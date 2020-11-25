@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './App.scss';
+import PropTypes from 'prop-types';
+
+const DrawingArea = () => {
+    return <div className='drawingArea'>drawingArea</div>;
+};
+
+const MainBoard = (props) => {
+    console.log(props.imageComponents);
+    return (
+        <div className='mainBoard'>
+            {props.imageComponents[0].test}
+            <DrawingArea />
+        </div>
+    );
+};
+
+MainBoard.propTypes = {
+    // TODO: 待資料確定後，明確定義 array 內容
+    imageComponents: PropTypes.array.isRequired,
+};
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    // TODO: 測試用資料, 待更新
+    let imageComponents = [{ test: 'testCom' }, {}];
+    const [imgComponents, setImgComponents] = React.useState(imageComponents);
+
+    return (
+        <div className='App'>
+            <MainBoard imageComponents={imageComponents} />
+        </div>
+    );
 }
 
 export default App;

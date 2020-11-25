@@ -1,0 +1,43 @@
+// color variants
+$main-color: #282c34;
+$sub-color: #e89a4f;
+$assist-color-dark: #badada;
+$assist-color-light: #dde6e8;
+$light-grey: #ebebeb;
+$dark-grey: #7f7e7e;
+$custom-black: #555555;
+
+* {
+    // border: 1px solid red;
+}
+
+// basic layouts
+body {
+    height: 100vh;
+}
+.App {
+    text-align: center;
+    position: relative;
+    height: 100vh;
+    background-color: $dark-grey;
+}
+.mainBoard {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    bottom: 0;
+    right: 0;
+    width: 90%;
+    height: 90%;
+    background-color: $light-grey;
+}
+.drawingArea {
+    align-self: center;
+    position: absolute;
+    /*固定寬高比為5:3*/
+    width: 60%;
+    height: 0;
+    padding-bottom: 35%;
+    background-color: white;
+    box-shadow: 0 0 2px 2px $light-grey;
+}
