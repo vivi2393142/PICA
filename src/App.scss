@@ -7,6 +7,8 @@ $light-grey: #ebebeb;
 $dark-grey: #7f7e7e;
 $custom-black: #555555;
 
+$board-to-window-ratio: 90%;
+
 * {
     // border: 1px solid red;
 }
@@ -23,21 +25,31 @@ body {
 }
 .mainBoard {
     position: absolute;
-    display: flex;
     justify-content: center;
+    align-items: center;
     bottom: 0;
     right: 0;
-    width: 90%;
-    height: 90%;
     background-color: $light-grey;
+    overflow: hidden;
 }
 .drawingArea {
-    align-self: center;
+    border: 1px solid black;
     position: absolute;
-    /*固定寬高比為5:3*/
-    width: 60%;
-    height: 0;
-    padding-bottom: 35%;
-    background-color: white;
-    box-shadow: 0 0 2px 2px $light-grey;
+    box-shadow: 0 1px 2px 0px $dark-grey;
+}
+.viewRatio {
+    color: white;
+}
+
+.ratioSelect {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1;
+}
+
+.canvas-container {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
