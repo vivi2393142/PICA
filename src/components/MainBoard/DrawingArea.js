@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
+import 'fabric-history';
 import * as icons from '../../icons.js';
 import * as handlers from './componentHandlers';
 
@@ -52,7 +53,7 @@ const DrawingArea = (props) => {
         handlers.keyDownHandlers(canvasInit);
         // -- set canvas
         setCanvas(canvasInit);
-        // -- listen to modified event
+
         canvasInit.on('object:modified', (e) => {
             console.log('編輯完畢');
         });
@@ -114,8 +115,8 @@ const DrawingArea = (props) => {
                 <button onClick={() => handlers.alignHandler(canvas, 'right')}>靠右對齊</button>
                 <button onClick={() => handlers.alignHandler(canvas, 'top')}>靠上對齊</button>
                 <button onClick={() => handlers.alignHandler(canvas, 'bottom')}>靠下對齊</button>
-                <button>重做</button>
-                <button>復原</button>
+                <button onClick={() => canvas.undo()}>復原</button>
+                <button onClick={() => canvas.redo()}>重做</button>
                 <button onClick={() => handlers.logCurrentCanvas(canvas)}>印出canvas</button>
             </div>
             {/* <div className='componentsNavLeft'>
