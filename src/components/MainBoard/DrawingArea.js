@@ -16,7 +16,6 @@ const DrawingArea = (props) => {
         const canvasInit = new fabric.Canvas('fabric-canvas', {
             height: allSettings.canvasSetting.height,
             width: allSettings.canvasSetting.width,
-            backgroundColor: '#fff',
         });
         // -- load canvas init data
         canvasInit.loadFromJSON(allSettings.canvasData, function () {
@@ -117,8 +116,15 @@ const DrawingArea = (props) => {
                 <button onClick={() => handlers.alignHandler(canvas, 'bottom')}>靠下對齊</button>
                 <button onClick={() => canvas.undo()}>復原</button>
                 <button onClick={() => canvas.redo()}>重做</button>
+                <button onClick={() => handlers.backgroundColorHandler(canvas)}>
+                    加入背景色彩
+                </button>
+                <button onClick={() => handlers.backgroundImageHandler(canvas)}>
+                    加入背景圖片
+                </button>
                 <button onClick={() => handlers.logCurrentCanvas(canvas)}>印出canvas</button>
             </div>
+
             {/* <div className='componentsNavLeft'>
                 <icons.Undo />
                 <icons.Redo />

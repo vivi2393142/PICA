@@ -62,6 +62,26 @@ const addImage = (canvi) => {
     canvi.requestRenderAll();
 };
 
+// -- add new components: add background
+const backgroundColorHandler = (canvas) => {
+    canvas.backgroundImage = 0;
+    canvas.backgroundColor = mainColor;
+    canvas.requestRenderAll();
+};
+
+const backgroundImageHandler = (canvas) => {
+    fabric.Image.fromURL(
+        'https://images.pexels.com/photos/3394939/pexels-photo-3394939.jpeg?cs=srgb&dl=pexels-matheus-natan-3394939.jpg&fm=jpg',
+        function (img) {
+            canvas.setBackgroundColor(img);
+            canvas.setBackgroundImage(img, canvas.requestRenderAll.bind(canvas), {
+                scaleX: canvas.width / img.width,
+                scaleY: canvas.height / img.height,
+            });
+        }
+    );
+};
+
 // -- methods for component: copy, cut, paste, delete
 const copyHandler = (canvas) => {
     if (canvas.getActiveObject()) {
@@ -343,4 +363,6 @@ export {
     toBottomHandler,
     logCurrentCanvas,
     alignHandler,
+    backgroundColorHandler,
+    backgroundImageHandler,
 };
