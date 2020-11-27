@@ -1,0 +1,11 @@
+import { ReactComponent as Undo } from './img/undo.svg';
+import { ReactComponent as Redo } from './img/redo.svg';
+import { ReactComponent as ToBottom } from './img/toBottom.svg';
+import { ReactComponent as ToTop } from './img/toTop.svg';
+import { ReactComponent as Upper } from './img/upper.svg';
+import { ReactComponent as Downer } from './img/downer.svg';
+import { ReactComponent as Layer } from './img/layer.svg';
+import { ReactComponent as TrashCan } from './img/trashCan.svg';
+import { ReactComponent as Align } from './img/align.svg';
+import { ReactComponent as Copy } from './img/copy.svg';
+export { Undo, Redo, ToBottom, ToTop, Upper, Downer, Layer, TrashCan, Align, Copy };

@@ -8,8 +8,8 @@ const MainBoard = (props) => {
 
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
-            (window.innerWidth * 0.75) / allSettings.canvasSetting.width,
-            (window.innerHeight * 0.75) / allSettings.canvasSetting.height
+            (window.innerWidth * 0.7) / allSettings.canvasSetting.width,
+            (window.innerHeight * 0.7) / allSettings.canvasSetting.height
         );
         container.style.width = `${fixRatio * allSettings.canvasSetting.width}px`;
         container.style.height = `${fixRatio * allSettings.canvasSetting.height}px`;
@@ -17,7 +17,6 @@ const MainBoard = (props) => {
 
     const handleRatioSelect = (e) => {
         setRatioSelectValue(e.target.value);
-        console.log(ratioSelectValue);
         const container = document.querySelector('.canvas-container');
         if (e.target.value === 'auto') {
             handleResponsiveSize(container);

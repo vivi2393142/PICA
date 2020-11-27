@@ -23,6 +23,8 @@ body {
     height: 100vh;
     background-color: $dark-grey;
 }
+
+// mainBoard
 .mainBoard {
     position: absolute;
     justify-content: center;
@@ -30,26 +32,56 @@ body {
     bottom: 0;
     right: 0;
     background-color: $light-grey;
-    overflow: hidden;
+    overflow: auto;
 }
-.drawingArea {
-    border: 1px solid black;
-    position: absolute;
-    box-shadow: 0 1px 2px 0px $dark-grey;
-}
-.viewRatio {
-    color: white;
-}
-
 .ratioSelect {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
     z-index: 1;
 }
+.componentsNavLeft,
+.componentsNavRight {
+    position: absolute;
+    top: -2rem;
+}
+.componentsNavLeft {
+    left: 0;
+}
+.componentsNavRight {
+    right: 0;
+}
+.componentsNavLeft * {
+    padding-right: 0.4rem;
+}
+.componentsNavRight * {
+    padding-left: 0.4rem;
+}
+.componentsNavLeft *,
+.componentsNavRight * {
+    pointer-events: all;
+    width: 1.6rem;
+    height: 1.6rem;
+}
 
-.canvas-container {
-    top: 50%;
+.componentsNavLeft *:hover,
+.componentsNavRight *:hover {
+    opacity: 0.8;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+// canvas
+.drawingArea {
+    border: 1px solid black;
+    position: absolute;
+    box-shadow: 0 1px 2px 0px $dark-grey;
+}
+.canvasWrapper {
+    position: absolute;
+    max-width: 100%;
+    max-height: 100%;
+    top: 53%;
     left: 50%;
     transform: translate(-50%, -50%);
 }

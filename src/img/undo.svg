@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>sub-nav/sub-nav-復原</title>
+    <g id="sub-nav/sub-nav-復原" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="復原" transform="translate(2.000000, 3.000000)" fill="#555555">
+            <path d="M8.5596137,4 C14.27324,4.00151269 19,7.5249412 19,12.0382178 C19,15.1109713 16.7813035,17.816436 13.3846089,19.1739863 C12.4797039,19.5356479 11.5092416,19.7935893 10.5001412,19.9386951 L10.0653825,19.9939485 L9.84568797,18.0060515 C10.8329211,17.8969464 11.7768958,17.6627184 12.642359,17.3168204 C15.3361056,16.240216 17,14.2112735 17,12.0382178 C17,8.84344676 13.4221184,6.11252152 8.84105387,6.00338746 L8.55934896,6 L4,6 L4,4 L8.5596137,4 Z" id="路徑" fill-rule="nonzero"></path>
+            <polygon id="三角形" transform="translate(5.000000, 4.500000) rotate(-90.000000) translate(-5.000000, -4.500000) " points="5 0 9 9 1 9"></polygon>
+        </g>
+    </g>
+</svg>
