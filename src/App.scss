@@ -11,6 +11,7 @@ $board-to-window-ratio: 90%;
 
 * {
     // border: 1px solid red;
+    // color:#db2316
 }
 
 // basic layouts
@@ -59,9 +60,11 @@ body {
 }
 .componentsNavLeft *,
 .componentsNavRight * {
-    pointer-events: all;
+    pointer-events: bounding-box;
     width: 1.6rem;
     height: 1.6rem;
+    fill: red;
+    // pointer-events: fill;
 }
 
 .componentsNavLeft *:hover,
@@ -84,4 +87,7 @@ body {
     top: 53%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+.nonUndoRedo {
+    color: #999;
 }

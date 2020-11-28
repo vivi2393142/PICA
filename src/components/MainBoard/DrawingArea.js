@@ -2,14 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
-import * as icons from '../../icons.js';
-import * as handlers from './componentHandlers';
+import ActiveNav from './ActiveNav';
+import initAligningGuidelines from './aligning_guidelines.js';
 
 const DrawingArea = (props) => {
     const allSettings = props.drawingAreaSettings;
-    const [canvas, setCanvas] = React.useState('');
-    const mainColor = '#e89a4f';
-
+    const [canvas, setCanvas] = React.useState({});
+    const [activeObjType, setActiveObjType] = React.useState('');
+    const [hasUndo, setHasUndo] = React.useState(false);
+    const [hasRedo, setHasRedo] = React.useState(false);
+    // console.log(canvas.historyUndo);
     // init fabric canvas
     React.useEffect(() => {
         // canvas setting
@@ -17,10 +19,55 @@ const DrawingArea = (props) => {
             height: allSettings.canvasSetting.height,
             width: allSettings.canvasSetting.width,
         });
-        // -- load canvas init data
-        canvasInit.loadFromJSON(allSettings.canvasData, function () {
-            canvasInit.renderAll();
-        });
+
+        async function presetObjectStyle() {
+            // -- render initial data then clear init history
+            await canvasInit.renderAll();
+            canvasInit.clearHistory();
+            // -- preset image, iText objects style
+            let imgObjects = canvasInit.getObjects('image');
+            let texObjects = canvasInit.getObjects('i-text');
+            imgObjects.forEach((object) => {
+                object.setControlsVisibility({
+                    mb: false,
+                    mt: false,
+                    ml: false,
+                    mr: false,
+                });
+            });
+            texObjects.forEach((object) => {
+                object.setControlsVisibility({
+                    mb: false,
+                    mt: false,
+                    ml: false,
+                    mr: false,
+                });
+            });
+            // -- listen to all changes -> update database
+            canvasInit.on('object:modified', (e) => {
+                setHasUndo(canvasInit.historyUndo.length > 0);
+                setHasRedo(canvasInit.historyRedo.length > 0);
+                console.log('編輯完畢');
+            });
+            // TODO:處理複製剪下貼上會更新兩次的問題
+            canvasInit.on('object:added', (e) => {
+                setHasUndo(canvasInit.historyUndo.length > 0);
+                setHasRedo(canvasInit.historyRedo.length > 0);
+                console.log('新增完畢');
+            });
+            canvasInit.on('object:removed', (e) => {
+                setHasUndo(canvasInit.historyUndo.length > 0);
+                setHasRedo(canvasInit.historyRedo.length > 0);
+                console.log('移除完畢');
+            });
+            // -- check active object
+            canvasInit.on('mouse:down', (e) => {
+                e.target ? setActiveObjType(e.target.type) : setActiveObjType('');
+            });
+        }
+        canvasInit.loadFromJSON(allSettings.canvasData, presetObjectStyle);
+        // -- init align guide lines extensions
+        initAligningGuidelines(canvasInit);
         // -- customize selection style
         canvasInit.selectionColor = 'rgba(0,0,0,0.03)';
         canvasInit.selectionBorderColor = 'rgba(0,0,0,0.25)';
@@ -32,7 +79,7 @@ const DrawingArea = (props) => {
             borderColor: 'rgba(0,0,0,0.25)',
             cornerColor: 'rgba(0,0,0,0.25)',
             cornerStrokeColor: 'rgba(0,0,0,0.25)',
-            cornerSize: 6,
+            cornerSize: 8,
             cornerStyle: 'circle',
             cornerColor: 'white',
         };
@@ -48,22 +95,8 @@ const DrawingArea = (props) => {
         document.querySelector('.upper-canvas').style.height = '100%';
         // -- default view ratio: auto
         props.handleResponsiveSize(container);
-        // -- preset keydown combination
-        handlers.keyDownHandlers(canvasInit);
         // -- set canvas
         setCanvas(canvasInit);
-
-        canvasInit.on('object:modified', (e) => {
-            console.log('編輯完畢');
-        });
-        // TODO:處理複製剪下貼上會更新兩次的問題
-        canvasInit.on('object:added', (e) => {
-            console.log('新增完畢');
-        });
-        canvasInit.on('object:removed', (e) => {
-            console.log('移除完畢');
-        });
-
         return () => {
             canvasInit.dispose();
         };
@@ -86,59 +119,14 @@ const DrawingArea = (props) => {
     //render
     return (
         <div className='canvasWrapper'>
-            <div className='testNav'>
-                <button onClick={() => handlers.addRect(canvas)}>新增方形</button>
-                <button onClick={() => handlers.addCircle(canvas)}>新增圓形</button>
-                <button onClick={() => handlers.addTriangle(canvas)}>新增三角形</button>
-                <button onClick={() => handlers.addIText(canvas)}>新增文字</button>
-                <button onClick={() => handlers.addImage(canvas)}>新增圖片</button>
-                <button onClick={() => handlers.copyHandler(canvas)}>複製</button>
-                <button onClick={() => handlers.cutHandler(canvas)}>剪下</button>
-                <button onClick={() => handlers.pasteHandler(canvas)}>貼上</button>
-                <button onClick={() => handlers.delHandler(canvas)}>刪除</button>
-                <button onClick={() => handlers.groupHandler(canvas)}>群組</button>
-                <button onClick={() => handlers.ungroupHandler(canvas)}>取消群組</button>
-                <button onClick={() => handlers.selectAllHandler(canvas)}>全選</button>
-                <button onClick={() => handlers.upperHandler(canvas)}>上移一層</button>
-                <button onClick={() => handlers.toTopHandler(canvas)}>移到頂層</button>
-                <button onClick={() => handlers.downerHandler(canvas)}>下移一層</button>
-                <button onClick={() => handlers.toBottomHandler(canvas)}>移到底層</button>
-                <button>選擇顏色</button>
-                <button onClick={() => handlers.alignHandler(canvas, 'horizonCenter')}>
-                    水平置中
-                </button>
-                <button onClick={() => handlers.alignHandler(canvas, 'verticalCenter')}>
-                    垂直置中
-                </button>
-                <button onClick={() => handlers.alignHandler(canvas, 'left')}>靠左對齊</button>
-                <button onClick={() => handlers.alignHandler(canvas, 'right')}>靠右對齊</button>
-                <button onClick={() => handlers.alignHandler(canvas, 'top')}>靠上對齊</button>
-                <button onClick={() => handlers.alignHandler(canvas, 'bottom')}>靠下對齊</button>
-                <button onClick={() => canvas.undo()}>復原</button>
-                <button onClick={() => canvas.redo()}>重做</button>
-                <button onClick={() => handlers.backgroundColorHandler(canvas)}>
-                    加入背景色彩
-                </button>
-                <button onClick={() => handlers.backgroundImageHandler(canvas)}>
-                    加入背景圖片
-                </button>
-                <button onClick={() => handlers.logCurrentCanvas(canvas)}>印出canvas</button>
-            </div>
-
-            {/* <div className='componentsNavLeft'>
-                <icons.Undo />
-                <icons.Redo />
-            </div>
-            <div className='componentsNavRight'>
-                <icons.ToBottom />
-                <icons.ToTop />
-                <icons.Upper />
-                <icons.Downer />
-                <icons.Layer />
-                <icons.Align />
-                <icons.Copy />
-                <icons.TrashCan />
-            </div> */}
+            <ActiveNav
+                canvas={canvas}
+                setCanvas={setCanvas}
+                setActiveObjType={setActiveObjType}
+                activeObjType={activeObjType}
+                hasUndo={hasUndo}
+                hasRedo={hasRedo}
+            />
             <canvas className='drawingArea' id='fabric-canvas' />
         </div>
     );
