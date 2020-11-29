@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>sidebar/sidebar-照片</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="sidebar/sidebar-照片" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M13.2222222,12 C12.5481666,12 12,12.5481666 12,13.2222222 L12,21.7777778 C12,22.4518337 12.5481666,23 13.2222222,23 L21.7777778,23 C22.4518337,23 23,22.4518337 23,21.7777778 L23,13.2222222 C23,12.5481666 22.4518337,12 21.7777778,12 L13.2222222,12 Z" id="basic-/-image_alt" fill="#E89A4F" fill-rule="nonzero"></path>
+        <g id="basic-/-image_alt">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="basic-/-image_alt-(Background/Mask)"></g>
+            <path d="M5,3 C3.89699996,3 3,3.89699996 3,5 L3,19 C3,20.1030006 3.89699996,21 5,21 L19,21 C20.1030006,21 21,20.1030006 21,19 L21,5 C21,3.89699996 20.1030006,3 19,3 L5,3 Z M5,5 L19,5 L19.0020008,19 L5,19 L5,5 Z M9,13 L6,17 L18,17 L13,10 L10,14 L9,13 Z M10,9.5 C10,8.67157269 9.32842731,8 8.5,8 C7.67157269,8 7,8.67157269 7,9.5 C7,10.3284273 7.67157269,11 8.5,11 C9.32842731,11 10,10.3284273 10,9.5 Z" fill="#282C34" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

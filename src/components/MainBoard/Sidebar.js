@@ -4,6 +4,8 @@ import * as icons from '../../icons.js';
 
 const Sidebar = (props) => {
     const mainColor = '#e89a4f';
+    const [currentSidebar, setCurrentSidebar] = React.useState('');
+    console.log(currentSidebar);
     // -- add new components: rectangle, circle, triangle, text, image
     const addRect = () => {
         const rect = new fabric.Rect({
@@ -94,33 +96,156 @@ const Sidebar = (props) => {
         console.log(JSON.stringify(json));
     };
 
+    // jsx
+    const sidebarArray = [
+        {
+            EN: 'text',
+            CH: '文字',
+            icon: <icons.SidebarText className='sidebarIcon' />,
+            iconB: <icons.SidebarTextB className='sidebarIcon' />,
+        },
+        {
+            EN: 'shape',
+            CH: '形狀',
+            icon: <icons.SidebarShape className='sidebarIcon' />,
+            iconB: <icons.SidebarShapeB className='sidebarIcon' />,
+        },
+        {
+            EN: 'image',
+            CH: '照片',
+            icon: <icons.SidebarImage className='sidebarIcon' />,
+            iconB: <icons.SidebarImageB className='sidebarIcon' />,
+        },
+        {
+            EN: 'background',
+            CH: '背景',
+            icon: <icons.SidebarBackground className='sidebarIcon' />,
+            iconB: <icons.SidebarBackgroundB className='sidebarIcon' />,
+        },
+        {
+            EN: 'upload',
+            CH: '上傳',
+            icon: <icons.SidebarUpload className='sidebarIcon' />,
+            iconB: <icons.SidebarUploadB className='sidebarIcon' />,
+        },
+        {
+            EN: 'frame',
+            CH: '框架',
+            icon: <icons.SidebarFrame className='sidebarIcon' />,
+            iconB: <icons.SidebarFrameB className='sidebarIcon' />,
+        },
+        {
+            EN: 'sticker',
+            CH: '貼圖',
+            icon: <icons.SidebarSticker className='sidebarIcon' />,
+            iconB: <icons.SidebarStickerB className='sidebarIcon' />,
+        },
+        {
+            EN: 'line',
+            CH: '線條',
+            icon: <icons.SidebarLine className='sidebarIcon' />,
+            iconB: <icons.SidebarLineB className='sidebarIcon' />,
+        },
+        {
+            EN: 'more',
+            CH: '更多',
+            icon: <icons.SidebarMore className='sidebarIcon' />,
+            iconB: <icons.SidebarMoreB className='sidebarIcon' />,
+        },
+    ];
+
+    let sidebarFold = [];
+    sidebarArray.forEach((item, index) => {
+        let newItem = (
+            <div
+                key={index}
+                className={`sideButton ${
+                    currentSidebar === 'text' && currentSidebar === item.EN
+                        ? 'sideButtonChosen firstButton'
+                        : currentSidebar === item.EN
+                        ? 'sideButtonChosen'
+                        : null
+                }`}
+                onClick={() => setCurrentSidebar(item.EN)}
+            >
+                {currentSidebar === item.EN ? item.iconB : item.icon}
+                <div className={`iconText ${currentSidebar === item.EN ? 'iconTextB' : null}`}>
+                    {item.CH}
+                </div>
+            </div>
+        );
+        sidebarFold.push(newItem);
+    });
     return (
         <div className='sidebar'>
-            <icons.Test />
-            <div className='sideButton' onClick={addRect}>
-                新增方形
-            </div>
-            <div className='sideButton' onClick={addCircle}>
-                新增圓形
-            </div>
-            <div className='sideButton' onClick={addTriangle}>
-                新增三角形
-            </div>
-            <div className='sideButton' onClick={addIText}>
-                新增文字
-            </div>
-            <div className='sideButton' onClick={addImage}>
-                新增圖片
-            </div>
-            <div className='sideButton' onClick={backgroundColorHandler}>
-                加入背景色彩
-            </div>
-            <div className='sideButton' onClick={backgroundImageHandler}>
-                加入背景圖片
-            </div>
-            <div className='sideButton' onClick={logCurrentCanvas}>
-                印出canvas
-            </div>
+            <div className='sidebarFold'>{sidebarFold}</div>
+            {currentSidebar !== '' ? (
+                <div
+                    className={`sidebarUnfold sidebarUnfoldUpload ${
+                        currentSidebar === 'text' ? 'firstUnfold' : null
+                    }`}
+                >
+                    {currentSidebar === 'text' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem' onClick={addIText}>
+                                新增文字
+                            </div>
+                        </div>
+                    ) : currentSidebar === 'shape' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem' onClick={addRect}>
+                                新增方形
+                            </div>
+                            <div className='unfoldItem' onClick={addCircle}>
+                                新增圓形
+                            </div>
+                            <div className='unfoldItem' onClick={addTriangle}>
+                                新增三角形
+                            </div>
+                        </div>
+                    ) : currentSidebar === 'image' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem' onClick={addImage}>
+                                新增照片
+                            </div>
+                        </div>
+                    ) : currentSidebar === 'background' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem' onClick={backgroundColorHandler}>
+                                新增背景色彩
+                            </div>
+                            <div className='unfoldItem' onClick={backgroundImageHandler}>
+                                新增背景圖片
+                            </div>
+                        </div>
+                    ) : currentSidebar === 'upload' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem'></div>
+                        </div>
+                    ) : currentSidebar === 'frame' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem'>新增框架</div>
+                        </div>
+                    ) : currentSidebar === 'sticker' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem'>新增貼圖</div>
+                        </div>
+                    ) : currentSidebar === 'line' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem'>新增線條</div>
+                        </div>
+                    ) : currentSidebar === 'more' ? (
+                        <div className='sidebarUnfoldInner'>
+                            <div className='unfoldItem' onClick={logCurrentCanvas}>
+                                印出canvas(測試用)
+                            </div>
+                        </div>
+                    ) : null}
+                    <div className='sidebarCloseButton' onClick={() => setCurrentSidebar('')}>
+                        {'<'}
+                    </div>
+                </div>
+            ) : null}
         </div>
     );
 };

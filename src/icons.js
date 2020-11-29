@@ -27,8 +27,44 @@ import { ReactComponent as TextAlignLeft } from './img/text_align_left.svg';
 import { ReactComponent as TextAlignRight } from './img/text_align_right.svg';
 import { ReactComponent as TextAlignCenter } from './img/text_align_center.svg';
 import { ReactComponent as TextSpace } from './img/text_space.svg';
+import { ReactComponent as SidebarUpload } from './img/sidebar_upload.svg';
+import { ReactComponent as SidebarFrame } from './img/sidebar_frame.svg';
+import { ReactComponent as SidebarShape } from './img/sidebar_shape.svg';
+import { ReactComponent as SidebarMore } from './img/sidebar_more.svg';
+import { ReactComponent as SidebarBackground } from './img/sidebar_background.svg';
+import { ReactComponent as SidebarImage } from './img/sidebar_image.svg';
+import { ReactComponent as SidebarLine } from './img/sidebar_line.svg';
+import { ReactComponent as SidebarSticker } from './img/sidebar_sticker.svg';
+import { ReactComponent as SidebarText } from './img/sidebar_text.svg';
+import { ReactComponent as SidebarUploadB } from './img/sidebar_upload-b.svg';
+import { ReactComponent as SidebarFrameB } from './img/sidebar_frame-b.svg';
+import { ReactComponent as SidebarShapeB } from './img/sidebar_shape-b.svg';
+import { ReactComponent as SidebarMoreB } from './img/sidebar_more-b.svg';
+import { ReactComponent as SidebarBackgroundB } from './img/sidebar_background-b.svg';
+import { ReactComponent as SidebarImageB } from './img/sidebar_image-b.svg';
+import { ReactComponent as SidebarLineB } from './img/sidebar_line-b.svg';
+import { ReactComponent as SidebarStickerB } from './img/sidebar_sticker-b.svg';
+import { ReactComponent as SidebarTextB } from './img/sidebar_text-b.svg';
 
 export {
+    SidebarUploadB,
+    SidebarFrameB,
+    SidebarShapeB,
+    SidebarMoreB,
+    SidebarBackgroundB,
+    SidebarImageB,
+    SidebarLineB,
+    SidebarStickerB,
+    SidebarTextB,
+    SidebarUpload,
+    SidebarFrame,
+    SidebarShape,
+    SidebarMore,
+    SidebarBackground,
+    SidebarImage,
+    SidebarLine,
+    SidebarSticker,
+    SidebarText,
     TextSpace,
     TextAlignLeft,
     TextAlignRight,

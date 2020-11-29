@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>sidebar/sidebar-形狀 copy 2</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="sidebar/sidebar-形狀-copy-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M11,12.4285714 L11,19.5714286 C11,20.3592855 11.6407143,21 12.4285714,21 L19.5714286,21 C20.3592855,21 21,20.3592855 21,19.5714286 L21,12.4285714 C21,11.6407143 20.3592855,11 19.5714286,11 L12.4285714,11 C11.6407143,11 11,11.6407143 11,12.4285714 Z" id="basic-/-checkbox" fill="#E89A4F" fill-rule="nonzero"></path>
+        <g id="basic-/-checkbox">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="basic-/-checkbox-(Background/Mask)"></g>
+            <path d="M5,7 L5,17 C5,18.1029997 5.89699996,19 7,19 L17,19 C18.1029997,19 19,18.1029997 19,17 L19,7 C19,5.89699996 18.1029997,5 17,5 L7,5 C5.89699996,5 5,5.89699996 5,7 Z M7,7 L17,7 L17.0020008,17 L7,17 L7,7 Z" fill="#FFFFFF" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>
