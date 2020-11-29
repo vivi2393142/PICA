@@ -4,9 +4,9 @@ $sub-color: #e89a4f;
 $assist-color-dark: #badada;
 $assist-color-light: #dde6e8;
 $light-grey: #ebebeb;
+$middle-grey: #acacac;
 $dark-grey: #7f7e7e;
 $custom-black: #555555;
-
 $board-to-window-ratio: 90%;
 
 * {
@@ -17,77 +17,298 @@ $board-to-window-ratio: 90%;
 // basic layouts
 body {
     height: 100vh;
+    background-color: #282c34;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Heiti SC',
+        'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
 }
 .App {
     text-align: center;
     position: relative;
     height: 100vh;
-    background-color: $dark-grey;
+    display: flex;
+    flex-direction: column;
+}
+.header {
+    height: 10%;
+    z-index: 999;
+    color: white;
 }
 
 // mainBoard
 .mainBoard {
-    position: absolute;
     justify-content: center;
     align-items: center;
-    bottom: 0;
-    right: 0;
-    background-color: $light-grey;
+    display: flex;
+    flex-grow: 1;
+}
+.sidebar {
+    width: 8%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    z-index: 999;
+    padding: 0 1rem;
+    align-items: center;
+}
+.drawingAreaBox {
+    flex-grow: 1;
+    position: relative;
+    height: 100%;
     overflow: auto;
+    background-color: $light-grey;
+    border-radius: 3rem 0 0 0;
+}
+.componentsSelection {
+    width: 100%;
+    display: flex;
+    padding: 1rem 1% 0 2%;
+    box-sizing: border-box;
+    align-items: center;
+}
+.canvasWrapper {
+    justify-content: center;
+    position: absolute;
+    max-width: 95%;
+    max-height: 95%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 1rem 0;
 }
 .ratioSelect {
     position: absolute;
     bottom: 1rem;
     right: 1rem;
     z-index: 1;
-}
-.componentsNavLeft,
-.componentsNavRight {
-    position: absolute;
-    top: -2rem;
-}
-.componentsNavLeft {
-    left: 0;
-}
-.componentsNavRight {
-    right: 0;
-}
-.componentsNavLeft * {
-    padding-right: 0.4rem;
-}
-.componentsNavRight * {
-    padding-left: 0.4rem;
-}
-.componentsNavLeft *,
-.componentsNavRight * {
-    pointer-events: bounding-box;
-    width: 1.6rem;
-    height: 1.6rem;
-    fill: red;
-    // pointer-events: fill;
-}
-
-.componentsNavLeft *:hover,
-.componentsNavRight *:hover {
-    opacity: 0.8;
+    border: 1px solid $dark-grey;
+    border-radius: 0.2rem;
+    background-color: transparent;
+    padding: 0.2rem 0.5rem 0.2rem 0.6rem;
+    color: $custom-black;
     cursor: pointer;
-    border-radius: 2px;
 }
-
+// sidebar
+.sideButton {
+    border: 1px solid white;
+    color: white;
+    padding: 0.5rem;
+    cursor: pointer;
+    width: 100%;
+}
 // canvas
 .drawingArea {
-    border: 1px solid black;
+    border: 1px solid $custom-black;
     position: absolute;
     box-shadow: 0 1px 2px 0px $dark-grey;
 }
-.canvasWrapper {
-    position: absolute;
-    max-width: 100%;
-    max-height: 100%;
-    top: 53%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+// active nav bar
+.componentsNavLeft,
+.componentsNavRight {
+    display: flex;
+    align-items: center;
+    height: 1.5rem;
 }
-.nonUndoRedo {
-    color: #999;
+.componentsNavRight {
+    flex-wrap: wrap;
+    width: 35%;
+    // border: 1px solid red;
+    justify-content: flex-end;
+}
+.componentsNavLeft {
+    flex-wrap: wrap;
+    width: 65%;
+    // border: 1px solid red;
+    justify-content: flex-start;
+}
+.activeButton {
+    margin-right: 0.8rem;
+    pointer-events: bounding-box;
+    width: 1.6rem;
+    height: 1.6rem;
+}
+.activeButton:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
+.layerButton,
+.alignButton {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+.layer,
+.align {
+    position: relative;
+    z-index: 555;
+    display: inline-block;
+}
+.layerChoosingBox,
+.alignChoosingBox {
+    position: absolute;
+    top: 2rem;
+    right: 0;
+    z-index: 555;
+    display: flex;
+}
+
+// specific nav
+.specificNav {
+    display: flex;
+}
+.specificButton {
+    display: flex;
+    font-size: 0.9rem;
+    margin-left: 0.8rem;
+    color: $custom-black;
+    font-weight: 450;
+    cursor: pointer;
+    align-items: center;
+}
+.specificButton:hover {
+    opacity: 0.6;
+}
+// specific nav - color choosing box
+.colorChoosingBox {
+    position: relative;
+    display: inline-block;
+    margin: 0 0.8rem 0 0.8rem;
+    cursor: pointer;
+}
+.chrome-picker {
+    position: absolute;
+    z-index: 555;
+    top: 2rem;
+    left: 0;
+    padding: 0.3rem 0.3rem 0;
+}
+.currentColor {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0.2rem;
+    border: 3px solid white;
+    box-shadow: 0 0 2px $custom-black;
+}
+// specific nav - text
+.textOptionSans {
+    font-family: 'sans-serif';
+}
+.textOptionNotoSans {
+    font-family: 'Noto Sans TC';
+}
+.textOptionNotoSerif {
+    font-family: 'Noto Serif TC';
+}
+.textSizeOuter {
+    width: 4rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-left: 0.4rem;
+    margin-right: 0.2rem;
+}
+.textSizeSelect {
+    width: 100%;
+    height: 100%;
+}
+.textSizeInput {
+    position: absolute;
+    width: 40%;
+    height: 70%;
+    border: none;
+    left: 0.5rem;
+    background-color: $light-grey;
+    color: $custom-black;
+    font-weight: 450;
+}
+input:focus {
+    outline: none;
+}
+.specificNav select {
+    background-color: transparent;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin: 0.1rem 0.4rem;
+    margin-left: 0.2rem;
+    border: 1px solid $middle-grey;
+}
+.textIcon {
+    margin: 0 0.3rem;
+    weight: 1.4rem;
+    height: 1.4rem;
+}
+.textButtonActive {
+    border-radius: 3px;
+    background: rgb(214, 214, 214);
+    box-shadow: 0 0 1px 1px rgb(180, 180, 180) inset;
+}
+// specific nav - text - space
+.spaceBoxOuter {
+    position: relative;
+    font-size: 0.8rem;
+}
+.spaceBoxes {
+    position: absolute;
+    display: flex;
+    top: 1.8rem;
+    left: 0.5rem;
+    z-index: 555;
+    background-color: white;
+    border: 1px solid $middle-grey;
+    flex-direction: column;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px 0 $middle-grey;
+    padding: 0.5rem 0;
+    color: $custom-black;
+}
+.spaceBox {
+    display: flex;
+    padding: 0.6rem 1.2rem;
+}
+.spaceBoxText {
+    text-align: left;
+    width: 2.6rem;
+}
+.rangeValue {
+    padding-left: 0.8rem;
+}
+.inputRange {
+    -webkit-appearance: none !important;
+    width: 8rem;
+    height: 4px;
+    background-color: $light-grey;
+    box-shadow: 0 0 1px 0 $custom-black;
+    border-radius: 10px;
+    margin: auto;
+    transition: all 0.3s ease;
+}
+.inputRange:hover {
+    background-color: white;
+}
+.inputRange::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 13px;
+    height: 13px;
+    background-color: $sub-color;
+    border-radius: 100%;
+    box-shadow: 0px 0px 3px $light-grey;
+    transition: all 0.3s ease;
+}
+.inputRange::-webkit-slider-thumb:hover {
+    background-color: #f7ba82;
+    width: 16px;
+    height: 16px;
+    box-shadow: 0px 0px 3px $sub-color;
+}
+.inputRange::-webkit-slider-thumb:active {
+    box-shadow: 0px 0px 1px white;
+}
+
+// media query
+@media (max-width: 900px) {
+    .textSizeInput {
+        width: 30%;
+    }
+}
+
+@media (max-width: 700px) {
 }

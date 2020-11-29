@@ -2,16 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
-import ActiveNav from './ActiveNav';
-import initAligningGuidelines from './aligning_guidelines.js';
+
+import initAligningGuidelines from '../../aligning_guidelines.js';
 
 const DrawingArea = (props) => {
     const allSettings = props.drawingAreaSettings;
-    const [canvas, setCanvas] = React.useState({});
-    const [activeObjType, setActiveObjType] = React.useState('');
-    const [hasUndo, setHasUndo] = React.useState(false);
-    const [hasRedo, setHasRedo] = React.useState(false);
-    // console.log(canvas.historyUndo);
+
     // init fabric canvas
     React.useEffect(() => {
         // canvas setting
@@ -45,24 +41,30 @@ const DrawingArea = (props) => {
             });
             // -- listen to all changes -> update database
             canvasInit.on('object:modified', (e) => {
-                setHasUndo(canvasInit.historyUndo.length > 0);
-                setHasRedo(canvasInit.historyRedo.length > 0);
+                props.setHasUndo(canvasInit.historyUndo.length > 0);
+                props.setHasRedo(canvasInit.historyRedo.length > 0);
                 console.log('編輯完畢');
             });
             // TODO:處理複製剪下貼上會更新兩次的問題
             canvasInit.on('object:added', (e) => {
-                setHasUndo(canvasInit.historyUndo.length > 0);
-                setHasRedo(canvasInit.historyRedo.length > 0);
+                props.setHasUndo(canvasInit.historyUndo.length > 0);
+                props.setHasRedo(canvasInit.historyRedo.length > 0);
                 console.log('新增完畢');
             });
             canvasInit.on('object:removed', (e) => {
-                setHasUndo(canvasInit.historyUndo.length > 0);
-                setHasRedo(canvasInit.historyRedo.length > 0);
+                props.setHasUndo(canvasInit.historyUndo.length > 0);
+                props.setHasRedo(canvasInit.historyRedo.length > 0);
                 console.log('移除完畢');
             });
-            // -- check active object
-            canvasInit.on('mouse:down', (e) => {
-                e.target ? setActiveObjType(e.target.type) : setActiveObjType('');
+            canvasInit.on('selection:created', (e) => {
+                props.setActiveObj(e.target);
+                // console.log(e.target.type);
+            });
+            canvasInit.on('selection:updated', (e) => {
+                props.setActiveObj(e.target);
+            });
+            canvasInit.on('selection:cleared', (e) => {
+                props.setActiveObj({});
             });
         }
         canvasInit.loadFromJSON(allSettings.canvasData, presetObjectStyle);
@@ -86,9 +88,6 @@ const DrawingArea = (props) => {
         fabric.Object.prototype.set(customBorder);
         // -- preset responsive canvas size
         const container = document.querySelector('.canvas-container');
-        const boardToWindow = 0.9;
-        container.parentNode.parentNode.style.width = `${boardToWindow * 100}%`;
-        container.parentNode.parentNode.style.height = `${boardToWindow * 100}%`;
         document.querySelector('.lower-canvas').style.width = '100%';
         document.querySelector('.lower-canvas').style.height = '100%';
         document.querySelector('.upper-canvas').style.width = '100%';
@@ -96,7 +95,7 @@ const DrawingArea = (props) => {
         // -- default view ratio: auto
         props.handleResponsiveSize(container);
         // -- set canvas
-        setCanvas(canvasInit);
+        props.setCanvas(canvasInit);
         return () => {
             canvasInit.dispose();
         };
@@ -119,14 +118,6 @@ const DrawingArea = (props) => {
     //render
     return (
         <div className='canvasWrapper'>
-            <ActiveNav
-                canvas={canvas}
-                setCanvas={setCanvas}
-                setActiveObjType={setActiveObjType}
-                activeObjType={activeObjType}
-                hasUndo={hasUndo}
-                hasRedo={hasRedo}
-            />
             <canvas className='drawingArea' id='fabric-canvas' />
         </div>
     );
@@ -137,6 +128,12 @@ DrawingArea.propTypes = {
     drawingAreaSettings: PropTypes.object.isRequired,
     ratioSelectValue: PropTypes.string.isRequired,
     handleResponsiveSize: PropTypes.func.isRequired,
+    canvas: PropTypes.object.isRequired,
+    setCanvas: PropTypes.func.isRequired,
+    setActiveObj: PropTypes.func.isRequired,
+    activeObj: PropTypes.object.isRequired,
+    setHasUndo: PropTypes.func.isRequired,
+    setHasRedo: PropTypes.func.isRequired,
 };
 
 export default DrawingArea;

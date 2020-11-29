@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>text/text-間距</title>
+    <g id="text/text-間距" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-2" transform="translate(3.000000, 3.000000)" fill="#555555" fill-rule="nonzero">
+            <polygon id="Rectangle" points="11 8 11 10 0 10 0 8"></polygon>
+            <polygon id="Rectangle" points="11 13.5 11 15.5 0 15.5 0 13.5"></polygon>
+            <polygon id="Rectangle" points="11 2.5 11 4.5 0 4.5 0 2.5"></polygon>
+            <g id="Group" transform="translate(11.500000, 0.500000)">
+                <polygon id="Line" points="4.3 1.9 4.3 14.9 2.8 14.9 2.8 1.9"></polygon>
+                <polygon id="Path" points="0.531478714 2.41434803 3.5 0.039531 6.46852129 2.41434803 5.53147871 3.58565124 3.5 1.95999964 1.46852129 3.58565124"></polygon>
+                <polygon id="Path" transform="translate(3.500000, 14.812591) scale(-1, -1) translate(-3.500000, -14.812591) " points="0.531478714 15.414348 3.5 13.039531 6.46852129 15.414348 5.53147871 16.5856512 3.5 14.9599996 1.46852129 16.5856512"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

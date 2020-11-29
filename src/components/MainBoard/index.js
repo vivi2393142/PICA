@@ -1,10 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DrawingArea from './DrawingArea';
+import Sidebar from './Sidebar';
+import ComponentsSelection from './ComponentsSelection/index';
 
 const MainBoard = (props) => {
     const allSettings = props.drawingAreaSettings;
     const [ratioSelectValue, setRatioSelectValue] = React.useState('auto');
+    const [canvas, setCanvas] = React.useState({});
+    const [activeObj, setActiveObj] = React.useState({});
+    const [hasUndo, setHasUndo] = React.useState(false);
+    const [hasRedo, setHasRedo] = React.useState(false);
 
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
@@ -45,11 +51,28 @@ const MainBoard = (props) => {
                 {givenOptions}
                 <option value='auto'>符合畫面大小</option>
             </select>
-            <DrawingArea
-                drawingAreaSettings={props.drawingAreaSettings}
-                ratioSelectValue={ratioSelectValue}
-                handleResponsiveSize={handleResponsiveSize}
-            />
+            <Sidebar canvas={canvas} setCanvas={setCanvas} />
+            <div className='drawingAreaBox'>
+                <ComponentsSelection
+                    canvas={canvas}
+                    setCanvas={setCanvas}
+                    hasUndo={hasUndo}
+                    hasRedo={hasRedo}
+                    setActiveObj={setActiveObj}
+                    activeObj={activeObj}
+                />
+                <DrawingArea
+                    canvas={canvas}
+                    setCanvas={setCanvas}
+                    setActiveObj={setActiveObj}
+                    activeObj={activeObj}
+                    setHasUndo={setHasUndo}
+                    setHasRedo={setHasRedo}
+                    drawingAreaSettings={props.drawingAreaSettings}
+                    ratioSelectValue={ratioSelectValue}
+                    handleResponsiveSize={handleResponsiveSize}
+                />
+            </div>
         </div>
     );
 };

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>全選</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="全選" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g>
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="edit-/-select_multiple-(Background/Mask)"></g>
+            <path d="M18.7069702,7.85351372 L17.2929688,6.43951416 L12.9999685,10.7325144 L10.7069683,8.43951416 L9.29296875,9.85351372 L12.9999685,13.5605125 L18.7069702,7.85351372 Z M20,2 L8,2 C6.89699984,2 6,2.89699996 6,4 L6,16 C6,17.1029997 6.89699984,18 8,18 L20,18 C21.1030006,18 22,17.1029997 22,16 L22,4 C22,2.89699996 21.1030006,2 20,2 L20,2 Z M8,16 L8,4 L20,4 L20.0020008,16 L8,16 L8,16 Z M2,8 L2,20 C2,21.1030006 2.89699996,22 4,22 L16,22 L16,20 L4,20 L4,8 L2,8 Z" id="edit-/-select_multiple" fill="#555555" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

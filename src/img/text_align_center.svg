@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>text / text_align_center</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="text-/-text_align_center" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="edit-/-text_align_center">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="edit-/-text_align_center-(Background/Mask)"></g>
+            <path d="M21,5 L3,5 L3,7 L21,7 L21,5 Z M18,11 L6,11 L6,9 L18,9 L18,11 Z M21,13 L3,13 L3,15 L21,15 L21,13 Z M18,17 L6,17 L6,19 L18,19 L18,17 Z" fill="#555555" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>
