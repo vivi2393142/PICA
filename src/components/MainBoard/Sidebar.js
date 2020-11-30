@@ -62,7 +62,6 @@ const Sidebar = (props) => {
                 crossOrigin: 'anonymous',
             }
         );
-
         props.canvas.requestRenderAll();
     };
     // -- add new components: add background

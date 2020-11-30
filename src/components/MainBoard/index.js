@@ -82,6 +82,7 @@ const MainBoard = (props) => {
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
                     trackOutSideClick={trackOutSideClick}
+                    canvasSettingInit={allSettings.canvasSettingInit}
                 />
                 <DrawingArea
                     canvas={canvas}

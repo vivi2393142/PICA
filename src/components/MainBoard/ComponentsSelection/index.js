@@ -12,6 +12,7 @@ import NavLeftColor from './NavLeftColor';
 const ComponentsSelection = (props) => {
     const [clipboard, setClipboard] = React.useState(false);
     const [textIsEditing, setTextIsEditing] = React.useState(false);
+    const [croppingObj, setCroppingObj] = React.useState({});
 
     // methods for component:
     // -- methods for component: copy, cut, paste, delete
@@ -152,17 +153,18 @@ const ComponentsSelection = (props) => {
     return (
         <div className='componentsSelection'>
             <div className='componentsNavLeft'>
-                {props.activeObj.type === 'i-text' ||
-                props.activeObj.type === 'rect' ||
-                props.activeObj.type === 'circle' ||
-                props.activeObj.type === 'triangle' ? (
+                {(props.activeObj.type === 'i-text' ||
+                    props.activeObj.type === 'rect' ||
+                    props.activeObj.type === 'circle' ||
+                    props.activeObj.type === 'triangle') &&
+                props.activeObj.id !== 'cropbox' ? (
                     <NavLeftColor
                         canvas={props.canvas}
                         activeObj={props.activeObj}
                         trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
-                {props.activeObj.type === 'image' ? (
+                {props.activeObj.type === 'image' || croppingObj !== {} ? (
                     <NavLeftImg
                         currentSidebar={props.currentSidebar}
                         setCurrentSidebar={props.setCurrentSidebar}
@@ -170,6 +172,9 @@ const ComponentsSelection = (props) => {
                         canvas={props.canvas}
                         trackOutSideClick={props.trackOutSideClick}
                         activeObj={props.activeObj}
+                        croppingObj={croppingObj}
+                        setCroppingObj={setCroppingObj}
+                        canvasSettingInit={props.canvasSettingInit}
                     />
                 ) : props.activeObj.type === 'i-text' ? (
                     <NavLeftText
@@ -184,40 +189,44 @@ const ComponentsSelection = (props) => {
                     <NavLeftShape />
                 ) : null}
             </div>
-            <div className='componentsNavRight'>
-                {props.activeObj.type ? (
-                    <NavRightPartial
-                        copyHandler={copyHandler}
-                        cutHandler={cutHandler}
-                        pasteHandler={pasteHandler}
-                        delHandler={delHandler}
-                        canvas={props.canvas}
-                        activeObj={props.activeObj}
-                        setActiveObj={props.setActiveObj}
-                        trackOutSideClick={props.trackOutSideClick}
-                    />
-                ) : null}
-                {clipboard ? <icons.Paste className='activeButton' onClick={pasteHandler} /> : null}
-                {props.hasUndo ? (
-                    <icons.Undo
-                        className='activeButton'
-                        onClick={() => {
-                            props.canvas.undo();
-                            props.setActiveObj({});
-                        }}
-                    />
-                ) : null}
-                {props.hasRedo ? (
-                    <icons.Redo
-                        className='activeButton'
-                        onClick={() => {
-                            props.canvas.redo();
-                            props.setActiveObj({});
-                        }}
-                    />
-                ) : null}
-                <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
-            </div>
+            {props.activeObj.id !== 'cropbox' ? (
+                <div className='componentsNavRight'>
+                    {props.activeObj.type ? (
+                        <NavRightPartial
+                            copyHandler={copyHandler}
+                            cutHandler={cutHandler}
+                            pasteHandler={pasteHandler}
+                            delHandler={delHandler}
+                            canvas={props.canvas}
+                            activeObj={props.activeObj}
+                            setActiveObj={props.setActiveObj}
+                            trackOutSideClick={props.trackOutSideClick}
+                        />
+                    ) : null}
+                    {clipboard ? (
+                        <icons.Paste className='activeButton' onClick={pasteHandler} />
+                    ) : null}
+                    {props.hasUndo ? (
+                        <icons.Undo
+                            className='activeButton'
+                            onClick={() => {
+                                props.canvas.undo();
+                                props.setActiveObj({});
+                            }}
+                        />
+                    ) : null}
+                    {props.hasRedo ? (
+                        <icons.Redo
+                            className='activeButton'
+                            onClick={() => {
+                                props.canvas.redo();
+                                props.setActiveObj({});
+                            }}
+                        />
+                    ) : null}
+                    <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -231,7 +240,7 @@ ComponentsSelection.propTypes = {
     hasRedo: PropTypes.bool.isRequired,
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-
+    canvasSettingInit: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
 };
 

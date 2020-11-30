@@ -139,6 +139,8 @@ export default function App() {
         setCanvasSetting,
         canvasData,
         setCanvasData,
+        canvasSettingInit,
+        setCanvasSetting,
     };
 
     // render
