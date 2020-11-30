@@ -89,6 +89,8 @@ const NavLeftText = (props) => {
         });
         props.canvas.requestRenderAll();
     };
+
+    // get current text styles
     React.useEffect(() => {
         if (props.activeObj.type === 'i-text') {
             setTextFont(props.activeObj.fontFamily);
@@ -101,6 +103,7 @@ const NavLeftText = (props) => {
             setTextSpacing(props.activeObj.charSpacing);
         }
     }, [props.activeObj]);
+
     // jsx
     const textSizeArray = [6, 8, 10, 12, 14, 16, 18, 20, 24, 36, 48, 72];
     const textSizeOptions = textSizeArray.map((size, index) => <option key={index}>{size}</option>);

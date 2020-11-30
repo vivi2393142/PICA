@@ -95,13 +95,13 @@ body {
 .componentsNavRight {
     flex-wrap: wrap;
     width: 35%;
-    // border: 1px solid red;
+    padding-right: 0.5rem;
     justify-content: flex-end;
 }
 .componentsNavLeft {
     flex-wrap: wrap;
     width: 65%;
-    // border: 1px solid red;
+    padding-left: 0.5rem;
     justify-content: flex-start;
 }
 .activeButton {
@@ -141,7 +141,8 @@ body {
 .specificButton {
     display: flex;
     font-size: 0.9rem;
-    margin-left: 0.8rem;
+    margin-left: 0.6rem;
+    padding: 0 0.3rem;
     color: $custom-black;
     font-weight: 450;
     cursor: pointer;
@@ -198,7 +199,7 @@ body {
     width: 40%;
     height: 70%;
     border: none;
-    left: 0.5rem;
+    left: 0.7rem;
     background-color: $light-grey;
     color: $custom-black;
     font-weight: 450;
@@ -254,7 +255,7 @@ input:focus {
 .rangeValue {
     padding-left: 0.8rem;
 }
-.inputRange {
+input[type='range'] {
     -webkit-appearance: none !important;
     width: 8rem;
     height: 4px;
@@ -264,10 +265,10 @@ input:focus {
     margin: auto;
     transition: all 0.3s ease;
 }
-.inputRange:hover {
+input[type='range']:hover {
     background-color: white;
 }
-.inputRange::-webkit-slider-thumb {
+input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none !important;
     width: 13px;
     height: 13px;
@@ -276,17 +277,36 @@ input:focus {
     box-shadow: 0px 0px 3px $light-grey;
     transition: all 0.3s ease;
 }
-.inputRange::-webkit-slider-thumb:hover {
+input[type='range']::-webkit-slider-thumb:hover {
     background-color: #f7ba82;
     width: 16px;
     height: 16px;
     box-shadow: 0px 0px 3px $sub-color;
 }
-.inputRange::-webkit-slider-thumb:active {
+input[type='range']::-webkit-slider-thumb:active {
     box-shadow: 0px 0px 1px white;
 }
-
-//sidebar
+// specific nav - img
+.unfoldImgAdjustment {
+    flex-direction: column;
+}
+.imgAdjustBox {
+    display: flex;
+    justify-content: space-around;
+    padding: 1rem 0;
+}
+.imgAdjustText,
+.imgAdjustValue {
+    width: 3rem;
+    font-size: 0.8rem;
+    color: $custom-black;
+    font-weight: 500;
+}
+input[type='range'].imgAdjustRange {
+    height: 6px;
+    background-color: white;
+}
+// sidebar
 .sidebar {
     height: 100%;
     display: flex;
@@ -388,14 +408,14 @@ input:focus {
     font-size: 0.6rem;
     font-weight: 900;
     color: $dark-grey;
-    border-radius: 0 9px 9px 0;
+    border-radius: 0 5px 5px 0;
     width: 0.9rem;
     height: 5rem;
     top: 50%;
     transform: translateY(-50%);
     background: $light-grey;
     position: absolute;
-    right: -0.8rem;
+    right: -0.7rem;
     cursor: pointer;
 }
 // if chosen is the first one
@@ -405,6 +425,23 @@ input:focus {
 }
 .firstUnfold {
     border-radius: 0 2rem 0 0;
+}
+.lastButton::before {
+    content: '';
+    height: 0;
+}
+// specific nav
+.resetFilterButton {
+    font-size: 0.8rem;
+    color: $custom-black;
+    border-radius: 5px;
+    font-weight: 500;
+    padding: 0.2rem 0;
+    margin: 1rem auto 0 auto;
+    border: 1px solid $dark-grey;
+    border-radius: 5px;
+    width: 60%;
+    cursor: pointer;
 }
 
 // media query

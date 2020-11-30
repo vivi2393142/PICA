@@ -24,9 +24,9 @@ const NavLeftColor = (props) => {
         },
     });
     const handleColorChange = (color) => {
-        const colorN = color.rgb;
-        setColorChosen({ background: colorN });
-        props.activeObj.set('fill', `rgba(${colorN.r}, ${colorN.g}, ${colorN.b}, ${colorN.a})`);
+        const colorRgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
+        setColorChosen({ background: colorRgba });
+        props.activeObj.set('fill', colorRgba);
         props.canvas.requestRenderAll();
     };
     // -- preset active object value on specific selection

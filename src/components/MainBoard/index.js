@@ -11,6 +11,17 @@ const MainBoard = (props) => {
     const [activeObj, setActiveObj] = React.useState({});
     const [hasUndo, setHasUndo] = React.useState(false);
     const [hasRedo, setHasRedo] = React.useState(false);
+    const [currentSidebar, setCurrentSidebar] = React.useState('');
+    // -- track outside click event
+    const trackOutSideClick = (childElement, callback) => {
+        const clickedOrNot = (e) => {
+            if (!childElement.parentNode.contains(e.target)) {
+                callback();
+                document.removeEventListener('click', clickedOrNot, true);
+            }
+        };
+        document.addEventListener('click', clickedOrNot, true);
+    };
 
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
@@ -51,7 +62,15 @@ const MainBoard = (props) => {
                 {givenOptions}
                 <option value='auto'>符合畫面大小</option>
             </select>
-            <Sidebar canvas={canvas} setCanvas={setCanvas} />
+            <Sidebar
+                canvas={canvas}
+                setCanvas={setCanvas}
+                currentSidebar={currentSidebar}
+                setCurrentSidebar={setCurrentSidebar}
+                setActiveObj={setActiveObj}
+                activeObj={activeObj}
+                trackOutSideClick={trackOutSideClick}
+            />
             <div className='drawingAreaBox'>
                 <ComponentsSelection
                     canvas={canvas}
@@ -60,6 +79,9 @@ const MainBoard = (props) => {
                     hasRedo={hasRedo}
                     setActiveObj={setActiveObj}
                     activeObj={activeObj}
+                    currentSidebar={currentSidebar}
+                    setCurrentSidebar={setCurrentSidebar}
+                    trackOutSideClick={trackOutSideClick}
                 />
                 <DrawingArea
                     canvas={canvas}

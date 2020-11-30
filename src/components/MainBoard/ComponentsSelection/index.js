@@ -12,17 +12,6 @@ import NavLeftColor from './NavLeftColor';
 const ComponentsSelection = (props) => {
     const [clipboard, setClipboard] = React.useState(false);
     const [textIsEditing, setTextIsEditing] = React.useState(false);
-    // state for components
-    // -- track outside click event
-    const trackOutSideClick = (childElement, callback) => {
-        const clickedOrNot = (e) => {
-            if (!childElement.parentNode.contains(e.target)) {
-                callback();
-                document.removeEventListener('click', clickedOrNot, true);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
-    };
 
     // methods for component:
     // -- methods for component: copy, cut, paste, delete
@@ -170,17 +159,24 @@ const ComponentsSelection = (props) => {
                     <NavLeftColor
                         canvas={props.canvas}
                         activeObj={props.activeObj}
-                        trackOutSideClick={trackOutSideClick}
+                        trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
                 {props.activeObj.type === 'image' ? (
-                    <NavLeftImg />
+                    <NavLeftImg
+                        currentSidebar={props.currentSidebar}
+                        setCurrentSidebar={props.setCurrentSidebar}
+                        setActiveObj={props.setActiveObj}
+                        canvas={props.canvas}
+                        trackOutSideClick={props.trackOutSideClick}
+                        activeObj={props.activeObj}
+                    />
                 ) : props.activeObj.type === 'i-text' ? (
                     <NavLeftText
                         setTextIsEditing={setTextIsEditing}
                         canvas={props.canvas}
                         activeObj={props.activeObj}
-                        trackOutSideClick={trackOutSideClick}
+                        trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : props.activeObj.type === 'rect' ||
                   props.activeObj.type === 'circle' ||
@@ -198,7 +194,7 @@ const ComponentsSelection = (props) => {
                         canvas={props.canvas}
                         activeObj={props.activeObj}
                         setActiveObj={props.setActiveObj}
-                        trackOutSideClick={trackOutSideClick}
+                        trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
                 {clipboard ? <icons.Paste className='activeButton' onClick={pasteHandler} /> : null}
@@ -233,6 +229,10 @@ ComponentsSelection.propTypes = {
     activeObj: PropTypes.object.isRequired,
     hasUndo: PropTypes.bool.isRequired,
     hasRedo: PropTypes.bool.isRequired,
+    currentSidebar: PropTypes.string.isRequired,
+    setCurrentSidebar: PropTypes.func.isRequired,
+
+    trackOutSideClick: PropTypes.func.isRequired,
 };
 
 export default ComponentsSelection;
