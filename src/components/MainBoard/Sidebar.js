@@ -5,7 +5,6 @@ import * as icons from '../../icons.js';
 const Sidebar = (props) => {
     const mainColor = '#e89a4f';
     const [currentSidebar, setCurrentSidebar] = React.useState('');
-    console.log(currentSidebar);
     // -- add new components: rectangle, circle, triangle, text, image
     const addRect = () => {
         const rect = new fabric.Rect({

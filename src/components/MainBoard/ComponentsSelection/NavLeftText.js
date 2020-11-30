@@ -14,12 +14,16 @@ const NavLeftText = (props) => {
     };
     // -- text state
     const [textFont, setTextFont] = React.useState('sans-serif');
+    const FontFaceObserver = require('fontfaceobserver');
     const handleTextFont = (e) => {
         setTextFont(e.target.value);
-        props.activeObj.set({
-            fontFamily: e.target.value,
+        const myFont = new FontFaceObserver(e.target.value);
+        myFont.load().then(function () {
+            props.activeObj.set({
+                fontFamily: e.target.value,
+            });
+            props.canvas.requestRenderAll();
         });
-        props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
     };
     const [textSize, setTextSize] = React.useState(12);
