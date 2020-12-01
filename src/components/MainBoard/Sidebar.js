@@ -1,37 +1,91 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as icons from '../../icons.js';
+import * as icons from '../../img/icons.js';
+import * as sideItems from '../../img/sidebarItems.js';
+import shape1 from '../../img/src/sidebarItems/shape1.svg';
+import shape2 from '../../img/src/sidebarItems/shape2.svg';
+import shape3 from '../../img/src/sidebarItems/shape3.svg';
+import line1 from '../../img/src/sidebarItems/line1.svg';
+import line2 from '../../img/src/sidebarItems/line2.svg';
+import line3 from '../../img/src/sidebarItems/line3.svg';
+import line4 from '../../img/src/sidebarItems/line4.svg';
+import line5 from '../../img/src/sidebarItems/line5.svg';
+import line6 from '../../img/src/sidebarItems/line6.svg';
 
 const Sidebar = (props) => {
     const mainColor = '#e89a4f';
-    // add new components: rectangle, circle, triangle, text, image
+    const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
+    const adjSetNextPosition = () => {
+        if (
+            nextAddPosition.left + 80 > props.canvasSetting.width / 2 ||
+            nextAddPosition.top + 80 > props.canvasSetting.height / 2
+        ) {
+            setNextAddPosition({ top: 10, left: 10 });
+        } else {
+            setNextAddPosition({ top: nextAddPosition.top + 10, left: nextAddPosition.left + 10 });
+        }
+    };
+    // add new components: rectangle, circle, triangle, text, image, background
     const addRect = () => {
         const rect = new fabric.Rect({
+            top: nextAddPosition.top,
+            left: nextAddPosition.left,
             height: 100,
             width: 100,
             fill: mainColor,
         });
         props.canvas.add(rect);
+        props.canvas.requestRenderAll();
+        adjSetNextPosition();
     };
     const addCircle = () => {
         const circle = new fabric.Circle({
+            top: nextAddPosition.top,
+            left: nextAddPosition.left,
             radius: 50,
             fill: mainColor,
         });
         props.canvas.add(circle);
         props.canvas.requestRenderAll();
+        adjSetNextPosition();
     };
     const addTriangle = () => {
         const triangle = new fabric.Triangle({
+            top: nextAddPosition.top,
+            left: nextAddPosition.left,
             width: 100,
             height: 100,
             fill: mainColor,
         });
         props.canvas.add(triangle);
         props.canvas.requestRenderAll();
+        adjSetNextPosition();
     };
-    const addIText = () => {
-        let text = new fabric.IText('雙擊我編輯', {});
+    const addShape = (e) => {
+        fabric.loadSVGFromURL(e.target.src, (objects, options) => {
+            const newShape = fabric.util.groupSVGElements(objects, options);
+            newShape.set({
+                top: nextAddPosition.top,
+                left: nextAddPosition.left,
+                scaleX: 2.2,
+                scaleY: 2.2,
+                id: 'shape',
+            });
+            props.canvas.add(newShape);
+            props.canvas.requestRenderAll();
+            adjSetNextPosition();
+        });
+    };
+    const addIText = (title, size, weight) => {
+        let text = new fabric.IText(title, {});
+        text.set({
+            top: nextAddPosition.top,
+            left: nextAddPosition.left,
+            fill: '#555555',
+            fontSize: size,
+            fontFamily: 'Sans-serif',
+            fontWeight: weight,
+        });
         props.canvas.add(text);
         text.setControlsVisibility({
             mb: false,
@@ -39,14 +93,16 @@ const Sidebar = (props) => {
             ml: false,
             mr: false,
         });
-
         props.canvas.requestRenderAll();
+        adjSetNextPosition();
     };
     const addImage = () => {
         fabric.Image.fromURL(
             'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
             (img) => {
                 const oImg = img.set({
+                    top: nextAddPosition.top,
+                    left: nextAddPosition.left,
                     scaleX: 1,
                     scaleY: 1,
                 });
@@ -63,13 +119,12 @@ const Sidebar = (props) => {
             }
         );
         props.canvas.requestRenderAll();
+        adjSetNextPosition();
     };
-    // -- add new components: add background
     const backgroundColorHandler = () => {
         props.canvas.backgroundImage = 0;
         props.canvas.backgroundColor = mainColor;
         props.canvas.requestRenderAll();
-        // trigger 'object:modified' event
         props.canvas.fire('object:modified');
     };
     const backgroundImageHandler = () => {
@@ -90,6 +145,36 @@ const Sidebar = (props) => {
         // trigger 'object:modified' event
         props.canvas.fire('object:modified');
     };
+
+    // add new components: frame
+    const addFrameA = (col, spacing) => {
+        const rectBack = new fabric.Rect({
+            height: props.canvasSetting.height,
+            width: props.canvasSetting.width,
+            stroke: 'black',
+            fill: 'transparent',
+            isClipFrame: true,
+        });
+        let groupItem = [rectBack];
+        for (let i = 0; i < col; i++) {
+            let rect = new fabric.Rect({
+                top: 0,
+                left:
+                    (props.canvasSetting.width - spacing * (col - 1)) / col +
+                    spacing * (i === 0 ? 0 : 1),
+                height: props.canvasSetting.height,
+                width: (props.canvasSetting.width - spacing * (col - 1)) / col,
+                stroke: mainColor,
+                fill: 'transparent',
+                isClipFrame: true,
+            });
+            groupItem.push(rect);
+        }
+        const group = new fabric.Group(groupItem);
+        props.canvas.add(group);
+        props.canvas.requestRenderAll();
+    };
+
     // TODO: 測試用資料，待刪除
     const logCurrentCanvas = () => {
         var json = props.canvas.toJSON();
@@ -271,12 +356,14 @@ const Sidebar = (props) => {
             }`}
             onClick={() => props.setCurrentSidebar(item.EN)}
         >
-            {props.currentSidebar === item.EN ? item.iconB : item.icon}
+            {props.currentSidebar === item.EN ? item.icon : item.iconB}
             <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : null}`}>
                 {item.CH}
             </div>
         </div>
     ));
+
+    // jsx: sidebar -
 
     // get current image styles
     React.useEffect(() => {
@@ -307,35 +394,60 @@ const Sidebar = (props) => {
             {props.currentSidebar !== '' ? (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${
-                        props.currentSidebar === 'text' ? 'firstUnfold' : null
+                        props.currentSidebar === 'text' ? 'firstUnfold' : ''
                     }`}
                 >
                     {props.currentSidebar === 'text' ? (
-                        <div className='sidebarUnfoldInner'>
-                            <div className='unfoldItem' onClick={addIText}>
-                                新增文字
+                        <div className='sidebarUnfoldInner sidebarUnfoldText'>
+                            <div
+                                className='unfoldItem addTextBig draggableItem'
+                                onClick={() => addIText('雙擊以編輯標題', 36, 'bold')}
+                            >
+                                新增標題
+                            </div>
+                            <div
+                                className='unfoldItem addTextMiddle draggableItem'
+                                onClick={() => addIText('雙擊以編輯副標', 28, 'normal')}
+                            >
+                                新增副標
+                            </div>
+                            <div
+                                className='unfoldItem addTextSmall draggableItem'
+                                onClick={() => addIText('雙擊以編輯內文', 18, 'normal')}
+                            >
+                                新增內文
                             </div>
                         </div>
                     ) : props.currentSidebar === 'shape' ? (
-                        <div className='sidebarUnfoldInner'>
-                            <div className='unfoldItem' onClick={addRect}>
-                                新增方形
-                            </div>
-                            <div className='unfoldItem' onClick={addCircle}>
-                                新增圓形
-                            </div>
-                            <div className='unfoldItem' onClick={addTriangle}>
-                                新增三角形
-                            </div>
+                        <div className='sidebarUnfoldInner sidebarUnfoldShape'>
+                            <div className='sidebarUnfoldSubtitle'>常用形狀</div>
+                            <sideItems.Square className='unfoldItem' onClick={addRect} />
+                            <sideItems.Circle className='unfoldItem' onClick={addCircle} />
+                            <sideItems.Triangle className='unfoldItem' onClick={addTriangle} />
+                            <div className='sidebarUnfoldSubtitle'>不規則形狀</div>
+                            <img src={shape1} className='unfoldItem' onClick={addShape}></img>
+                            <img src={shape2} className='unfoldItem' onClick={addShape}></img>
+                            <img src={shape3} className='unfoldItem' onClick={addShape}></img>
                         </div>
                     ) : props.currentSidebar === 'image' ? (
-                        <div className='sidebarUnfoldInner'>
+                        <div
+                            className='sidebarUnfoldInner sidebarUnfoldImg'
+                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                        >
                             <div className='unfoldItem' onClick={addImage}>
                                 新增照片
                             </div>
+                            <img
+                                className='unfoldItem draggableItem'
+                                src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                            ></img>
+                            <img
+                                className='unfoldItem draggableItem'
+                                src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                            ></img>
                         </div>
                     ) : props.currentSidebar === 'background' ? (
-                        <div className='sidebarUnfoldInner'>
+                        <div className='sidebarUnfoldInner sidebarUnfoldBack'>
                             <div className='unfoldItem' onClick={backgroundColorHandler}>
                                 新增背景色彩
                             </div>
@@ -348,16 +460,54 @@ const Sidebar = (props) => {
                             <div className='unfoldItem'></div>
                         </div>
                     ) : props.currentSidebar === 'frame' ? (
-                        <div className='sidebarUnfoldInner'>
-                            <div className='unfoldItem'>新增框架</div>
+                        <div className='sidebarUnfoldInner sidebarUnfoldFrame'>
+                            <div className='unfoldItem' onClick={() => addFrameA(5, 10)}>
+                                新增框架
+                            </div>
                         </div>
                     ) : props.currentSidebar === 'sticker' ? (
-                        <div className='sidebarUnfoldInner'>
-                            <div className='unfoldItem'>新增貼圖</div>
+                        <div className='sidebarUnfoldInner sidebarUnfoldSticker'>
+                            <img
+                                className='unfoldItem draggableItem'
+                                src='https://opendoodles.s3-us-west-1.amazonaws.com/Doggie.png'
+                            ></img>
+                            <img
+                                className='unfoldItem draggableItem'
+                                src='https://opendoodles.s3-us-west-1.amazonaws.com/ballet.png'
+                            ></img>
                         </div>
                     ) : props.currentSidebar === 'line' ? (
-                        <div className='sidebarUnfoldInner'>
-                            <div className='unfoldItem'>新增線條</div>
+                        <div className='sidebarUnfoldInner sidebarUnfoldLine'>
+                            <img
+                                src={line1}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={line2}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={line3}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={line4}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={line5}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={line6}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                            ></img>
                         </div>
                     ) : props.currentSidebar === 'more' ? (
                         <div className='sidebarUnfoldInner'>
@@ -397,6 +547,8 @@ Sidebar.propTypes = {
     setActiveObj: PropTypes.func.isRequired,
     activeObj: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
+    saveDragItem: PropTypes.object.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
 };
 
 export default Sidebar;

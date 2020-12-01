@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="107px" height="25px" viewBox="0 0 107 25" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>line3</title>
+    <g id="line3" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group" transform="translate(1.000000, 9.000000)">
+            <line x1="3" y1="3.43226968" x2="106" y2="3.43226968" id="Stroke-1" stroke="#E89A4F" stroke-width="2"></line>
+            <path d="M7,3.5 C7,5.43296552 5.43296552,7 3.5,7 C1.56703448,7 0,5.43296552 0,3.5 C0,1.56703448 1.56703448,0 3.5,0 C5.43296552,0 7,1.56703448 7,3.5" id="Fill-3" fill="#E89A4F"></path>
+            <path d="M105.883333,3.5 C105.883333,5.43296552 104.368533,7 102.5,7 C100.631467,7 99.1166667,5.43296552 99.1166667,3.5 C99.1166667,1.56703448 100.631467,4.4408921e-16 102.5,4.4408921e-16 C104.368533,4.4408921e-16 105.883333,1.56703448 105.883333,3.5" id="Fill-6" fill="#E89A4F"></path>
+        </g>
+    </g>
+</svg>

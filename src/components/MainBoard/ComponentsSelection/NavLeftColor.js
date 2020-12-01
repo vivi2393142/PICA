@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
-import * as icons from '../../../icons.js';
 
 const NavLeftColor = (props) => {
     // unfold nav

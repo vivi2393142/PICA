@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as icons from '../../../icons.js';
+import * as icons from '../../../img/icons.js';
 
 const NavLeftText = (props) => {
     // unfold nav

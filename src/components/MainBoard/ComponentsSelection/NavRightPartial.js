@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
-import * as icons from '../../../icons.js';
+import * as icons from '../../../img/icons';
 
 const NavRightPartial = (props) => {
     // unfold nav

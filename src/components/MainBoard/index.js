@@ -22,7 +22,7 @@ const MainBoard = (props) => {
         };
         document.addEventListener('click', clickedOrNot, true);
     };
-
+    // responsive view handling
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
             (window.innerWidth * 0.7) / allSettings.canvasSetting.width,
@@ -31,7 +31,6 @@ const MainBoard = (props) => {
         container.style.width = `${fixRatio * allSettings.canvasSetting.width}px`;
         container.style.height = `${fixRatio * allSettings.canvasSetting.height}px`;
     };
-
     const handleRatioSelect = (e) => {
         setRatioSelectValue(e.target.value);
         const container = document.querySelector('.canvas-container');
@@ -46,7 +45,6 @@ const MainBoard = (props) => {
             }px`;
         }
     };
-
     const ratioOptions = [10, 25, 50, 75, 100, 125, 200, 300];
     const givenOptions = ratioOptions.map((item, index) => {
         return (
@@ -55,6 +53,42 @@ const MainBoard = (props) => {
             </option>
         );
     });
+    // drag to add event
+    const [saveDragItem, setSaveDragItem] = React.useState({});
+    React.useEffect(() => {
+        // --- save the dragging target
+        let itemDragOffset = { offsetX: 0, offsetY: 0 };
+        let movingItem = {};
+        const saveDragItemFunc = (e) => {
+            if (e.target.classList.contains('draggableItem')) {
+                itemDragOffset.offsetX =
+                    e.clientX - e.target.offsetParent.offsetLeft - e.target.offsetLeft;
+                itemDragOffset.offsetY =
+                    e.clientY - e.target.offsetParent.offsetTop - e.target.offsetTop;
+                movingItem = e.target;
+            }
+        };
+        setSaveDragItem({ func: saveDragItemFunc });
+        // --- listener to drop then add the dragging one
+        const dropItem = (e) => {
+            const currentSizeRatio =
+                parseInt(document.querySelector('.canvas-container').style.width) /
+                allSettings.canvasSetting.width;
+            console.log(currentSizeRatio);
+            const { offsetX, offsetY } = e.e;
+            const image = new fabric.Image(movingItem, {
+                scaleX: movingItem.width / movingItem.naturalWidth,
+                scaleY: movingItem.height / movingItem.naturalHeight,
+                top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+            });
+            canvas.add(image);
+        };
+        // --- init when canvas is ready
+        if (typeof canvas.on === 'function') {
+            canvas.on('drop', dropItem);
+        }
+    }, [typeof canvas.on]);
 
     return (
         <div className='mainBoard'>
@@ -70,6 +104,8 @@ const MainBoard = (props) => {
                 setActiveObj={setActiveObj}
                 activeObj={activeObj}
                 trackOutSideClick={trackOutSideClick}
+                saveDragItem={saveDragItem}
+                canvasSetting={allSettings.canvasSetting}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { fabric } from 'fabric';
 import 'fabric-history';
-import * as icons from '../../../icons.js';
+import * as icons from '../../../img/icons.js';
 
 const NavLeftImg = (props) => {
     // toggle adjustment nav
@@ -53,15 +53,17 @@ const NavLeftImg = (props) => {
             originY: currentObj.originY,
             left: currentObj.left,
             top: currentObj.top,
-            width: currentObj.width * currentObj.scaleX,
-            height: currentObj.height * currentObj.scaleY,
+            width: currentObj.width * currentObj.scaleX - 1,
+            height: currentObj.height * currentObj.scaleY - 1,
             angle: currentObj.angle,
-            fill: null,
-            stroke: '#e89a4f',
-            strokeWidth: 3,
-            strokeDashArray: [5, 3],
+            fill: 'rgba(0,0,0,0)',
+            borderDashArray: [5, 3],
+            borderColor: '#e89a4f',
+            cornerColor: '#e89a4f',
+            cornerStrokeColor: '#e89a4f',
         });
         props.canvas.add(clipPathView);
+        clipPathView.set({ borderColor: '#e89a4f' });
         clipPathView.lockMovementX = true;
         clipPathView.lockMovementY = true;
         clipPathView.hoverCursor = 'default';
@@ -74,14 +76,17 @@ const NavLeftImg = (props) => {
     const confirmCropping = () => {
         // --- set actual clippath through crop box(since the location mode is different)
         const clipPath = new fabric.Rect({
-            height: (props.activeObj.height * props.activeObj.scaleY) / props.croppingObj.scaleY,
-            width: (props.activeObj.width * props.activeObj.scaleX) / props.croppingObj.scaleX,
+            height:
+                (props.activeObj.height * props.activeObj.scaleY) / props.croppingObj.scaleY + 4,
+            width: (props.activeObj.width * props.activeObj.scaleX) / props.croppingObj.scaleX + 4,
             top:
                 (-props.activeObj.height / 2 + props.activeObj.top - props.croppingObj.top) /
-                props.croppingObj.scaleY,
+                    props.croppingObj.scaleY -
+                2,
             left:
                 (-props.activeObj.width / 2 + props.activeObj.left - props.croppingObj.left) /
-                props.croppingObj.scaleX,
+                    props.croppingObj.scaleX -
+                2,
         });
         // --- enable all controls
         props.canvas.getObjects().forEach((obj) => {
@@ -121,12 +126,12 @@ const NavLeftImg = (props) => {
     // render
     return (
         <div className='specificNav'>
-            {!props.croppingObj.type ? (
+            {props.activeObj.type === 'image' && !props.croppingObj.type ? (
                 <div className={'specificButton'} onClick={toggleImageAdjustmentNav}>
                     調整圖片參數
                 </div>
             ) : null}
-            {!props.croppingObj.type ? (
+            {props.activeObj.type === 'image' && !props.croppingObj.type ? (
                 <div className='specificButton' onClick={startCropping}>
                     裁剪圖片
                 </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import './App.scss';
 import MainBoard from './components/MainBoard';
 import Header from './components/Header';
+import * as backImg from './img/background';
 
 // export default App;
 export default function App() {
@@ -43,7 +44,7 @@ export default function App() {
                 globalCompositeOperation: 'source-over',
                 skewX: 0,
                 skewY: 0,
-                text: '哈囉1\n你好\ntttttttttttt',
+                text: 'test\n你好\nttttt',
                 fontSize: 36,
                 fontWeight: 'normal',
                 fontFamily: 'Sans-serif',
@@ -143,9 +144,28 @@ export default function App() {
         setCanvasSetting,
     };
 
+    const Background = () => {
+        return (
+            <div>
+                <backImg.BackY1 className='backImg backY1' />
+                <backImg.BackY2 className='backImg backY2' />
+                {/* <backImg.BackY3 className='backImg' /> */}
+                <backImg.BackW1 className='backImg backW1' />
+                <backImg.BackW2 className='backImg backW2' />
+                {/*<backImg.BackW3 className='backImg' />
+                <backImg.BackW4 className='backImg' /> */}
+                <backImg.BackG1 className='backImg backG1' />
+                <backImg.BackG2 className='backImg backG2' />
+                <backImg.BackL1 className='backImg backL1' />
+                {/* <backImg.BackL2 className='backImg' />   */}
+            </div>
+        );
+    };
+
     // render
     return (
         <div className='App'>
+            <Background />
             <Header />
             <MainBoard drawingAreaSettings={drawingAreaSettings} />
         </div>
