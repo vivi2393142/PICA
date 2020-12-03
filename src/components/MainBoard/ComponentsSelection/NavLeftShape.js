@@ -51,17 +51,17 @@ const NavLeftShape = (props) => {
         props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
     };
-    const stokeWidthArray = [1, 2, 3, 4, 5];
+    const stokeWidthArray = [0, 1, 2, 3, 4, 5];
     const stokeWidthOptions = stokeWidthArray.map((width, index) => (
         <option key={index}>{width}</option>
     ));
     // render
     return (
         <div className='specificNav'>
-            <div className='colorChoosingBox'>
+            <div className='colorChoosingBox borderChoosing'>
                 <div
                     className='currentColor currentBorderColor'
-                    style={{ backgroundColor: borderColorChosen.background }}
+                    style={{ borderColor: borderColorChosen.background }}
                     onClick={toggleBorderColorSelection}
                 ></div>
                 {isChoosingBorderColor ? (

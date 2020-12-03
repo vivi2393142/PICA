@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ChromePicker } from 'react-color';
 import * as icons from '../../img/icons.js';
-import * as sideItems from '../../img/sidebarItems.js';
 import shape1 from '../../img/src/sidebarItems/shape1.svg';
 import shape2 from '../../img/src/sidebarItems/shape2.svg';
 import shape3 from '../../img/src/sidebarItems/shape3.svg';
@@ -11,6 +11,9 @@ import line3 from '../../img/src/sidebarItems/line3.svg';
 import line4 from '../../img/src/sidebarItems/line4.svg';
 import line5 from '../../img/src/sidebarItems/line5.svg';
 import line6 from '../../img/src/sidebarItems/line6.svg';
+import square from '../../img/src/sidebarItems/square.svg';
+import triangle from '../../img/src/sidebarItems/triangle.svg';
+import circle from '../../img/src/sidebarItems/circle.svg';
 
 const Sidebar = (props) => {
     const mainColor = '#e89a4f';
@@ -96,15 +99,15 @@ const Sidebar = (props) => {
         props.canvas.requestRenderAll();
         adjSetNextPosition();
     };
-    const addImage = () => {
+    const addImage = (e) => {
         fabric.Image.fromURL(
-            'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
+            e.target.src,
             (img) => {
                 const oImg = img.set({
                     top: nextAddPosition.top,
                     left: nextAddPosition.left,
-                    scaleX: 1,
-                    scaleY: 1,
+                    scaleX: e.target.width / e.target.naturalWidth,
+                    scaleY: e.target.height / e.target.naturalHeight,
                 });
                 props.canvas.add(oImg);
                 oImg.setControlsVisibility({
@@ -121,31 +124,148 @@ const Sidebar = (props) => {
         props.canvas.requestRenderAll();
         adjSetNextPosition();
     };
-    const backgroundColorHandler = () => {
+    const addSticker = (e) => {
+        fabric.Image.fromURL(
+            e.target.src,
+            (img) => {
+                const oImg = img.set({
+                    top: nextAddPosition.top,
+                    left: nextAddPosition.left,
+                    scaleX: e.target.width / e.target.naturalWidth,
+                    scaleY: e.target.height / e.target.naturalHeight,
+                    id: 'sticker',
+                });
+                props.canvas.add(oImg);
+                oImg.setControlsVisibility({
+                    mb: false,
+                    mt: false,
+                    ml: false,
+                    mr: false,
+                });
+            },
+            {
+                crossOrigin: 'anonymous',
+            }
+        );
+        props.canvas.requestRenderAll();
+        adjSetNextPosition();
+    };
+    const backgroundColorHandler = (color) => {
         props.canvas.backgroundImage = 0;
-        props.canvas.backgroundColor = mainColor;
+        props.canvas.backgroundColor = color;
         props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
     };
-    const backgroundImageHandler = () => {
+    const backgroundImageHandler = (e) => {
+        // remove exist background
+        if (props.canvas.getObjects()[0].id === 'background') {
+            props.canvas.remove(props.canvas.getObjects()[0]);
+        }
+        const scaleToWidth = props.canvasSetting.width / e.target.naturalWidth;
+        const scaleToHeight = props.canvasSetting.height / e.target.naturalHeight;
+        const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
         fabric.Image.fromURL(
-            'https://images.pexels.com/photos/3394939/pexels-photo-3394939.jpeg?cs=srgb&dl=pexels-matheus-natan-3394939.jpg&fm=jpg',
-            function (img) {
-                props.canvas.setBackgroundColor(img);
-                props.canvas.setBackgroundImage(
-                    img,
-                    props.canvas.requestRenderAll.bind(props.canvas),
-                    {
-                        scaleX: props.canvas.width / img.width,
-                        scaleY: props.canvas.height / img.height,
+            e.target.src,
+            (img) => {
+                const backImg = img.set({
+                    // fit canvas
+                    scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
+                    scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
+                    id: 'background',
+                });
+                backImg.setControlsVisibility({
+                    mb: false,
+                    mt: false,
+                    ml: false,
+                    mr: false,
+                    mtr: false,
+                });
+                if (scaleWay === 'toWidth') {
+                    backImg.lockMovementX = true;
+                } else {
+                    backImg.lockMovementY = true;
+                }
+                props.canvas.add(backImg);
+                backImg.sendToBack();
+                // bounding can't be inside canvas
+                backImg.on('modified', () => {
+                    const currentSizeRatio =
+                        parseInt(document.querySelector('.canvas-container').style.width) /
+                        props.canvasSetting.width;
+                    backImg.setCoords();
+                    const { top, left, width, height } = backImg.getBoundingRect();
+                    if (top > 0) {
+                        backImg.top = 0;
                     }
-                );
+                    if (top + height < props.canvas.getHeight()) {
+                        backImg.top = (props.canvas.getHeight() - height) / currentSizeRatio;
+                    }
+                    if (left > 0) {
+                        backImg.left = 0;
+                    }
+                    if (left + width < props.canvas.getWidth()) {
+                        backImg.left = (props.canvas.getWidth() - width) / currentSizeRatio;
+                    }
+                    props.canvas.requestRenderAll();
+                });
+            },
+            {
+                crossOrigin: 'anonymous',
             }
         );
-        // trigger 'object:modified' event
-        props.canvas.fire('object:modified');
     };
 
+    // backgroundColor
+    const [hasBackColor, setHasBackColor] = React.useState(false);
+    const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
+    const [backColorChosen, setBackColorChosen] = React.useState({
+        background: {
+            r: '255',
+            g: '255',
+            b: '255',
+            a: '1',
+        },
+    });
+    const toggleAddBackColor = () => {
+        if (hasBackColor) {
+            document.querySelector('.colorChartWrapper').classList.remove('colorChartUnfold');
+            document.querySelector('.colorChartWrapper').classList.add('colorChartFold');
+            backgroundColorHandler('rgba(255, 255, 255, 1)');
+            setBackColorChosen({
+                background: 'rgba(255, 255, 255, 1)',
+            });
+        } else {
+            // remove exist background
+            if (props.canvas.getObjects()[0].id === 'background') {
+                props.canvas.remove(props.canvas.getObjects()[0]);
+            }
+            document.querySelector('.colorChartWrapper').classList.add('colorChartUnfold');
+            document.querySelector('.colorChartWrapper').classList.remove('colorChartFold');
+        }
+        setHasBackColor(!hasBackColor);
+    };
+    const toggleBackColorSelection = (e) => {
+        const clickedOrNot = (e) => {
+            if (!document.querySelector('.backgroundPicker').contains(e.target)) {
+                setIsChoosingBackColor(false);
+                document.removeEventListener('click', clickedOrNot, true);
+            }
+        };
+        document.addEventListener('click', clickedOrNot, true);
+        setIsChoosingBackColor(true);
+    };
+    const handleBackColorChange = (color) => {
+        const colorRgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
+        setBackColorChosen({ background: colorRgba });
+        backgroundColorHandler(colorRgba);
+        props.canvas.requestRenderAll();
+    };
+    const handleBackColorChangeCube = (e) => {
+        const color = e.target.style.backgroundColor;
+        setBackColorChosen({ background: color });
+        backgroundColorHandler(color);
+        props.canvas.requestRenderAll();
+    };
     // add new components: frame
     const addFrameA = (col, spacing) => {
         const rectBack = new fabric.Rect({
@@ -300,28 +420,16 @@ const Sidebar = (props) => {
             iconB: <icons.SidebarShapeB className='sidebarIcon' />,
         },
         {
+            EN: 'line',
+            CH: '線條',
+            icon: <icons.SidebarLine className='sidebarIcon' />,
+            iconB: <icons.SidebarLineB className='sidebarIcon' />,
+        },
+        {
             EN: 'image',
             CH: '照片',
             icon: <icons.SidebarImage className='sidebarIcon' />,
             iconB: <icons.SidebarImageB className='sidebarIcon' />,
-        },
-        {
-            EN: 'background',
-            CH: '背景',
-            icon: <icons.SidebarBackground className='sidebarIcon' />,
-            iconB: <icons.SidebarBackgroundB className='sidebarIcon' />,
-        },
-        {
-            EN: 'upload',
-            CH: '上傳',
-            icon: <icons.SidebarUpload className='sidebarIcon' />,
-            iconB: <icons.SidebarUploadB className='sidebarIcon' />,
-        },
-        {
-            EN: 'frame',
-            CH: '框架',
-            icon: <icons.SidebarFrame className='sidebarIcon' />,
-            iconB: <icons.SidebarFrameB className='sidebarIcon' />,
         },
         {
             EN: 'sticker',
@@ -330,10 +438,22 @@ const Sidebar = (props) => {
             iconB: <icons.SidebarStickerB className='sidebarIcon' />,
         },
         {
-            EN: 'line',
-            CH: '線條',
-            icon: <icons.SidebarLine className='sidebarIcon' />,
-            iconB: <icons.SidebarLineB className='sidebarIcon' />,
+            EN: 'background',
+            CH: '背景',
+            icon: <icons.SidebarBackground className='sidebarIcon' />,
+            iconB: <icons.SidebarBackgroundB className='sidebarIcon' />,
+        },
+        {
+            EN: 'frame',
+            CH: '框架',
+            icon: <icons.SidebarFrame className='sidebarIcon' />,
+            iconB: <icons.SidebarFrameB className='sidebarIcon' />,
+        },
+        {
+            EN: 'upload',
+            CH: '上傳',
+            icon: <icons.SidebarUpload className='sidebarIcon' />,
+            iconB: <icons.SidebarUploadB className='sidebarIcon' />,
         },
         {
             EN: 'more',
@@ -352,12 +472,12 @@ const Sidebar = (props) => {
                     ? 'sideButtonChosen lastButton'
                     : props.currentSidebar === item.EN
                     ? 'sideButtonChosen'
-                    : null
+                    : ''
             }`}
             onClick={() => props.setCurrentSidebar(item.EN)}
         >
             {props.currentSidebar === item.EN ? item.icon : item.iconB}
-            <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : null}`}>
+            <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : ''}`}>
                 {item.CH}
             </div>
         </div>
@@ -398,61 +518,306 @@ const Sidebar = (props) => {
                     }`}
                 >
                     {props.currentSidebar === 'text' ? (
-                        <div className='sidebarUnfoldInner sidebarUnfoldText'>
+                        <div
+                            className='sidebarUnfoldInner sidebarUnfoldText'
+                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                        >
                             <div
-                                className='unfoldItem addTextBig draggableItem'
-                                onClick={() => addIText('雙擊以編輯標題', 36, 'bold')}
+                                draggable='true'
+                                className='unfoldItem addTextBig '
+                                onClick={() =>
+                                    addIText(
+                                        props.textSetting[0].title,
+                                        props.textSetting[0].size,
+                                        props.textSetting[0].fontWeight
+                                    )
+                                }
                             >
                                 新增標題
                             </div>
                             <div
-                                className='unfoldItem addTextMiddle draggableItem'
-                                onClick={() => addIText('雙擊以編輯副標', 28, 'normal')}
+                                draggable='true'
+                                className='unfoldItem addTextMiddle '
+                                onClick={() =>
+                                    addIText(
+                                        props.textSetting[1].title,
+                                        props.textSetting[1].size,
+                                        props.textSetting[1].fontWeight
+                                    )
+                                }
                             >
                                 新增副標
                             </div>
                             <div
-                                className='unfoldItem addTextSmall draggableItem'
-                                onClick={() => addIText('雙擊以編輯內文', 18, 'normal')}
+                                draggable='true'
+                                className='unfoldItem addTextSmall '
+                                onClick={() =>
+                                    addIText(
+                                        props.textSetting[2].title,
+                                        props.textSetting[2].size,
+                                        props.textSetting[2].fontWeight
+                                    )
+                                }
                             >
                                 新增內文
                             </div>
                         </div>
                     ) : props.currentSidebar === 'shape' ? (
-                        <div className='sidebarUnfoldInner sidebarUnfoldShape'>
+                        <div
+                            className='sidebarUnfoldInner sidebarUnfoldShape'
+                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                        >
                             <div className='sidebarUnfoldSubtitle'>常用形狀</div>
-                            <sideItems.Square className='unfoldItem' onClick={addRect} />
-                            <sideItems.Circle className='unfoldItem' onClick={addCircle} />
-                            <sideItems.Triangle className='unfoldItem' onClick={addTriangle} />
+                            <img
+                                src={square}
+                                className='unfoldItem rectShape '
+                                draggable='true'
+                                onClick={addRect}
+                            ></img>
+                            <img
+                                src={circle}
+                                className='unfoldItem circleShape'
+                                draggable='true'
+                                onClick={addCircle}
+                            ></img>
+                            <img
+                                src={triangle}
+                                className='unfoldItem triangleShape'
+                                draggable='true'
+                                onClick={addTriangle}
+                            ></img>
                             <div className='sidebarUnfoldSubtitle'>不規則形狀</div>
-                            <img src={shape1} className='unfoldItem' onClick={addShape}></img>
-                            <img src={shape2} className='unfoldItem' onClick={addShape}></img>
-                            <img src={shape3} className='unfoldItem' onClick={addShape}></img>
+                            <img
+                                src={shape1}
+                                draggable='true'
+                                className='unfoldItem abnormalShape'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={shape2}
+                                className='unfoldItem abnormalShape'
+                                draggable='true'
+                                onClick={addShape}
+                            ></img>
+                            <img
+                                src={shape3}
+                                className='unfoldItem abnormalShape'
+                                draggable='true'
+                                onClick={addShape}
+                            ></img>
+                        </div>
+                    ) : props.currentSidebar === 'line' ? (
+                        <div
+                            className='sidebarUnfoldInner sidebarUnfoldLine'
+                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                        >
+                            <img
+                                src={line1}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                                draggable='true'
+                            ></img>
+                            <img
+                                src={line2}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                                draggable='true'
+                            ></img>
+                            <img
+                                src={line3}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                                draggable='true'
+                            ></img>
+                            <img
+                                src={line4}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                                draggable='true'
+                            ></img>
+                            <img
+                                src={line5}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                                draggable='true'
+                            ></img>
+                            <img
+                                src={line6}
+                                className='unfoldItem itemLine'
+                                onClick={addShape}
+                                draggable='true'
+                            ></img>
                         </div>
                     ) : props.currentSidebar === 'image' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldImg'
                             onMouseDown={(e) => props.saveDragItem.func(e)}
                         >
-                            <div className='unfoldItem' onClick={addImage}>
-                                新增照片
-                            </div>
                             <img
-                                className='unfoldItem draggableItem'
+                                onClick={addImage}
+                                className='unfoldItem'
+                                draggable='true'
                                 src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
                             ></img>
                             <img
-                                className='unfoldItem draggableItem'
+                                onClick={addImage}
+                                className='unfoldItem'
+                                draggable='true'
                                 src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
                             ></img>
                         </div>
                     ) : props.currentSidebar === 'background' ? (
                         <div className='sidebarUnfoldInner sidebarUnfoldBack'>
-                            <div className='unfoldItem' onClick={backgroundColorHandler}>
-                                新增背景色彩
+                            <div className='backgroundTitleOuter'>
+                                <div className='sidebarUnfoldSubtitle backgroundTitle'>
+                                    背景色彩
+                                </div>
+                                {hasBackColor ? (
+                                    <div
+                                        className='backgroundCheckboxMinus'
+                                        onClick={toggleAddBackColor}
+                                    >
+                                        －
+                                    </div>
+                                ) : (
+                                    <div
+                                        className='backgroundCheckboxAdd'
+                                        onClick={toggleAddBackColor}
+                                    >
+                                        ＋
+                                    </div>
+                                )}
                             </div>
-                            <div className='unfoldItem' onClick={backgroundImageHandler}>
-                                新增背景圖片
+                            <div className='colorChartWrapper'>
+                                <div className='currentBackground'>
+                                    <div
+                                        className='backgroundColorCube currentColorCube'
+                                        style={{ backgroundColor: backColorChosen.background }}
+                                        onClick={toggleBackColorSelection}
+                                    ></div>
+                                    {isChoosingBackColor ? (
+                                        <ChromePicker
+                                            className='backgroundPicker'
+                                            color={backColorChosen.background}
+                                            onChange={handleBackColorChange}
+                                        />
+                                    ) : null}
+                                </div>
+                                <div className='backgroundColorChart'>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#FCB900' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#FF6900' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#7BDCB5' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#00D084' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#8ED1FC' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#0693E3' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#ABB8C3' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#EB144C' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#F78DA7' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                    <div
+                                        className='backgroundColorCube'
+                                        style={{ backgroundColor: '#9900EF' }}
+                                        onClick={handleBackColorChangeCube}
+                                    ></div>
+                                </div>
+                            </div>
+                            <div className='sidebarUnfoldSubtitle backgroundTitle'>背景圖片</div>
+                            <div className='backImgChart'>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
+                                <img
+                                    draggable='false'
+                                    onClick={backgroundImageHandler}
+                                    className='unfoldItem'
+                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
+                                ></img>
                             </div>
                         </div>
                     ) : props.currentSidebar === 'upload' ? (
@@ -460,53 +825,27 @@ const Sidebar = (props) => {
                             <div className='unfoldItem'></div>
                         </div>
                     ) : props.currentSidebar === 'frame' ? (
-                        <div className='sidebarUnfoldInner sidebarUnfoldFrame'>
+                        <div className='sidebarUnfoldInner sidebarUnfoldFrame' t>
                             <div className='unfoldItem' onClick={() => addFrameA(5, 10)}>
                                 新增框架
                             </div>
                         </div>
                     ) : props.currentSidebar === 'sticker' ? (
-                        <div className='sidebarUnfoldInner sidebarUnfoldSticker'>
+                        <div
+                            className='sidebarUnfoldInner sidebarUnfoldSticker'
+                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                        >
                             <img
-                                className='unfoldItem draggableItem'
-                                src='https://opendoodles.s3-us-west-1.amazonaws.com/Doggie.png'
+                                onClick={addSticker}
+                                draggable='true'
+                                className='unfoldItem'
+                                src='https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189'
                             ></img>
                             <img
-                                className='unfoldItem draggableItem'
-                                src='https://opendoodles.s3-us-west-1.amazonaws.com/ballet.png'
-                            ></img>
-                        </div>
-                    ) : props.currentSidebar === 'line' ? (
-                        <div className='sidebarUnfoldInner sidebarUnfoldLine'>
-                            <img
-                                src={line1}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={line2}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={line3}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={line4}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={line5}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={line6}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
+                                onClick={addSticker}
+                                draggable='true'
+                                className='unfoldItem'
+                                src='https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189'
                             ></img>
                         </div>
                     ) : props.currentSidebar === 'more' ? (
@@ -549,6 +888,7 @@ Sidebar.propTypes = {
     trackOutSideClick: PropTypes.func.isRequired,
     saveDragItem: PropTypes.object.isRequired,
     canvasSetting: PropTypes.object.isRequired,
+    textSetting: PropTypes.array.isRequired,
 };
 
 export default Sidebar;

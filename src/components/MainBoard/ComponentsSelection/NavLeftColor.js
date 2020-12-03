@@ -34,7 +34,9 @@ const NavLeftColor = (props) => {
             props.activeObj.type === 'rect' ||
             props.activeObj.type === 'circle' ||
             props.activeObj.type === 'triangle' ||
-            props.activeObj.type === 'i-text'
+            props.activeObj.type === 'i-text' ||
+            props.activeObj.type === 'path' ||
+            props.activeObj.type === 'polygon'
         ) {
             setColorChosen({ background: props.activeObj.fill });
         }

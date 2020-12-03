@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>sidebar/sidebar-上傳</title>
+    <title>上傳</title>
     <defs>
         <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
     </defs>
-    <g id="sidebar/sidebar-上傳" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="上傳" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <path d="M10.3183331,15.2480665 L10.719258,14.5504212 C11.5961898,13.0244821 13.2605066,12 15.1666667,12 C17.5540232,12 19.5621184,13.6097621 20.115406,15.7847936 L20.3892134,16.8611617 L21.5077145,17.0289766 C22.7299608,17.212357 23.6666667,18.2504546 23.6666667,19.5 C23.6666667,20.8807122 22.5249931,22 21.1166667,22 L10.0666667,22 C8.18889842,22 6.66666667,20.5076157 6.66666667,18.6666667 C6.66666667,17.0117167 7.89851841,15.6356326 9.51224946,15.3771718 L10.3183331,15.2480665 Z" id="file-/-cloud_up" fill="#E89A4F"></path>
         <g id="file-/-cloud_up">
             <mask id="mask-2" fill="white">

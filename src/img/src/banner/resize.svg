@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>調整畫布尺寸</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="調整畫布尺寸" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="edit-/-move_vertical">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="edit-/-move_vertical-(Background/Mask)"></g>
+            <path d="M12.5,24 L18,18 L13.6,18 L13.6,6 L18,6 L12.5,0 L7,6 L11.4,6 L11.4,18 L7,18 L12.5,24 Z" fill="#282C34" fill-rule="nonzero" mask="url(#mask-2)" transform="translate(12.500000, 12.000000) rotate(45.000000) translate(-12.500000, -12.000000) "></path>
+        </g>
+    </g>
+</svg>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>sidebar/sidebar-線條 copy</title>
+    <title>線條</title>
     <defs>
         <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
     </defs>
-    <g id="sidebar/sidebar-線條-copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="線條" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <circle id="Oval" fill="#E89A4F" cx="8.5" cy="20.5" r="2.5"></circle>
         <circle id="Oval-Copy" fill="#E89A4F" cx="20.5" cy="8.5" r="2.5"></circle>
         <g id="sidebar-線條">

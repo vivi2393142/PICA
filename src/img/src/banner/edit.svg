@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>編輯權限</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="編輯權限" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="edit-/-edit">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="edit-/-edit-(Background/Mask)"></g>
+            <path d="M3.66956995,16.7949075 L3.42465937,19.4889231 C3.36811984,20.1108584 3.8891521,20.6318918 4.51108731,20.5753522 L7.20510385,20.3304414 L18.5187958,9.01674946 L14.9832619,5.48121555 L3.66956995,16.7949075 Z M21.3472391,6.18830615 C21.7377631,5.79778222 21.7377634,5.16461686 21.3472391,4.77409259 L19.2259188,2.65277224 C18.8353945,2.26224797 18.2022292,2.26224831 17.8117052,2.65277224 L15.6903687,4.77410877 L19.2259026,8.30964268 L21.3472391,6.18830615 Z" fill="#282C34" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

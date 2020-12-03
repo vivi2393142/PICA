@@ -66,6 +66,9 @@ const DrawingArea = (props) => {
             canvasInit.on('selection:cleared', (e) => {
                 props.setActiveObj({});
             });
+            canvasInit.on('object:scaled', (e) => {
+                console.log('object:scaled');
+            });
         }
         canvasInit.loadFromJSON(allSettings.canvasData, presetObjectStyle);
         // -- init align guide lines extensions
@@ -94,6 +97,8 @@ const DrawingArea = (props) => {
         document.querySelector('.upper-canvas').style.height = '100%';
         // -- default view ratio: auto
         props.handleResponsiveSize(container);
+        // -- zoom canvas without quality lose
+        props.zoomCanvas(canvasInit);
         // -- set canvas
         props.setCanvas(canvasInit);
         return () => {
@@ -134,6 +139,7 @@ DrawingArea.propTypes = {
     activeObj: PropTypes.object.isRequired,
     setHasUndo: PropTypes.func.isRequired,
     setHasRedo: PropTypes.func.isRequired,
+    zoomCanvas: PropTypes.func.isRequired,
 };
 
 export default DrawingArea;

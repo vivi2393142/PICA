@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>sidebar/sidebar-貼圖 copy</title>
+    <title>貼圖</title>
     <defs>
         <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
     </defs>
-    <g id="sidebar/sidebar-貼圖-copy" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g id="貼圖" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <path d="M11,17.5 C11,21.0841 13.9159,24 17.5,24 C21.0841,24 24,21.0841 24,17.5 C24,13.9159 21.0841,11 17.5,11 C13.9159,11 11,13.9159 11,17.5 Z" id="basic-/-happy" fill="#E89A4F" fill-rule="nonzero"></path>
         <g id="sidebar-貼圖">
             <mask id="mask-2" fill="white">

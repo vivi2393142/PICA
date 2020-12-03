@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>會員資料</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="會員資料" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="user-/-user">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <g id="user-/-user-(Background/Mask)"></g>
+            <path d="M7,7 C7,9.75699997 9.24300003,12 12,12 C14.757,12 17,9.75699997 17,7 C17,4.24300003 14.757,2 12,2 C9.24300003,2 7,4.24300003 7,7 Z M9,7 C9,5.34599996 10.346,4 12,4 C13.654,4 15,5.34599996 15,7 C15,8.65400004 13.654,10 12,10 C10.346,10 9,8.65400004 9,7 Z M21,20 C21,16.141 17.859,13 14,13 L10,13 C6.1400001,13 3,16.141 3,20 L3,21 L5,21 L5,20 C5,17.243 7.24300003,15 10,15 L14,15 C16.757,15 19,17.243 19,20 L19,21 L21,21 L21,20 Z" fill="#282C34" mask="url(#mask-2)"></path>
+        </g>
+    </g>
+</svg>

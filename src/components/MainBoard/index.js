@@ -12,6 +12,11 @@ const MainBoard = (props) => {
     const [hasUndo, setHasUndo] = React.useState(false);
     const [hasRedo, setHasRedo] = React.useState(false);
     const [currentSidebar, setCurrentSidebar] = React.useState('');
+    const textSetting = [
+        { title: '雙擊以編輯標題', size: 36, fontWeight: 'bold' },
+        { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
+        { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
+    ];
     // -- track outside click event
     const trackOutSideClick = (childElement, callback) => {
         const clickedOrNot = (e) => {
@@ -44,6 +49,16 @@ const MainBoard = (props) => {
                 (parseInt(e.target.value) / 100) * allSettings.canvasSetting.height
             }px`;
         }
+        // -- zoom canvas without quality lose
+        zoomCanvas(canvas);
+    };
+    const zoomCanvas = (canvas) => {
+        const currentSizeRatio =
+            parseInt(document.querySelector('.canvas-container').style.width) /
+            allSettings.canvasSetting.width;
+        canvas.setZoom(currentSizeRatio);
+        canvas.setWidth(allSettings.canvasSetting.width * canvas.getZoom());
+        canvas.setHeight(allSettings.canvasSetting.height * canvas.getZoom());
     };
     const ratioOptions = [10, 25, 50, 75, 100, 125, 200, 300];
     const givenOptions = ratioOptions.map((item, index) => {
@@ -60,7 +75,7 @@ const MainBoard = (props) => {
         let itemDragOffset = { offsetX: 0, offsetY: 0 };
         let movingItem = {};
         const saveDragItemFunc = (e) => {
-            if (e.target.classList.contains('draggableItem')) {
+            if (e.target.draggable) {
                 itemDragOffset.offsetX =
                     e.clientX - e.target.offsetParent.offsetLeft - e.target.offsetLeft;
                 itemDragOffset.offsetY =
@@ -74,15 +89,131 @@ const MainBoard = (props) => {
             const currentSizeRatio =
                 parseInt(document.querySelector('.canvas-container').style.width) /
                 allSettings.canvasSetting.width;
-            console.log(currentSizeRatio);
             const { offsetX, offsetY } = e.e;
-            const image = new fabric.Image(movingItem, {
-                scaleX: movingItem.width / movingItem.naturalWidth,
-                scaleY: movingItem.height / movingItem.naturalHeight,
-                top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-            });
-            canvas.add(image);
+            const src = movingItem.src;
+            if (movingItem.parentNode.classList.contains('sidebarUnfoldImg')) {
+                fabric.Image.fromURL(
+                    src,
+                    (img) => {
+                        const imtItem = img.set({
+                            scaleX: movingItem.width / movingItem.naturalWidth,
+                            scaleY: movingItem.height / movingItem.naturalHeight,
+                            top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                            left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                        });
+                        canvas.add(imtItem);
+                        imtItem.setControlsVisibility({
+                            mb: false,
+                            mt: false,
+                            ml: false,
+                            mr: false,
+                        });
+                    },
+                    {
+                        crossOrigin: 'anonymous',
+                    }
+                );
+                canvas.requestRenderAll();
+            } else if (movingItem.parentNode.classList.contains('sidebarUnfoldText')) {
+                let currentTextSetting = {};
+                movingItem.classList.contains('addTextBig')
+                    ? (currentTextSetting = textSetting[0])
+                    : movingItem.classList.contains('addTextMiddle')
+                    ? (currentTextSetting = textSetting[1])
+                    : movingItem.classList.contains('addTextSmall')
+                    ? (currentTextSetting = textSetting[2])
+                    : null;
+                const textItem = new fabric.IText(currentTextSetting.title, {
+                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                    fill: '#555555',
+                    fontSize: currentTextSetting.size,
+                    fontWeight: currentTextSetting.fontWeight,
+                });
+                canvas.add(textItem);
+                canvas.requestRenderAll();
+            } else if (movingItem.parentNode.classList.contains('sidebarUnfoldShape')) {
+                if (movingItem.classList.contains('rectShape')) {
+                    const rectItem = new fabric.Rect({
+                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                        height: 100,
+                        width: 100,
+                        fill: '#e89a4f',
+                    });
+                    canvas.add(rectItem);
+                    canvas.requestRenderAll();
+                } else if (movingItem.classList.contains('circleShape')) {
+                    const circleItem = new fabric.Circle({
+                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                        radius: 50,
+                        fill: '#e89a4f',
+                    });
+                    canvas.add(circleItem);
+                    canvas.requestRenderAll();
+                } else if (movingItem.classList.contains('triangleShape')) {
+                    const triangleItem = new fabric.Triangle({
+                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                        width: 100,
+                        height: 100,
+                        fill: '#e89a4f',
+                    });
+                    canvas.add(triangleItem);
+                    canvas.requestRenderAll();
+                } else if (movingItem.classList.contains('abnormalShape')) {
+                    fabric.loadSVGFromURL(src, (objects, options) => {
+                        const abnormalShapeItem = fabric.util.groupSVGElements(objects, options);
+                        abnormalShapeItem.set({
+                            top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                            left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                            scaleX: 2.2,
+                            scaleY: 2.2,
+                            id: 'shape',
+                        });
+                        canvas.add(abnormalShapeItem);
+                        canvas.requestRenderAll();
+                    });
+                }
+            } else if (movingItem.parentNode.classList.contains('sidebarUnfoldLine')) {
+                fabric.loadSVGFromURL(src, (objects, options) => {
+                    const svgItem = fabric.util.groupSVGElements(objects, options);
+                    svgItem.set({
+                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                        scaleX: 2.2,
+                        scaleY: 2.2,
+                        id: 'shape',
+                    });
+                    canvas.add(svgItem);
+                    canvas.requestRenderAll();
+                });
+            } else if (movingItem.parentNode.classList.contains('sidebarUnfoldSticker')) {
+                fabric.Image.fromURL(
+                    src,
+                    (img) => {
+                        const stickerItem = img.set({
+                            scaleX: movingItem.width / movingItem.naturalWidth,
+                            scaleY: movingItem.height / movingItem.naturalHeight,
+                            top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                            left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                            id: 'sticker',
+                        });
+                        canvas.add(stickerItem);
+                        stickerItem.setControlsVisibility({
+                            mb: false,
+                            mt: false,
+                            ml: false,
+                            mr: false,
+                        });
+                    },
+                    {
+                        crossOrigin: 'anonymous',
+                    }
+                );
+                canvas.requestRenderAll();
+            }
         };
         // --- init when canvas is ready
         if (typeof canvas.on === 'function') {
@@ -106,6 +237,7 @@ const MainBoard = (props) => {
                 trackOutSideClick={trackOutSideClick}
                 saveDragItem={saveDragItem}
                 canvasSetting={allSettings.canvasSetting}
+                textSetting={textSetting}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection
@@ -118,7 +250,7 @@ const MainBoard = (props) => {
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
                     trackOutSideClick={trackOutSideClick}
-                    canvasSettingInit={allSettings.canvasSettingInit}
+                    canvasSetting={allSettings.canvasSetting}
                 />
                 <DrawingArea
                     canvas={canvas}
@@ -130,6 +262,7 @@ const MainBoard = (props) => {
                     drawingAreaSettings={props.drawingAreaSettings}
                     ratioSelectValue={ratioSelectValue}
                     handleResponsiveSize={handleResponsiveSize}
+                    zoomCanvas={zoomCanvas}
                 />
             </div>
         </div>

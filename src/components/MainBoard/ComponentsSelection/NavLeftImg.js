@@ -22,8 +22,8 @@ const NavLeftImg = (props) => {
     // -- preset dark background, cropping target index
     let croppingObjIndex = 0;
     const darkBackground = new fabric.Rect({
-        height: props.canvasSettingInit.height,
-        width: props.canvasSettingInit.width,
+        height: props.canvasSetting.height,
+        width: props.canvasSetting.width,
         fill: 'rgba(0, 0, 0, 0.8)',
     });
     const startCropping = () => {
@@ -158,7 +158,7 @@ NavLeftImg.propTypes = {
     activeObj: PropTypes.object.isRequired,
     croppingObj: PropTypes.object.isRequired,
     setCroppingObj: PropTypes.func.isRequired,
-    canvasSettingInit: PropTypes.object.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
 };
 
 export default NavLeftImg;

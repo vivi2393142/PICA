@@ -156,7 +156,9 @@ const ComponentsSelection = (props) => {
                 {(props.activeObj.type === 'i-text' ||
                     props.activeObj.type === 'rect' ||
                     props.activeObj.type === 'circle' ||
-                    props.activeObj.type === 'triangle') &&
+                    props.activeObj.type === 'triangle' ||
+                    props.activeObj.type === 'path' ||
+                    props.activeObj.type === 'polygon') &&
                 props.activeObj.id !== 'cropbox' ? (
                     <NavLeftColor
                         canvas={props.canvas}
@@ -164,7 +166,9 @@ const ComponentsSelection = (props) => {
                         trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
-                {props.activeObj.type === 'image' || croppingObj !== {} ? (
+                {(props.activeObj.type === 'image' || croppingObj !== {}) &&
+                props.activeObj.id !== 'sticker' &&
+                props.activeObj.id !== 'background' ? (
                     <NavLeftImg
                         currentSidebar={props.currentSidebar}
                         setCurrentSidebar={props.setCurrentSidebar}
@@ -174,7 +178,7 @@ const ComponentsSelection = (props) => {
                         activeObj={props.activeObj}
                         croppingObj={croppingObj}
                         setCroppingObj={setCroppingObj}
-                        canvasSettingInit={props.canvasSettingInit}
+                        canvasSetting={props.canvasSetting}
                     />
                 ) : null}
                 {props.activeObj.type === 'i-text' ? (
@@ -185,9 +189,10 @@ const ComponentsSelection = (props) => {
                         trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
-                {props.activeObj.type === 'rect' ||
-                props.activeObj.type === 'circle' ||
-                props.activeObj.type === 'triangle' ? (
+                {(props.activeObj.type === 'rect' ||
+                    props.activeObj.type === 'circle' ||
+                    props.activeObj.type === 'triangle') &&
+                props.activeObj.id !== 'cropbox' ? (
                     <NavLeftShape
                         trackOutSideClick={props.trackOutSideClick}
                         canvas={props.canvas}
@@ -230,7 +235,9 @@ const ComponentsSelection = (props) => {
                             }}
                         />
                     ) : null}
-                    <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
+                    {props.activeObj.id !== 'background' ? (
+                        <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
+                    ) : null}
                 </div>
             ) : null}
         </div>
@@ -246,7 +253,7 @@ ComponentsSelection.propTypes = {
     hasRedo: PropTypes.bool.isRequired,
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    canvasSettingInit: PropTypes.object.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
 };
 

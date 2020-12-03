@@ -169,50 +169,58 @@ const NavRightPartial = (props) => {
                 <icons.Ungroup className='activeButton' onClick={ungroupHandler} />
             ) : null}
             <icons.TrashCan className='activeButton' onClick={props.delHandler} />
-            <div className='layer'>
-                <icons.Layer className='activeButton' onClick={toggleLayerSelection} />
-                {isLayerChoosing ? (
-                    <div className='layerChoosingBox'>
-                        <icons.ToBottom className='activeButton' onClick={toBottomHandler} />
-                        <icons.ToTop className='activeButton' onClick={toTopHandler} />
-                        <icons.Upper className='activeButton' onClick={upperHandler} />
-                        <icons.Downer className='activeButton' onClick={downerHandler} />
-                    </div>
-                ) : null}
-            </div>
-            <div className='align'>
-                <icons.Align className='activeButton' onClick={toggleAlignSelection} />
-                {isAlignChoosing ? (
-                    <div className='alignChoosingBox'>
-                        <icons.AlignCenterH
-                            className='activeButton'
-                            onClick={() => alignHandler('horizonCenter')}
-                        />
-                        <icons.AlignCenterV
-                            className='activeButton'
-                            onClick={() => alignHandler('verticalCenter')}
-                        />
-                        <icons.AlignLeft
-                            className='activeButton'
-                            onClick={() => alignHandler('left')}
-                        />
-                        <icons.AlignRight
-                            className='activeButton'
-                            onClick={() => alignHandler('right')}
-                        />
-                        <icons.AlignTop
-                            className='activeButton'
-                            onClick={() => alignHandler('top')}
-                        />
-                        <icons.AlignBottom
-                            className='activeButton'
-                            onClick={() => alignHandler('bottom')}
-                        />
-                    </div>
-                ) : null}
-            </div>
-            <icons.Copy className='activeButton' onClick={props.copyHandler} />
-            <icons.Cut className='activeButton' onClick={props.cutHandler} />
+            {props.activeObj.id !== 'background' ? (
+                <div className='layer'>
+                    <icons.Layer className='activeButton' onClick={toggleLayerSelection} />
+                    {isLayerChoosing ? (
+                        <div className='layerChoosingBox'>
+                            <icons.ToBottom className='activeButton' onClick={toBottomHandler} />
+                            <icons.ToTop className='activeButton' onClick={toTopHandler} />
+                            <icons.Upper className='activeButton' onClick={upperHandler} />
+                            <icons.Downer className='activeButton' onClick={downerHandler} />
+                        </div>
+                    ) : null}
+                </div>
+            ) : null}
+            {props.activeObj.id !== 'background' ? (
+                <div className='align'>
+                    <icons.Align className='activeButton' onClick={toggleAlignSelection} />
+                    {isAlignChoosing ? (
+                        <div className='alignChoosingBox'>
+                            <icons.AlignCenterH
+                                className='activeButton'
+                                onClick={() => alignHandler('horizonCenter')}
+                            />
+                            <icons.AlignCenterV
+                                className='activeButton'
+                                onClick={() => alignHandler('verticalCenter')}
+                            />
+                            <icons.AlignLeft
+                                className='activeButton'
+                                onClick={() => alignHandler('left')}
+                            />
+                            <icons.AlignRight
+                                className='activeButton'
+                                onClick={() => alignHandler('right')}
+                            />
+                            <icons.AlignTop
+                                className='activeButton'
+                                onClick={() => alignHandler('top')}
+                            />
+                            <icons.AlignBottom
+                                className='activeButton'
+                                onClick={() => alignHandler('bottom')}
+                            />
+                        </div>
+                    ) : null}
+                </div>
+            ) : null}
+            {props.activeObj.id !== 'background' ? (
+                <icons.Copy className='activeButton' onClick={props.copyHandler} />
+            ) : null}
+            {props.activeObj.id !== 'background' ? (
+                <icons.Cut className='activeButton' onClick={props.cutHandler} />
+            ) : null}
         </div>
     );
 };
