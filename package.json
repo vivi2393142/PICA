@@ -1,5 +1,5 @@
 {
-  "homepage": "https://vivi2393142.github.io/PICA/",
+  "homepage": "https://pica-b4a59.web.app/",
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.2.2",
     "fabric": "^4.2.0",
     "fabric-history": "^1.6.0",
+    "firebase": "^8.1.1",
     "fontfaceobserver": "^2.1.0",
     "husky": "^4.3.0",
     "jspdf": "^2.1.1",

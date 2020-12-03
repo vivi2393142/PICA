@@ -31,8 +31,8 @@ const MainBoard = (props) => {
     // responsive view handling
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
-            (window.innerWidth * 0.8) / allSettings.canvasSetting.width,
-            (window.innerHeight * 0.8) / allSettings.canvasSetting.height
+            (window.innerWidth * 0.75) / allSettings.canvasSetting.width,
+            (window.innerHeight * 0.75) / allSettings.canvasSetting.height
         );
         container.style.width = `${fixRatio * allSettings.canvasSetting.width}px`;
         container.style.height = `${fixRatio * allSettings.canvasSetting.height}px`;
