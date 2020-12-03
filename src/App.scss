@@ -26,7 +26,7 @@ body {
         'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
     position: relative;
 }
-.App {
+.Canvas {
     text-align: center;
     position: relative;
     height: 100vh;
@@ -148,9 +148,11 @@ body {
     height: 100%;
     overflow: auto;
     background-color: $light-grey;
-    // background-color: rgba(224, 223, 223, 0.7);
     border-radius: 3rem 0 0 0;
     box-shadow: 0 0 8px 2px rgb(88, 88, 88) inset;
+}
+.drawingAreaBox {
+    *zoom: 1; /*For IE 6&7 only*/
 }
 .componentsSelection {
     width: 100%;
@@ -167,7 +169,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    margin: 1rem 0;
+    margin: 1rem 0rem;
 }
 .ratioSelect {
     position: absolute;
@@ -763,9 +765,9 @@ input[type='range'].imgAdjustRange {
 .bannerIcons {
     height: 1.6rem;
     width: 1.6rem;
-    margin-right: 1.3rem;
+    margin-right: 1.5rem;
     cursor: pointer;
-    // border: 1px solid red;
+    position: relative;
 }
 .bannerIcons:hover {
     opacity: 0.6;
@@ -782,23 +784,195 @@ input[type='range'].imgAdjustRange {
 .bannerLeft {
     margin-right: auto;
     display: flex;
+    align-items: center;
 }
 .bannerLeft input {
     background-color: transparent;
     border: none;
     font-size: 0.9rem;
-    color: $custom-black;
+    color: $main-color;
     padding: 0.3rem 0.5rem;
     border-radius: 5px;
     box-sizing: border-box;
+    border: 1px solid transparent;
+    font-weight: 500;
+    letter-spacing: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
 }
-
 .bannerLeft input:hover {
-    border: 1px solid $middle-grey;
+    border: 1px solid $light-grey;
 }
-
+.inputTyping {
+    border: 1px solid $light-grey;
+}
+.bannerRight {
+    display: flex;
+    align-items: center;
+}
 .status {
-    // padding: 0 1.5rem;
+    padding: 0 1.6rem;
+    font-size: 0.9rem;
+    color: $custom-black;
+    letter-spacing: 1px;
+}
+.resizeIconWrapper,
+.exportIconWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.resizeBlur::before {
+    content: '點擊以重設畫布尺寸';
+    position: absolute;
+    color: $custom-black;
+    font-size: 0.9rem;
+    left: 0;
+    width: 0;
+    top: 50%;
+    height: 1.1rem;
+    transform: translateY(-50%);
+    animation-name: resizeIconFold;
+    animation-duration: 300ms;
+    overflow: hidden;
+}
+.resizeHover::before {
+    content: '點擊以重設畫布尺寸';
+    position: absolute;
+    color: $custom-black;
+    font-size: 0.9rem;
+    left: -9rem;
+    top: 50%;
+    height: 1.1rem;
+    transform: translateY(-50%);
+    animation-name: resizeIconUnfold;
+    animation-duration: 300ms;
+    overflow: hidden;
+}
+@keyframes resizeIconUnfold {
+    0% {
+        width: 0rem;
+        left: 0rem;
+    }
+    100% {
+        width: 9rem;
+        left: -9rem;
+    }
+}
+@keyframes resizeIconFold {
+    0% {
+        width: 9rem;
+        left: -9rem;
+    }
+    100% {
+        width: 0rem;
+        left: 0rem;
+    }
+}
+.sizeSelection {
+    position: absolute;
+    top: 150%;
+    right: 50%;
+    color: $custom-black;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    flex: 1;
+    box-shadow: 0 1px 2px 0 $middle-grey;
+    text-align: left;
+}
+.sizeOption {
+    padding: 0.6rem 0;
+    display: flex;
+}
+.sizeOption:hover {
+    color: $sub-color;
+    cursor: pointer;
+    // font-weight: 600;
+}
+.sizeDetails {
+    color: transparent;
+    font-size: 0.6rem;
+    padding-left: 1rem;
+}
+.sizeOption:hover .sizeDetails {
+    color: $middle-grey;
+}
+// banner - custom size
+.customSizeWrapper {
+    position: absolute;
+    top: 150%;
+    right: 50%;
+    color: $custom-black;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    flex: 1;
+    box-shadow: 0 1px 2px 0 $middle-grey;
+}
+.customSizeInputOuter {
+    display: flex;
+}
+.customSizeInputCross {
+    padding: 0 0.5rem;
+}
+.customSizeInputPx {
+    padding-left: 0.5rem;
+}
+.customSizeInputOuter input {
+    width: 4rem;
+    border: 1px solid $middle-grey;
+    border-radius: 3px;
+    padding: 0.2rem;
+    text-align: center;
+    color: $custom-black;
+}
+.customSizeButton {
+    margin-top: 1rem;
+    border: 1px solid $middle-grey;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.customSizeButton:hover {
+    opacity: 0.6;
+}
+.statusSize {
+    padding-left: 1.6rem;
+    font-size: 0.9rem;
+    color: $custom-black;
+    letter-spacing: 1px;
+}
+// banner - share
+.export {
+    position: relative;
+}
+.exportWrapper {
+    position: absolute;
+    top: 150%;
+    right: 50%;
+    color: $custom-black;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+    padding: 0.6rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    flex: 1;
+    box-shadow: 0 1px 2px 0 $middle-grey;
+    text-align: left;
+}
+.exportWrapper * {
+    padding: 0.6rem 0;
+    display: flex;
+    cursor: pointer;
 }
 
 // media query
@@ -807,6 +981,5 @@ input[type='range'].imgAdjustRange {
         width: 30%;
     }
 }
-
 @media (max-width: 700px) {
 }

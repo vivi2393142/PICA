@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
-import * as icons from '../../../img/icons.js';
+import * as icons from '../../../../img/icons';
 import NavRightPartial from './NavRightPartial';
 import NavLeftText from './NavLeftText';
 import NavLeftImg from './NavLeftImg';

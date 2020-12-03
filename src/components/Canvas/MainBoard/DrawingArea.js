@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
-
-import initAligningGuidelines from '../../aligning_guidelines.js';
+import initAligningGuidelines from '../../../aligning_guidelines.js';
 
 const DrawingArea = (props) => {
     const allSettings = props.drawingAreaSettings;
@@ -91,6 +90,8 @@ const DrawingArea = (props) => {
         fabric.Object.prototype.set(customBorder);
         // -- preset responsive canvas size
         const container = document.querySelector('.canvas-container');
+        container.style.paddingBottom = '1rem';
+        container.style.paddingRight = '1rem';
         document.querySelector('.lower-canvas').style.width = '100%';
         document.querySelector('.lower-canvas').style.height = '100%';
         document.querySelector('.upper-canvas').style.width = '100%';
@@ -110,7 +111,7 @@ const DrawingArea = (props) => {
     React.useEffect(() => {
         const handleResize = () => {
             const container = document.querySelector('.canvas-container');
-            if (props.ratioSelectValue === 'auto') {
+            if (allSettings.ratioSelectValue === 'auto') {
                 props.handleResponsiveSize(container);
             }
         };
@@ -118,7 +119,7 @@ const DrawingArea = (props) => {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [props.ratioSelectValue]);
+    }, [allSettings.ratioSelectValue]);
 
     //render
     return (
@@ -131,7 +132,6 @@ const DrawingArea = (props) => {
 DrawingArea.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     drawingAreaSettings: PropTypes.object.isRequired,
-    ratioSelectValue: PropTypes.string.isRequired,
     handleResponsiveSize: PropTypes.func.isRequired,
     canvas: PropTypes.object.isRequired,
     setCanvas: PropTypes.func.isRequired,

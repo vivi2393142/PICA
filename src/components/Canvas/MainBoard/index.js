@@ -6,8 +6,9 @@ import ComponentsSelection from './ComponentsSelection/index';
 
 const MainBoard = (props) => {
     const allSettings = props.drawingAreaSettings;
-    const [ratioSelectValue, setRatioSelectValue] = React.useState('auto');
-    const [canvas, setCanvas] = React.useState({});
+    const canvas = allSettings.canvas;
+    const setCanvas = allSettings.setCanvas;
+
     const [activeObj, setActiveObj] = React.useState({});
     const [hasUndo, setHasUndo] = React.useState(false);
     const [hasRedo, setHasRedo] = React.useState(false);
@@ -30,14 +31,14 @@ const MainBoard = (props) => {
     // responsive view handling
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
-            (window.innerWidth * 0.7) / allSettings.canvasSetting.width,
-            (window.innerHeight * 0.7) / allSettings.canvasSetting.height
+            (window.innerWidth * 0.8) / allSettings.canvasSetting.width,
+            (window.innerHeight * 0.8) / allSettings.canvasSetting.height
         );
         container.style.width = `${fixRatio * allSettings.canvasSetting.width}px`;
         container.style.height = `${fixRatio * allSettings.canvasSetting.height}px`;
     };
     const handleRatioSelect = (e) => {
-        setRatioSelectValue(e.target.value);
+        allSettings.setRatioSelectValue(e.target.value);
         const container = document.querySelector('.canvas-container');
         if (e.target.value === 'auto') {
             handleResponsiveSize(container);
@@ -223,7 +224,11 @@ const MainBoard = (props) => {
 
     return (
         <div className='mainBoard'>
-            <select className='ratioSelect' value={ratioSelectValue} onChange={handleRatioSelect}>
+            <select
+                className='ratioSelect'
+                value={allSettings.ratioSelectValue}
+                onChange={handleRatioSelect}
+            >
                 {givenOptions}
                 <option value='auto'>符合畫面大小</option>
             </select>
@@ -260,7 +265,6 @@ const MainBoard = (props) => {
                     setHasUndo={setHasUndo}
                     setHasRedo={setHasRedo}
                     drawingAreaSettings={props.drawingAreaSettings}
-                    ratioSelectValue={ratioSelectValue}
                     handleResponsiveSize={handleResponsiveSize}
                     zoomCanvas={zoomCanvas}
                 />

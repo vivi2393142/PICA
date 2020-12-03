@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
-import * as icons from '../../img/icons.js';
-import shape1 from '../../img/src/sidebarItems/shape1.svg';
-import shape2 from '../../img/src/sidebarItems/shape2.svg';
-import shape3 from '../../img/src/sidebarItems/shape3.svg';
-import line1 from '../../img/src/sidebarItems/line1.svg';
-import line2 from '../../img/src/sidebarItems/line2.svg';
-import line3 from '../../img/src/sidebarItems/line3.svg';
-import line4 from '../../img/src/sidebarItems/line4.svg';
-import line5 from '../../img/src/sidebarItems/line5.svg';
-import line6 from '../../img/src/sidebarItems/line6.svg';
-import square from '../../img/src/sidebarItems/square.svg';
-import triangle from '../../img/src/sidebarItems/triangle.svg';
-import circle from '../../img/src/sidebarItems/circle.svg';
+import * as icons from '../../../img/icons';
+import shape1 from '../../../img/src/sidebarItems/shape1.svg';
+import shape2 from '../../../img/src/sidebarItems/shape2.svg';
+import shape3 from '../../../img/src/sidebarItems/shape3.svg';
+import line1 from '../../../img/src/sidebarItems/line1.svg';
+import line2 from '../../../img/src/sidebarItems/line2.svg';
+import line3 from '../../../img/src/sidebarItems/line3.svg';
+import line4 from '../../../img/src/sidebarItems/line4.svg';
+import line5 from '../../../img/src/sidebarItems/line5.svg';
+import line6 from '../../../img/src/sidebarItems/line6.svg';
+import square from '../../../img/src/sidebarItems/square.svg';
+import triangle from '../../../img/src/sidebarItems/triangle.svg';
+import circle from '../../../img/src/sidebarItems/circle.svg';
 
 const Sidebar = (props) => {
     const mainColor = '#e89a4f';

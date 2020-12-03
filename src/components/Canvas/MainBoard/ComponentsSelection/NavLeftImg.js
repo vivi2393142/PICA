@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { fabric } from 'fabric';
 import 'fabric-history';
-import * as icons from '../../../img/icons.js';
 
 const NavLeftImg = (props) => {
     // toggle adjustment nav
