@@ -92,6 +92,7 @@ const DrawingArea = (props) => {
         const container = document.querySelector('.canvas-container');
         container.style.paddingBottom = '1rem';
         container.style.paddingRight = '1rem';
+        // container.style.marginTop = '1.8rem';
         document.querySelector('.lower-canvas').style.width = '100%';
         document.querySelector('.lower-canvas').style.height = '100%';
         document.querySelector('.upper-canvas').style.width = '100%';

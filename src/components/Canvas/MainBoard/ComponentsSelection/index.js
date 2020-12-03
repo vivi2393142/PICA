@@ -215,28 +215,36 @@ const ComponentsSelection = (props) => {
                         />
                     ) : null}
                     {clipboard ? (
-                        <icons.Paste className='activeButton' onClick={pasteHandler} />
+                        <div className='paste'>
+                            <icons.Paste className='activeButton' onClick={pasteHandler} />
+                        </div>
                     ) : null}
                     {props.hasUndo ? (
-                        <icons.Undo
-                            className='activeButton'
-                            onClick={() => {
-                                props.canvas.undo();
-                                props.setActiveObj({});
-                            }}
-                        />
+                        <div className='undo'>
+                            <icons.Undo
+                                className='activeButton'
+                                onClick={() => {
+                                    props.canvas.undo();
+                                    props.setActiveObj({});
+                                }}
+                            />
+                        </div>
                     ) : null}
                     {props.hasRedo ? (
-                        <icons.Redo
-                            className='activeButton'
-                            onClick={() => {
-                                props.canvas.redo();
-                                props.setActiveObj({});
-                            }}
-                        />
+                        <div className='redo'>
+                            <icons.Redo
+                                className='activeButton'
+                                onClick={() => {
+                                    props.canvas.redo();
+                                    props.setActiveObj({});
+                                }}
+                            />
+                        </div>
                     ) : null}
                     {props.activeObj.id !== 'background' ? (
-                        <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
+                        <div className='selectAll'>
+                            <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
+                        </div>
                     ) : null}
                 </div>
             ) : null}

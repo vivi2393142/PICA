@@ -168,7 +168,9 @@ const NavRightPartial = (props) => {
             {props.activeObj.type === 'group' ? (
                 <icons.Ungroup className='activeButton' onClick={ungroupHandler} />
             ) : null}
-            <icons.TrashCan className='activeButton' onClick={props.delHandler} />
+            <div className='trashCan'>
+                <icons.TrashCan className='activeButton' onClick={props.delHandler} />
+            </div>
             {props.activeObj.id !== 'background' ? (
                 <div className='layer'>
                     <icons.Layer className='activeButton' onClick={toggleLayerSelection} />
@@ -216,10 +218,14 @@ const NavRightPartial = (props) => {
                 </div>
             ) : null}
             {props.activeObj.id !== 'background' ? (
-                <icons.Copy className='activeButton' onClick={props.copyHandler} />
+                <div className='copy'>
+                    <icons.Copy className='activeButton' onClick={props.copyHandler} />
+                </div>
             ) : null}
             {props.activeObj.id !== 'background' ? (
-                <icons.Cut className='activeButton' onClick={props.cutHandler} />
+                <div className='cut'>
+                    <icons.Cut className='activeButton' onClick={props.cutHandler} />{' '}
+                </div>
             ) : null}
         </div>
     );
