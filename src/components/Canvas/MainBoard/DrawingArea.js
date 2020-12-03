@@ -90,7 +90,7 @@ const DrawingArea = (props) => {
         fabric.Object.prototype.set(customBorder);
         // -- preset responsive canvas size
         const container = document.querySelector('.canvas-container');
-        container.style.border = '1.5rem solid transparent';
+        container.style.border = '3.5rem solid transparent';
         // container.style.borderRight = '1.5rem solid transparent';
         // container.style.marginTop = '1.8rem';
         document.querySelector('.lower-canvas').style.width = '100%';

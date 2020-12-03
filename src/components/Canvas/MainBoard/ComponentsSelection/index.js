@@ -153,8 +153,7 @@ const ComponentsSelection = (props) => {
     return (
         <div className='componentsSelection'>
             <div className='componentsNavLeft'>
-                {(props.activeObj.type === 'i-text' ||
-                    props.activeObj.type === 'rect' ||
+                {(props.activeObj.type === 'rect' ||
                     props.activeObj.type === 'circle' ||
                     props.activeObj.type === 'triangle' ||
                     props.activeObj.type === 'path' ||

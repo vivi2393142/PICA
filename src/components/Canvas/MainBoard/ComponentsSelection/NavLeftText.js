@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as icons from '../../../../img/icons';
+import NavLeftColor from './NavLeftColor';
 
 const NavLeftText = (props) => {
     // unfold nav
@@ -110,7 +111,12 @@ const NavLeftText = (props) => {
 
     // render
     return (
-        <div className='specificNav'>
+        <div className='specificNav textNav'>
+            <NavLeftColor
+                canvas={props.canvas}
+                activeObj={props.activeObj}
+                trackOutSideClick={props.trackOutSideClick}
+            />
             <select className='specificButton' value={textFont} onChange={handleTextFont}>
                 <option value='sans-serif'>預設字體</option>
                 <option value='Noto Sans TC'>思源黑體</option>

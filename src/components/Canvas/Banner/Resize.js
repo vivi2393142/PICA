@@ -47,8 +47,8 @@ const Resize = (props) => {
         allSettings.setCanvasSetting(newCanvasSetting);
         // resize to fix window
         let fixRatio = Math.min(
-            (window.innerWidth * 0.75) / newCanvasSetting.width,
-            (window.innerHeight * 0.75) / newCanvasSetting.height
+            (window.innerWidth * 0.7) / newCanvasSetting.width,
+            (window.innerHeight * 0.7) / newCanvasSetting.height
         );
         container.style.width = `${fixRatio * newCanvasSetting.width}px`;
         container.style.height = `${fixRatio * newCanvasSetting.height}px`;

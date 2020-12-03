@@ -43,7 +43,7 @@ body {
 }
 // background
 .backImages {
-    position: absolute;
+    position: fixed;
     top: 0;
     height: 100%;
     width: 100%;
@@ -51,7 +51,6 @@ body {
 }
 .backImg {
     position: absolute;
-    z-index: 1000;
     z-index: -1;
     // opacity: 0.5;
     overflow: hidden;
@@ -141,6 +140,7 @@ body {
     display: flex;
     flex-grow: 1;
     height: 90%;
+    width: 100vw;
 }
 .drawingAreaBox {
     flex-grow: 1;
@@ -150,16 +150,17 @@ body {
     background-color: $light-grey;
     border-radius: 3rem 0 0 0;
     box-shadow: 0 0 8px 2px rgb(88, 88, 88) inset;
-}
-.drawingAreaBox {
-    *zoom: 1; /*For IE 6&7 only*/
+    // width: 100%;
 }
 .componentsSelection {
+    z-index: 1;
     display: flex;
-    padding: 1.5rem 1% 0 2%;
+    padding: 0.8rem 0 0 0.8rem;
     box-sizing: border-box;
     align-items: center;
     flex-grow: 1;
+    position: fixed;
+    width: 100%;
 }
 .canvasWrapper {
     justify-content: center;
@@ -195,24 +196,30 @@ body {
     display: flex;
     align-items: center;
     height: 1.5rem;
+    padding: 0.2rem 0 1rem 0;
 }
 .componentsNavRight {
     flex-wrap: wrap;
-    width: 35%;
+    width: 50%;
     padding-right: 0.5rem;
     justify-content: flex-end;
+    position: fixed;
+    right: 0;
 }
 .componentsNavLeft {
     flex-wrap: wrap;
-    width: 65%;
-    padding-left: 0.5rem;
+    width: 42%;
+    padding-left: 0.8rem;
     justify-content: flex-start;
 }
 .activeButton {
-    margin-right: 0.8rem;
     pointer-events: bounding-box;
     width: 1.6rem;
     height: 1.6rem;
+    padding: 0.2rem;
+    margin: 0 0.3rem;
+    background-color: rgba(235, 235, 235, 0.8);
+    border-radius: 5px;
 }
 .activeButton:hover {
     opacity: 0.6;
@@ -232,15 +239,16 @@ body {
 .cut,
 .paste {
     position: relative;
-    z-index: 555;
-    display: inline-block;
+
+    display: flex;
+    height: 100%;
 }
 .layerChoosingBox,
 .alignChoosingBox {
     position: absolute;
     top: 2rem;
     right: 0;
-    z-index: 555;
+
     display: flex;
 }
 
@@ -249,15 +257,20 @@ body {
     display: flex;
     align-items: center;
 }
+.textNav {
+    flex-wrap: wrap;
+}
 .specificButton {
     display: flex;
     font-size: 0.9rem;
-    margin-left: 0.3rem;
-    padding: 0 0.3rem;
     color: $custom-black;
     font-weight: 450;
     cursor: pointer;
     align-items: center;
+    padding: 0.2rem;
+    margin: 0 0.3rem;
+    background-color: rgba(235, 235, 235, 0.8);
+    border-radius: 5px;
 }
 .specificButton:hover {
     opacity: 0.6;
@@ -266,7 +279,7 @@ body {
 .colorChoosingBox {
     position: relative;
     display: inline-block;
-    margin: 0 0.8rem 0 0.8rem;
+    margin: 0 0.8rem 0 0.4rem;
     cursor: pointer;
 }
 .borderChoosing {
@@ -275,7 +288,7 @@ body {
 }
 .chrome-picker {
     position: absolute;
-    z-index: 555;
+
     top: 2rem;
     left: 0;
     padding: 0.3rem 0.3rem 0;
@@ -308,8 +321,7 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    margin-left: 0.4rem;
-    margin-right: 0.2rem;
+    padding-right: 0rem;
 }
 .textSizeSelect {
     width: 100%;
@@ -337,7 +349,7 @@ input:focus {
     border: 1px solid $middle-grey;
 }
 .textIcon {
-    margin: 0 0.3rem;
+    // margin: 0 0.3rem;
     weight: 1.4rem;
     height: 1.4rem;
 }
@@ -356,7 +368,7 @@ input:focus {
     display: flex;
     top: 1.8rem;
     left: 0.5rem;
-    z-index: 555;
+
     background-color: white;
     border: 1px solid $middle-grey;
     flex-direction: column;
@@ -769,6 +781,7 @@ input[type='range'].imgAdjustRange {
 }
 .componentsNavRightPartial {
     display: flex;
+    height: 100%;
 }
 // banner
 .bannerIcons {
