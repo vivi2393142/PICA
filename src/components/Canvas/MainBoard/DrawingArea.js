@@ -90,8 +90,8 @@ const DrawingArea = (props) => {
         fabric.Object.prototype.set(customBorder);
         // -- preset responsive canvas size
         const container = document.querySelector('.canvas-container');
-        container.style.paddingBottom = '1rem';
-        container.style.paddingRight = '1rem';
+        container.style.border = '1.5rem solid transparent';
+        // container.style.borderRight = '1.5rem solid transparent';
         // container.style.marginTop = '1.8rem';
         document.querySelector('.lower-canvas').style.width = '100%';
         document.querySelector('.lower-canvas').style.height = '100%';
@@ -100,7 +100,7 @@ const DrawingArea = (props) => {
         // -- default view ratio: auto
         props.handleResponsiveSize(container);
         // -- zoom canvas without quality lose
-        props.zoomCanvas(canvasInit);
+        // props.zoomCanvas(canvasInit);
         // -- set canvas
         props.setCanvas(canvasInit);
         return () => {

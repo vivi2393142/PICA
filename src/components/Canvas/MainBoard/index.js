@@ -51,7 +51,7 @@ const MainBoard = (props) => {
             }px`;
         }
         // -- zoom canvas without quality lose
-        zoomCanvas(canvas);
+        // zoomCanvas(canvas);
     };
     const zoomCanvas = (canvas) => {
         const currentSizeRatio =
