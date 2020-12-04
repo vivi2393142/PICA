@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import Resize from './Resize';
 import Export from './Export';
+import * as firebase from '../../../firebase';
 
 const Banner = (props) => {
     const allSettings = props.drawingAreaSettings;
@@ -17,6 +18,7 @@ const Banner = (props) => {
             <div className='logoWrapper'>
                 <bannerIcons.Logo className='bannerLogo' />
             </div>
+
             <div className='bannerLeft'>
                 <input
                     placeholder='未命名文件'
@@ -26,6 +28,16 @@ const Banner = (props) => {
                 <div className='statusSize'>{`${allSettings.canvasSetting.width}×${allSettings.canvasSetting.height}像素`}</div>
                 <div className='status'>已儲存</div>
             </div>
+            <button
+                onClick={() =>
+                    firebase.updateCanvasData(allSettings.canvas, allSettings.canvasSetting)
+                }
+            >
+                firebase存檔
+            </button>
+            <button onClick={() => firebase.getCanvasData(allSettings.canvasSetting)}>
+                firebase讀檔
+            </button>
             <div className='bannerRight'>
                 <Resize drawingAreaSettings={allSettings} />
                 <div className='shareIconWrapper'>

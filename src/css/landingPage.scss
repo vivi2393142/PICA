@@ -1,0 +1,229 @@
+// color variants
+$main-color: #282c34;
+$dark-green: #1f3642;
+$sub-color: #e89a4f;
+$assist-color-dark: #badada;
+$assist-color-light: #ccd7da;
+$light-grey: #ebebeb;
+$middle-grey: #acacac;
+$dark-grey: #7f7e7e;
+$custom-black: #555555;
+$board-to-window-ratio: 90%;
+$bk-w: #eaecec;
+$bk-y: #d8c2b0;
+$bk-g: #919da3;
+
+.bannerWrapper {
+    display: flex;
+    justify-content: center;
+    height: 10%;
+    border-bottom: 1px solid $middle-grey;
+    padding: 1rem 0;
+    .banner {
+        width: 70%;
+        display: flex;
+        color: $custom-black;
+        .button {
+            padding: 0.3rem 1rem;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .signUp {
+            background: $sub-color;
+            border-radius: 5px;
+            padding: 0.3rem 1rem;
+            color: white;
+            letter-spacing: 1px;
+        }
+    }
+    & .logo {
+        margin-right: auto;
+    }
+}
+
+.mainWrapper {
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10rem;
+    .main {
+        width: 70%;
+        display: flex;
+        justify-content: space-between;
+
+        .mainText {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+
+            .startButton {
+                background: $sub-color;
+                border-radius: 5px;
+                margin-right: auto;
+                padding: 0.5rem 1rem;
+                color: white;
+                letter-spacing: 1px;
+                margin-top: 3rem;
+                cursor: pointer;
+            }
+        }
+
+        .mainImg {
+            width: 40%;
+            height: 25rem;
+            position: relative;
+            margin: 0 5rem;
+            * {
+                width: 45%;
+                stroke: none;
+                position: absolute;
+            }
+            .imageY path {
+                fill: $sub-color;
+            }
+            .imageG path {
+                stroke: none;
+                fill: $dark-green;
+            }
+            .imageB path {
+                stroke: none;
+                fill: $assist-color-dark;
+            }
+            .Y3 {
+                top: 0%;
+                left: 0%;
+                width: 65%;
+            }
+            .Y1 {
+                bottom: 10%;
+                right: 5%;
+                width: 40%;
+                transform: rotate(120deg);
+            }
+            .G1 {
+                bottom: 0;
+                left: 5%;
+                width: 50%;
+            }
+            .B1 {
+                width: 20%;
+                top: 50%;
+                left: 2%;
+                transform: rotate(220deg);
+            }
+            .B3 {
+                width: 45%;
+                right: 0;
+                top: 35%;
+            }
+            .G2 {
+                width: 30%;
+                right: 5%;
+                top: 10%;
+                transform: rotate(50deg);
+            }
+        }
+    }
+}
+
+.loginCover {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    //TODO: 待處理z-index問題
+    z-index: 999;
+}
+
+.signupBlock,
+.loginBlock {
+    z-index: 1000;
+    background-color: $light-grey;
+    border: 1px solid $custom-black;
+    display: flex;
+    position: absolute;
+    flex-wrap: wrap;
+    display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1.5rem 2rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: $custom-black;
+    width: 20rem;
+    justify-content: space-between;
+    & * {
+        margin: 0.5rem 0;
+    }
+    .close {
+        font-size: 0.7rem;
+        position: absolute;
+        top: 0.5rem;
+        right: 2.5rem;
+        cursor: pointer;
+        border: 1px solid $custom-black;
+        border-radius: 100%;
+        width: 1rem;
+        height: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    .toggle {
+        font-size: 0.8rem;
+        font-weight: 500;
+        cursor: pointer;
+        position: absolute;
+        bottom: 1.2rem;
+        right: 2.2rem;
+        padding: 0.1rem 0.3rem;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+    }
+    .inputTop {
+        width: 100%;
+        text-align: center;
+        padding-bottom: 0.5rem;
+    }
+    .inputName {
+        width: 30%;
+    }
+    input {
+        width: 65%;
+    }
+    .submit {
+        margin: 0 auto;
+        border: 1px solid $custom-black;
+        padding: 0.1rem 1rem;
+        border-radius: 5px;
+        margin-top: 1rem;
+        cursor: pointer;
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+}
+.loginBlock {
+    background-color: $dark-green;
+    color: white;
+    border: 1px solid white;
+    .submit {
+        border: 1px solid white;
+    }
+    .toggle:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    .close {
+        border: 1px solid white;
+    }
+}

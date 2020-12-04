@@ -1,0 +1,73 @@
+// color variants
+$main-color: #282c34;
+$dark-green: #1f3642;
+$sub-color: #e89a4f;
+$assist-color-dark: #badada;
+$assist-color-light: #ccd7da;
+$light-grey: #ebebeb;
+$middle-grey: #acacac;
+$dark-grey: #7f7e7e;
+$custom-black: #555555;
+$board-to-window-ratio: 90%;
+$bk-w: #eaecec;
+$bk-y: #d8c2b0;
+$bk-g: #919da3;
+
+.bannerWrapper {
+    display: flex;
+    justify-content: center;
+    height: 10%;
+    border-bottom: 1px solid $middle-grey;
+    padding: 1rem 0;
+    .banner {
+        width: 70%;
+        display: flex;
+        color: $custom-black;
+        .button {
+            padding: 0.3rem 1rem;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+    }
+    & .logo {
+        margin-right: auto;
+    }
+}
+
+.mainWrapper {
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10rem;
+    .main {
+        width: 70%;
+        display: flex;
+        justify-content: space-around;
+        color: $dark-grey;
+
+        .addNewText {
+            width: 40%;
+            font-size: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &::after {
+                content: '';
+                display: block;
+                padding-bottom: 100%; // 一直都是 100%
+            }
+        }
+        .addNew {
+            width: 40%;
+            background-color: $light-grey;
+            border-radius: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+
+            cursor: pointer;
+        }
+    }
+}

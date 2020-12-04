@@ -1,14 +1,15 @@
 import React from 'react';
-import '../../App.scss';
+import styles from '../../css/canvas.scss';
 import MainBoard from './MainBoard';
 import Banner from './Banner';
 import * as backImg from '../../img/background';
+import { nanoid } from 'nanoid';
 
 // export default App;
 const Canvas = () => {
     // TODO: 測試用資料-畫布設定,待更新
     const [canvas, setCanvas] = React.useState({});
-    const canvasSettingInit = { title: '', width: 600, height: 400 };
+    const canvasSettingInit = { id: nanoid(), title: '', width: 600, height: 400 };
     const [canvasSetting, setCanvasSetting] = React.useState(canvasSettingInit);
     const [ratioSelectValue, setRatioSelectValue] = React.useState('auto');
     // TODO: 測試用資料-canvas原生資料
@@ -331,11 +332,7 @@ const Canvas = () => {
     return (
         <div className='Canvas'>
             <Background />
-            <Banner
-                drawingAreaSettings={drawingAreaSettings}
-                canvas={canvas}
-                setCanvas={setCanvas}
-            />
+            <Banner drawingAreaSettings={drawingAreaSettings} />
             <MainBoard drawingAreaSettings={drawingAreaSettings} />
         </div>
     );

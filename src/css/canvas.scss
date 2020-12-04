@@ -8,22 +8,20 @@ $middle-grey: #acacac;
 $dark-grey: #7f7e7e;
 $custom-black: #555555;
 $board-to-window-ratio: 90%;
-$bk-w: #eaecec;
-$bk-y: #d8c2b0;
-$bk-g: #919da3;
+$bk-w: #eeeeee;
+$bk-y: #f5dfcd;
+$bk-g: #9aa3a8;
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@400;700&display=swap');
 
-* {
-    // border: 1px solid red;
-    // color:#db2316
-}
-
-// basic layouts
 body {
-    height: 100vh;
-    background-color: $assist-color-light;
     font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Heiti SC',
         'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
+    overflow: hidden;
+}
+
+.Canvas body {
+    height: 100vh;
+    background-color: $assist-color-light;
     position: relative;
 }
 .Canvas {
@@ -150,6 +148,8 @@ body {
     background-color: $light-grey;
     border-radius: 3rem 0 0 0;
     box-shadow: 0 0 8px 2px rgb(88, 88, 88) inset;
+
+    border: 2px solid rgb(161, 161, 161);
     // width: 100%;
 }
 .componentsSelection {
