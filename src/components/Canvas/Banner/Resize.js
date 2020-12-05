@@ -8,11 +8,13 @@ const Resize = (props) => {
     const [isChoosingCanvasSize, setIsChoosingCanvasSize] = React.useState(false);
     const canvasSizeOptions = [
         { name: '自訂尺寸', width: 0, height: 0 },
-        // { name: '橫式海報', width: 0, height: 0 },
-        // { name: '邀請卡', width: 0, height: 0 },
-        // { name: 'Facebook 封面', width: 2050, height: 780 },
         { name: 'Instagram 貼文', width: 1080, height: 1080 },
-        // { name: '名片', width: 0, height: 0 },
+        { name: '網頁常用', width: 1280, height: 1024 },
+        { name: '橫式海報', width: 1728, height: 1296, mmW: 609, mmH: 457 },
+        { name: '明信片', width: 560, height: 288, mmW: 198, mmH: 102 },
+        { name: '橫式A4', width: 842, height: 595, mmW: 297, mmH: 210 },
+        // { name: 'Facebook 封面', width: 2050, height: 780 },
+        { name: '名片', width: 1063, height: 638, mmW: 90, mmH: 54 },
     ];
     const toggleSizeChoosing = (e, way) => {
         const targetContainer = e.currentTarget.parentNode;
@@ -90,6 +92,11 @@ const Resize = (props) => {
                     onClick={(e) => handleCanvasSize(e, 'default')}
                 >
                     {item.name}
+                    <div className='sizeDetails'>
+                        {item.mmW
+                            ? `${item.mmW}×${item.mmH} mm`
+                            : `${item.width}×${item.height} px`}
+                    </div>
                 </div>
             );
         } else {

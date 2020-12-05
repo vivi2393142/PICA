@@ -2,10 +2,9 @@ import firebase from 'firebase/app';
 import 'firebase/analytics';
 import 'firebase/auth';
 import 'firebase/firestore';
-// Import firebaseui module.
-import * as firebaseui from 'firebaseui';
 
 // init firebase
+
 const firebaseConfig = {
     apiKey: 'AIzaSyDtNmp8oroSpowKQmr4nHAgqsJ59VCafYE',
     authDomain: 'pica-b4a59.firebaseapp.com',
@@ -17,48 +16,110 @@ const firebaseConfig = {
     measurementId: 'G-R544SCV03H',
 };
 firebase.initializeApp(firebaseConfig);
+
 const db = firebase.firestore();
 
 // firestore
-const updateCanvasData = (canvas, canvasSetting) => {
+const loadUserData = (userId, callback) => {
+    const ref = firebase.firestore().collection('userData').doc(userId);
+    ref.get().then((doc) => {
+        const dataFromFirebase = doc.data();
+        callback(dataFromFirebase);
+    });
+};
+
+const createNewCanvas = (canvasSetting, userId) => {
+    // add data to canvasFiles
+    const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+    ref.set({
+        data: JSON.stringify({
+            version: '4.2.0',
+            objects: [],
+            background: '#fff',
+        }),
+        basicSetting: canvasSetting,
+    }).then(() => {
+        // add data to userData
+        const userRef = db.collection('userData').doc(userId);
+        userRef
+            .get()
+            .then((doc) => {
+                let oldCanvas = doc.data().canvas;
+                oldCanvas.push(canvasSetting.id);
+                userRef.update({ canvas: oldCanvas }).then(() => {});
+            })
+            .then(() => {
+                document.location.href = `../file/${canvasSetting.id}`;
+            });
+    });
+};
+
+const loadCanvas = (callback, fileId) => {
+    const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
+    ref.get().then((doc) => {
+        const dataFromFirebase = doc.data();
+        const canvasSettingInit = dataFromFirebase.basicSetting;
+        const canvasDataInit = JSON.parse(dataFromFirebase.data);
+        callback(canvasSettingInit, canvasDataInit);
+    });
+};
+
+let initState = true;
+
+const listenCanvas = (fileId, callback) => {
+    console.log('設定監聽事件');
+    const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
+    ref.onSnapshot((doc) => {
+        if (initState) {
+            initState = false;
+        } else {
+            console.log('文件更新');
+            callback();
+        }
+    });
+};
+
+const saveCanvasData = (canvas, canvasSetting) => {
     const canvasData = JSON.stringify(canvas.toJSON());
     const ref = db.collection('canvasFiles').doc(canvasSetting.id);
     ref.set({
         data: canvasData,
         basicSetting: canvasSetting,
-    }).then(() => {
-        console.log('set data successful');
-    });
+    }).then(() => {});
 };
 
-const getCanvasData = (canvasSetting) => {
-    const ref = db.collection('canvasFiles').doc('K_Qoc5zNxFueM587vn2oD');
+const getCanvasData = (id, callback) => {
+    const ref = db.collection('canvasFiles').doc(id);
     ref.get().then((doc) => {
-        console.log(doc.data());
+        return doc.data();
     });
 };
 
 // native login
 const checkCurrentUser = (successCallback, failCallback) => {
-    successCallback;
+    // successCallback;
     const user = firebase.auth().currentUser;
-    // console.log(user);
-    // console.log('已執行');
     if (user) {
-        successCallback();
+        // successCallback();
         return user;
     } else {
-        failCallback();
+        // failCallback();
     }
 };
 
-const nativeSignUp = (email, pwd, successCallback) => {
+const nativeSignUp = (email, pwd) => {
     firebase
         .auth()
         .createUserWithEmailAndPassword(email, pwd)
         .then((user) => {
-            successCallback();
-            // console.log(user);
+            // add data to userData
+            const ref = db.collection('userData').doc(email);
+            ref.set({
+                email: email,
+                canvas: [],
+            }).then(() => {
+                // console.log('set data successful');
+            });
             return user;
         })
         .catch((error) => {
@@ -69,18 +130,17 @@ const nativeSignUp = (email, pwd, successCallback) => {
         });
 };
 
-const nativeSignIn = (email, pwd, successCallback) => {
+const nativeSignIn = (email, pwd) => {
     firebase
         .auth()
         .signInWithEmailAndPassword(email, pwd)
         .then((user) => {
-            successCallback();
             return user;
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
+            // console.log(errorCode, errorMessage);
             alert('請輸入正確帳號密碼');
         });
 };
@@ -102,10 +162,14 @@ const nativeSignOut = (successCallback) => {
 
 export {
     db,
-    updateCanvasData,
+    saveCanvasData,
     getCanvasData,
     nativeSignUp,
     nativeSignIn,
     nativeSignOut,
     checkCurrentUser,
+    createNewCanvas,
+    loadCanvas,
+    listenCanvas,
+    loadUserData,
 };

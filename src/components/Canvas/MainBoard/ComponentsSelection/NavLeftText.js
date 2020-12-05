@@ -136,35 +136,35 @@ const NavLeftText = (props) => {
             </div>
             <icons.TextBold
                 className={`specificButton textIcon ${
-                    textWeight === 'bold' ? 'textButtonActive' : null
+                    textWeight === 'bold' ? 'textButtonActive' : ''
                 }`}
                 onClick={handleTextWeight}
             />
             <icons.TextItalic
                 className={`specificButton textIcon ${
-                    textStyle === 'italic' ? 'textButtonActive' : null
+                    textStyle === 'italic' ? 'textButtonActive' : ''
                 }`}
                 onClick={handleTextStyle}
             />
             <icons.TextUnderline
-                className={`specificButton textIcon ${textUnderline ? 'textButtonActive' : null}`}
+                className={`specificButton textIcon ${textUnderline ? 'textButtonActive' : ''}`}
                 onClick={handleTextUnderline}
             />
             <icons.TextAlignLeft
                 className={`specificButton textIcon ${
-                    textAlign === 'left' ? 'textButtonActive' : null
+                    textAlign === 'left' ? 'textButtonActive' : ''
                 }`}
                 onClick={() => handleTextAlgin('left')}
             />
             <icons.TextAlignCenter
                 className={`specificButton textIcon ${
-                    textAlign === 'center' ? 'textButtonActive' : null
+                    textAlign === 'center' ? 'textButtonActive' : ''
                 }`}
                 onClick={() => handleTextAlgin('center')}
             />
             <icons.TextAlignRight
                 className={`specificButton textIcon ${
-                    textAlign === 'right' ? 'textButtonActive' : null
+                    textAlign === 'right' ? 'textButtonActive' : ''
                 }`}
                 onClick={() => handleTextAlgin('right')}
             />

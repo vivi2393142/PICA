@@ -4,6 +4,7 @@ import * as bannerIcons from '../../../img/banner';
 import Resize from './Resize';
 import Export from './Export';
 import * as firebase from '../../../firebase';
+import { Link } from 'react-router-dom';
 
 const Banner = (props) => {
     const allSettings = props.drawingAreaSettings;
@@ -16,19 +17,37 @@ const Banner = (props) => {
     return (
         <div className='banner'>
             <div className='logoWrapper'>
-                <bannerIcons.Logo className='bannerLogo' />
+                <Link to='/main'>
+                    <bannerIcons.Logo className='bannerLogo' />
+                </Link>
             </div>
 
             <div className='bannerLeft'>
                 <input
-                    placeholder='未命名文件'
-                    value={allSettings.canvasSetting.title}
+                    placeholder='未命名畫布'
+                    defaultValue={allSettings.canvasSetting.title}
                     onChange={handleTitle}
                 ></input>
                 <div className='statusSize'>{`${allSettings.canvasSetting.width}×${allSettings.canvasSetting.height}像素`}</div>
+                <div
+                    onClick={() =>
+                        firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting)
+                    }
+                    style={{
+                        cursor: 'pointer',
+                        border: '1px solid #555555',
+                        padding: ' 0 0.5rem',
+                        fontSize: ' 0.9rem',
+                        color: '#555555',
+                        letterSpacing: '1px',
+                        marginLeft: '1rem',
+                    }}
+                >
+                    {'點我儲存(暫時)'}
+                </div>
                 <div className='status'>已儲存</div>
             </div>
-            <button
+            {/* <button
                 onClick={() =>
                     firebase.updateCanvasData(allSettings.canvas, allSettings.canvasSetting)
                 }
@@ -37,7 +56,7 @@ const Banner = (props) => {
             </button>
             <button onClick={() => firebase.getCanvasData(allSettings.canvasSetting)}>
                 firebase讀檔
-            </button>
+            </button> */}
             <div className='bannerRight'>
                 <Resize drawingAreaSettings={allSettings} />
                 <div className='shareIconWrapper'>

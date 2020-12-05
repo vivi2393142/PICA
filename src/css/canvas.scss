@@ -19,12 +19,10 @@ body {
     overflow: hidden;
 }
 
-.Canvas body {
+.Canvas {
     height: 100vh;
     background-color: $assist-color-light;
     position: relative;
-}
-.Canvas {
     text-align: center;
     position: relative;
     height: 100vh;
@@ -836,6 +834,25 @@ input[type='range'].imgAdjustRange {
     font-size: 0.9rem;
     color: $custom-black;
     letter-spacing: 1px;
+    opacity: 0;
+}
+.showStatus {
+    animation-name: showStatus;
+    animation-duration: 3s;
+}
+@keyframes showStatus {
+    0% {
+        opacity: 0;
+    }
+    20% {
+        opacity: 1;
+    }
+    80% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 .resizeIconWrapper,
 .exportIconWrapper {
@@ -916,12 +933,12 @@ input[type='range'].imgAdjustRange {
     // font-weight: 600;
 }
 .sizeDetails {
-    color: transparent;
-    font-size: 0.6rem;
-    padding-left: 1rem;
-}
-.sizeOption:hover .sizeDetails {
     color: $middle-grey;
+    font-size: 0.6rem;
+    padding-left: 1.5rem;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
 }
 // banner - custom size
 .customSizeWrapper {

@@ -16,13 +16,13 @@ $bk-g: #919da3;
 .bannerWrapper {
     display: flex;
     justify-content: center;
-    height: 10%;
     border-bottom: 1px solid $middle-grey;
     padding: 1rem 0;
     .banner {
         width: 70%;
         display: flex;
         color: $custom-black;
+        align-items: center;
         .button {
             padding: 0.3rem 1rem;
             margin-left: 1.5rem;
@@ -39,6 +39,7 @@ $bk-g: #919da3;
     }
     & .logo {
         margin-right: auto;
+        height: 3rem;
     }
 }
 
@@ -70,10 +71,10 @@ $bk-g: #919da3;
         }
 
         .mainImg {
-            width: 40%;
-            height: 25rem;
+            width: 50%;
+            height: 100%;
             position: relative;
-            margin: 0 5rem;
+            margin: 0 3rem;
             * {
                 width: 45%;
                 stroke: none;
@@ -96,8 +97,8 @@ $bk-g: #919da3;
                 width: 65%;
             }
             .Y1 {
-                bottom: 10%;
-                right: 5%;
+                bottom: 5%;
+                right: 2%;
                 width: 40%;
                 transform: rotate(120deg);
             }
