@@ -10,6 +10,8 @@ import NavLeftShape from './NavLeftShape';
 import NavLeftColor from './NavLeftColor';
 
 const ComponentsSelection = (props) => {
+    const allSettings = props.allSettings;
+
     const [clipboard, setClipboard] = React.useState(false);
     const [textIsEditing, setTextIsEditing] = React.useState(false);
     const [croppingObj, setCroppingObj] = React.useState({});
@@ -17,16 +19,16 @@ const ComponentsSelection = (props) => {
     // methods for component:
     // -- methods for component: copy, cut, paste, delete
     const copyHandler = () => {
-        props.activeObj.clone(function (cloned) {
+        allSettings.activeObj.clone(function (cloned) {
             setClipboard(cloned);
         });
     };
     const cutHandler = () => {
-        props.activeObj.clone(function (cloned) {
+        allSettings.activeObj.clone(function (cloned) {
             setClipboard(cloned);
-            const activeObject = props.canvas.getActiveObjects();
-            props.canvas.remove(...activeObject);
-            props.canvas.discardActiveObject();
+            const activeObject = allSettings.canvas.getActiveObjects();
+            allSettings.canvas.remove(...activeObject);
+            allSettings.canvas.discardActiveObject();
         });
     };
     const pasteHandler = () => {
@@ -34,7 +36,7 @@ const ComponentsSelection = (props) => {
             return;
         }
         clipboard.clone(function (clonedObj) {
-            props.canvas.discardActiveObject();
+            allSettings.canvas.discardActiveObject();
             clonedObj.set({
                 left: clonedObj.left + 10,
                 top: clonedObj.top + 10,
@@ -42,36 +44,36 @@ const ComponentsSelection = (props) => {
             });
             if (clonedObj.type === 'activeSelection') {
                 // active selection needs a reference to the canvas.
-                clonedObj.canvas = props.canvas;
+                clonedObj.canvas = allSettings.canvas;
                 clonedObj.forEachObject(function (obj) {
-                    props.canvas.add(obj);
+                    allSettings.canvas.add(obj);
                 });
                 // this should solve the unselect ability
                 clonedObj.setCoords();
             } else {
-                props.canvas.add(clonedObj);
+                allSettings.canvas.add(clonedObj);
             }
             let newClipBoard = clipboard;
             newClipBoard.top += 10;
             newClipBoard.left += 10;
             setClipboard(newClipBoard);
-            props.canvas.setActiveObject(clonedObj);
-            props.canvas.requestRenderAll();
+            allSettings.canvas.setActiveObject(clonedObj);
+            allSettings.canvas.requestRenderAll();
         });
     };
     const delHandler = () => {
-        const activeObject = props.canvas.getActiveObjects();
-        props.canvas.remove(...activeObject);
-        props.canvas.discardActiveObject();
+        const activeObject = allSettings.canvas.getActiveObjects();
+        allSettings.canvas.remove(...activeObject);
+        allSettings.canvas.discardActiveObject();
     };
     // -- methods for component: select all
     const selectAllHandler = () => {
-        props.canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection(props.canvas.getObjects(), {
-            canvas: props.canvas,
+        allSettings.canvas.discardActiveObject();
+        var sel = new fabric.ActiveSelection(allSettings.canvas.getObjects(), {
+            canvas: allSettings.canvas,
         });
-        props.canvas.setActiveObject(sel);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.setActiveObject(sel);
+        allSettings.canvas.requestRenderAll();
     };
 
     // keyboard functions
@@ -100,7 +102,7 @@ const ComponentsSelection = (props) => {
             if (ctrlDown && e.keyCode === codes.vKey) {
                 pasteHandler();
             }
-            if (props.activeObj.type) {
+            if (allSettings.activeObj.type) {
                 if (ctrlDown && e.keyCode === codes.cKey) {
                     copyHandler();
                 }
@@ -109,7 +111,8 @@ const ComponentsSelection = (props) => {
                 }
                 if (e.keyCode === codes.delKey) {
                     if (
-                        (props.activeObj.type === 'i-text' && props.activeObj.isEditing) ||
+                        (allSettings.activeObj.type === 'i-text' &&
+                            allSettings.activeObj.isEditing) ||
                         textIsEditing
                     ) {
                         return;
@@ -124,12 +127,12 @@ const ComponentsSelection = (props) => {
             }
             if (ctrlDown && e.keyCode === codes.zKey && !shiftDown) {
                 //TODO: 待修正copy paste時復原的錯誤(因會紀錄不只一次紀錄)
-                props.canvas.undo();
-                props.setActiveObj({});
+                allSettings.canvas.undo();
+                allSettings.setActiveObj({});
             }
             if (ctrlDown && shiftDown && e.keyCode === codes.zKey) {
-                props.canvas.redo();
-                props.setActiveObj({});
+                allSettings.canvas.redo();
+                allSettings.setActiveObj({});
             }
         };
         const keyupEvent = (e) => {
@@ -147,69 +150,70 @@ const ComponentsSelection = (props) => {
             document.removeEventListener('keydown', keydownEvent, false);
             document.removeEventListener('keyup', keyupEvent, false);
         };
-    }, [props.canvas, props.activeObj, clipboard, textIsEditing]);
+    }, [allSettings.canvas, allSettings.activeObj, clipboard, textIsEditing]);
 
     // render
     return (
         <div className='componentsSelection'>
             <div className='componentsNavLeft'>
-                {(props.activeObj.type === 'rect' ||
-                    props.activeObj.type === 'circle' ||
-                    props.activeObj.type === 'triangle' ||
-                    props.activeObj.type === 'path' ||
-                    props.activeObj.type === 'polygon') &&
-                props.activeObj.id !== 'cropbox' ? (
+                {(allSettings.activeObj.type === 'rect' ||
+                    allSettings.activeObj.type === 'circle' ||
+                    allSettings.activeObj.type === 'triangle' ||
+                    allSettings.activeObj.type === 'path' ||
+                    allSettings.activeObj.type === 'polygon') &&
+                allSettings.activeObj.id !== 'cropbox' ? (
                     <NavLeftColor
-                        canvas={props.canvas}
-                        activeObj={props.activeObj}
+                        canvas={allSettings.canvas}
+                        activeObj={allSettings.activeObj}
                         trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
-                {(props.activeObj.type === 'image' || croppingObj !== {}) &&
-                props.activeObj.id !== 'sticker' &&
-                props.activeObj.id !== 'background' ? (
+                {(allSettings.activeObj.type === 'image' || croppingObj !== {}) &&
+                allSettings.activeObj.id !== 'sticker' &&
+                allSettings.activeObj.id !== 'background' ? (
                     <NavLeftImg
                         currentSidebar={props.currentSidebar}
                         setCurrentSidebar={props.setCurrentSidebar}
-                        setActiveObj={props.setActiveObj}
-                        canvas={props.canvas}
+                        // setActiveObj={props.setActiveObj}
+                        // canvas={props.canvas}
                         trackOutSideClick={props.trackOutSideClick}
-                        activeObj={props.activeObj}
+                        // activeObj={props.activeObj}
                         croppingObj={croppingObj}
                         setCroppingObj={setCroppingObj}
-                        canvasSetting={props.canvasSetting}
+                        // canvasSetting={props.canvasSetting}
+                        allSettings={allSettings}
                     />
                 ) : null}
-                {props.activeObj.type === 'i-text' ? (
+                {allSettings.activeObj.type === 'i-text' ? (
                     <NavLeftText
                         setTextIsEditing={setTextIsEditing}
-                        canvas={props.canvas}
-                        activeObj={props.activeObj}
+                        canvas={allSettings.canvas}
+                        activeObj={allSettings.activeObj}
                         trackOutSideClick={props.trackOutSideClick}
                     />
                 ) : null}
-                {(props.activeObj.type === 'rect' ||
-                    props.activeObj.type === 'circle' ||
-                    props.activeObj.type === 'triangle') &&
-                props.activeObj.id !== 'cropbox' ? (
+                {(allSettings.activeObj.type === 'rect' ||
+                    allSettings.activeObj.type === 'circle' ||
+                    allSettings.activeObj.type === 'triangle') &&
+                allSettings.activeObj.id !== 'cropbox' ? (
                     <NavLeftShape
                         trackOutSideClick={props.trackOutSideClick}
-                        canvas={props.canvas}
-                        activeObj={props.activeObj}
+                        canvas={allSettings.canvas}
+                        activeObj={allSettings.activeObj}
                     />
                 ) : null}
             </div>
-            {props.activeObj.id !== 'cropbox' ? (
+            {allSettings.activeObj.id !== 'cropbox' ? (
                 <div className='componentsNavRight'>
-                    {props.activeObj.type ? (
+                    {allSettings.activeObj.type ? (
                         <NavRightPartial
                             copyHandler={copyHandler}
                             cutHandler={cutHandler}
                             pasteHandler={pasteHandler}
                             delHandler={delHandler}
-                            canvas={props.canvas}
-                            activeObj={props.activeObj}
-                            setActiveObj={props.setActiveObj}
+                            canvas={allSettings.canvas}
+                            activeObj={allSettings.activeObj}
+                            setActiveObj={allSettings.setActiveObj}
                             trackOutSideClick={props.trackOutSideClick}
                         />
                     ) : null}
@@ -218,29 +222,29 @@ const ComponentsSelection = (props) => {
                             <icons.Paste className='activeButton' onClick={pasteHandler} />
                         </div>
                     ) : null}
-                    {props.hasUndo ? (
+                    {allSettings.hasUndo ? (
                         <div className='undo'>
                             <icons.Undo
                                 className='activeButton'
                                 onClick={() => {
-                                    props.canvas.undo();
-                                    props.setActiveObj({});
+                                    allSettings.canvas.undo();
+                                    allSettings.setActiveObj({});
                                 }}
                             />
                         </div>
                     ) : null}
-                    {props.hasRedo ? (
+                    {allSettings.hasRedo ? (
                         <div className='redo'>
                             <icons.Redo
                                 className='activeButton'
                                 onClick={() => {
-                                    props.canvas.redo();
-                                    props.setActiveObj({});
+                                    allSettings.canvas.redo();
+                                    allSettings.setActiveObj({});
                                 }}
                             />
                         </div>
                     ) : null}
-                    {props.activeObj.id !== 'background' ? (
+                    {allSettings.activeObj.id !== 'background' ? (
                         <div className='selectAll'>
                             <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
                         </div>
@@ -252,16 +256,17 @@ const ComponentsSelection = (props) => {
 };
 
 ComponentsSelection.propTypes = {
-    canvas: PropTypes.object.isRequired,
-    setCanvas: PropTypes.func.isRequired,
-    setActiveObj: PropTypes.func.isRequired,
-    activeObj: PropTypes.object.isRequired,
-    hasUndo: PropTypes.bool.isRequired,
-    hasRedo: PropTypes.bool.isRequired,
+    // canvas: PropTypes.object.isRequired,
+    // setCanvas: PropTypes.func.isRequired,
+    // setActiveObj: PropTypes.func.isRequired,
+    // activeObj: PropTypes.object.isRequired,
+    // hasUndo: PropTypes.bool.isRequired,
+    // hasRedo: PropTypes.bool.isRequired,
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    canvasSetting: PropTypes.object.isRequired,
+    // canvasSetting: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
+    allSettings: PropTypes.object.isRequired,
 };
 
 export default ComponentsSelection;

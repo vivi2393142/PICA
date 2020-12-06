@@ -7,7 +7,7 @@ import * as firebase from '../../../firebase';
 import { Link } from 'react-router-dom';
 
 const Banner = (props) => {
-    const allSettings = props.drawingAreaSettings;
+    const allSettings = props.allSettings;
     // title setting
     const handleTitle = (e) => {
         const newCanvasSetting = { ...allSettings.canvasSetting, title: e.target.value };
@@ -28,7 +28,7 @@ const Banner = (props) => {
                     defaultValue={allSettings.canvasSetting.title}
                     onChange={handleTitle}
                 ></input>
-                <div className='statusSize'>{`${allSettings.canvasSetting.width}×${allSettings.canvasSetting.height}像素`}</div>
+
                 <div
                     onClick={() =>
                         firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting)
@@ -58,6 +58,7 @@ const Banner = (props) => {
                 firebase讀檔
             </button> */}
             <div className='bannerRight'>
+                <div className='statusSize'>{`${allSettings.canvasSetting.width}×${allSettings.canvasSetting.height}像素`}</div>
                 <Resize drawingAreaSettings={allSettings} />
                 <div className='shareIconWrapper'>
                     <bannerIcons.Share className='bannerIcons' />
@@ -73,7 +74,7 @@ const Banner = (props) => {
 
 Banner.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
-    drawingAreaSettings: PropTypes.object.isRequired,
+    allSettings: PropTypes.object.isRequired,
 };
 
 export default Banner;

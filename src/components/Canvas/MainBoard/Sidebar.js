@@ -16,12 +16,13 @@ import triangle from '../../../img/src/sidebarItems/triangle.svg';
 import circle from '../../../img/src/sidebarItems/circle.svg';
 
 const Sidebar = (props) => {
+    const allSettings = props.allSettings;
     const mainColor = '#e89a4f';
     const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
     const adjSetNextPosition = () => {
         if (
-            nextAddPosition.left + 80 > props.canvasSetting.width / 2 ||
-            nextAddPosition.top + 80 > props.canvasSetting.height / 2
+            nextAddPosition.left + 80 > allSettings.canvasSetting.width / 2 ||
+            nextAddPosition.top + 80 > allSettings.canvasSetting.height / 2
         ) {
             setNextAddPosition({ top: 10, left: 10 });
         } else {
@@ -37,8 +38,8 @@ const Sidebar = (props) => {
             width: 100,
             fill: mainColor,
         });
-        props.canvas.add(rect);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.add(rect);
+        allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
     };
     const addCircle = () => {
@@ -48,8 +49,8 @@ const Sidebar = (props) => {
             radius: 50,
             fill: mainColor,
         });
-        props.canvas.add(circle);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.add(circle);
+        allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
     };
     const addTriangle = () => {
@@ -60,8 +61,8 @@ const Sidebar = (props) => {
             height: 100,
             fill: mainColor,
         });
-        props.canvas.add(triangle);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.add(triangle);
+        allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
     };
     const addShape = (e) => {
@@ -74,8 +75,8 @@ const Sidebar = (props) => {
                 scaleY: 2.2,
                 id: 'shape',
             });
-            props.canvas.add(newShape);
-            props.canvas.requestRenderAll();
+            allSettings.canvas.add(newShape);
+            allSettings.canvas.requestRenderAll();
             adjSetNextPosition();
         });
     };
@@ -89,14 +90,14 @@ const Sidebar = (props) => {
             fontFamily: 'Sans-serif',
             fontWeight: weight,
         });
-        props.canvas.add(text);
+        allSettings.canvas.add(text);
         text.setControlsVisibility({
             mb: false,
             mt: false,
             ml: false,
             mr: false,
         });
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
     };
     const addImage = (e) => {
@@ -109,7 +110,7 @@ const Sidebar = (props) => {
                     scaleX: e.target.width / e.target.naturalWidth,
                     scaleY: e.target.height / e.target.naturalHeight,
                 });
-                props.canvas.add(oImg);
+                allSettings.canvas.add(oImg);
                 oImg.setControlsVisibility({
                     mb: false,
                     mt: false,
@@ -121,7 +122,7 @@ const Sidebar = (props) => {
                 crossOrigin: 'anonymous',
             }
         );
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
     };
     const addSticker = (e) => {
@@ -135,7 +136,7 @@ const Sidebar = (props) => {
                     scaleY: e.target.height / e.target.naturalHeight,
                     id: 'sticker',
                 });
-                props.canvas.add(oImg);
+                allSettings.canvas.add(oImg);
                 oImg.setControlsVisibility({
                     mb: false,
                     mt: false,
@@ -147,22 +148,22 @@ const Sidebar = (props) => {
                 crossOrigin: 'anonymous',
             }
         );
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
     };
     const backgroundColorHandler = (color) => {
-        props.canvas.backgroundImage = 0;
-        props.canvas.backgroundColor = color;
-        props.canvas.requestRenderAll();
-        props.canvas.fire('object:modified');
+        allSettings.canvas.backgroundImage = 0;
+        allSettings.canvas.backgroundColor = color;
+        allSettings.canvas.requestRenderAll();
+        allSettings.canvas.fire('object:modified');
     };
     const backgroundImageHandler = (e) => {
         // remove exist background
-        if (props.canvas.getObjects()[0].id === 'background') {
-            props.canvas.remove(props.canvas.getObjects()[0]);
+        if (allSettings.canvas.getObjects()[0].id === 'background') {
+            allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
         }
-        const scaleToWidth = props.canvasSetting.width / e.target.naturalWidth;
-        const scaleToHeight = props.canvasSetting.height / e.target.naturalHeight;
+        const scaleToWidth = allSettings.canvasSetting.width / e.target.naturalWidth;
+        const scaleToHeight = allSettings.canvasSetting.height / e.target.naturalHeight;
         const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
         fabric.Image.fromURL(
             e.target.src,
@@ -185,28 +186,28 @@ const Sidebar = (props) => {
                 } else {
                     backImg.lockMovementY = true;
                 }
-                props.canvas.add(backImg);
+                allSettings.canvas.add(backImg);
                 backImg.sendToBack();
                 // bounding can't be inside canvas
                 backImg.on('modified', () => {
                     const currentSizeRatio =
                         parseInt(document.querySelector('.canvas-container').style.width) /
-                        props.canvasSetting.width;
+                        allSettings.canvasSetting.width;
                     backImg.setCoords();
                     const { top, left, width, height } = backImg.getBoundingRect();
                     if (top > 0) {
                         backImg.top = 0;
                     }
-                    if (top + height < props.canvas.getHeight()) {
-                        backImg.top = (props.canvas.getHeight() - height) / currentSizeRatio;
+                    if (top + height < allSettings.canvas.getHeight()) {
+                        backImg.top = (allSettings.canvas.getHeight() - height) / currentSizeRatio;
                     }
                     if (left > 0) {
                         backImg.left = 0;
                     }
-                    if (left + width < props.canvas.getWidth()) {
-                        backImg.left = (props.canvas.getWidth() - width) / currentSizeRatio;
+                    if (left + width < allSettings.canvas.getWidth()) {
+                        backImg.left = (allSettings.canvas.getWidth() - width) / currentSizeRatio;
                     }
-                    props.canvas.requestRenderAll();
+                    allSettings.canvas.requestRenderAll();
                 });
             },
             {
@@ -236,8 +237,8 @@ const Sidebar = (props) => {
             });
         } else {
             // remove exist background
-            if (props.canvas.getObjects()[0].id === 'background') {
-                props.canvas.remove(props.canvas.getObjects()[0]);
+            if (allSettings.canvas.getObjects()[0].id === 'background') {
+                allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
             }
             document.querySelector('.colorChartWrapper').classList.add('colorChartUnfold');
             document.querySelector('.colorChartWrapper').classList.remove('colorChartFold');
@@ -258,19 +259,19 @@ const Sidebar = (props) => {
         const colorRgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
         setBackColorChosen({ background: colorRgba });
         backgroundColorHandler(colorRgba);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
     };
     const handleBackColorChangeCube = (e) => {
         const color = e.target.style.backgroundColor;
         setBackColorChosen({ background: color });
         backgroundColorHandler(color);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
     };
     // add new components: frame
     const addFrameA = (col, spacing) => {
         const rectBack = new fabric.Rect({
-            height: props.canvasSetting.height,
-            width: props.canvasSetting.width,
+            height: allSettings.canvasSetting.height,
+            width: allSettings.canvasSetting.width,
             stroke: 'black',
             fill: 'transparent',
             isClipFrame: true,
@@ -280,10 +281,10 @@ const Sidebar = (props) => {
             let rect = new fabric.Rect({
                 top: 0,
                 left:
-                    (props.canvasSetting.width - spacing * (col - 1)) / col +
+                    (allSettings.canvasSetting.width - spacing * (col - 1)) / col +
                     spacing * (i === 0 ? 0 : 1),
-                height: props.canvasSetting.height,
-                width: (props.canvasSetting.width - spacing * (col - 1)) / col,
+                height: allSettings.canvasSetting.height,
+                width: (allSettings.canvasSetting.width - spacing * (col - 1)) / col,
                 stroke: mainColor,
                 fill: 'transparent',
                 isClipFrame: true,
@@ -291,13 +292,13 @@ const Sidebar = (props) => {
             groupItem.push(rect);
         }
         const group = new fabric.Group(groupItem);
-        props.canvas.add(group);
-        props.canvas.requestRenderAll();
+        allSettings.canvas.add(group);
+        allSettings.canvas.requestRenderAll();
     };
 
     // TODO: 測試用資料，待刪除
     const logCurrentCanvas = () => {
-        var json = props.canvas.toJSON();
+        var json = allSettings.canvas.toJSON();
         console.log(JSON.stringify(json));
     };
 
@@ -375,9 +376,9 @@ const Sidebar = (props) => {
             blur: 0,
             noise: 0,
         });
-        props.activeObj.filters = [];
-        props.activeObj.applyFilters();
-        props.canvas.requestRenderAll();
+        allSettings.activeObj.filters = [];
+        allSettings.activeObj.applyFilters();
+        allSettings.canvas.requestRenderAll();
     };
     const imageFiltersJsx = customFilters.map((item, index) => (
         <div key={index} className='imgAdjustBox'>
@@ -396,9 +397,9 @@ const Sidebar = (props) => {
                     const newFilter = new f[item.way]({
                         [item.attr]: parseFloat(e.target.value),
                     });
-                    props.activeObj.filters[index] = newFilter;
-                    props.activeObj.applyFilters();
-                    props.canvas.requestRenderAll();
+                    allSettings.activeObj.filters[index] = newFilter;
+                    allSettings.activeObj.applyFilters();
+                    allSettings.canvas.requestRenderAll();
                 }}
                 step={item.step}
             ></input>
@@ -487,7 +488,7 @@ const Sidebar = (props) => {
 
     // get current image styles
     React.useEffect(() => {
-        if (props.activeObj.type === 'image') {
+        if (allSettings.activeObj.type === 'image') {
             let filtersActive = {
                 brightness: 0,
                 contrast: 0,
@@ -496,7 +497,7 @@ const Sidebar = (props) => {
                 blur: 0,
                 noise: 0,
             };
-            props.activeObj.filters.forEach((item) => {
+            allSettings.activeObj.filters.forEach((item) => {
                 let type = item.type.toLowerCase();
                 if (type === 'huerotation') {
                     filtersActive.rotation = parseFloat(item.rotation);
@@ -506,7 +507,7 @@ const Sidebar = (props) => {
             });
             setCurrentFilters(filtersActive);
         }
-    }, [props.activeObj]);
+    }, [allSettings.activeObj]);
 
     return (
         <div className='sidebar'>
@@ -520,16 +521,16 @@ const Sidebar = (props) => {
                     {props.currentSidebar === 'text' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldText'
-                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
                             <div
                                 draggable='true'
                                 className='unfoldItem addTextBig '
                                 onClick={() =>
                                     addIText(
-                                        props.textSetting[0].title,
-                                        props.textSetting[0].size,
-                                        props.textSetting[0].fontWeight
+                                        allSettings.textSetting[0].title,
+                                        allSettings.textSetting[0].size,
+                                        allSettings.textSetting[0].fontWeight
                                     )
                                 }
                             >
@@ -540,9 +541,9 @@ const Sidebar = (props) => {
                                 className='unfoldItem addTextMiddle '
                                 onClick={() =>
                                     addIText(
-                                        props.textSetting[1].title,
-                                        props.textSetting[1].size,
-                                        props.textSetting[1].fontWeight
+                                        allSettings.textSetting[1].title,
+                                        allSettings.textSetting[1].size,
+                                        allSettings.textSetting[1].fontWeight
                                     )
                                 }
                             >
@@ -553,9 +554,9 @@ const Sidebar = (props) => {
                                 className='unfoldItem addTextSmall '
                                 onClick={() =>
                                     addIText(
-                                        props.textSetting[2].title,
-                                        props.textSetting[2].size,
-                                        props.textSetting[2].fontWeight
+                                        allSettings.textSetting[2].title,
+                                        allSettings.textSetting[2].size,
+                                        allSettings.textSetting[2].fontWeight
                                     )
                                 }
                             >
@@ -565,7 +566,7 @@ const Sidebar = (props) => {
                     ) : props.currentSidebar === 'shape' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldShape'
-                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
                             <div className='sidebarUnfoldSubtitle'>常用形狀</div>
                             <img
@@ -609,7 +610,7 @@ const Sidebar = (props) => {
                     ) : props.currentSidebar === 'line' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldLine'
-                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
                             <img
                                 src={line1}
@@ -651,7 +652,7 @@ const Sidebar = (props) => {
                     ) : props.currentSidebar === 'image' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldImg'
-                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
                             <img
                                 onClick={addImage}
@@ -833,7 +834,7 @@ const Sidebar = (props) => {
                     ) : props.currentSidebar === 'sticker' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldSticker'
-                            onMouseDown={(e) => props.saveDragItem.func(e)}
+                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
                             <img
                                 onClick={addSticker}
@@ -879,16 +880,17 @@ const Sidebar = (props) => {
 };
 
 Sidebar.propTypes = {
-    canvas: PropTypes.object.isRequired,
-    setCanvas: PropTypes.func.isRequired,
+    // canvas: PropTypes.object.isRequired,
+    // setCanvas: PropTypes.func.isRequired,
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    setActiveObj: PropTypes.func.isRequired,
-    activeObj: PropTypes.object.isRequired,
+    // setActiveObj: PropTypes.func.isRequired,
+    // activeObj: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
-    saveDragItem: PropTypes.object.isRequired,
-    canvasSetting: PropTypes.object.isRequired,
-    textSetting: PropTypes.array.isRequired,
+    // saveDragItem: PropTypes.object.isRequired,
+    // canvasSetting: PropTypes.object.isRequired,
+    // textSetting: PropTypes.array.isRequired,
+    allSettings: PropTypes.object.isRequired,
 };
 
 export default Sidebar;

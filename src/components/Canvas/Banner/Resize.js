@@ -115,18 +115,7 @@ const Resize = (props) => {
 
     return (
         <div className='resizeIconWrapper'>
-            <bannerIcons.Resize
-                className='bannerIcons'
-                onMouseOver={(e) => {
-                    e.currentTarget.parentNode.classList.remove('resizeBlur');
-                    e.currentTarget.parentNode.classList.add('resizeHover');
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.parentNode.classList.remove('resizeHover');
-                    e.currentTarget.parentNode.classList.add('resizeBlur');
-                }}
-                onClick={toggleSizeChoosing}
-            />
+            <bannerIcons.Resize className='bannerIcons' onClick={toggleSizeChoosing} />
             {isChoosingCanvasSize ? <div className='sizeSelection'>{sizeSelectionJsx}</div> : null}
             {isTypingSize ? (
                 <div className='customSizeWrapper' onMouseLeave={() => setIsTypingSize(false)}>

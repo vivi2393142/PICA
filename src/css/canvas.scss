@@ -860,52 +860,8 @@ input[type='range'].imgAdjustRange {
     display: flex;
     align-items: center;
 }
-.resizeBlur::before {
-    content: '點擊以重設畫布尺寸';
-    position: absolute;
-    color: $custom-black;
-    font-size: 0.9rem;
-    left: 0;
-    width: 0;
-    top: 50%;
-    height: 1.1rem;
-    transform: translateY(-50%);
-    animation-name: resizeIconFold;
-    animation-duration: 300ms;
-    overflow: hidden;
-}
-.resizeHover::before {
-    content: '點擊以重設畫布尺寸';
-    position: absolute;
-    color: $custom-black;
-    font-size: 0.9rem;
-    left: -9rem;
-    top: 50%;
-    height: 1.1rem;
-    transform: translateY(-50%);
-    animation-name: resizeIconUnfold;
-    animation-duration: 300ms;
-    overflow: hidden;
-}
-@keyframes resizeIconUnfold {
-    0% {
-        width: 0rem;
-        left: 0rem;
-    }
-    100% {
-        width: 9rem;
-        left: -9rem;
-    }
-}
-@keyframes resizeIconFold {
-    0% {
-        width: 9rem;
-        left: -9rem;
-    }
-    100% {
-        width: 0rem;
-        left: 0rem;
-    }
+.statusSize {
+    padding-right: 0.5rem;
 }
 .sizeSelection {
     position: absolute;

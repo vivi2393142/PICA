@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import 'fabric-history';
 
 const NavLeftImg = (props) => {
+    const allSettings = props.allSettings;
+
     // toggle adjustment nav
     const toggleImageAdjustmentNav = () => {
         props.setCurrentSidebar('imageAdjustment');
@@ -20,29 +22,29 @@ const NavLeftImg = (props) => {
     // -- preset dark background, cropping target index
     let croppingObjIndex = 0;
     const darkBackground = new fabric.Rect({
-        height: props.canvasSetting.height,
-        width: props.canvasSetting.width,
+        height: allSettings.canvasSetting.height,
+        width: allSettings.canvasSetting.width,
         fill: 'rgba(0, 0, 0, 0.8)',
     });
     const startCropping = () => {
         // --- update cropping obj
-        props.setCroppingObj(props.activeObj);
+        props.setCroppingObj(allSettings.activeObj);
         // --- add dark background and enable to choose other then crop box
         darkBackground.on('mousedown', () => {
-            props.canvas.setActiveObject(clipPathView);
+            allSettings.canvas.setActiveObject(clipPathView);
         });
-        props.canvas.add(darkBackground);
+        allSettings.canvas.add(darkBackground);
         // --- disable all controls
-        props.canvas.getObjects().forEach((obj) => {
+        allSettings.canvas.getObjects().forEach((obj) => {
             obj.hasControls = false;
             obj.selectable = false;
             obj.hoverCursor = 'default';
         });
         // --- get cropping target index then send to the top
-        croppingObjIndex = props.canvas.getObjects().indexOf(props.activeObj);
-        props.activeObj.bringToFront();
+        croppingObjIndex = allSettings.canvas.getObjects().indexOf(allSettings.activeObj);
+        allSettings.activeObj.bringToFront();
         // --- preset clippath
-        let currentObj = props.activeObj;
+        let currentObj = allSettings.activeObj;
         currentObj.clipPath = null;
         // --- clone cropping target to create crop box
         const clipPathView = new fabric.Rect({
@@ -60,7 +62,7 @@ const NavLeftImg = (props) => {
             cornerColor: '#e89a4f',
             cornerStrokeColor: '#e89a4f',
         });
-        props.canvas.add(clipPathView);
+        allSettings.canvas.add(clipPathView);
         clipPathView.set({ borderColor: '#e89a4f' });
         clipPathView.lockMovementX = true;
         clipPathView.lockMovementY = true;
@@ -69,67 +71,80 @@ const NavLeftImg = (props) => {
             mtr: false,
         });
 
-        props.canvas.setActiveObject(clipPathView);
+        allSettings.canvas.setActiveObject(clipPathView);
     };
     const confirmCropping = () => {
         // --- set actual clippath through crop box(since the location mode is different)
         const clipPath = new fabric.Rect({
             height:
-                (props.activeObj.height * props.activeObj.scaleY) / props.croppingObj.scaleY + 4,
-            width: (props.activeObj.width * props.activeObj.scaleX) / props.croppingObj.scaleX + 4,
+                (allSettings.activeObj.height * allSettings.activeObj.scaleY) /
+                    props.croppingObj.scaleY +
+                4,
+            width:
+                (allSettings.activeObj.width * allSettings.activeObj.scaleX) /
+                    props.croppingObj.scaleX +
+                4,
             top:
-                (-props.activeObj.height / 2 + props.activeObj.top - props.croppingObj.top) /
+                (-allSettings.activeObj.height / 2 +
+                    allSettings.activeObj.top -
+                    props.croppingObj.top) /
                     props.croppingObj.scaleY -
                 2,
             left:
-                (-props.activeObj.width / 2 + props.activeObj.left - props.croppingObj.left) /
+                (-allSettings.activeObj.width / 2 +
+                    allSettings.activeObj.left -
+                    props.croppingObj.left) /
                     props.croppingObj.scaleX -
                 2,
         });
         // --- enable all controls
-        props.canvas.getObjects().forEach((obj) => {
+        allSettings.canvas.getObjects().forEach((obj) => {
             obj.hasControls = true;
             obj.selectable = true;
             obj.hoverCursor = 'move';
         });
         // --- reset clippath and index
         props.croppingObj.clipPath = clipPath;
-        props.canvas.moveTo(props.croppingObj, croppingObjIndex);
+        allSettings.canvas.moveTo(props.croppingObj, croppingObjIndex);
         // --- update cropping obj
         props.setCroppingObj({});
         // --- remove crop box and dark background
-        props.canvas.remove(props.activeObj);
-        props.canvas.remove(props.canvas.getObjects()[props.canvas.getObjects().length - 1]);
+        allSettings.canvas.remove(allSettings.activeObj);
+        allSettings.canvas.remove(
+            allSettings.canvas.getObjects()[allSettings.canvas.getObjects().length - 1]
+        );
         // --- render
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
     };
     const cancelCropping = () => {
         // --- enable all controls
-        props.canvas.getObjects().forEach((obj) => {
+        allSettings.canvas.getObjects().forEach((obj) => {
             obj.hasControls = true;
             obj.selectable = true;
             obj.hoverCursor = 'move';
         });
         // --- reset index
-        props.canvas.moveTo(props.croppingObj, croppingObjIndex);
+        allSettings.canvas.moveTo(allSettings.croppingObj, croppingObjIndex);
         // --- update cropping obj
-        props.setCroppingObj({});
+        allSettings.setCroppingObj({});
         // --- remove crop box and dark background
-        props.canvas.remove(props.activeObj);
-        props.canvas.remove(props.canvas.getObjects()[props.canvas.getObjects().length - 1]);
+        allSettings.canvas.remove(allSettings.activeObj);
+        allSettings.canvas.remove(
+            allSettings.canvas.getObjects()[allSettings.canvas.getObjects().length - 1]
+        );
         // --- render
-        props.canvas.requestRenderAll();
+        allSettings.canvas.requestRenderAll();
     };
 
     // render
     return (
         <div className='specificNav'>
-            {props.activeObj.type === 'image' && !props.croppingObj.type ? (
+            {allSettings.activeObj.type === 'image' && !props.croppingObj.type ? (
                 <div className={'specificButton'} onClick={toggleImageAdjustmentNav}>
                     調整圖片參數
                 </div>
             ) : null}
-            {props.activeObj.type === 'image' && !props.croppingObj.type ? (
+            {allSettings.activeObj.type === 'image' && !props.croppingObj.type ? (
                 <div className='specificButton' onClick={startCropping}>
                     裁剪圖片
                 </div>
@@ -152,11 +167,12 @@ NavLeftImg.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
-    canvas: PropTypes.object.isRequired,
-    activeObj: PropTypes.object.isRequired,
+    // canvas: PropTypes.object.isRequired,
+    // activeObj: PropTypes.object.isRequired,
     croppingObj: PropTypes.object.isRequired,
     setCroppingObj: PropTypes.func.isRequired,
-    canvasSetting: PropTypes.object.isRequired,
+    // canvasSetting: PropTypes.object.isRequired,
+    allSettings: PropTypes.object.isRequired,
 };
 
 export default NavLeftImg;

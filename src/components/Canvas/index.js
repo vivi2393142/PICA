@@ -33,6 +33,7 @@ const Canvas = (props) => {
         }, 3000);
     };
 
+    // handle responsive size
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
             (window.innerWidth * 0.72) / canvasSetting.width,
@@ -43,24 +44,30 @@ const Canvas = (props) => {
     };
 
     React.useEffect(() => {
-        console.log(props.match.params.id);
-        console.log('執行canvas use effect setting');
+        // console.log(props.match.params.id);
+        // console.log('執行canvas use effect setting');
+
+        // get firebase data according to URL params
         firebase.loadCanvas((canvasSettingInit, canvasDataInit) => {
+            // set canvas setting state by firebase canvas data
             setCanvasSetting(canvasSettingInit);
             setCanvasData(canvasDataInit);
 
+            // create new canvas then load firebase data in
             const canvasInit = new fabric.Canvas('fabric-canvas', {
                 height: canvasSettingInit.height,
                 width: canvasSettingInit.width,
             });
+            canvasInit.loadFromJSON(canvasDataInit, presetObjectStyle);
 
             async function presetObjectStyle() {
                 // -- render initial data then clear init history
                 await canvasInit.renderAll();
+                // ---- remove loader after finishing render canvas
                 setIsLoaded(false);
                 canvasInit.clearHistory();
-                // props.setIsLoaded(false);
-                // -- preset image, iText objects style
+
+                // preset image, iText objects style
                 let imgObjects = canvasInit.getObjects('image');
                 let texObjects = canvasInit.getObjects('i-text');
                 imgObjects.forEach((object) => {
@@ -79,6 +86,8 @@ const Canvas = (props) => {
                         mr: false,
                     });
                 });
+
+                // fabric listeners
                 // -- listen to all changes -> update database
                 canvasInit.on('object:modified', (e) => {
                     setHasUndo(canvasInit.historyUndo.length > 0);
@@ -96,6 +105,7 @@ const Canvas = (props) => {
                     setHasRedo(canvasInit.historyRedo.length > 0);
                     console.log('移除完畢');
                 });
+                // -- listen to all changes -> set active obj
                 canvasInit.on('selection:created', (e) => {
                     setActiveObj(e.target);
                     // console.log(e.target.type);
@@ -106,15 +116,14 @@ const Canvas = (props) => {
                 canvasInit.on('selection:cleared', (e) => {
                     setActiveObj({});
                 });
-                canvasInit.on('object:scaled', (e) => {
-                    console.log('object:scaled');
-                });
+                // -- listen to drop event -> execute drop function
                 canvasInit.on('drop', (e) => {
                     dropItem(e);
-                    console.log('監聽到drop');
+                    // console.log('監聽到drop');
                 });
             }
-            canvasInit.loadFromJSON(canvasDataInit, presetObjectStyle);
+
+            // preset fabric custom styles
             // -- init align guide lines extensions
             initAligningGuidelines(canvasInit);
             // -- customize selection style
@@ -134,10 +143,10 @@ const Canvas = (props) => {
             };
             fabric.Object.prototype.set(customBorder);
 
-            // -- set canvas
+            // set canvas
             setCanvas(canvasInit);
 
-            // -- preset responsive canvas size
+            // responsive canvas size
             const container = document.querySelector('.canvas-container');
             container.style.border = '2.8rem solid transparent';
             document.querySelector('.lower-canvas').style.width = '100%';
@@ -152,6 +161,7 @@ const Canvas = (props) => {
             container.style.width = `${fixRatio * canvasSettingInit.width}px`;
             container.style.height = `${fixRatio * canvasSettingInit.height}px`;
 
+            // dnd components event
             // --- save the dragging target
             let itemDragOffset = { offsetX: 0, offsetY: 0 };
             let movingItem = {};
@@ -302,11 +312,12 @@ const Canvas = (props) => {
                 }
             };
 
+            // show save status when firebase find new update
             firebase.listenCanvas(props.match.params.id, showSaveStatus);
         }, props.match.params.id);
     }, []);
 
-    const drawingAreaSettings = {
+    const allSettings = {
         canvasSetting,
         setCanvasSetting,
         canvasData,
@@ -325,6 +336,7 @@ const Canvas = (props) => {
         setActiveObj,
         saveDragItem,
         handleResponsiveSize,
+        textSetting,
     };
 
     const Background = () => {
@@ -350,8 +362,8 @@ const Canvas = (props) => {
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
             <Background />
-            <Banner drawingAreaSettings={drawingAreaSettings} />
-            <MainBoard drawingAreaSettings={drawingAreaSettings} />
+            <Banner allSettings={allSettings} />
+            <MainBoard allSettings={allSettings} />
         </div>
     );
 };
@@ -361,44 +373,3 @@ Canvas.propTypes = {
 };
 
 export default Canvas;
-
-// const dataTest = {
-//     version: '4.2.0',
-//     objects: [
-//         {
-//             type: 'rect',
-//             version: '4.2.0',
-//             originX: 'left',
-//             originY: 'top',
-//             left: null,
-//             top: null,
-//             width: 100,
-//             height: 100,
-//             fill: '#e89a4f',
-//             stroke: null,
-//             strokeWidth: 1,
-//             strokeDashArray: null,
-//             strokeLineCap: 'butt',
-//             strokeDashOffset: 0,
-//             strokeLineJoin: 'miter',
-//             strokeMiterLimit: 4,
-//             scaleX: 1,
-//             scaleY: 1,
-//             angle: 0,
-//             flipX: false,
-//             flipY: false,
-//             opacity: 1,
-//             shadow: null,
-//             visible: true,
-//             backgroundColor: '',
-//             fillRule: 'nonzero',
-//             paintFirst: 'fill',
-//             globalCompositeOperation: 'source-over',
-//             skewX: 0,
-//             skewY: 0,
-//             rx: 0,
-//             ry: 0,
-//         },
-//     ],
-//     background: '#fff',
-// };

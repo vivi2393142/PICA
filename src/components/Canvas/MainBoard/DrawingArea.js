@@ -4,7 +4,7 @@ import { fabric } from 'fabric';
 import 'fabric-history';
 
 const DrawingArea = (props) => {
-    const allSettings = props.drawingAreaSettings;
+    const allSettings = props.allSettings;
 
     // -- handle auto resizing option
     React.useEffect(() => {
@@ -30,13 +30,13 @@ const DrawingArea = (props) => {
 
 DrawingArea.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
-    drawingAreaSettings: PropTypes.object.isRequired,
-    canvas: PropTypes.object.isRequired,
-    setCanvas: PropTypes.func.isRequired,
-    setActiveObj: PropTypes.func.isRequired,
-    activeObj: PropTypes.object.isRequired,
-    setHasUndo: PropTypes.func.isRequired,
-    setHasRedo: PropTypes.func.isRequired,
+    allSettings: PropTypes.object.isRequired,
+    // canvas: PropTypes.object.isRequired,
+    // setCanvas: PropTypes.func.isRequired,
+    // setActiveObj: PropTypes.func.isRequired,
+    // activeObj: PropTypes.object.isRequired,
+    // setHasUndo: PropTypes.func.isRequired,
+    // setHasRedo: PropTypes.func.isRequired,
     zoomCanvas: PropTypes.func.isRequired,
 };
 

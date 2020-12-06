@@ -5,9 +5,9 @@ import Sidebar from './Sidebar';
 import ComponentsSelection from './ComponentsSelection/index';
 
 const MainBoard = (props) => {
-    const allSettings = props.drawingAreaSettings;
-    const canvas = allSettings.canvas;
-    const setCanvas = allSettings.setCanvas;
+    const allSettings = props.allSettings;
+    // const canvas = allSettings.canvas;
+    // const setCanvas = allSettings.setCanvas;
 
     const [currentSidebar, setCurrentSidebar] = React.useState('');
     const textSetting = [
@@ -46,9 +46,11 @@ const MainBoard = (props) => {
         const currentSizeRatio =
             parseInt(document.querySelector('.canvas-container').style.width) /
             allSettings.canvasSetting.width;
-        canvas.setZoom(currentSizeRatio);
-        canvas.setWidth(allSettings.canvasSetting.width * canvas.getZoom());
-        canvas.setHeight(allSettings.canvasSetting.height * canvas.getZoom());
+        allSettings.canvas.setZoom(currentSizeRatio);
+        allSettings.canvas.setWidth(allSettings.canvasSetting.width * allSettings.canvas.getZoom());
+        allSettings.canvas.setHeight(
+            allSettings.canvasSetting.height * allSettings.canvas.getZoom()
+        );
     };
     const ratioOptions = [10, 25, 50, 75, 100, 125, 200, 300];
     const givenOptions = ratioOptions.map((item, index) => {
@@ -70,38 +72,40 @@ const MainBoard = (props) => {
                 <option value='auto'>符合畫面大小</option>
             </select>
             <Sidebar
-                canvas={canvas}
-                setCanvas={setCanvas}
+                allSettings={allSettings}
+                // canvas={canvas}
+                // setCanvas={setCanvas}
                 currentSidebar={currentSidebar}
                 setCurrentSidebar={setCurrentSidebar}
-                setActiveObj={allSettings.setActiveObj}
-                activeObj={allSettings.activeObj}
+                // setActiveObj={allSettings.setActiveObj}
+                // activeObj={allSettings.activeObj}
                 trackOutSideClick={trackOutSideClick}
-                saveDragItem={allSettings.saveDragItem}
-                canvasSetting={allSettings.canvasSetting}
-                textSetting={textSetting}
+                // saveDragItem={allSettings.saveDragItem}
+                // canvasSetting={allSettings.canvasSetting}
+                // textSetting={textSetting}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection
-                    canvas={canvas}
-                    setCanvas={setCanvas}
-                    hasUndo={allSettings.hasUndo}
-                    hasRedo={allSettings.hasRedo}
-                    setActiveObj={allSettings.setActiveObj}
-                    activeObj={allSettings.activeObj}
+                    // canvas={canvas}
+                    // setCanvas={setCanvas}
+                    // hasUndo={allSettings.hasUndo}
+                    // hasRedo={allSettings.hasRedo}
+                    // setActiveObj={allSettings.setActiveObj}
+                    // activeObj={allSettings.activeObj}
+                    allSettings={allSettings}
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
                     trackOutSideClick={trackOutSideClick}
-                    canvasSetting={allSettings.canvasSetting}
+                    // canvasSetting={allSettings.canvasSetting}
                 />
                 <DrawingArea
-                    canvas={canvas}
-                    setCanvas={setCanvas}
-                    setActiveObj={allSettings.setActiveObj}
-                    activeObj={allSettings.activeObj}
-                    setHasUndo={allSettings.setHasUndo}
-                    setHasRedo={allSettings.setHasRedo}
-                    drawingAreaSettings={props.drawingAreaSettings}
+                    // canvas={canvas}
+                    // setCanvas={setCanvas}
+                    // setActiveObj={allSettings.setActiveObj}
+                    // activeObj={allSettings.activeObj}
+                    // setHasUndo={allSettings.setHasUndo}
+                    // setHasRedo={allSettings.setHasRedo}
+                    allSettings={allSettings}
                     zoomCanvas={zoomCanvas}
                 />
             </div>
@@ -111,7 +115,7 @@ const MainBoard = (props) => {
 
 MainBoard.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
-    drawingAreaSettings: PropTypes.object.isRequired,
+    allSettings: PropTypes.object.isRequired,
 };
 
 export default MainBoard;
