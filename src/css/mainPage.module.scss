@@ -59,14 +59,21 @@ $bk-g: #919da3;
                 height: 5rem;
                 margin: 1rem auto;
             }
+            .otherDetails {
+                padding: 0.2rem 0;
+                color: $custom-black;
+            }
         }
         .canvasFiles {
             display: flex;
             flex-wrap: wrap;
 
-            .file {
-                width: 30%;
-                margin: 0.5%;
+            .fileWrapper,
+            .addNew {
+                margin: 1%;
+            }
+            .file,
+            .addNew {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -74,12 +81,29 @@ $bk-g: #919da3;
                 border-radius: 1rem;
                 font-size: 1rem;
                 cursor: pointer;
-
-                &::after {
-                    content: '';
-                    display: block;
-                    padding-bottom: 60%; // 寬高比10:6
+                overflow: hidden;
+                height: 10rem;
+                box-shadow: 1px 1px 5px 0 $custom-black;
+                position: relative;
+                flex-direction: column;
+                // &::after {
+                //     content: '';
+                //     display: block;
+                //     padding-bottom: 60%; // 寬高比10:6
+                // }
+                .fileImg {
+                    height: 100%;
                 }
+            }
+            .fileTitle {
+                text-align: center;
+                font-size: 0.9rem;
+                width: 100%;
+                color: $custom-black;
+                padding: 0.2rem 0;
+            }
+            .addNew {
+                width: 15rem;
             }
         }
     }

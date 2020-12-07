@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 import * as icons from '../../../img/icons';
+import * as firebase from '../../../firebase';
 import shape1 from '../../../img/src/sidebarItems/shape1.svg';
 import shape2 from '../../../img/src/sidebarItems/shape2.svg';
 import shape3 from '../../../img/src/sidebarItems/shape3.svg';
@@ -17,8 +18,11 @@ import circle from '../../../img/src/sidebarItems/circle.svg';
 
 const Sidebar = (props) => {
     const allSettings = props.allSettings;
+    // console.log(allSettings.uploadedFiles);
     const mainColor = '#e89a4f';
     const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
+    const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
+    // set next add in component position
     const adjSetNextPosition = () => {
         if (
             nextAddPosition.left + 80 > allSettings.canvasSetting.width / 2 ||
@@ -215,6 +219,41 @@ const Sidebar = (props) => {
             }
         );
     };
+
+    // uploaded function
+    const handleUploadImage = (e) => {
+        firebase.uploadToStorage(
+            e,
+            props.fileId,
+            (uploadValue) => setUploadProgressValue(uploadValue),
+            () => setUploadProgressValue(0)
+        );
+    };
+    const uploadedImgJsx = allSettings.uploadedFiles
+        ? allSettings.uploadedFiles.map((item, index) => {
+              return (
+                  <div
+                      key={index}
+                      className='unfoldItemImgWrapper'
+                      onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+                  >
+                      <img
+                          className='unfoldItemImg'
+                          onClick={addImage}
+                          draggable='true'
+                          src={item.src}
+                      ></img>
+                      <div
+                          className='close'
+                          id={item.path}
+                          onClick={(e) => firebase.removeUploadImg(e, props.fileId)}
+                      >
+                          x
+                      </div>
+                  </div>
+              );
+          })
+        : null;
 
     // backgroundColor
     const [hasBackColor, setHasBackColor] = React.useState(false);
@@ -484,7 +523,117 @@ const Sidebar = (props) => {
         </div>
     ));
 
-    // jsx: sidebar -
+    // jsx: sidebar - sticker
+    const stickerArray = [
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fballet.svg?alt=media&token=1d5e5227-2183-4bcc-ad9b-959ac4819763',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2FDoggie.svg?alt=media&token=a2c119c8-b54b-4179-ac98-051cbe8485ff',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fclumsy.svg?alt=media&token=3f7b90d8-c1e2-4137-84cc-03b90c914351',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fbikini.svg?alt=media&token=d1c1eb63-84c8-4d9c-a7f9-f323c4bfd876',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fcoffee.svg?alt=media&token=cf6b586c-75c0-4c03-b81a-e29f8fa43574',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdancing.svg?alt=media&token=7835db16-23f8-4908-82f7-e097999e1520',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdog-jump.svg?alt=media&token=f9877759-4a82-4330-aa5f-9db031ca8c3c',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffloat.svg?alt=media&token=2e447975-657a-4dca-9dbb-91d870aace7e',
+    ];
+    const stickerJsx = stickerArray.map((item, index) => {
+        return (
+            <img
+                key={index}
+                onClick={addImage}
+                className='unfoldItem'
+                draggable='true'
+                src={item}
+            ></img>
+        );
+    });
+
+    // jsx: sidebar - image
+    const imageArray = [
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727922.jpeg?alt=media&token=68c098f6-4baa-4a9c-b14f-c85b98b78ca2',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727928.jpeg?alt=media&token=22179791-4cd4-46b7-9b52-69ce6d5031a2',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303086.jpeg?alt=media&token=8651f14d-76a2-4a2e-aaa7-52b068b11bef',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303098.jpeg?alt=media&token=a947cd3d-46e2-4766-91bd-b184d873901e',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-maksim-goncharenok-5821029.jpeg?alt=media&token=e81bc877-ad53-4ad5-8479-9dc7bae31a7c',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-pixabay-235970.jpeg?alt=media&token=5242ddcf-69cd-45a9-a92f-aa146798f3ea',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-tejas-prajapati-586744.jpeg?alt=media&token=fa4acca3-5cfa-4a76-afb0-1437ce3c82b3',
+    ];
+    const imageJsx = imageArray.map((item, index) => {
+        return (
+            <img
+                key={index}
+                onClick={addImage}
+                className='unfoldItem'
+                draggable='true'
+                src={item}
+            ></img>
+        );
+    });
+
+    // jsx: sidebar - line
+    const lineArray = [line1, line2, line3, line4, line5, line6];
+    const lineJsx = lineArray.map((item, index) => {
+        return (
+            <img
+                key={index}
+                src={item}
+                className='unfoldItem itemLine'
+                onClick={addShape}
+                draggable='true'
+            ></img>
+        );
+    });
+
+    // jsx: sidebar - background color cube
+    const colorArray = [
+        '#FCB900',
+        '#FF6900',
+        '#7BDCB5',
+        '#00D084',
+        '#8ED1FC',
+        '#0693E3',
+        '#ABB8C3',
+        '#EB144C',
+        '#F78DA7',
+        '#9900EF',
+    ];
+    const backgroundColorJsx = colorArray.map((item, index) => {
+        return (
+            <div
+                key={index}
+                className='backgroundColorCube'
+                style={{ backgroundColor: item }}
+                onClick={handleBackColorChangeCube}
+            ></div>
+        );
+    });
+
+    // jsx: sidebar - background image
+    const backgroundImageArray = ['https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'];
+    const backgroundImageJsx = backgroundImageArray.map((item, index) => {
+        return (
+            <img
+                key={index}
+                draggable='false'
+                onClick={backgroundImageHandler}
+                className='unfoldItem'
+                src={item}
+            ></img>
+        );
+    });
+
+    // jsx: sidebar - shape
+    const abnormalShapeArray = [shape1, shape2, shape3];
+    const abnShapeJsx = abnormalShapeArray.map((item, index) => {
+        return (
+            <img
+                key={index}
+                src={item}
+                draggable='true'
+                className='unfoldItem abnormalShape'
+                onClick={addShape}
+            ></img>
+        );
+    });
 
     // get current image styles
     React.useEffect(() => {
@@ -588,84 +737,21 @@ const Sidebar = (props) => {
                                 onClick={addTriangle}
                             ></img>
                             <div className='sidebarUnfoldSubtitle'>不規則形狀</div>
-                            <img
-                                src={shape1}
-                                draggable='true'
-                                className='unfoldItem abnormalShape'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={shape2}
-                                className='unfoldItem abnormalShape'
-                                draggable='true'
-                                onClick={addShape}
-                            ></img>
-                            <img
-                                src={shape3}
-                                className='unfoldItem abnormalShape'
-                                draggable='true'
-                                onClick={addShape}
-                            ></img>
+                            {abnShapeJsx}
                         </div>
                     ) : props.currentSidebar === 'line' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldLine'
                             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
-                            <img
-                                src={line1}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                                draggable='true'
-                            ></img>
-                            <img
-                                src={line2}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                                draggable='true'
-                            ></img>
-                            <img
-                                src={line3}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                                draggable='true'
-                            ></img>
-                            <img
-                                src={line4}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                                draggable='true'
-                            ></img>
-                            <img
-                                src={line5}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                                draggable='true'
-                            ></img>
-                            <img
-                                src={line6}
-                                className='unfoldItem itemLine'
-                                onClick={addShape}
-                                draggable='true'
-                            ></img>
+                            {lineJsx}
                         </div>
                     ) : props.currentSidebar === 'image' ? (
                         <div
                             className='sidebarUnfoldInner sidebarUnfoldImg'
                             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
-                            <img
-                                onClick={addImage}
-                                className='unfoldItem'
-                                draggable='true'
-                                src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                            ></img>
-                            <img
-                                onClick={addImage}
-                                className='unfoldItem'
-                                draggable='true'
-                                src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                            ></img>
+                            {imageJsx}
                         </div>
                     ) : props.currentSidebar === 'background' ? (
                         <div className='sidebarUnfoldInner sidebarUnfoldBack'>
@@ -704,126 +790,35 @@ const Sidebar = (props) => {
                                         />
                                     ) : null}
                                 </div>
-                                <div className='backgroundColorChart'>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#FCB900' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#FF6900' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#7BDCB5' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#00D084' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#8ED1FC' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#0693E3' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#ABB8C3' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#EB144C' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#F78DA7' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                    <div
-                                        className='backgroundColorCube'
-                                        style={{ backgroundColor: '#9900EF' }}
-                                        onClick={handleBackColorChangeCube}
-                                    ></div>
-                                </div>
+                                <div className='backgroundColorChart'>{backgroundColorJsx}</div>
                             </div>
                             <div className='sidebarUnfoldSubtitle backgroundTitle'>背景圖片</div>
-                            <div className='backImgChart'>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                                <img
-                                    draggable='false'
-                                    onClick={backgroundImageHandler}
-                                    className='unfoldItem'
-                                    src='https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'
-                                ></img>
-                            </div>
+                            <div className='backImgChart'>{backgroundImageJsx}</div>
                         </div>
                     ) : props.currentSidebar === 'upload' ? (
                         <div className='sidebarUnfoldInner'>
-                            <div className='unfoldItem'></div>
+                            {uploadProgressValue === 0 ? (
+                                <label className='unfoldItem uploadLabel'>
+                                    點擊以上傳圖片
+                                    <input
+                                        className='uploadInput'
+                                        type='file'
+                                        accept='image/png, image/jpeg'
+                                        onChange={handleUploadImage}
+                                    ></input>
+                                </label>
+                            ) : (
+                                <div className='progressWrapper'>
+                                    <progress
+                                        className='uploadProgress'
+                                        value={uploadProgressValue}
+                                        max='100'
+                                    ></progress>
+                                    <div>LOADING</div>
+                                    <div>{uploadProgressValue}%</div>
+                                </div>
+                            )}
+                            {uploadedImgJsx}
                         </div>
                     ) : props.currentSidebar === 'frame' ? (
                         <div className='sidebarUnfoldInner sidebarUnfoldFrame' t>
@@ -836,18 +831,7 @@ const Sidebar = (props) => {
                             className='sidebarUnfoldInner sidebarUnfoldSticker'
                             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
-                            <img
-                                onClick={addSticker}
-                                draggable='true'
-                                className='unfoldItem'
-                                src='https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189'
-                            ></img>
-                            <img
-                                onClick={addSticker}
-                                draggable='true'
-                                className='unfoldItem'
-                                src='https://cdn.glitch.com/4c9ebeb9-8b9a-4adc-ad0a-238d9ae00bb5%2Fmdn_logo-only_color.svg?1535749917189'
-                            ></img>
+                            {stickerJsx}
                         </div>
                     ) : props.currentSidebar === 'more' ? (
                         <div className='sidebarUnfoldInner'>
@@ -880,17 +864,12 @@ const Sidebar = (props) => {
 };
 
 Sidebar.propTypes = {
-    // canvas: PropTypes.object.isRequired,
-    // setCanvas: PropTypes.func.isRequired,
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    // setActiveObj: PropTypes.func.isRequired,
-    // activeObj: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
-    // saveDragItem: PropTypes.object.isRequired,
-    // canvasSetting: PropTypes.object.isRequired,
-    // textSetting: PropTypes.array.isRequired,
     allSettings: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    fileId: PropTypes.string.isRequired,
 };
 
 export default Sidebar;

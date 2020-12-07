@@ -14,6 +14,12 @@ const Banner = (props) => {
         allSettings.setCanvasSetting(newCanvasSetting);
     };
 
+    const handleSaveFile = () => {
+        allSettings.canvas.discardActiveObject().renderAll();
+        // firebase.testSaveDataURL(dataURL, props.fileId,);
+        firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting, props.fileId);
+    };
+
     return (
         <div className='banner'>
             <div className='logoWrapper'>
@@ -21,7 +27,6 @@ const Banner = (props) => {
                     <bannerIcons.Logo className='bannerLogo' />
                 </Link>
             </div>
-
             <div className='bannerLeft'>
                 <input
                     placeholder='未命名畫布'
@@ -30,9 +35,7 @@ const Banner = (props) => {
                 ></input>
 
                 <div
-                    onClick={() =>
-                        firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting)
-                    }
+                    onClick={handleSaveFile}
                     style={{
                         cursor: 'pointer',
                         border: '1px solid #555555',
@@ -75,6 +78,7 @@ const Banner = (props) => {
 Banner.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     allSettings: PropTypes.object.isRequired,
+    fileId: PropTypes.string.isRequired,
 };
 
 export default Banner;

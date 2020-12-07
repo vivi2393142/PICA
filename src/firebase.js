@@ -2,9 +2,10 @@ import firebase from 'firebase/app';
 import 'firebase/analytics';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
+import { nanoid } from 'nanoid';
 
 // init firebase
-
 const firebaseConfig = {
     apiKey: 'AIzaSyDtNmp8oroSpowKQmr4nHAgqsJ59VCafYE',
     authDomain: 'pica-b4a59.firebaseapp.com',
@@ -18,6 +19,26 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
+
+// save data URL
+const savaDataURL = (fileId, successCallback) => {
+    const exportCanvas = document.getElementById('fabric-canvas');
+    let dataURL = exportCanvas.toDataURL('image/jpeg', 1);
+    const storageRef = firebase
+        .storage()
+        .ref()
+        .child('snapshot/' + fileId);
+    const newDataURL = dataURL.replace('data:image/jpeg;base64,', '');
+    const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
+    task.on(
+        'state_changed',
+        () => {},
+        function error(err) {},
+        function complete() {
+            successCallback(storageRef);
+        }
+    );
+};
 
 // firestore
 const loadUserData = (userId, callback) => {
@@ -38,6 +59,7 @@ const createNewCanvas = (canvasSetting, userId) => {
             background: '#fff',
         }),
         basicSetting: canvasSetting,
+        uploaded: [],
     }).then(() => {
         // add data to userData
         const userRef = db.collection('userData').doc(userId);
@@ -61,16 +83,33 @@ const loadCanvas = (callback, fileId) => {
         const canvasSettingInit = dataFromFirebase.basicSetting;
         const canvasDataInit = JSON.parse(dataFromFirebase.data);
         callback(canvasSettingInit, canvasDataInit);
+        if (canvasDataInit.objects.length === 0) {
+            savaDataURL(fileId, (storageRef) => {
+                storageRef.getDownloadURL().then((url) => {
+                    const ref = db.collection('canvasFiles').doc(fileId);
+                    ref.get().then((doc) => {
+                        ref.update({
+                            snapshot: url,
+                        }).then(() => {});
+                    });
+                });
+            });
+        }
     });
 };
 
 let initState = true;
-
-const listenCanvas = (fileId, callback) => {
-    console.log('設定監聽事件');
+const listenCanvas = (fileId, callback, setUploadedFiles) => {
+    // console.log('設定監聽事件');
     const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
+    let oldData = [];
     ref.onSnapshot((doc) => {
+        if (doc.data().uploaded !== oldData.uploaded) {
+            setUploadedFiles(doc.data().uploaded);
+        }
+        oldData = doc.data();
         if (initState) {
+            // 不回應第一次監聽
             initState = false;
         } else {
             console.log('文件更新');
@@ -79,19 +118,37 @@ const listenCanvas = (fileId, callback) => {
     });
 };
 
-const saveCanvasData = (canvas, canvasSetting) => {
-    const canvasData = JSON.stringify(canvas.toJSON());
-    const ref = db.collection('canvasFiles').doc(canvasSetting.id);
-    ref.set({
-        data: canvasData,
-        basicSetting: canvasSetting,
-    }).then(() => {});
+const saveCanvasData = (canvas, canvasSetting, fileId) => {
+    // save snap shot on storage
+    savaDataURL(fileId, (storageRef) => {
+        storageRef.getDownloadURL().then((url) => {
+            // update file data
+            const canvasData = JSON.stringify(canvas.toJSON());
+            const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+            ref.update({
+                data: canvasData,
+                basicSetting: canvasSetting,
+                snapshot: url,
+            }).then(() => {});
+        });
+    });
 };
 
 const getCanvasData = (id, callback) => {
     const ref = db.collection('canvasFiles').doc(id);
     ref.get().then((doc) => {
         return doc.data();
+    });
+};
+
+const getAllCanvasData = (callback) => {
+    const ref = db.collection('canvasFiles');
+    let result = [];
+    ref.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            result.push(doc.data());
+        });
+        callback(result);
     });
 };
 
@@ -160,6 +217,74 @@ const nativeSignOut = (successCallback) => {
         );
 };
 
+// storage
+const storage = firebase.storage();
+const uploadToStorage = (e, fileId, callback, successCallback, failCallback) => {
+    const imgId = nanoid();
+    const file = e.target.files[0];
+    const storageRef = firebase
+        .storage()
+        .ref()
+        .child(fileId + '/' + imgId);
+    const task = storageRef.put(file);
+    // listen to progress
+    task.on(
+        'state_changed',
+        (snapshot) => {
+            let uploadValue = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            callback(uploadValue.toFixed(0));
+        },
+        function error(err) {
+            // console.log('上傳失敗');
+        },
+        function complete() {
+            successCallback();
+            // console.log('上傳成功');
+            // get upload URL and set into firestore data
+            storageRef.getDownloadURL().then((url) => {
+                const ref = db.collection('canvasFiles').doc(fileId);
+                ref.get().then((doc) => {
+                    let oldUploaded = [...doc.data().uploaded];
+                    oldUploaded.push({ src: url, path: `${fileId}/${imgId}` });
+                    // console.log(oldUploaded);
+                    ref.update({
+                        uploaded: oldUploaded,
+                    }).then(() => {});
+                });
+            });
+        }
+    );
+};
+
+const removeUploadImg = (e, fileId) => {
+    const storageRef = firebase.storage().ref().child(e.target.id);
+    storageRef
+        .delete()
+        .then(() => {
+            // console.log('刪除成功');
+            // get upload URL and set into firestore data
+            const ref = db.collection('canvasFiles').doc(fileId);
+            ref.get().then((doc) => {
+                const newUploaded = doc.data().uploaded.filter((item) => item.path !== e.target.id);
+                ref.update({
+                    uploaded: newUploaded,
+                }).then(() => {});
+            });
+        })
+        .catch(function (error) {
+            // console.log('刪除失敗');
+        });
+};
+
+// const testSaveDataURL = (dataURL, fileId) => {
+//     const storageRef = firebase
+//         .storage()
+//         .ref()
+//         .child('snapshot/' + fileId);
+//     let newDataURL = dataURL.replace('data:image/jpeg;base64,', '');
+//     const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
+// };
+
 export {
     db,
     saveCanvasData,
@@ -172,4 +297,7 @@ export {
     loadCanvas,
     listenCanvas,
     loadUserData,
+    uploadToStorage,
+    removeUploadImg,
+    getAllCanvasData,
 };

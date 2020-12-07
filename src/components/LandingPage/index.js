@@ -89,7 +89,7 @@ const LandingPage = (props) => {
                                 className={styles.submit}
                                 onClick={() => {
                                     const user = firebase.nativeSignIn(inputId, inputPwd);
-                                    user ? props.setCurrentUser(user) : props.setCurrentUser(null);
+                                    user ? props.setCurrentUser(user) : props.setCurrentUser({});
                                 }}
                             >
                                 確認
@@ -121,7 +121,7 @@ const LandingPage = (props) => {
                                 className={styles.submit}
                                 onClick={() => {
                                     const user = firebase.nativeSignUp(inputId, inputPwd);
-                                    user ? props.setCurrentUser(user) : props.setCurrentUser(null);
+                                    user ? props.setCurrentUser(user) : props.setCurrentUser({});
                                 }}
                             >
                                 確認

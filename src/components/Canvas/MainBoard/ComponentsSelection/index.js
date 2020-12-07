@@ -256,15 +256,8 @@ const ComponentsSelection = (props) => {
 };
 
 ComponentsSelection.propTypes = {
-    // canvas: PropTypes.object.isRequired,
-    // setCanvas: PropTypes.func.isRequired,
-    // setActiveObj: PropTypes.func.isRequired,
-    // activeObj: PropTypes.object.isRequired,
-    // hasUndo: PropTypes.bool.isRequired,
-    // hasRedo: PropTypes.bool.isRequired,
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    // canvasSetting: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,
 };

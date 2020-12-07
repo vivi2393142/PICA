@@ -12,7 +12,7 @@ const NavLeftImg = (props) => {
             const targetDiv = document.querySelector('.sidebarUnfold');
             if (!targetDiv.contains(e.target)) {
                 props.setCurrentSidebar('');
-                props.canvas.fire('object:modified');
+                allSettings.canvas.fire('object:modified');
                 document.removeEventListener('click', clickedOrNot, true);
             }
         };

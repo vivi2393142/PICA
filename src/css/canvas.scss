@@ -209,6 +209,7 @@ body {
     width: 42%;
     padding-left: 0.8rem;
     justify-content: flex-start;
+    z-index: 1;
 }
 .activeButton {
     pointer-events: bounding-box;
@@ -544,7 +545,12 @@ input[type='range'].imgAdjustRange {
         $main-color
     );
 }
-.unfoldItem {
+.unfoldImgWrapper {
+    display: flex;
+    position: relative;
+}
+.unfoldItem,
+.unfoldItemImgWrapper {
     border: 1px solid white;
     color: white;
     width: 45%;
@@ -553,7 +559,36 @@ input[type='range'].imgAdjustRange {
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    position: relative;
     margin: 3% 2%;
+    .unfoldItemImg {
+        width: 100%;
+        height: 100%;
+
+        &:hover {
+            opacity: 0.6;
+        }
+    }
+    .close {
+        font-size: 0.7rem;
+        position: absolute;
+        top: -0.5rem;
+        right: -0.5rem;
+        background-color: white;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 100%;
+        color: $custom-black;
+        border: 1px solid $custom-black;
+        display: flex;
+        justify-content: center;
+        line-height: 1rem;
+
+        &:hover {
+            background-color: $sub-color;
+            color: white;
+        }
+    }
 }
 .unfoldItem:hover {
     opacity: 0.6;
@@ -630,6 +665,47 @@ input[type='range'].imgAdjustRange {
 // sidebar - sticker
 .sidebarUnfoldSticker * {
     background-color: rgba(255, 255, 255, 0.6);
+}
+// sidebar - upload
+.uploadLabel {
+    width: 100%;
+    padding: 0.3rem 0;
+    background-color: $sub-color;
+    color: $main-color;
+    border: none;
+    border-radius: 3px;
+}
+.uploadInput {
+    display: none;
+}
+.progressWrapper {
+    color: $light-grey;
+    width: 100%;
+    padding: 1rem 0.3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    progress[value] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 1rem;
+    }
+    progress[value]::-webkit-progress-bar {
+        background-color: #eee;
+        border-radius: 2px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+        border-radius: 3px;
+    }
+    progress[value]::-webkit-progress-value {
+        background-color: $sub-color;
+        border-radius: 3px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+    }
+    div {
+        font-size: 0.6rem;
+        padding: 0.4rem 0;
+    }
 }
 //sidebar - background
 .currentBackground {
@@ -723,7 +799,7 @@ input[type='range'].imgAdjustRange {
 }
 .colorChartWrapper {
     height: 0;
-    overflow: hidden;
+    // overflow: hidden;
 }
 .colorChartUnfold {
     height: auto;
@@ -754,6 +830,7 @@ input[type='range'].imgAdjustRange {
 .backgroundPicker {
     top: 3.2rem;
     left: 0.2rem;
+    z-index: 1;
 }
 .backImgChart {
     display: flex;

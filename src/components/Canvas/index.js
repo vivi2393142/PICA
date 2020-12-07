@@ -24,6 +24,7 @@ const Canvas = (props) => {
         { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
+    const [uploadedFiles, setUploadedFiles] = React.useState([]);
 
     // show save status
     const showSaveStatus = () => {
@@ -177,13 +178,16 @@ const Canvas = (props) => {
             setSaveDragItem({ func: saveDragItemFunc });
             // --- listener to drop then add the dragging one
             const dropItem = (e) => {
-                console.log(movingItem);
+                // console.log(movingItem);
                 const currentSizeRatio =
                     parseInt(document.querySelector('.canvas-container').style.width) /
                     canvasSettingInit.width;
                 const { offsetX, offsetY } = e.e;
                 const src = movingItem.src;
-                if (movingItem.parentNode.classList.contains('sidebarUnfoldImg')) {
+                if (
+                    movingItem.parentNode.classList.contains('sidebarUnfoldImg') ||
+                    movingItem.parentNode.classList.contains('unfoldItemImgWrapper')
+                ) {
                     fabric.Image.fromURL(
                         src,
                         (img) => {
@@ -194,7 +198,6 @@ const Canvas = (props) => {
                                 left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
                             });
                             canvasInit.add(imgItem);
-                            console.log(imgItem);
                             imgItem.setControlsVisibility({
                                 mb: false,
                                 mt: false,
@@ -313,7 +316,9 @@ const Canvas = (props) => {
             };
 
             // show save status when firebase find new update
-            firebase.listenCanvas(props.match.params.id, showSaveStatus);
+            firebase.listenCanvas(props.match.params.id, showSaveStatus, (files) =>
+                setUploadedFiles(files)
+            );
         }, props.match.params.id);
     }, []);
 
@@ -337,6 +342,7 @@ const Canvas = (props) => {
         saveDragItem,
         handleResponsiveSize,
         textSetting,
+        uploadedFiles,
     };
 
     const Background = () => {
@@ -362,14 +368,19 @@ const Canvas = (props) => {
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
             <Background />
-            <Banner allSettings={allSettings} />
-            <MainBoard allSettings={allSettings} />
+            <Banner allSettings={allSettings} fileId={props.match.params.id} />
+            <MainBoard
+                allSettings={allSettings}
+                currentUser={props.currentUser}
+                fileId={props.match.params.id}
+            />
         </div>
     );
 };
 
 Canvas.propTypes = {
     match: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
 };
 
 export default Canvas;

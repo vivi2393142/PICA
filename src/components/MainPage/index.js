@@ -10,7 +10,8 @@ import Loader from '../Loader';
 const MainPage = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [isChoosingSize, setIsChoosingSize] = React.useState(false);
-    const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({});
+    const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
+    const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const canvasSizeOptions = [
         { name: '自訂尺寸->未完成(進畫布可以改)', width: 0, height: 0 },
         { name: 'Instagram 貼文', width: 1080, height: 1080 },
@@ -36,27 +37,52 @@ const MainPage = (props) => {
     };
 
     React.useEffect(() => {
-        if (props.currentUser) {
+        if (props.currentUser !== {}) {
             firebase.loadUserData(props.currentUser.email, (dataFromFirebase) => {
-                setIsLoaded(false);
-                setUserDataFromFirebase(dataFromFirebase);
+                if (dataFromFirebase) {
+                    setUserDataFromFirebase(dataFromFirebase);
+                }
             });
         }
     }, [props.currentUser]);
 
-    const canvasFilesJsx = userDataFromFirebase.canvas
-        ? userDataFromFirebase.canvas.map((item, index) => {
-              return (
-                  <div
-                      className={styles.file}
-                      key={index}
-                      onClick={() => (document.location.href = `../file/${item}`)}
-                  >
-                      {item}
-                  </div>
-              );
-          })
-        : null;
+    React.useEffect(() => {
+        firebase.getAllCanvasData((result) => {
+            // console.log(userDataFromFirebase.canvas[0]);
+            if (userDataFromFirebase.canvas[0] !== '') {
+                let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
+                    const fileData = result.find((data) => data.basicSetting.id === item);
+                    return {
+                        fileId: item,
+                        snapshot: fileData.snapshot,
+                        title:
+                            fileData.basicSetting.title === ''
+                                ? '未命名畫布'
+                                : fileData.basicSetting.title,
+                    };
+                });
+                setCanvasDataWithDataURL(canvasDataWithImg);
+                setIsLoaded(false);
+            }
+        });
+    }, [userDataFromFirebase.canvas]);
+
+    const canvasFilesJsx =
+        canvasDataWithDataURL.length !== 0
+            ? canvasDataWithDataURL.map((item, index) => {
+                  return (
+                      <div key={index} className={styles.fileWrapper}>
+                          <div
+                              className={styles.file}
+                              onClick={() => (document.location.href = `../file/${item.fileId}`)}
+                          >
+                              <img src={item.snapshot} className={styles.fileImg}></img>
+                          </div>
+                          <div className={styles.fileTitle}>{item.title}</div>
+                      </div>
+                  );
+              })
+            : null;
 
     const sizeSelectionJsx = canvasSizeOptions.map((item, index) => {
         if (item.name !== '自訂尺寸') {
@@ -99,7 +125,7 @@ const MainPage = (props) => {
                         className={styles.button}
                         onClick={() =>
                             firebase.nativeSignOut(() => {
-                                props.setCurrentUser(null);
+                                props.setCurrentUser({});
                                 document.location.href = `./`;
                             })
                         }
@@ -112,23 +138,14 @@ const MainPage = (props) => {
                 <div className={styles.main}>
                     <div className={styles.memberDetails}>
                         <div className={styles.memberPhoto}></div>
-                        <div>UserName</div>
-                        {/* <div>{props.currentUser.email}</div> */}
-                        <div> files</div>
+                        <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
+                        <div className={styles.otherDetails}>
+                            {userDataFromFirebase.canvas.length} files
+                        </div>
                     </div>
                     <div className={styles.canvasFiles}>
                         {canvasFilesJsx ? canvasFilesJsx : null}
-                        {/* {canvasFilesJsx} */}
-                        {/* <div className={styles.'file'></div>
-                        <div className={styles.'file'></div>
-                        <div className={styles.'file'></div>
-                        <div className={styles.'file'></div>
-                        <div className={styles.'file'></div>
-                        <div className={styles.'file'></div> */}
-                        <div
-                            className={`${styles.file} ${styles.addNew}`}
-                            onClick={() => setIsChoosingSize(true)}
-                        >
+                        <div className={styles.addNew} onClick={() => setIsChoosingSize(true)}>
                             +
                         </div>
                     </div>

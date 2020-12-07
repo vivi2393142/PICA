@@ -73,41 +73,20 @@ const MainBoard = (props) => {
             </select>
             <Sidebar
                 allSettings={allSettings}
-                // canvas={canvas}
-                // setCanvas={setCanvas}
                 currentSidebar={currentSidebar}
                 setCurrentSidebar={setCurrentSidebar}
-                // setActiveObj={allSettings.setActiveObj}
-                // activeObj={allSettings.activeObj}
                 trackOutSideClick={trackOutSideClick}
-                // saveDragItem={allSettings.saveDragItem}
-                // canvasSetting={allSettings.canvasSetting}
-                // textSetting={textSetting}
+                currentUser={props.currentUser}
+                fileId={props.fileId}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection
-                    // canvas={canvas}
-                    // setCanvas={setCanvas}
-                    // hasUndo={allSettings.hasUndo}
-                    // hasRedo={allSettings.hasRedo}
-                    // setActiveObj={allSettings.setActiveObj}
-                    // activeObj={allSettings.activeObj}
                     allSettings={allSettings}
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
                     trackOutSideClick={trackOutSideClick}
-                    // canvasSetting={allSettings.canvasSetting}
                 />
-                <DrawingArea
-                    // canvas={canvas}
-                    // setCanvas={setCanvas}
-                    // setActiveObj={allSettings.setActiveObj}
-                    // activeObj={allSettings.activeObj}
-                    // setHasUndo={allSettings.setHasUndo}
-                    // setHasRedo={allSettings.setHasRedo}
-                    allSettings={allSettings}
-                    zoomCanvas={zoomCanvas}
-                />
+                <DrawingArea allSettings={allSettings} zoomCanvas={zoomCanvas} />
             </div>
         </div>
     );
@@ -116,6 +95,8 @@ const MainBoard = (props) => {
 MainBoard.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     allSettings: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    fileId: PropTypes.string.isRequired,
 };
 
 export default MainBoard;
