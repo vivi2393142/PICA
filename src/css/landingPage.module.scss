@@ -12,7 +12,17 @@ $board-to-window-ratio: 90%;
 $bk-w: #eaecec;
 $bk-y: #d8c2b0;
 $bk-g: #919da3;
+$big-font: 1rem;
+$middle-font: 0.9rem;
+$small-font: 0.8rem;
+$tiny-font: 0.7rem;
+$symbol-font: 0.6rem;
 
+.landingPage {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 .bannerWrapper {
     display: flex;
     justify-content: center;
@@ -44,11 +54,13 @@ $bk-g: #919da3;
 }
 
 .mainWrapper {
-    height: 90%;
     display: flex;
+    flex-grow: 1;
     justify-content: center;
-    margin-top: 10rem;
+    align-items: center;
+    margin-bottom: 10%;
     .main {
+        height: 35%;
         width: 70%;
         display: flex;
         justify-content: space-around;
@@ -137,7 +149,7 @@ $bk-g: #919da3;
 }
 
 .loginCover {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(255, 255, 255, 0.7);
     position: fixed;
     width: 100vw;
     height: 100vh;
@@ -145,31 +157,118 @@ $bk-g: #919da3;
     left: 0;
     //TODO: 待處理z-index問題
     z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .loginRect {
+        width: 42rem;
+        height: 20rem;
+        background-color: $dark-green;
+        display: flex;
+        position: absolute;
+        border-radius: 5px;
+        justify-content: space-around;
+        padding: 0 1.5rem;
+        align-items: center;
+        .textBox {
+            color: white;
+            width: 40%;
+            height: 60%;
+            // border: 1px solid $custom-black;
+            h1 {
+                font-size: 1.5rem;
+                font-weight: 900;
+            }
+            h4 {
+                font-weight: 400;
+                font-size: $middle-font;
+                padding: 0.3rem 0;
+            }
+            .button {
+                font-size: $small-font;
+                border: 1px solid white;
+                padding: 0.3rem 2rem;
+                display: inline-block;
+                border-radius: 5px;
+                font-weight: 500;
+                space-between: 2px;
+                cursor: pointer;
+                transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+                &:hover {
+                    color: $custom-black;
+                    background-color: rgba(255, 255, 255, 0.9);
+                }
+            }
+        }
+    }
+}
+.blockWrapper {
+    position: absolute;
+    height: 24rem;
+    width: 15rem;
+    position: relative;
+    background-color: white;
+    box-shadow: 0 0 5px 0 $custom-black;
+    padding: 1.5rem 2.5rem;
+    overflow: hidden;
+}
+.blockWrapperRight {
+    left: 10rem;
+}
+.blockWrapperRightAni {
+    animation-name: blockToRight;
+    animation-duration: 500ms;
+    left: 10rem;
+}
+@keyframes blockToRight {
+    0% {
+        left: -10rem;
+    }
+    90% {
+        left: 10.5rem;
+    }
+    100% {
+        left: 10rem;
+    }
+}
+.blockWrapperLeft {
+    left: -10rem;
+}
+.blockWrapperLeftAni {
+    animation-name: blockToLeft;
+    animation-duration: 500ms;
+    left: -10rem;
+}
+@keyframes blockToLeft {
+    0% {
+        left: 10rem;
+    }
+    90% {
+        left: -10.5rem;
+    }
+    100% {
+        left: -10rem;
+    }
 }
 
 .signupBlock,
 .loginBlock {
-    z-index: 1000;
-    background-color: $light-grey;
-    border: 1px solid $custom-black;
     display: flex;
     position: absolute;
-    flex-wrap: wrap;
-    display: flex;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 1.5rem 2rem;
-    border-radius: 10px;
-    font-size: 1rem;
+    top: 0%;
+    left: 0%;
+    flex-direction: column;
+    padding: 2rem 2.5rem;
+    border-radius: 5px;
+    font-size: $big-font;
     color: $custom-black;
-    width: 20rem;
-    justify-content: space-between;
+    height: 24rem;
+    width: 15rem;
     & * {
         margin: 0.5rem 0;
     }
     .close {
-        font-size: 0.7rem;
+        font-size: $tiny-font;
         position: absolute;
         top: 0.5rem;
         right: 2.5rem;
@@ -186,53 +285,158 @@ $bk-g: #919da3;
         }
     }
     .toggle {
-        font-size: 0.8rem;
+        font-size: $small-font;
         font-weight: 500;
         cursor: pointer;
         position: absolute;
         bottom: 1.2rem;
         right: 2.2rem;
         padding: 0.1rem 0.3rem;
-
         &:hover {
             background-color: rgba(0, 0, 0, 0.2);
         }
     }
     .inputTop {
         width: 100%;
-        text-align: center;
-        padding-bottom: 0.5rem;
+        text-align: left;
+        padding: 0 0 1rem 0;
+        color: $sub-color;
+        font-size: 1.3rem;
+        font-weight: 500;
     }
     .inputName {
         width: 30%;
     }
     input {
-        width: 65%;
+        border: none;
+        border-bottom: 1px solid $middle-grey;
+        line-height: 2;
+        background-color: transparent;
     }
     .submit {
-        margin: 0 auto;
-        border: 1px solid $custom-black;
-        padding: 0.1rem 1rem;
-        border-radius: 5px;
-        margin-top: 1rem;
+        // border: 1px solid $custom-black;
+        padding: 0.4rem 2.5rem;
+        border-radius: 3rem;
         cursor: pointer;
-
+        align-self: flex-start;
+        background-color: $sub-color;
+        color: white;
+        font-weight: 500;
+        margin-top: 1.5rem;
         &:hover {
             opacity: 0.6;
         }
     }
 }
-.loginBlock {
-    background-color: $dark-green;
-    color: white;
-    border: 1px solid white;
-    .submit {
-        border: 1px solid white;
+
+.signupBlockLeft {
+    left: -100%;
+    animation: signUpToLeft 700ms;
+}
+.loginBlockLeft {
+    left: 0;
+    animation: loginToLeft 700ms;
+}
+@keyframes signUpToLeft {
+    0% {
+        left: 0%;
     }
-    .toggle:hover {
-        background-color: rgba(255, 255, 255, 0.2);
+    100% {
+        left: -100%;
     }
-    .close {
-        border: 1px solid white;
+}
+@keyframes loginToLeft {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: 0%;
+    }
+}
+.signupBlockRight {
+    left: 0;
+    animation: signUpToRight 700ms;
+}
+.loginBlockRight {
+    left: 100%;
+    animation: loginToRight 700ms;
+}
+@keyframes signUpToRight {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: -0%;
+    }
+}
+@keyframes loginToRight {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: 100%;
+    }
+}
+.otherSign {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: $middle-grey;
+    .or {
+        width: 100%;
+        border-bottom: 1px solid $middle-grey;
+        position: relative;
+        margin-bottom: 1rem;
+        &::before {
+            content: 'or';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -0.6rem;
+            background-color: white;
+            padding: 0 0.8rem;
+            // color: $dark-grey;
+        }
+    }
+    .loginWayF,
+    .loginWayG {
+        width: 40%;
+        border: 1px solid $middle-grey;
+        height: 1rem;
+        padding: 0.4rem 0.2rem;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        font-size: $middle-font;
+        cursor: pointer;
+        .loginIcon {
+            margin: 0;
+            height: 1.3rem;
+        }
+
+        span {
+            padding-left: 0.1rem;
+        }
+    }
+}
+.loginWayF {
+    // transition: color 0.2s ease-in-out, color 0.2s ease-in-out;
+    &:hover {
+        color: #3b5998;
+        border: 1px solid #3b5998;
+        .loginIcon path {
+            fill: #3b5998;
+        }
+    }
+}
+.loginWayG {
+    // transition: color 0.2s, border 0.2s;
+    &:hover {
+        color: #eb4537;
+        border: 1px solid #eb4537;
+        .loginIcon path {
+            fill: #eb4537;
+        }
     }
 }

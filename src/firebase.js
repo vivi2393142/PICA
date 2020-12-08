@@ -164,7 +164,70 @@ const checkCurrentUser = (successCallback, failCallback) => {
     }
 };
 
-const nativeSignUp = (email, pwd) => {
+const fbSignUp = () => {
+    const provider = new firebase.auth.FacebookAuthProvider();
+    firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function (result) {
+            // var token = result.credential.accessToken;
+            // var user = result.user;
+            // console.log(result.user.displayName);
+            console.log(result.user.photoURL);
+            console.log(result);
+            const ref = db.collection('userData').doc(result.user.email);
+            ref.set({
+                photo: result.user.photoURL,
+                name: result.user.displayName,
+                email: result.user.email,
+                canvas: [],
+            });
+            return user;
+        })
+        .catch(function (error) {
+            // var errorCode = error.code;
+            // var errorMessage = error.message;
+            // // The email of the user's account used.
+            // var email = error.email;
+            // // The firebase.auth.AuthCredential type that was used.
+            // var credential = error.credential;
+            // // ...
+        });
+};
+
+const googleSignUp = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase
+        .auth()
+        .signInWithPopup(provider)
+        .then(function (result) {
+            // var token = result.credential.accessToken;
+            // var user = result.user;
+            // console.log(result.user.displayName);
+            // console.log(result.user.photoURL);
+            // console.log(result.user.email);
+            const ref = db.collection('userData').doc(result.user.email);
+            ref.set({
+                photo: result.user.photoURL,
+                name: result.user.displayName,
+                email: result.user.email,
+                canvas: [],
+            });
+            return user;
+        })
+        .catch(function (error) {
+            //    console.log(error.message)
+            //     var errorCode = error.code;
+            //     var errorMessage = error.message;
+            //     // The email of the user's account used.
+            //     var email = error.email;
+            //     // The firebase.auth.AuthCredential type that was used.
+            //     var credential = error.credential;
+            //     // ...
+        });
+};
+
+const nativeSignUp = (name, email, pwd) => {
     firebase
         .auth()
         .createUserWithEmailAndPassword(email, pwd)
@@ -172,6 +235,7 @@ const nativeSignUp = (email, pwd) => {
             // add data to userData
             const ref = db.collection('userData').doc(email);
             ref.set({
+                name: name,
                 email: email,
                 canvas: [],
             }).then(() => {
@@ -300,4 +364,6 @@ export {
     uploadToStorage,
     removeUploadImg,
     getAllCanvasData,
+    fbSignUp,
+    googleSignUp,
 };

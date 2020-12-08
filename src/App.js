@@ -14,6 +14,9 @@ export default function App() {
     // trackCurrentUser
     const setCurrentUserFunc = () => {
         if (currentUserTimes === 0) {
+            // FB.getLoginStatus(function(response) {
+            //     statusChangeCallback(response);
+            // });
             firebase.auth().onAuthStateChanged((user) => {
                 if (user) {
                     setCurrentUser(user);

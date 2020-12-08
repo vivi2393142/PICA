@@ -11,6 +11,11 @@ $board-to-window-ratio: 90%;
 $bk-w: #eeeeee;
 $bk-y: #f5dfcd;
 $bk-g: #9aa3a8;
+$big-font: 1rem;
+$middle-font: 0.9rem;
+$small-font: 0.8rem;
+$tiny-font: 0.7rem;
+$symbol-font: 0.6rem;
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@400;700&display=swap');
 
 body {
@@ -260,7 +265,7 @@ body {
 }
 .specificButton {
     display: flex;
-    font-size: 0.9rem;
+    font-size: $middle-font;
     color: $custom-black;
     font-weight: 450;
     cursor: pointer;
@@ -341,7 +346,7 @@ input:focus {
 .specificNav select {
     background-color: transparent;
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: $small-font;
     margin: 0.1rem 0.4rem;
     margin-left: 0.2rem;
     border: 1px solid $middle-grey;
@@ -359,7 +364,7 @@ input:focus {
 // specific nav - text - space
 .spaceBoxOuter {
     position: relative;
-    font-size: 0.8rem;
+    font-size: $small-font;
 }
 .spaceBoxes {
     position: absolute;
@@ -430,7 +435,7 @@ input[type='range']::-webkit-slider-thumb:active {
 .imgAdjustText,
 .imgAdjustValue {
     width: 3rem;
-    font-size: 0.8rem;
+    font-size: $small-font;
     color: white;
     font-weight: 500;
 }
@@ -465,7 +470,7 @@ input[type='range'].imgAdjustRange {
                 padding: 2px;
             }
             .iconText {
-                font-size: 0.8rem;
+                font-size: $small-font;
             }
             .iconTextB {
                 color: white;
@@ -517,7 +522,7 @@ input[type='range'].imgAdjustRange {
         padding-bottom: 0;
         position: relative;
         font-weight: 500;
-        font-size: 0.9rem;
+        font-size: $middle-font;
         height: 100%;
 
         .sidebarUnfoldInner {
@@ -579,7 +584,7 @@ input[type='range'].imgAdjustRange {
         }
     }
     .close {
-        font-size: 0.7rem;
+        font-size: $tiny-font;
         position: absolute;
         top: -0.5rem;
         right: -0.4rem;
@@ -613,7 +618,7 @@ input[type='range'].imgAdjustRange {
 .sidebarCloseButton {
     display: flex;
     align-items: center;
-    font-size: 0.6rem;
+    font-size: $symbol-font;
     font-weight: 900;
     color: $light-grey;
     border-radius: 0 5px 5px 0;
@@ -701,7 +706,7 @@ input[type='range'].imgAdjustRange {
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
     }
     div {
-        font-size: 0.6rem;
+        font-size: $symbol-font;
         padding: 0.4rem 0;
     }
 }
@@ -724,7 +729,7 @@ input[type='range'].imgAdjustRange {
     position: relative;
     &:hover:before {
         content: '< 點擊選取更多顏色';
-        font-size: 0.8rem;
+        font-size: $small-font;
         color: white;
         position: absolute;
         width: 10rem;
@@ -751,7 +756,7 @@ input[type='range'].imgAdjustRange {
     width: 0.9rem;
     height: 0.9rem;
     font-weight: 900;
-    font-size: 0.6rem;
+    font-size: $symbol-font;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -768,7 +773,7 @@ input[type='range'].imgAdjustRange {
     width: 0.9rem;
     height: 0.9rem;
     font-weight: 600;
-    font-size: 0.6rem;
+    font-size: $symbol-font;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -831,7 +836,7 @@ input[type='range'].imgAdjustRange {
 }
 // specific nav
 .resetFilterButton {
-    font-size: 0.8rem;
+    font-size: $small-font;
     color: white;
     border-radius: 5px;
     font-weight: 500;
@@ -873,7 +878,7 @@ input[type='range'].imgAdjustRange {
     & input {
         background-color: transparent;
         border: none;
-        font-size: 0.9rem;
+        font-size: $middle-font;
         color: $main-color;
         padding: 0.3rem 0.5rem;
         border-radius: 5px;
@@ -896,7 +901,7 @@ input[type='range'].imgAdjustRange {
 }
 .status {
     padding: 0 1.6rem;
-    font-size: 0.9rem;
+    font-size: $middle-font;
     color: $custom-black;
     letter-spacing: 1px;
     opacity: 0;
@@ -938,7 +943,7 @@ input[type='range'].imgAdjustRange {
     padding: 0.6rem 1.5rem;
     display: flex;
     flex-direction: column;
-    font-size: 0.9rem;
+    font-size: $middle-font;
     white-space: nowrap;
     flex: 1;
     box-shadow: 0 1px 2px 0 $middle-grey;
@@ -955,7 +960,7 @@ input[type='range'].imgAdjustRange {
 }
 .sizeDetails {
     color: $middle-grey;
-    font-size: 0.6rem;
+    font-size: $symbol-font;
     padding-left: 1.5rem;
     margin-left: auto;
     display: flex;
@@ -972,7 +977,7 @@ input[type='range'].imgAdjustRange {
     padding: 1rem 1.5rem;
     display: flex;
     flex-direction: column;
-    font-size: 0.9rem;
+    font-size: $middle-font;
     white-space: nowrap;
     flex: 1;
     box-shadow: 0 1px 2px 0 $middle-grey;
@@ -1006,7 +1011,7 @@ input[type='range'].imgAdjustRange {
 
 .statusSize {
     padding-left: 1.6rem;
-    font-size: 0.9rem;
+    font-size: $middle-font;
     color: $custom-black;
     letter-spacing: 1px;
 }
@@ -1024,7 +1029,7 @@ input[type='range'].imgAdjustRange {
     padding: 0.6rem 1.5rem;
     display: flex;
     flex-direction: column;
-    font-size: 0.9rem;
+    font-size: $middle-font;
     white-space: nowrap;
     flex: 1;
     box-shadow: 0 1px 2px 0 $middle-grey;
