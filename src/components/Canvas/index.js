@@ -25,9 +25,21 @@ const Canvas = (props) => {
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
     const [uploadedFiles, setUploadedFiles] = React.useState([]);
+    const [hasBackColor, setHasBackColor] = React.useState(false);
+
+    // handleSaveFile
+    const handleSaveFile = (canvas, canvasSetting) => {
+        // console.log(canvas);
+        // allSettings.canvas.discardActiveObject().renderAll();
+        // firebase.testSaveDataURL(dataURL, props.fileId,);
+        firebase.saveCanvasData(canvas, canvasSetting, props.match.params.id);
+    };
 
     // show save status
     const showSaveStatus = () => {
+        // if (document.querySelector('.status').classList.contains('showStatus')) {
+        //     document.querySelector('.status').classList.remove('showStatus');
+        // }
         document.querySelector('.status').classList.add('showStatus');
         setTimeout(() => {
             document.querySelector('.status').classList.remove('showStatus');
@@ -88,21 +100,39 @@ const Canvas = (props) => {
                 // fabric listeners
                 // -- listen to all changes -> update database
                 canvasInit.on('object:modified', (e) => {
+                    if (e.target) {
+                        if (e.target.id === 'cropBackground' || e.target.id === 'cropbox') {
+                            return;
+                        }
+                    }
                     setHasUndo(canvasInit.historyUndo.length > 0);
                     setHasRedo(canvasInit.historyRedo.length > 0);
-                    console.log(e);
                     console.log('編輯完畢');
+                    handleSaveFile(canvasInit, canvasSettingInit);
                 });
                 // TODO:處理複製剪下貼上會更新兩次的問題
                 canvasInit.on('object:added', (e) => {
+                    if (e.target) {
+                        if (e.target.id === 'cropBackground' || e.target.id === 'cropbox') {
+                            return;
+                        }
+                    }
                     setHasUndo(canvasInit.historyUndo.length > 0);
                     setHasRedo(canvasInit.historyRedo.length > 0);
                     console.log('新增完畢');
+                    handleSaveFile(canvasInit, canvasSettingInit);
                 });
                 canvasInit.on('object:removed', (e) => {
+                    if (e.target) {
+                        if (e.target.id === 'cropBackground') {
+                            return;
+                        }
+                    }
+                    // e.target.id === 'cropbox' regards as crop event
                     setHasUndo(canvasInit.historyUndo.length > 0);
                     setHasRedo(canvasInit.historyRedo.length > 0);
                     console.log('移除完畢');
+                    handleSaveFile(canvasInit, canvasSettingInit);
                 });
                 // -- listen to all changes -> set active obj
                 canvasInit.on('selection:created', (e) => {
@@ -349,6 +379,8 @@ const Canvas = (props) => {
         handleResponsiveSize,
         textSetting,
         uploadedFiles,
+        hasBackColor,
+        setHasBackColor,
     };
 
     const Background = () => {

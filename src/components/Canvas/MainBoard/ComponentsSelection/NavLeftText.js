@@ -126,13 +126,6 @@ const NavLeftText = (props) => {
                 <select className='textSizeSelect' value={textSize} onChange={handleTextSize}>
                     {textSizeOptions}
                 </select>
-                {/* <input
-                    className='textSizeInput'
-                    value={textSize}
-                    onChange={handleTextSize}
-                    onFocus={() => props.setTextIsEditing(true)}
-                    onBlur={() => props.setTextIsEditing(false)}
-                ></input> */}
             </div>
             <icons.TextBold
                 className={`specificButton textIcon ${

@@ -14,7 +14,7 @@ const Banner = (props) => {
         allSettings.setCanvasSetting(newCanvasSetting);
     };
 
-    const handleSaveFile = () => {
+    const handleSaveFileTemporary = () => {
         allSettings.canvas.discardActiveObject().renderAll();
         // firebase.testSaveDataURL(dataURL, props.fileId,);
         firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting, props.fileId);
@@ -35,7 +35,7 @@ const Banner = (props) => {
                 ></input>
 
                 <div
-                    onClick={handleSaveFile}
+                    onClick={handleSaveFileTemporary}
                     style={{
                         cursor: 'pointer',
                         border: '1px solid #555555',

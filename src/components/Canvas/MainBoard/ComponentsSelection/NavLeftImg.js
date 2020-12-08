@@ -25,6 +25,7 @@ const NavLeftImg = (props) => {
         height: allSettings.canvasSetting.height,
         width: allSettings.canvasSetting.width,
         fill: 'rgba(0, 0, 0, 0.8)',
+        id: 'cropBackground',
     });
     const startCropping = () => {
         // --- update cropping obj
@@ -117,6 +118,7 @@ const NavLeftImg = (props) => {
         allSettings.canvas.requestRenderAll();
     };
     const cancelCropping = () => {
+        console.log('取消');
         // --- enable all controls
         allSettings.canvas.getObjects().forEach((obj) => {
             obj.hasControls = true;
@@ -124,9 +126,9 @@ const NavLeftImg = (props) => {
             obj.hoverCursor = 'move';
         });
         // --- reset index
-        allSettings.canvas.moveTo(allSettings.croppingObj, croppingObjIndex);
+        allSettings.canvas.moveTo(props.croppingObj, croppingObjIndex);
         // --- update cropping obj
-        allSettings.setCroppingObj({});
+        props.setCroppingObj({});
         // --- remove crop box and dark background
         allSettings.canvas.remove(allSettings.activeObj);
         allSettings.canvas.remove(

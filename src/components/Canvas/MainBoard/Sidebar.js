@@ -172,7 +172,7 @@ const Sidebar = (props) => {
         allSettings.canvas.backgroundImage = 0;
         allSettings.canvas.backgroundColor = color;
         allSettings.canvas.requestRenderAll();
-        allSettings.canvas.fire('object:modified');
+        // allSettings.canvas.fire('object:modified');
     };
     const backgroundImageHandler = (e) => {
         // remove exist background
@@ -275,7 +275,7 @@ const Sidebar = (props) => {
         : null;
 
     // backgroundColor
-    const [hasBackColor, setHasBackColor] = React.useState(false);
+
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
     const [backColorChosen, setBackColorChosen] = React.useState({
         background: {
@@ -286,13 +286,14 @@ const Sidebar = (props) => {
         },
     });
     const toggleAddBackColor = () => {
-        if (hasBackColor) {
+        if (allSettings.hasBackColor) {
             document.querySelector('.colorChartWrapper').classList.remove('colorChartUnfold');
             document.querySelector('.colorChartWrapper').classList.add('colorChartFold');
             backgroundColorHandler('rgba(255, 255, 255, 1)');
             setBackColorChosen({
                 background: 'rgba(255, 255, 255, 1)',
             });
+            allSettings.canvas.fire('object:modified');
         } else {
             // remove exist background
             if (allSettings.canvas.getObjects()[0].id === 'background') {
@@ -301,12 +302,13 @@ const Sidebar = (props) => {
             document.querySelector('.colorChartWrapper').classList.add('colorChartUnfold');
             document.querySelector('.colorChartWrapper').classList.remove('colorChartFold');
         }
-        setHasBackColor(!hasBackColor);
+        allSettings.setHasBackColor(!allSettings.hasBackColor);
     };
     const toggleBackColorSelection = (e) => {
         const clickedOrNot = (e) => {
             if (!document.querySelector('.backgroundPicker').contains(e.target)) {
                 setIsChoosingBackColor(false);
+                allSettings.canvas.fire('object:modified');
                 document.removeEventListener('click', clickedOrNot, true);
             }
         };
@@ -787,7 +789,7 @@ const Sidebar = (props) => {
                                 <div className='sidebarUnfoldSubtitle backgroundTitle'>
                                     背景色彩
                                 </div>
-                                {hasBackColor ? (
+                                {allSettings.hasBackColor ? (
                                     <div
                                         className='backgroundCheckboxMinus'
                                         onClick={toggleAddBackColor}
