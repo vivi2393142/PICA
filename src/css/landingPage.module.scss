@@ -51,13 +51,21 @@ $bk-g: #919da3;
     .main {
         width: 70%;
         display: flex;
-        justify-content: space-between;
-
+        justify-content: space-around;
         .mainText {
             width: 50%;
             display: flex;
             flex-direction: column;
-
+            h1 {
+                font-size: 2.4rem;
+                font-style: italic;
+                line-height: 1.4;
+                margin: 0;
+            }
+            span {
+                color: $sub-color;
+                font-weight: 900;
+            }
             .startButton {
                 background: $sub-color;
                 border-radius: 5px;
@@ -65,7 +73,7 @@ $bk-g: #919da3;
                 padding: 0.5rem 1rem;
                 color: white;
                 letter-spacing: 1px;
-                margin-top: 3rem;
+                margin-top: 5rem;
                 cursor: pointer;
             }
         }

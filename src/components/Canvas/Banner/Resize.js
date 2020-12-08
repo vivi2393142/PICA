@@ -29,6 +29,7 @@ const Resize = (props) => {
         document.addEventListener('click', clickedOrNot, true);
     };
     const handleCanvasSize = (e, way) => {
+        alert('請注意，若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切');
         // reset size on canvas and react state
         let newCanvasSetting = {};
         if (way === 'default') {

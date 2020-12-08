@@ -146,7 +146,6 @@ body {
     background-color: $light-grey;
     border-radius: 3rem 0 0 0;
     box-shadow: 0 0 8px 2px rgb(88, 88, 88) inset;
-
     border: 2px solid rgb(161, 161, 161);
     // width: 100%;
 }
@@ -199,7 +198,7 @@ body {
 .componentsNavRight {
     flex-wrap: wrap;
     width: 50%;
-    padding-right: 0.5rem;
+    padding-right: 0.8rem;
     justify-content: flex-end;
     position: fixed;
     right: 0;
@@ -445,110 +444,120 @@ input[type='range'].imgAdjustRange {
     display: flex;
     z-index: 999;
     overflow: hidden;
+    .sidebarFold {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 6rem;
+        height: 100%;
+        .sideButton {
+            color: $custom-black;
+            font-weight: 600;
+            cursor: pointer;
+            height: 11%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            .sidebarIcon {
+                width: 1.6rem;
+                height: 1.6rem;
+                padding: 2px;
+            }
+            .iconText {
+                font-size: 0.8rem;
+            }
+            .iconTextB {
+                color: white;
+                font-weight: 600;
+            }
+        }
+        .sideButtonChosen {
+            position: relative;
+            width: 100%;
+            height: 11%;
+            background-color: $main-color;
+            z-index: 1;
+            &::before {
+                content: '';
+                position: absolute;
+                top: 100%;
+                right: 0;
+                width: 1.2rem;
+                height: 1.2rem;
+                background: radial-gradient(
+                    circle farthest-side at bottom left,
+                    rgba(0, 0, 0, 0) 0,
+                    rgba(0, 0, 0, 0) 99%,
+                    $main-color
+                );
+            }
+            &::after {
+                content: '';
+                position: absolute;
+                top: -1.2rem;
+                right: 0;
+                width: 1.2rem;
+                height: 1.2rem;
+                background: radial-gradient(
+                    circle farthest-side at top left,
+                    rgba(0, 0, 0, 0) 0,
+                    rgba(0, 0, 0, 0) 99%,
+                    $main-color
+                );
+            }
+        }
+    }
+    .sidebarUnfold {
+        width: 16rem;
+        margin-right: 2rem;
+        border-radius: 2rem 2rem 0 0;
+        background-color: $main-color;
+        padding: 1.5rem;
+        padding-bottom: 0;
+        position: relative;
+        font-weight: 500;
+        font-size: 0.9rem;
+        height: 100%;
+
+        .sidebarUnfoldInner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            overflow-y: auto;
+            align-items: flex-start;
+            align-content: flex-start;
+            &::-webkit-scrollbar {
+                width: 8px;
+            }
+            &::-webkit-scrollbar-track {
+                box-shadow: inset 0 0 5px $middle-grey;
+                border-radius: 10px;
+            }
+            &::-webkit-scrollbar-thumb {
+                background: $dark-grey;
+                border-radius: 10px;
+            }
+            &::-webkit-scrollbar-thumb:hover {
+                background: $middle-grey;
+            }
+        }
+    }
+    // if chosen is the first one
+    .firstButton::after {
+        content: '';
+        height: 0;
+    }
+    .firstUnfold {
+        border-radius: 0 2rem 0 0;
+    }
+    .lastButton::before {
+        content: '';
+        height: 0;
+    }
 }
-.sidebarFold {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    width: 6rem;
-    height: 100%;
-}
-.sidebarUnfold {
-    width: 16rem;
-    margin-right: 2rem;
-    border-radius: 2rem 2rem 0 0;
-    background-color: $main-color;
-    padding: 1.5rem;
-    padding-bottom: 0;
-    position: relative;
-    font-weight: 500;
-    font-size: 0.9rem;
-    height: 100%;
-}
-.sidebarUnfoldInner {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    overflow-y: auto;
-    align-items: flex-start;
-    align-content: flex-start;
-}
-.sidebarUnfoldInner::-webkit-scrollbar {
-    width: 8px;
-}
-.sidebarUnfoldInner::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 5px $middle-grey;
-    border-radius: 10px;
-}
-.sidebarUnfoldInner::-webkit-scrollbar-thumb {
-    background: $dark-grey;
-    border-radius: 10px;
-}
-.sidebarUnfoldInner::-webkit-scrollbar-thumb:hover {
-    background: $middle-grey;
-}
-.sideButton {
-    color: $custom-black;
-    font-weight: 600;
-    cursor: pointer;
-    height: 11%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-}
-.sidebarIcon {
-    width: 1.6rem;
-    height: 1.6rem;
-    padding: 2px;
-}
-.iconText {
-    font-size: 0.8rem;
-}
-.iconTextB {
-    color: white;
-    font-weight: 600;
-}
-.sideButtonChosen {
-    position: relative;
-    width: 100%;
-    height: 11%;
-    background-color: $main-color;
-    z-index: 1;
-}
-.sideButtonChosen:before {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 1.2rem;
-    height: 1.2rem;
-    background: radial-gradient(
-        circle farthest-side at bottom left,
-        rgba(0, 0, 0, 0) 0,
-        rgba(0, 0, 0, 0) 99%,
-        $main-color
-    );
-}
-.sideButtonChosen::after {
-    content: '';
-    position: absolute;
-    top: -1.2rem;
-    right: 0;
-    width: 1.2rem;
-    height: 1.2rem;
-    background: radial-gradient(
-        circle farthest-side at top left,
-        rgba(0, 0, 0, 0) 0,
-        rgba(0, 0, 0, 0) 99%,
-        $main-color
-    );
-}
-.unfoldImgWrapper {
-    display: flex;
-    position: relative;
-}
+
 .unfoldItem,
 .unfoldItemImgWrapper {
     border: 1px solid white;
@@ -573,7 +582,7 @@ input[type='range'].imgAdjustRange {
         font-size: 0.7rem;
         position: absolute;
         top: -0.5rem;
-        right: -0.5rem;
+        right: -0.4rem;
         background-color: white;
         width: 1rem;
         height: 1rem;
@@ -617,18 +626,6 @@ input[type='range'].imgAdjustRange {
     right: -1rem;
     cursor: pointer;
 }
-// if chosen is the first one
-.firstButton::after {
-    content: '';
-    height: 0;
-}
-.firstUnfold {
-    border-radius: 0 2rem 0 0;
-}
-.lastButton::before {
-    content: '';
-    height: 0;
-}
 // sidebar - text
 .sidebarUnfoldText * {
     width: 90%;
@@ -662,6 +659,7 @@ input[type='range'].imgAdjustRange {
     border: none;
     padding: 0.5rem 0;
 }
+
 // sidebar - sticker
 .sidebarUnfoldSticker * {
     background-color: rgba(255, 255, 255, 0.6);
@@ -724,19 +722,19 @@ input[type='range'].imgAdjustRange {
 }
 .currentColorCube {
     position: relative;
-}
-.currentColorCube:hover:before {
-    content: '< 點擊選取更多顏色';
-    font-size: 0.8rem;
-    color: white;
-    position: absolute;
-    width: 10rem;
-    display: flex;
-    left: 3rem;
-    top: 50%;
-    transform: translateY(-50%);
-    // animation-name: cubeAlert;
-    // animation-duration: 1s;
+    &:hover:before {
+        content: '< 點擊選取更多顏色';
+        font-size: 0.8rem;
+        color: white;
+        position: absolute;
+        width: 10rem;
+        display: flex;
+        left: 3rem;
+        top: 50%;
+        transform: translateY(-50%);
+        // animation-name: cubeAlert;
+        // animation-duration: 1s;
+    }
 }
 // @keyframes cubeAlert {
 //     0% {
@@ -799,7 +797,7 @@ input[type='range'].imgAdjustRange {
 }
 .colorChartWrapper {
     height: 0;
-    // overflow: hidden;
+    overflow: hidden;
 }
 .colorChartUnfold {
     height: auto;
@@ -830,16 +828,6 @@ input[type='range'].imgAdjustRange {
 .backgroundPicker {
     top: 3.2rem;
     left: 0.2rem;
-    z-index: 1;
-}
-.backImgChart {
-    display: flex;
-    flex-wrap: wrap;
-    position: relative;
-    padding-bottom: 2rem;
-}
-.backImgChart .unfoldItem {
-    height: auto;
 }
 // specific nav
 .resetFilterButton {
@@ -865,9 +853,9 @@ input[type='range'].imgAdjustRange {
     margin-right: 1.5rem;
     cursor: pointer;
     position: relative;
-}
-.bannerIcons:hover {
-    opacity: 0.6;
+    &:hover {
+        opacity: 0.6;
+    }
 }
 .bannerLogo {
     height: 100%;
@@ -882,19 +870,19 @@ input[type='range'].imgAdjustRange {
     margin-right: auto;
     display: flex;
     align-items: center;
-}
-.bannerLeft input {
-    background-color: transparent;
-    border: none;
-    font-size: 0.9rem;
-    color: $main-color;
-    padding: 0.3rem 0.5rem;
-    border-radius: 5px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
-    font-weight: 500;
-    letter-spacing: 1px;
-    background-color: rgba(255, 255, 255, 0.3);
+    & input {
+        background-color: transparent;
+        border: none;
+        font-size: 0.9rem;
+        color: $main-color;
+        padding: 0.3rem 0.5rem;
+        border-radius: 5px;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        font-weight: 500;
+        letter-spacing: 1px;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
 }
 .bannerLeft input:hover {
     border: 1px solid $light-grey;
@@ -959,11 +947,11 @@ input[type='range'].imgAdjustRange {
 .sizeOption {
     padding: 0.6rem 0;
     display: flex;
-}
-.sizeOption:hover {
-    color: $sub-color;
-    cursor: pointer;
-    // font-weight: 600;
+    &:hover {
+        color: $sub-color;
+        cursor: pointer;
+        // font-weight: 600;
+    }
 }
 .sizeDetails {
     color: $middle-grey;
@@ -1011,10 +999,11 @@ input[type='range'].imgAdjustRange {
     border: 1px solid $middle-grey;
     border-radius: 3px;
     cursor: pointer;
+    &:hover {
+        opacity: 0.6;
+    }
 }
-.customSizeButton:hover {
-    opacity: 0.6;
-}
+
 .statusSize {
     padding-left: 1.6rem;
     font-size: 0.9rem;
@@ -1040,11 +1029,44 @@ input[type='range'].imgAdjustRange {
     flex: 1;
     box-shadow: 0 1px 2px 0 $middle-grey;
     text-align: left;
+    & * {
+        padding: 0.6rem 0;
+        display: flex;
+        cursor: pointer;
+    }
 }
-.exportWrapper * {
-    padding: 0.6rem 0;
+
+//sidebar - waterfall
+.sidebarUnfoldSticker,
+.sidebarUnfoldImg,
+.backImgChart,
+.sidebarUnfoldUpload {
     display: flex;
-    cursor: pointer;
+    flex-wrap: wrap;
+    max-height: 95%;
+    &::after {
+        content: '';
+        flex-grow: 999999999;
+        min-width: 300px;
+        height: 0;
+    }
+    .unfoldItemGalleryWrapper {
+        position: relative;
+        display: block;
+        height: 5rem;
+        flex-grow: 1;
+        width: auto;
+        margin: 2% 2%;
+        .unfoldItemGallery {
+            margin: 0;
+            height: 5rem;
+            width: auto;
+            object-fit: cover;
+            max-width: 100%;
+            min-width: 100%;
+            vertical-align: bottom;
+        }
+    }
 }
 
 // media query

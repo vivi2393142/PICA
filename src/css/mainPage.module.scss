@@ -32,8 +32,32 @@ $bk-g: #919da3;
         }
     }
     & .logo {
-        margin-right: auto;
         height: 3rem;
+    }
+    .leftNav {
+        margin-right: auto;
+        display: flex;
+        font-size: 0.9rem;
+        padding: 0 1rem;
+        color: $dark-grey;
+        div {
+            padding: 0 1.5rem;
+            cursor: pointer;
+        }
+        .navChosen {
+            color: $sub-color;
+            font-weight: 500;
+            position: relative;
+            &::before {
+                content: '';
+                width: 15%;
+                height: 105%;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                border-bottom: 1.5px solid $sub-color;
+            }
+        }
     }
 }
 
@@ -91,6 +115,9 @@ $bk-g: #919da3;
                 //     display: block;
                 //     padding-bottom: 60%; // 寬高比10:6
                 // }
+                // .file:hover {
+                //     box-shadow: 1px 1px 5px 0 $custom-black;
+                // }
                 .fileImg {
                     height: 100%;
                 }
@@ -100,7 +127,7 @@ $bk-g: #919da3;
                 font-size: 0.9rem;
                 width: 100%;
                 color: $custom-black;
-                padding: 0.2rem 0;
+                padding: 0.5rem 0;
             }
             .addNew {
                 width: 15rem;

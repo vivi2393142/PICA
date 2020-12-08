@@ -35,11 +35,12 @@ const Sidebar = (props) => {
     };
     // add new components: rectangle, circle, triangle, text, image, background
     const addRect = () => {
+        const shapeRatio = allSettings.canvas.width / 600;
         const rect = new fabric.Rect({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
-            height: 100,
-            width: 100,
+            height: 100 * shapeRatio,
+            width: 100 * shapeRatio,
             fill: mainColor,
         });
         allSettings.canvas.add(rect);
@@ -47,10 +48,11 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addCircle = () => {
+        const shapeRatio = allSettings.canvas.width / 600;
         const circle = new fabric.Circle({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
-            radius: 50,
+            radius: 50 * shapeRatio,
             fill: mainColor,
         });
         allSettings.canvas.add(circle);
@@ -58,11 +60,12 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addTriangle = () => {
+        const shapeRatio = allSettings.canvas.width / 600;
         const triangle = new fabric.Triangle({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
-            width: 100,
-            height: 100,
+            width: 100 * shapeRatio,
+            height: 100 * shapeRatio,
             fill: mainColor,
         });
         allSettings.canvas.add(triangle);
@@ -70,13 +73,14 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addShape = (e) => {
+        const shapeRatio = allSettings.canvas.width / 600;
         fabric.loadSVGFromURL(e.target.src, (objects, options) => {
             const newShape = fabric.util.groupSVGElements(objects, options);
             newShape.set({
                 top: nextAddPosition.top,
                 left: nextAddPosition.left,
-                scaleX: 2.2,
-                scaleY: 2.2,
+                scaleX: 2.2 * shapeRatio,
+                scaleY: 2.2 * shapeRatio,
                 id: 'shape',
             });
             allSettings.canvas.add(newShape);
@@ -85,12 +89,13 @@ const Sidebar = (props) => {
         });
     };
     const addIText = (title, size, weight) => {
+        const textRatio = allSettings.canvas.width / 600;
         let text = new fabric.IText(title, {});
         text.set({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
             fill: '#555555',
-            fontSize: size,
+            fontSize: size * textRatio,
             fontFamily: 'Sans-serif',
             fontWeight: weight,
         });
@@ -105,14 +110,18 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addImage = (e) => {
+        const scaleRatio = Math.max(
+            allSettings.canvas.width / 4 / e.target.naturalWidth,
+            allSettings.canvas.height / 4 / e.target.naturalHeight
+        );
         fabric.Image.fromURL(
             e.target.src,
             (img) => {
                 const oImg = img.set({
                     top: nextAddPosition.top,
                     left: nextAddPosition.left,
-                    scaleX: e.target.width / e.target.naturalWidth,
-                    scaleY: e.target.height / e.target.naturalHeight,
+                    scaleX: scaleRatio,
+                    scaleY: scaleRatio,
                 });
                 allSettings.canvas.add(oImg);
                 oImg.setControlsVisibility({
@@ -130,14 +139,18 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addSticker = (e) => {
+        const scaleRatio = Math.max(
+            allSettings.canvas.width / 4 / e.target.naturalWidth,
+            allSettings.canvas.height / 4 / e.target.naturalHeight
+        );
         fabric.Image.fromURL(
             e.target.src,
             (img) => {
                 const oImg = img.set({
                     top: nextAddPosition.top,
                     left: nextAddPosition.left,
-                    scaleX: e.target.width / e.target.naturalWidth,
-                    scaleY: e.target.height / e.target.naturalHeight,
+                    scaleX: scaleRatio,
+                    scaleY: scaleRatio,
                     id: 'sticker',
                 });
                 allSettings.canvas.add(oImg);
@@ -222,27 +235,33 @@ const Sidebar = (props) => {
 
     // uploaded function
     const handleUploadImage = (e) => {
-        firebase.uploadToStorage(
-            e,
-            props.fileId,
-            (uploadValue) => setUploadProgressValue(uploadValue),
-            () => setUploadProgressValue(0)
-        );
+        if (e.target.files[0].size > 5242880) {
+            alert('請勿上傳超過5mb之圖片');
+        } else {
+            firebase.uploadToStorage(
+                e,
+                props.fileId,
+                (uploadValue) => setUploadProgressValue(uploadValue),
+                () => setUploadProgressValue(0)
+            );
+        }
     };
     const uploadedImgJsx = allSettings.uploadedFiles
         ? allSettings.uploadedFiles.map((item, index) => {
               return (
                   <div
                       key={index}
-                      className='unfoldItemImgWrapper'
+                      className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
                       onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                   >
-                      <img
-                          className='unfoldItemImg'
-                          onClick={addImage}
-                          draggable='true'
-                          src={item.src}
-                      ></img>
+                      <div>
+                          <img
+                              className='unfoldItemImg unfoldItemGallery'
+                              onClick={addImage}
+                              draggable='true'
+                              src={item.src}
+                          ></img>
+                      </div>
                       <div
                           className='close'
                           id={item.path}
@@ -536,13 +555,14 @@ const Sidebar = (props) => {
     ];
     const stickerJsx = stickerArray.map((item, index) => {
         return (
-            <img
-                key={index}
-                onClick={addImage}
-                className='unfoldItem'
-                draggable='true'
-                src={item}
-            ></img>
+            <div key={index} className='unfoldItemGalleryWrapper'>
+                <img
+                    onClick={addImage}
+                    className='unfoldItem unfoldItemGallery'
+                    draggable='true'
+                    src={item}
+                ></img>
+            </div>
         );
     });
 
@@ -559,13 +579,14 @@ const Sidebar = (props) => {
     ];
     const imageJsx = imageArray.map((item, index) => {
         return (
-            <img
-                key={index}
-                onClick={addImage}
-                className='unfoldItem'
-                draggable='true'
-                src={item}
-            ></img>
+            <div key={index} className='unfoldItemGalleryWrapper'>
+                <img
+                    onClick={addImage}
+                    className='unfoldItem unfoldItemGallery'
+                    draggable='true'
+                    src={item}
+                ></img>
+            </div>
         );
     });
 
@@ -608,16 +629,23 @@ const Sidebar = (props) => {
     });
 
     // jsx: sidebar - background image
-    const backgroundImageArray = ['https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg'];
+    const backgroundImageArray = [
+        'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
+        'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
+        'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
+        'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
+    ];
     const backgroundImageJsx = backgroundImageArray.map((item, index) => {
         return (
-            <img
-                key={index}
-                draggable='false'
-                onClick={backgroundImageHandler}
-                className='unfoldItem'
-                src={item}
-            ></img>
+            <div key={index} className='unfoldItemGalleryWrapper'>
+                <img
+                    key={index}
+                    draggable='false'
+                    onClick={backgroundImageHandler}
+                    className='unfoldItem unfoldItemGallery'
+                    src={item}
+                ></img>
+            </div>
         );
     });
 
@@ -796,7 +824,7 @@ const Sidebar = (props) => {
                             <div className='backImgChart'>{backgroundImageJsx}</div>
                         </div>
                     ) : props.currentSidebar === 'upload' ? (
-                        <div className='sidebarUnfoldInner'>
+                        <div className='sidebarUnfoldInner sidebarUnfoldUpload'>
                             {uploadProgressValue === 0 ? (
                                 <label className='unfoldItem uploadLabel'>
                                     點擊以上傳圖片

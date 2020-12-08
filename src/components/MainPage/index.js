@@ -121,6 +121,10 @@ const MainPage = (props) => {
             <div className={styles.bannerWrapper}>
                 <div className={styles.banner}>
                     <bannerIcons.Logo className={styles.logo} />
+                    <div className={styles.leftNav}>
+                        <div>探索作品</div>
+                        <div className={styles.navChosen}>我的作品</div>
+                    </div>
                     <div
                         className={styles.button}
                         onClick={() =>

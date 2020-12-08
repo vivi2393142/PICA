@@ -41,7 +41,10 @@ const LandingPage = (props) => {
             <div className={styles.mainWrapper}>
                 <div className={styles.main}>
                     <div className={styles.mainText}>
-                        <h1>Be an artist through PICtures Art </h1>
+                        <h1>
+                            Be an artist through <br />
+                            <span>PIC</span>tures <span>A</span>rt{' '}
+                        </h1>
                         <p>一分鐘內輕易上手，設計可以比你想的還容易。</p>
                         <div
                             className={styles.startButton}

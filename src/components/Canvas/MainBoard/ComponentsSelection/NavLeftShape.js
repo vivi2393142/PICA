@@ -43,7 +43,6 @@ const NavLeftShape = (props) => {
     // set stroke width
     const [rectStroke, setRectStroke] = React.useState(1);
     const handleRectStoke = (e) => {
-        console.log(parseInt(e.target.value));
         setRectStroke(parseInt(e.target.value));
         props.activeObj.set({
             strokeWidth: parseInt(e.target.value),
