@@ -25,7 +25,7 @@ const NavLeftImg = (props) => {
         height: allSettings.canvasSetting.height,
         width: allSettings.canvasSetting.width,
         fill: 'rgba(0, 0, 0, 0.8)',
-        id: 'cropBackground',
+        specialType: 'cropBackground',
     });
     const startCropping = () => {
         // --- update cropping obj
@@ -49,7 +49,7 @@ const NavLeftImg = (props) => {
         currentObj.clipPath = null;
         // --- clone cropping target to create crop box
         const clipPathView = new fabric.Rect({
-            id: 'cropbox',
+            specialType: 'cropbox',
             originX: currentObj.originX,
             originY: currentObj.originY,
             left: currentObj.left,
@@ -169,11 +169,8 @@ NavLeftImg.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
-    // canvas: PropTypes.object.isRequired,
-    // activeObj: PropTypes.object.isRequired,
     croppingObj: PropTypes.object.isRequired,
     setCroppingObj: PropTypes.func.isRequired,
-    // canvasSetting: PropTypes.object.isRequired,
     allSettings: PropTypes.object.isRequired,
 };
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
+import * as firebase from '../../../firebase';
 
 const Resize = (props) => {
     const allSettings = props.drawingAreaSettings;
@@ -60,6 +61,30 @@ const Resize = (props) => {
         allSettings.canvas.setHeight(newCanvasSetting.height * allSettings.canvas.getZoom());
         // reset to auto fix
         allSettings.setRatioSelectValue('auto');
+        // preset background image object style
+        let backgroundObject = allSettings.canvas
+            .getObjects('image')
+            .find((x) => x.specialType === 'background');
+        if (backgroundObject) {
+            allSettings.canvas.remove(backgroundObject);
+            const scaleToWidth = newCanvasSetting.width / backgroundObject.width;
+            const scaleToHeight = newCanvasSetting.height / backgroundObject.height;
+            const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
+            allSettings.presetBackgroundImg(
+                backgroundObject,
+                allSettings.canvas,
+                newCanvasSetting,
+                scaleWay,
+                scaleToWidth,
+                scaleToHeight
+            );
+        }
+        firebase.setBasicSetting(
+            props.fileId,
+            newCanvasSetting.width,
+            newCanvasSetting.height,
+            allSettings.canvas
+        );
         // close toggle
         setIsChoosingCanvasSize(false);
         setIsTypingSize(false);
@@ -153,6 +178,7 @@ const Resize = (props) => {
 Resize.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     drawingAreaSettings: PropTypes.object.isRequired,
+    fileId: PropTypes.string.isRequired,
 };
 
 export default Resize;

@@ -29,17 +29,11 @@ const Canvas = (props) => {
 
     // handleSaveFile
     const handleSaveFile = (canvas, canvasSetting) => {
-        // console.log(canvas);
-        // allSettings.canvas.discardActiveObject().renderAll();
-        // firebase.testSaveDataURL(dataURL, props.fileId,);
         firebase.saveCanvasData(canvas, canvasSetting, props.match.params.id);
     };
 
     // show save status
     const showSaveStatus = () => {
-        // if (document.querySelector('.status').classList.contains('showStatus')) {
-        //     document.querySelector('.status').classList.remove('showStatus');
-        // }
         document.querySelector('.status').classList.add('showStatus');
         setTimeout(() => {
             document.querySelector('.status').classList.remove('showStatus');
@@ -54,6 +48,63 @@ const Canvas = (props) => {
         );
         container.style.width = `${fixRatio * canvasSetting.width}px`;
         container.style.height = `${fixRatio * canvasSetting.height}px`;
+    };
+
+    // preset backgroundImg function
+    const presetBackgroundImg = (
+        backImg,
+        canvas,
+        canvasSetting,
+        scaleWay,
+        scaleToWidth,
+        scaleToHeight
+    ) => {
+        backImg.setControlsVisibility({
+            mb: false,
+            mt: false,
+            ml: false,
+            mr: false,
+            mtr: false,
+        });
+        backImg.set({
+            scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
+            scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
+        });
+        if (scaleWay === 'toWidth') {
+            backImg.lockMovementX = true;
+        } else {
+            backImg.lockMovementY = true;
+        }
+        backImg.toObject = (function (toObject) {
+            return function (propertiesToInclude) {
+                return fabric.util.object.extend(toObject.call(this, propertiesToInclude), {
+                    specialType: 'background', //my custom property
+                });
+            };
+        })(backImg.toObject);
+        canvas.add(backImg);
+        backImg.sendToBack();
+        // bounding can't be inside canvas
+        // backImg.on('modified', () => {
+        //     const currentSizeRatio =
+        //         parseInt(document.querySelector('.canvas-container').style.width) /
+        //         canvasSetting.width;
+        //     backImg.setCoords();
+        //     const { top, left, width, height } = backImg.getBoundingRect();
+        //     if (top > 0) {
+        //         backImg.top = 0;
+        //     }
+        //     if (top + height < canvas.getHeight()) {
+        //         backImg.top = canvas.getHeight() - height;
+        //     }
+        //     if (left > 0) {
+        //         backImg.left = 0;
+        //     }
+        //     if (left + width < canvas.getWidth()) {
+        //         backImg.left = canvas.getWidth() - width;
+        //     }
+        //     canvas.requestRenderAll();
+        // });
     };
 
     React.useEffect(() => {
@@ -79,7 +130,7 @@ const Canvas = (props) => {
                     setIsLoaded(false);
                     canvasInit.clearHistory();
 
-                    // preset image, iText objects style
+                    // preset image & iText objects style
                     let imgObjects = canvasInit.getObjects('image');
                     let texObjects = canvasInit.getObjects('i-text');
                     imgObjects.forEach((object) => {
@@ -98,12 +149,58 @@ const Canvas = (props) => {
                             mr: false,
                         });
                     });
-
+                    // preset background image object style
+                    let backgroundObject = canvasInit
+                        .getObjects('image')
+                        .find((x) => x.specialType === 'background');
+                    if (backgroundObject) {
+                        canvasInit.remove(backgroundObject);
+                        const scaleToWidth = canvasSettingInit.width / backgroundObject.width;
+                        const scaleToHeight = canvasSettingInit.height / backgroundObject.height;
+                        const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
+                        presetBackgroundImg(
+                            backgroundObject,
+                            canvasInit,
+                            canvasSettingInit,
+                            scaleWay,
+                            scaleToWidth,
+                            scaleToHeight
+                        );
+                    }
+                    // preset shape and sticker special type
+                    let stickerObjects = canvasInit
+                        .getObjects('image')
+                        .filter((x) => x.specialType === 'sticker');
+                    if (stickerObjects.length !== 0) {
+                        stickerObjects.forEach((sticker) => {
+                            canvasInit.remove(sticker);
+                            sticker.toObject = (function (toObject) {
+                                return function (propertiesToInclude) {
+                                    return fabric.util.object.extend(
+                                        toObject.call(this, propertiesToInclude),
+                                        {
+                                            specialType: 'sticker', //my custom property
+                                        }
+                                    );
+                                };
+                            })(sticker.toObject);
+                            canvasInit.add(sticker);
+                            sticker.setControlsVisibility({
+                                mb: false,
+                                mt: false,
+                                ml: false,
+                                mr: false,
+                            });
+                        });
+                    }
                     // fabric listeners
                     // -- listen to all changes -> update database
                     canvasInit.on('object:modified', (e) => {
                         if (e.target) {
-                            if (e.target.id === 'cropBackground' || e.target.id === 'cropbox') {
+                            if (
+                                e.target.specialType === 'cropBackground' ||
+                                e.target.specialType === 'cropbox'
+                            ) {
                                 return;
                             }
                         }
@@ -115,7 +212,10 @@ const Canvas = (props) => {
                     // TODO:處理複製剪下貼上會更新兩次的問題
                     canvasInit.on('object:added', (e) => {
                         if (e.target) {
-                            if (e.target.id === 'cropBackground' || e.target.id === 'cropbox') {
+                            if (
+                                e.target.specialType === 'cropBackground' ||
+                                e.target.specialType === 'cropbox'
+                            ) {
                                 return;
                             }
                         }
@@ -126,7 +226,7 @@ const Canvas = (props) => {
                     });
                     canvasInit.on('object:removed', (e) => {
                         if (e.target) {
-                            if (e.target.id === 'cropBackground') {
+                            if (e.target.specialType === 'cropBackground') {
                                 return;
                             }
                         }
@@ -139,7 +239,6 @@ const Canvas = (props) => {
                     // -- listen to all changes -> set active obj
                     canvasInit.on('selection:created', (e) => {
                         setActiveObj(e.target);
-                        // console.log(e.target.type);
                     });
                     canvasInit.on('selection:updated', (e) => {
                         setActiveObj(e.target);
@@ -304,7 +403,7 @@ const Canvas = (props) => {
                                     left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
                                     scaleX: 2.2 * shapeRatio,
                                     scaleY: 2.2 * shapeRatio,
-                                    id: 'shape',
+                                    // specialType: 'shape',
                                 });
                                 canvasInit.add(abnormalShapeItem);
                                 canvasInit.requestRenderAll();
@@ -319,7 +418,7 @@ const Canvas = (props) => {
                                 left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
                                 scaleX: 2.2 * lineRatio,
                                 scaleY: 2.2 * lineRatio,
-                                id: 'shape',
+                                // specialType: 'shape',
                             });
                             canvasInit.add(svgItem);
                             canvasInit.requestRenderAll();
@@ -335,8 +434,18 @@ const Canvas = (props) => {
                                     scaleY: scaleRatio,
                                     top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
                                     left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                    id: 'sticker',
+                                    specialType: 'sticker',
                                 });
+                                stickerItem.toObject = (function (toObject) {
+                                    return function (propertiesToInclude) {
+                                        return fabric.util.object.extend(
+                                            toObject.call(this, propertiesToInclude),
+                                            {
+                                                specialType: 'sticker', //my custom property
+                                            }
+                                        );
+                                    };
+                                })(stickerItem.toObject);
                                 canvasInit.add(stickerItem);
                                 stickerItem.setControlsVisibility({
                                     mb: false,
@@ -385,6 +494,7 @@ const Canvas = (props) => {
         uploadedFiles,
         hasBackColor,
         setHasBackColor,
+        presetBackgroundImg,
     };
 
     const Background = () => {
@@ -392,7 +502,6 @@ const Canvas = (props) => {
             <div className='backImages'>
                 <backImg.BackY1 className='backImg backY1' />
                 <backImg.BackY2 className='backImg backY2' />
-                {/* <backImg.BackY3 className='backImg' /> */}
                 <backImg.BackW1 className='backImg backW1' />
                 <backImg.BackW2 className='backImg backW2' />
                 <backImg.BackW3 className='backImg backW3' />

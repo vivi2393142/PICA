@@ -152,6 +152,15 @@ const getAllCanvasData = (callback) => {
     });
 };
 
+const setBasicSetting = (fileId, newWidth, newHeight, canvas) => {
+    let result = {};
+    const ref = db.collection('canvasFiles').doc(fileId);
+    ref.get().then((doc) => {
+        result = { ...doc.data().basicSetting, width: newWidth, height: newHeight };
+        saveCanvasData(canvas, result, fileId);
+    });
+};
+
 // native login
 const checkCurrentUser = (successCallback, failCallback) => {
     // successCallback;
@@ -382,4 +391,5 @@ export {
     fbSignUp,
     googleSignUp,
     uploadUserPhoto,
+    setBasicSetting,
 };

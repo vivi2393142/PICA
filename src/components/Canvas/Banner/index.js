@@ -16,7 +16,6 @@ const Banner = (props) => {
 
     const handleSaveFileTemporary = () => {
         allSettings.canvas.discardActiveObject().renderAll();
-        // firebase.testSaveDataURL(dataURL, props.fileId,);
         firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting, props.fileId);
     };
 
@@ -50,19 +49,9 @@ const Banner = (props) => {
                 </div>
                 <div className='status'>已儲存</div>
             </div>
-            {/* <button
-                onClick={() =>
-                    firebase.updateCanvasData(allSettings.canvas, allSettings.canvasSetting)
-                }
-            >
-                firebase存檔
-            </button>
-            <button onClick={() => firebase.getCanvasData(allSettings.canvasSetting)}>
-                firebase讀檔
-            </button> */}
             <div className='bannerRight'>
                 <div className='statusSize'>{`${allSettings.canvasSetting.width}×${allSettings.canvasSetting.height}像素`}</div>
-                <Resize drawingAreaSettings={allSettings} />
+                <Resize drawingAreaSettings={allSettings} fileId={props.fileId} />
                 <div className='shareIconWrapper'>
                     <bannerIcons.Share className='bannerIcons' />
                 </div>

@@ -81,8 +81,14 @@ const Sidebar = (props) => {
                 left: nextAddPosition.left,
                 scaleX: 2.2 * shapeRatio,
                 scaleY: 2.2 * shapeRatio,
-                id: 'shape',
             });
+            // newShape.toObject = (function (toObject) {
+            //     return function (propertiesToInclude) {
+            //         return fabric.util.object.extend(toObject.call(this, propertiesToInclude), {
+            //             specialType: 'shape', //my custom property
+            //         });
+            //     };
+            // })(newShape.toObject);
             allSettings.canvas.add(newShape);
             allSettings.canvas.requestRenderAll();
             adjSetNextPosition();
@@ -151,8 +157,14 @@ const Sidebar = (props) => {
                     left: nextAddPosition.left,
                     scaleX: scaleRatio,
                     scaleY: scaleRatio,
-                    id: 'sticker',
                 });
+                oImg.toObject = (function (toObject) {
+                    return function (propertiesToInclude) {
+                        return fabric.util.object.extend(toObject.call(this, propertiesToInclude), {
+                            specialType: 'sticker', //my custom property
+                        });
+                    };
+                })(oImg.toObject);
                 allSettings.canvas.add(oImg);
                 oImg.setControlsVisibility({
                     mb: false,
@@ -172,12 +184,11 @@ const Sidebar = (props) => {
         allSettings.canvas.backgroundImage = 0;
         allSettings.canvas.backgroundColor = color;
         allSettings.canvas.requestRenderAll();
-        // allSettings.canvas.fire('object:modified');
     };
     const backgroundImageHandler = (e) => {
         // remove exist background
         if (allSettings.canvas.getObjects().length > 0) {
-            if (allSettings.canvas.getObjects()[0].id === 'background') {
+            if (allSettings.canvas.getObjects()[0].specialType === 'background') {
                 allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
             }
         }
@@ -191,43 +202,15 @@ const Sidebar = (props) => {
                     // fit canvas
                     scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
                     scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
-                    id: 'background',
                 });
-                backImg.setControlsVisibility({
-                    mb: false,
-                    mt: false,
-                    ml: false,
-                    mr: false,
-                    mtr: false,
-                });
-                if (scaleWay === 'toWidth') {
-                    backImg.lockMovementX = true;
-                } else {
-                    backImg.lockMovementY = true;
-                }
-                allSettings.canvas.add(backImg);
-                backImg.sendToBack();
-                // bounding can't be inside canvas
-                backImg.on('modified', () => {
-                    const currentSizeRatio =
-                        parseInt(document.querySelector('.canvas-container').style.width) /
-                        allSettings.canvasSetting.width;
-                    backImg.setCoords();
-                    const { top, left, width, height } = backImg.getBoundingRect();
-                    if (top > 0) {
-                        backImg.top = 0;
-                    }
-                    if (top + height < allSettings.canvas.getHeight()) {
-                        backImg.top = (allSettings.canvas.getHeight() - height) / currentSizeRatio;
-                    }
-                    if (left > 0) {
-                        backImg.left = 0;
-                    }
-                    if (left + width < allSettings.canvas.getWidth()) {
-                        backImg.left = (allSettings.canvas.getWidth() - width) / currentSizeRatio;
-                    }
-                    allSettings.canvas.requestRenderAll();
-                });
+                allSettings.presetBackgroundImg(
+                    backImg,
+                    allSettings.canvas,
+                    allSettings.canvasSetting,
+                    scaleWay,
+                    scaleToWidth,
+                    scaleToHeight
+                );
             },
             {
                 crossOrigin: 'anonymous',
@@ -298,7 +281,7 @@ const Sidebar = (props) => {
             allSettings.canvas.fire('object:modified');
         } else {
             // remove exist background
-            if (allSettings.canvas.getObjects()[0].id === 'background') {
+            if (allSettings.canvas.getObjects()[0].specialType === 'background') {
                 allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
             }
             document.querySelector('.colorChartWrapper').classList.add('colorChartUnfold');
@@ -561,7 +544,7 @@ const Sidebar = (props) => {
         return (
             <div key={index} className='unfoldItemGalleryWrapper'>
                 <img
-                    onClick={addImage}
+                    onClick={addSticker}
                     className='unfoldItem unfoldItemGallery'
                     draggable='true'
                     src={item}

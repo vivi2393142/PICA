@@ -161,7 +161,7 @@ const ComponentsSelection = (props) => {
                     allSettings.activeObj.type === 'triangle' ||
                     allSettings.activeObj.type === 'path' ||
                     allSettings.activeObj.type === 'polygon') &&
-                allSettings.activeObj.id !== 'cropbox' ? (
+                allSettings.activeObj.specialType !== 'cropbox' ? (
                     <NavLeftColor
                         canvas={allSettings.canvas}
                         activeObj={allSettings.activeObj}
@@ -169,18 +169,13 @@ const ComponentsSelection = (props) => {
                     />
                 ) : null}
                 {(allSettings.activeObj.type === 'image' || croppingObj !== {}) &&
-                allSettings.activeObj.id !== 'sticker' &&
-                allSettings.activeObj.id !== 'background' ? (
+                allSettings.activeObj.specialType !== 'background' ? (
                     <NavLeftImg
                         currentSidebar={props.currentSidebar}
                         setCurrentSidebar={props.setCurrentSidebar}
-                        // setActiveObj={props.setActiveObj}
-                        // canvas={props.canvas}
                         trackOutSideClick={props.trackOutSideClick}
-                        // activeObj={props.activeObj}
                         croppingObj={croppingObj}
                         setCroppingObj={setCroppingObj}
-                        // canvasSetting={props.canvasSetting}
                         allSettings={allSettings}
                     />
                 ) : null}
@@ -195,7 +190,7 @@ const ComponentsSelection = (props) => {
                 {(allSettings.activeObj.type === 'rect' ||
                     allSettings.activeObj.type === 'circle' ||
                     allSettings.activeObj.type === 'triangle') &&
-                allSettings.activeObj.id !== 'cropbox' ? (
+                allSettings.activeObj.specialType !== 'cropbox' ? (
                     <NavLeftShape
                         trackOutSideClick={props.trackOutSideClick}
                         canvas={allSettings.canvas}
@@ -203,7 +198,7 @@ const ComponentsSelection = (props) => {
                     />
                 ) : null}
             </div>
-            {allSettings.activeObj.id !== 'cropbox' ? (
+            {allSettings.activeObj.specialType !== 'cropbox' ? (
                 <div className='componentsNavRight'>
                     {allSettings.activeObj.type ? (
                         <NavRightPartial
@@ -244,7 +239,7 @@ const ComponentsSelection = (props) => {
                             />
                         </div>
                     ) : null}
-                    {allSettings.activeObj.id !== 'background' ? (
+                    {allSettings.activeObj.specialType !== 'background' ? (
                         <div className='selectAll'>
                             <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
                         </div>
