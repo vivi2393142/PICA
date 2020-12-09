@@ -6,15 +6,13 @@ import ComponentsSelection from './ComponentsSelection/index';
 
 const MainBoard = (props) => {
     const allSettings = props.allSettings;
-    // const canvas = allSettings.canvas;
-    // const setCanvas = allSettings.setCanvas;
-
     const [currentSidebar, setCurrentSidebar] = React.useState('');
     const textSetting = [
         { title: '雙擊以編輯標題', size: 36, fontWeight: 'bold' },
         { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
+
     // -- track outside click event
     const trackOutSideClick = (childElement, callback) => {
         const clickedOrNot = (e) => {

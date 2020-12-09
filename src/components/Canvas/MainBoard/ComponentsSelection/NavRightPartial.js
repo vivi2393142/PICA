@@ -43,19 +43,24 @@ const NavRightPartial = (props) => {
     };
     // -- methods for component: group, ungroup, selectAll
     const groupHandler = (e) => {
+        props.canvas.offHistory();
         if (props.activeObj.type === 'activeSelection') {
             props.activeObj.toGroup();
             props.canvas.requestRenderAll();
             props.setActiveObj(props.canvas.getActiveObject());
         }
+        props.canvas.onHistory();
     };
     const ungroupHandler = () => {
+        props.canvas.offHistory();
         if (props.activeObj.type === 'group') {
             props.activeObj.toActiveSelection();
             props.canvas.requestRenderAll();
             props.setActiveObj(props.canvas.getActiveObject());
         }
+        props.canvas.onHistory();
     };
+
     // -- methods for component: align components
     const alignHandler = (side) => {
         // const activeObj = props.canvas.getActiveObject();

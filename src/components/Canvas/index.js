@@ -15,23 +15,22 @@ const Canvas = (props) => {
     const [canvasSetting, setCanvasSetting] = React.useState({});
     const [canvasData, setCanvasData] = React.useState({});
     const [ratioSelectValue, setRatioSelectValue] = React.useState('auto');
-    const [hasUndo, setHasUndo] = React.useState(false);
-    const [hasRedo, setHasRedo] = React.useState(false);
     const [activeObj, setActiveObj] = React.useState({});
     const [saveDragItem, setSaveDragItem] = React.useState({});
+    const [uploadedFiles, setUploadedFiles] = React.useState([]);
+    const [hasBackColor, setHasBackColor] = React.useState(false);
+    const [hasUndo, setHasUndo] = React.useState(false);
+    const [hasRedo, setHasRedo] = React.useState(false);
     const textSetting = [
         { title: '雙擊以編輯標題', size: 36, fontWeight: 'bold' },
         { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
-    const [uploadedFiles, setUploadedFiles] = React.useState([]);
-    const [hasBackColor, setHasBackColor] = React.useState(false);
-
+    console.log('render canvas');
     // handleSaveFile
     const handleSaveFile = (canvas, canvasSetting) => {
         firebase.saveCanvasData(canvas, canvasSetting, props.match.params.id);
     };
-
     // show save status
     const showSaveStatus = () => {
         document.querySelector('.status').classList.add('showStatus');
@@ -39,7 +38,6 @@ const Canvas = (props) => {
             document.querySelector('.status').classList.remove('showStatus');
         }, 3000);
     };
-
     // handle responsive size
     const handleResponsiveSize = (container) => {
         let fixRatio = Math.min(
@@ -108,6 +106,7 @@ const Canvas = (props) => {
     };
 
     React.useEffect(() => {
+        console.log('render useEffect');
         // get firebase data according to URL params
         firebase.loadCanvas(
             canvas,
@@ -128,7 +127,6 @@ const Canvas = (props) => {
                     await canvasInit.renderAll();
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
-                    canvasInit.clearHistory();
 
                     // preset image & iText objects style
                     let imgObjects = canvasInit.getObjects('image');
@@ -204,9 +202,9 @@ const Canvas = (props) => {
                                 return;
                             }
                         }
+                        console.log('編輯完畢');
                         setHasUndo(canvasInit.historyUndo.length > 0);
                         setHasRedo(canvasInit.historyRedo.length > 0);
-                        console.log('編輯完畢');
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
                     // TODO:處理複製剪下貼上會更新兩次的問題
@@ -219,9 +217,9 @@ const Canvas = (props) => {
                                 return;
                             }
                         }
-                        setHasUndo(canvasInit.historyUndo.length > 0);
-                        setHasRedo(canvasInit.historyRedo.length > 0);
                         console.log('新增完畢');
+                        setHasUndo(canvasInit.historyUndo > 0);
+                        setHasRedo(canvasInit.historyRedo > 0);
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
                     canvasInit.on('object:removed', (e) => {
@@ -230,10 +228,9 @@ const Canvas = (props) => {
                                 return;
                             }
                         }
-                        // e.target.id === 'cropbox' regards as crop event
-                        setHasUndo(canvasInit.historyUndo.length > 0);
-                        setHasRedo(canvasInit.historyRedo.length > 0);
                         console.log('移除完畢');
+                        setHasUndo(canvasInit.historyUndo > 0);
+                        setHasRedo(canvasInit.historyRedo > 0);
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
                     // -- listen to all changes -> set active obj
@@ -249,8 +246,8 @@ const Canvas = (props) => {
                     // -- listen to drop event -> execute drop function
                     canvasInit.on('drop', (e) => {
                         dropItem(e, canvasInit);
-                        // console.log('監聽到drop');
                     });
+                    canvasInit.clearHistory();
                 }
 
                 // preset fabric custom styles
@@ -482,10 +479,6 @@ const Canvas = (props) => {
         setCanvas,
         ratioSelectValue,
         setRatioSelectValue,
-        hasUndo,
-        setHasUndo,
-        hasRedo,
-        setHasRedo,
         activeObj,
         setActiveObj,
         saveDragItem,
@@ -495,6 +488,8 @@ const Canvas = (props) => {
         hasBackColor,
         setHasBackColor,
         presetBackgroundImg,
+        hasUndo,
+        hasRedo,
     };
 
     const Background = () => {

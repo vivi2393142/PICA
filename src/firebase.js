@@ -4,6 +4,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { nanoid } from 'nanoid';
+import { auth } from 'firebaseui';
 
 // init firebase
 const firebaseConfig = {
@@ -22,13 +23,18 @@ const db = firebase.firestore();
 
 // save data URL
 const savaDataURL = (canvas, fileId, successCallback) => {
-    const exportCanvas = document.getElementById('fabric-canvas');
-    let dataURL = exportCanvas.toDataURL('image/jpeg', 1);
+    let exportCanvas;
+    if (JSON.stringify(canvas) === '{}') {
+        exportCanvas = document.getElementById('fabric-canvas');
+    } else {
+        exportCanvas = canvas;
+    }
+    let dataURL = exportCanvas.toDataURL('image/png', 1);
     const storageRef = firebase
         .storage()
         .ref()
         .child('snapshot/' + fileId);
-    const newDataURL = dataURL.replace('data:image/jpeg;base64,', '');
+    const newDataURL = dataURL.replace('data:image/png;base64,', '');
     const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
     task.on(
         'state_changed',
@@ -100,7 +106,6 @@ const loadCanvas = (canvas, callback, fileId) => {
 
 let initState = true;
 const listenCanvas = (fileId, callback, setUploadedFiles) => {
-    // console.log('設定監聽事件');
     const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
     let oldData = [];
     ref.onSnapshot((doc) => {

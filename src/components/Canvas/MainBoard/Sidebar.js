@@ -186,6 +186,7 @@ const Sidebar = (props) => {
         allSettings.canvas.requestRenderAll();
     };
     const backgroundImageHandler = (e) => {
+        allSettings.canvas.offHistory();
         // remove exist background
         if (allSettings.canvas.getObjects().length > 0) {
             if (allSettings.canvas.getObjects()[0].specialType === 'background') {
@@ -195,6 +196,7 @@ const Sidebar = (props) => {
         const scaleToWidth = allSettings.canvasSetting.width / e.target.naturalWidth;
         const scaleToHeight = allSettings.canvasSetting.height / e.target.naturalHeight;
         const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
+        allSettings.canvas.onHistory();
         fabric.Image.fromURL(
             e.target.src,
             (img) => {
@@ -260,7 +262,6 @@ const Sidebar = (props) => {
         : null;
 
     // backgroundColor
-
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
     const [backColorChosen, setBackColorChosen] = React.useState({
         background: {
@@ -310,34 +311,6 @@ const Sidebar = (props) => {
         const color = e.target.style.backgroundColor;
         setBackColorChosen({ background: color });
         backgroundColorHandler(color);
-        allSettings.canvas.requestRenderAll();
-    };
-    // add new components: frame
-    const addFrameA = (col, spacing) => {
-        const rectBack = new fabric.Rect({
-            height: allSettings.canvasSetting.height,
-            width: allSettings.canvasSetting.width,
-            stroke: 'black',
-            fill: 'transparent',
-            isClipFrame: true,
-        });
-        let groupItem = [rectBack];
-        for (let i = 0; i < col; i++) {
-            let rect = new fabric.Rect({
-                top: 0,
-                left:
-                    (allSettings.canvasSetting.width - spacing * (col - 1)) / col +
-                    spacing * (i === 0 ? 0 : 1),
-                height: allSettings.canvasSetting.height,
-                width: (allSettings.canvasSetting.width - spacing * (col - 1)) / col,
-                stroke: mainColor,
-                fill: 'transparent',
-                isClipFrame: true,
-            });
-            groupItem.push(rect);
-        }
-        const group = new fabric.Group(groupItem);
-        allSettings.canvas.add(group);
         allSettings.canvas.requestRenderAll();
     };
 

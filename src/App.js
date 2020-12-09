@@ -12,20 +12,14 @@ export default function App() {
     const [currentUser, setCurrentUser] = React.useState({});
     const [currentUserTimes, setCurrentUserTimes] = React.useState(0);
     // trackCurrentUser
-    const setCurrentUserFunc = () => {
-        if (currentUserTimes === 0) {
-            // FB.getLoginStatus(function(response) {
-            //     statusChangeCallback(response);
-            // });
-            firebase.auth().onAuthStateChanged((user) => {
-                if (user) {
-                    setCurrentUser(user);
-                }
-            });
-            setCurrentUserTimes(1);
-        }
-    };
-    setCurrentUserFunc();
+    if (currentUserTimes === 0) {
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user && user !== currentUser) {
+                setCurrentUser(user);
+            }
+        });
+        setCurrentUserTimes(1);
+    }
 
     // render
     return (

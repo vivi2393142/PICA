@@ -98,7 +98,9 @@ const LandingPage = (props) => {
                         className={`${styles.blockWrapper} ${
                             chooseLogin ? styles.blockWrapperRightAni : styles.blockWrapperLeftAni
                         } ${chooseLogin ? styles.blockWrapperRight : styles.blockWrapperLeft} `}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                        }}
                     >
                         <div
                             className={`${styles.loginBlock} ${

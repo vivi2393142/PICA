@@ -28,6 +28,7 @@ const NavLeftImg = (props) => {
         specialType: 'cropBackground',
     });
     const startCropping = () => {
+        allSettings.canvas.offHistory();
         // --- update cropping obj
         props.setCroppingObj(allSettings.activeObj);
         // --- add dark background and enable to choose other then crop box
@@ -71,7 +72,6 @@ const NavLeftImg = (props) => {
         clipPathView.setControlsVisibility({
             mtr: false,
         });
-
         allSettings.canvas.setActiveObject(clipPathView);
     };
     const confirmCropping = () => {
@@ -104,18 +104,20 @@ const NavLeftImg = (props) => {
             obj.selectable = true;
             obj.hoverCursor = 'move';
         });
+
+        // --- remove crop box and dark background
+        allSettings.canvas.remove(allSettings.activeObj);
+        allSettings.canvas.remove(
+            allSettings.canvas.getObjects()[allSettings.canvas.getObjects().length - 2]
+        );
         // --- reset clippath and index
         props.croppingObj.clipPath = clipPath;
         allSettings.canvas.moveTo(props.croppingObj, croppingObjIndex);
         // --- update cropping obj
         props.setCroppingObj({});
-        // --- remove crop box and dark background
-        allSettings.canvas.remove(allSettings.activeObj);
-        allSettings.canvas.remove(
-            allSettings.canvas.getObjects()[allSettings.canvas.getObjects().length - 1]
-        );
         // --- render
         allSettings.canvas.requestRenderAll();
+        allSettings.canvas.onHistory();
     };
     const cancelCropping = () => {
         console.log('取消');
@@ -136,6 +138,7 @@ const NavLeftImg = (props) => {
         );
         // --- render
         allSettings.canvas.requestRenderAll();
+        allSettings.canvas.onHistory();
     };
 
     // render
