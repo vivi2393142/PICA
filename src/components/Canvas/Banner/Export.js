@@ -23,7 +23,6 @@ const Export = (props) => {
     const allSettings = props.drawingAreaSettings;
     const exportCanvas = document.getElementById('fabric-canvas');
     const handleExport = (way) => {
-        allSettings.canvas.discardActiveObject().renderAll();
         let dataURL = '';
         const fileName = allSettings.canvasSetting.title
             ? allSettings.canvasSetting.title
@@ -44,10 +43,10 @@ const Export = (props) => {
             setIsChoosingExport(false);
             return;
         } else if (way === 'jpg') {
-            dataURL = exportCanvas.toDataURL('image/jpeg', 1);
-            console.log(dataURL);
+            dataURL = allSettings.canvas.toDataURL('image/jpeg', 1);
+            // console.log(dataURL);
         } else if (way === 'png') {
-            dataURL = exportCanvas.toDataURL('image/png');
+            dataURL = allSettings.canvas.toDataURL('image/png');
         }
         const dlLink = document.createElement('a');
         dlLink.download = fileName;

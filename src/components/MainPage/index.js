@@ -12,6 +12,8 @@ const MainPage = (props) => {
     const [isChoosingSize, setIsChoosingSize] = React.useState(false);
     const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
+    const [userPhoto, setUserPhoto] = React.useState('');
+    const [isSmallLoaded, setIsSmallLoaded] = React.useState(false);
     const canvasSizeOptions = [
         { name: '自訂尺寸->未完成(進畫布可以改)', width: 0, height: 0 },
         { name: 'Instagram 貼文', width: 1080, height: 1080 },
@@ -36,11 +38,26 @@ const MainPage = (props) => {
         firebase.createNewCanvas(canvasSetting, props.currentUser.email);
     };
 
+    // uploaded function
+    const handleUploadImage = (e) => {
+        setIsSmallLoaded(true);
+        if (e.target.files[0].size > 2097152) {
+            alert('請勿上傳超過2mb之圖片');
+        } else {
+            firebase.uploadUserPhoto(e, props.currentUser.email, (url) => {
+                setUserPhoto(url);
+                setIsSmallLoaded(false);
+            });
+        }
+    };
+
     React.useEffect(() => {
         if (props.currentUser !== {}) {
             firebase.loadUserData(props.currentUser.email, (dataFromFirebase) => {
                 if (dataFromFirebase) {
                     setUserDataFromFirebase(dataFromFirebase);
+                    setUserPhoto(dataFromFirebase.photo);
+                    setIsLoaded(false);
                 }
             });
         }
@@ -62,7 +79,6 @@ const MainPage = (props) => {
                     };
                 });
                 setCanvasDataWithDataURL(canvasDataWithImg);
-                setIsLoaded(false);
             }
         });
     }, [userDataFromFirebase.canvas]);
@@ -123,6 +139,7 @@ const MainPage = (props) => {
                     <bannerIcons.Logo className={styles.logo} />
                     <div className={styles.leftNav}>
                         <div>探索作品</div>
+                        <div>我的收藏</div>
                         <div className={styles.navChosen}>我的作品</div>
                     </div>
                     <div
@@ -141,7 +158,27 @@ const MainPage = (props) => {
             <div className={styles.mainWrapper}>
                 <div className={styles.main}>
                     <div className={styles.memberDetails}>
-                        <div className={styles.memberPhoto}></div>
+                        <div className={styles.memberPhotoWrapper}>
+                            {isSmallLoaded ? (
+                                <div className={styles.loaderWrapper}>
+                                    <div className={styles.smallLoader}>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            ) : null}
+                            <img src={userPhoto} className={styles.memberPhoto}></img>
+                            <label>
+                                <input
+                                    type='file'
+                                    accept='image/png, image/jpeg'
+                                    onChange={handleUploadImage}
+                                ></input>
+                            </label>
+                        </div>
+                        <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
                         <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
                         <div className={styles.otherDetails}>
                             {userDataFromFirebase.canvas.length} files

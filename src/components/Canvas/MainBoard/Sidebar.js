@@ -176,8 +176,10 @@ const Sidebar = (props) => {
     };
     const backgroundImageHandler = (e) => {
         // remove exist background
-        if (allSettings.canvas.getObjects()[0].id === 'background') {
-            allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
+        if (allSettings.canvas.getObjects().length > 0) {
+            if (allSettings.canvas.getObjects()[0].id === 'background') {
+                allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
+            }
         }
         const scaleToWidth = allSettings.canvasSetting.width / e.target.naturalWidth;
         const scaleToHeight = allSettings.canvasSetting.height / e.target.naturalHeight;

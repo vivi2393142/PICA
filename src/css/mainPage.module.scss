@@ -12,6 +12,11 @@ $board-to-window-ratio: 90%;
 $bk-w: #eaecec;
 $bk-y: #d8c2b0;
 $bk-g: #919da3;
+$big-font: 1rem;
+$middle-font: 0.9rem;
+$small-font: 0.8rem;
+$tiny-font: 0.7rem;
+$symbol-font: 0.6rem;
 
 .bannerWrapper {
     display: flex;
@@ -75,63 +80,106 @@ $bk-g: #919da3;
         .memberDetails {
             text-align: center;
             margin: 2rem 0 3rem 0;
-
-            .memberPhoto {
-                background-color: $main-color;
+            .memberPhotoWrapper {
                 border-radius: 100%;
-                width: 5rem;
-                height: 5rem;
-                margin: 1rem auto;
-            }
-            .otherDetails {
-                padding: 0.2rem 0;
-                color: $custom-black;
-            }
-        }
-        .canvasFiles {
-            display: flex;
-            flex-wrap: wrap;
-
-            .fileWrapper,
-            .addNew {
-                margin: 1%;
-            }
-            .file,
-            .addNew {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: $light-grey;
-                border-radius: 1rem;
-                font-size: 1rem;
-                cursor: pointer;
+                width: 8rem;
+                height: 8rem;
+                margin: 0.5rem auto;
                 overflow: hidden;
-                height: 10rem;
-                box-shadow: 1px 1px 5px 0 $custom-black;
                 position: relative;
-                flex-direction: column;
-                // &::after {
-                //     content: '';
-                //     display: block;
-                //     padding-bottom: 60%; // 寬高比10:6
-                // }
-                // .file:hover {
-                //     box-shadow: 1px 1px 5px 0 $custom-black;
-                // }
-                .fileImg {
+                label {
+                    width: 100%;
                     height: 100%;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    cursor: pointer;
+                    &:hover::before {
+                        content: '';
+                        background-color: rgba(255, 255, 255, 0.6);
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                    }
+                    &:hover::after {
+                        content: '';
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        color: $light-grey;
+                        width: 100%;
+                        height: 100%;
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        background: url('../img/src/banner/edit.svg') no-repeat center/ 2rem 2rem;
+                    }
+                }
+                input {
+                    display: none;
                 }
             }
-            .fileTitle {
-                text-align: center;
-                font-size: 0.9rem;
+            .memberPhoto {
                 width: 100%;
-                color: $custom-black;
-                padding: 0.5rem 0;
+                height: 100%;
             }
-            .addNew {
-                width: 15rem;
+        }
+        .otherDetails,
+        .otherDetailsName {
+            padding: 0.2rem 0;
+            color: $custom-black;
+        }
+        .otherDetailsName {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+    }
+    .canvasFiles {
+        display: flex;
+        flex-wrap: wrap;
+
+        .fileWrapper,
+        .addNew {
+            margin: 1%;
+        }
+        .file,
+        .addNew {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: $light-grey;
+            border-radius: 1rem;
+            font-size: 1rem;
+            cursor: pointer;
+            overflow: hidden;
+            height: 10rem;
+            box-shadow: 1px 1px 5px 0 $custom-black;
+            position: relative;
+            flex-direction: column;
+            // &::after {
+            //     content: '';
+            //     display: block;
+            //     padding-bottom: 60%; // 寬高比10:6
+            // }
+            // .file:hover {
+            //     box-shadow: 1px 1px 5px 0 $custom-black;
+            // }
+            .fileImg {
+                height: 100%;
             }
+        }
+        .fileTitle {
+            text-align: center;
+            font-size: 0.9rem;
+            width: 100%;
+            color: $custom-black;
+            padding: 0.5rem 0;
+        }
+        .addNew {
+            width: 15rem;
         }
     }
 }
@@ -187,5 +235,71 @@ $bk-g: #919da3;
         &:hover {
             opacity: 0.5;
         }
+    }
+}
+.loaderWrapper {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.smallLoader {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 40px;
+}
+.smallLoader div {
+    position: absolute;
+    top: 41.25%;
+    width: 12%;
+    height: 12%;
+    border-radius: 50%;
+    background: #fff;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.smallLoader div:nth-child(1) {
+    left: 10%;
+    animation: smallLoader1 0.6s infinite;
+}
+.smallLoader div:nth-child(2) {
+    left: 10%;
+    animation: smallLoader2 0.6s infinite;
+}
+.smallLoader div:nth-child(3) {
+    left: 40%;
+    animation: smallLoader2 0.6s infinite;
+}
+.smallLoader div:nth-child(4) {
+    left: 70%;
+    animation: smallLoader3 0.6s infinite;
+}
+@keyframes smallLoader1 {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+@keyframes smallLoader3 {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(0);
+    }
+}
+@keyframes smallLoader2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    100% {
+        transform: translate(12px, 0);
     }
 }

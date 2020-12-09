@@ -21,7 +21,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // save data URL
-const savaDataURL = (fileId, successCallback) => {
+const savaDataURL = (canvas, fileId, successCallback) => {
     const exportCanvas = document.getElementById('fabric-canvas');
     let dataURL = exportCanvas.toDataURL('image/jpeg', 1);
     const storageRef = firebase
@@ -76,7 +76,7 @@ const createNewCanvas = (canvasSetting, userId) => {
     });
 };
 
-const loadCanvas = (callback, fileId) => {
+const loadCanvas = (canvas, callback, fileId) => {
     const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
         const dataFromFirebase = doc.data();
@@ -84,7 +84,7 @@ const loadCanvas = (callback, fileId) => {
         const canvasDataInit = JSON.parse(dataFromFirebase.data);
         callback(canvasSettingInit, canvasDataInit);
         if (canvasDataInit.objects.length === 0) {
-            savaDataURL(fileId, (storageRef) => {
+            savaDataURL(canvas, fileId, (storageRef) => {
                 storageRef.getDownloadURL().then((url) => {
                     const ref = db.collection('canvasFiles').doc(fileId);
                     ref.get().then((doc) => {
@@ -120,7 +120,7 @@ const listenCanvas = (fileId, callback, setUploadedFiles) => {
 
 const saveCanvasData = (canvas, canvasSetting, fileId) => {
     // save snap shot on storage
-    savaDataURL(fileId, (storageRef) => {
+    savaDataURL(canvas, fileId, (storageRef) => {
         storageRef.getDownloadURL().then((url) => {
             // update file data
             const canvasData = JSON.stringify(canvas.toJSON());
@@ -170,29 +170,27 @@ const fbSignUp = () => {
         .auth()
         .signInWithPopup(provider)
         .then(function (result) {
-            // var token = result.credential.accessToken;
-            // var user = result.user;
-            // console.log(result.user.displayName);
-            console.log(result.user.photoURL);
-            console.log(result);
             const ref = db.collection('userData').doc(result.user.email);
-            ref.set({
-                photo: result.user.photoURL,
-                name: result.user.displayName,
-                email: result.user.email,
-                canvas: [],
+            // if user had edit photo before, don't renew fb photo
+            ref.get().then((doc) => {
+                if (doc.data().photo.slice(0, 10) === 'https://gr') {
+                    const userPhoto = `https://graph.facebook.com/${result.additionalUserInfo.profile.id}/picture?access_token=${result.credential.accessToken}&width=700`;
+                    ref.update({
+                        photo: userPhoto,
+                    });
+                }
             });
+            // if it's sign up, set basic data
+            if (result.additionalUserInfo.isNewUser) {
+                ref.set({
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    canvas: [],
+                });
+            }
             return user;
         })
-        .catch(function (error) {
-            // var errorCode = error.code;
-            // var errorMessage = error.message;
-            // // The email of the user's account used.
-            // var email = error.email;
-            // // The firebase.auth.AuthCredential type that was used.
-            // var credential = error.credential;
-            // // ...
-        });
+        .catch(function (error) {});
 };
 
 const googleSignUp = () => {
@@ -201,30 +199,18 @@ const googleSignUp = () => {
         .auth()
         .signInWithPopup(provider)
         .then(function (result) {
-            // var token = result.credential.accessToken;
-            // var user = result.user;
-            // console.log(result.user.displayName);
-            // console.log(result.user.photoURL);
-            // console.log(result.user.email);
-            const ref = db.collection('userData').doc(result.user.email);
-            ref.set({
-                photo: result.user.photoURL,
-                name: result.user.displayName,
-                email: result.user.email,
-                canvas: [],
-            });
+            if (result.additionalUserInfo.isNewUser) {
+                const ref = db.collection('userData').doc(result.user.email);
+                ref.set({
+                    photo: result.user.photoURL,
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    canvas: [],
+                });
+            }
             return user;
         })
-        .catch(function (error) {
-            //    console.log(error.message)
-            //     var errorCode = error.code;
-            //     var errorMessage = error.message;
-            //     // The email of the user's account used.
-            //     var email = error.email;
-            //     // The firebase.auth.AuthCredential type that was used.
-            //     var credential = error.credential;
-            //     // ...
-        });
+        .catch(function (error) {});
 };
 
 const nativeSignUp = (name, email, pwd) => {
@@ -235,6 +221,8 @@ const nativeSignUp = (name, email, pwd) => {
             // add data to userData
             const ref = db.collection('userData').doc(email);
             ref.set({
+                photo:
+                    'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
                 name: name,
                 email: email,
                 canvas: [],
@@ -244,8 +232,8 @@ const nativeSignUp = (name, email, pwd) => {
             return user;
         })
         .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            // const errorCode = error.code;
+            // const errorMessage = error.message;
             // console.log(errorCode, errorMessage);
             alert('請輸入有效之email地址及6位以上密碼');
         });
@@ -320,6 +308,33 @@ const uploadToStorage = (e, fileId, callback, successCallback, failCallback) => 
     );
 };
 
+const uploadUserPhoto = (e, email, successCallback) => {
+    const imgId = nanoid();
+    const file = e.target.files[0];
+    const storageRef = firebase
+        .storage()
+        .ref()
+        .child('userPhoto/' + imgId);
+    const task = storageRef.put(file);
+    // listen to progress
+    task.on(
+        'state_changed',
+        (snapshot) => {},
+        function error(err) {},
+        function complete() {
+            storageRef.getDownloadURL().then((url) => {
+                const ref = db.collection('userData').doc(email);
+                ref.get().then((doc) => {
+                    successCallback(url);
+                    ref.update({
+                        photo: url,
+                    }).then(() => {});
+                });
+            });
+        }
+    );
+};
+
 const removeUploadImg = (e, fileId) => {
     const storageRef = firebase.storage().ref().child(e.target.id);
     storageRef
@@ -366,4 +381,5 @@ export {
     getAllCanvasData,
     fbSignUp,
     googleSignUp,
+    uploadUserPhoto,
 };

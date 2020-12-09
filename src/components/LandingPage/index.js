@@ -184,6 +184,7 @@ const LandingPage = (props) => {
                                         inputId,
                                         inputPwd
                                     );
+                                    console.log(user);
                                     user ? props.setCurrentUser(user) : props.setCurrentUser({});
                                 }}
                             >
