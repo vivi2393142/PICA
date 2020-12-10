@@ -18,11 +18,14 @@ $small-font: 0.8rem;
 $tiny-font: 0.7rem;
 $symbol-font: 0.6rem;
 
+body {
+    overflow: auto;
+}
 .bannerWrapper {
     display: flex;
     justify-content: center;
     height: 3rem;
-    border-bottom: 1px solid $middle-grey;
+    // border-bottom: 1px solid $middle-grey;
     padding: 1rem 0;
     .banner {
         width: 70%;
@@ -38,6 +41,7 @@ $symbol-font: 0.6rem;
     }
     & .logo {
         height: 3rem;
+        cursor: pointer;
     }
     .leftNav {
         margin-right: auto;
@@ -69,17 +73,15 @@ $symbol-font: 0.6rem;
 .mainWrapper {
     display: flex;
     justify-content: center;
-
     .main {
         width: 70%;
         display: flex;
         justify-content: space-around;
         color: $dark-grey;
         flex-direction: column;
-
         .memberDetails {
             text-align: center;
-            margin: 2rem 0 3rem 0;
+            margin-top: 2rem;
             .memberPhotoWrapper {
                 border-radius: 100%;
                 width: 8rem;
@@ -140,35 +142,57 @@ $symbol-font: 0.6rem;
     .canvasFiles {
         display: flex;
         flex-wrap: wrap;
-
+        padding: 2rem 0;
         .fileWrapper,
-        .addNew {
-            margin: 1%;
+        .fileWrapperNew {
+            width: 25%;
+            padding: 1rem 0;
+            box-sizing: border-box;
+            padding: 0.5rem 1%;
+            box-sizing: border-box;
         }
-        .file,
-        .addNew {
+        .file {
             display: flex;
-            justify-content: center;
             align-items: center;
             background-color: $light-grey;
             border-radius: 1rem;
             font-size: 1rem;
             cursor: pointer;
             overflow: hidden;
-            height: 10rem;
-            box-shadow: 1px 1px 5px 0 $custom-black;
+            border: 1px solid $light-grey;
             position: relative;
             flex-direction: column;
-            // &::after {
-            //     content: '';
-            //     display: block;
-            //     padding-bottom: 60%; // 寬高比10:6
-            // }
-            // .file:hover {
-            //     box-shadow: 1px 1px 5px 0 $custom-black;
-            // }
+            width: 100%;
+            &::after {
+                content: '';
+                display: block;
+                padding-bottom: 75%;
+            }
             .fileImg {
-                height: 100%;
+                max-width: 60%;
+                position: absolute;
+                top: 10%;
+                box-shadow: 2px 2px 4px 0 $middle-grey;
+                border-radius: 15px;
+            }
+        }
+        .fileWrapperNew {
+            margin-right: auto;
+            .addNew {
+                border: 1px solid $light-grey;
+                width: 100%;
+                background-color: $light-grey;
+                border-radius: 1rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+                cursor: pointer;
+                &::after {
+                    content: '';
+                    display: block;
+                    padding-bottom: 75%;
+                }
             }
         }
         .fileTitle {
@@ -177,9 +201,6 @@ $symbol-font: 0.6rem;
             width: 100%;
             color: $custom-black;
             padding: 0.5rem 0;
-        }
-        .addNew {
-            width: 15rem;
         }
     }
 }
@@ -301,5 +322,85 @@ $symbol-font: 0.6rem;
     }
     100% {
         transform: translate(12px, 0);
+    }
+}
+
+.explore {
+    & * {
+        // border: 1px solid red;
+    }
+    display: flex;
+    .sidebarWrapper {
+        width: 15%;
+        display: flex;
+        align-items: center;
+        position: relative;
+        height: calc(100vh - 5rem);
+        .sidebar {
+            position: absolute;
+            margin-left: 20%;
+            .tag {
+                color: $dark-grey;
+                font-size: $middle-font;
+                padding: 0.5rem 0;
+                font-weight: 400;
+            }
+            .currentTag {
+                color: $sub-color;
+                font-weight: 700;
+            }
+        }
+    }
+    .main {
+        width: 70%;
+        padding: 1rem 0;
+        position: relative;
+        .row {
+            display: flex;
+            overflow-x: scroll;
+            padding: 2rem 0;
+            // border: 1px solid red;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+            .fileWrapper {
+                min-width: 18%;
+                max-width: 18%;
+                margin-right: 2%;
+                .info {
+                    display: flex;
+                    color: $dark-grey;
+                    padding: 0.5rem 0.3rem 0 0.3rem;
+                    align-items: center;
+                    .userPhoto {
+                        width: 1rem;
+                        border-radius: 100%;
+                    }
+                    .author {
+                        margin-right: auto;
+                        font-weight: 700;
+                        margin-left: 0.2rem;
+                        font-size: $small-font;
+                    }
+                    .like,
+                    .messages {
+                        font-size: $tiny-font;
+                    }
+                    .infoIcon {
+                        width: 1.2rem;
+                        height: 1.2rem;
+                    }
+                }
+                .innerImg {
+                    width: 100%;
+                    border-radius: 1rem;
+                    box-shadow: 0 0 1px 0 $dark-grey;
+                    cursor: pointer;
+                    &:hover {
+                        box-shadow: 0 3px 8px 1px $dark-grey;
+                    }
+                }
+            }
+        }
     }
 }

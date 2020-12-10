@@ -66,6 +66,9 @@ const createNewCanvas = (canvasSetting, userId) => {
         }),
         basicSetting: canvasSetting,
         uploaded: [],
+        comment: [],
+        like: [],
+        isSample: false,
     }).then(() => {
         // add data to userData
         const userRef = db.collection('userData').doc(userId);
@@ -157,13 +160,71 @@ const getAllCanvasData = (callback) => {
     });
 };
 
-const setBasicSetting = (fileId, newWidth, newHeight, canvas) => {
+const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     let result = {};
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
-        result = { ...doc.data().basicSetting, width: newWidth, height: newHeight };
+        result = { ...doc.data().basicSetting, width: newWidth, height: newHeight, type: newType };
         saveCanvasData(canvas, result, fileId);
     });
+};
+
+const getAllFiles = (callback) => {
+    let allUsers = [];
+    let instagram = [];
+    let poster = [];
+    let postcard = [];
+    let web = [];
+    let a4 = [];
+    let nameCard = [];
+    let custom = [];
+    const refUser = db.collection('userData');
+    const refFiles = db.collection('canvasFiles');
+    refUser
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                allUsers.push(doc.data());
+            });
+        })
+        .then(() => {
+            refFiles
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        // console.log(doc.data());
+                        const userId = doc.data().basicSetting.userEmail;
+                        const userData = allUsers.find((x) => x.email === userId);
+                        // console.log(userId, userData);
+                        const fileData = {
+                            userId: userId,
+                            userName: userData.name,
+                            userPhoto: userData.photo,
+                            like: doc.data().like.length,
+                            comment: doc.data().comment.length,
+                            fileId: doc.data().basicSetting.id,
+                            snapshot: doc.data().snapshot,
+                        };
+                        doc.data().basicSetting.type === 'instagram'
+                            ? instagram.push(fileData)
+                            : doc.data().basicSetting.type === 'poster'
+                            ? poster.push(fileData)
+                            : doc.data().basicSetting.type === 'postcard'
+                            ? postcard.push(fileData)
+                            : doc.data().basicSetting.type === 'web'
+                            ? web.push(fileData)
+                            : doc.data().basicSetting.type === 'a4'
+                            ? a4.push(fileData)
+                            : doc.data().basicSetting.type === 'nameCard'
+                            ? nameCard.push(fileData)
+                            : custom.push(fileData);
+                    });
+                })
+                .then(() => {
+                    const dataArray = { instagram, poster, postcard, web, a4, nameCard, custom };
+                    callback(dataArray);
+                });
+        });
 };
 
 // native login
@@ -185,18 +246,20 @@ const fbSignUp = () => {
         .signInWithPopup(provider)
         .then(function (result) {
             const ref = db.collection('userData').doc(result.user.email);
-            // if user had edit photo before, don't renew fb photo
-            ref.get().then((doc) => {
-                if (doc.data().photo.slice(0, 10) === 'https://gr') {
-                    const userPhoto = `https://graph.facebook.com/${result.additionalUserInfo.profile.id}/picture?access_token=${result.credential.accessToken}&width=700`;
-                    ref.update({
-                        photo: userPhoto,
-                    });
-                }
-            });
+            // // if user had edit photo before, don't renew fb photo
+            // ref.get().then((doc) => {
+            //     if (doc.data().photo.slice(0, 10) === 'https://gr') {
+            //         const userPhoto = `https://graph.facebook.com/${result.additionalUserInfo.profile.id}/picture?access_token=${result.credential.accessToken}&width=700`;
+            //         ref.update({
+            //             photo: userPhoto,
+            //         });
+            //     }
+            // });
             // if it's sign up, set basic data
             if (result.additionalUserInfo.isNewUser) {
                 ref.set({
+                    photo:
+                        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
                     name: result.user.displayName,
                     email: result.user.email,
                     canvas: [],
@@ -216,7 +279,8 @@ const googleSignUp = () => {
             if (result.additionalUserInfo.isNewUser) {
                 const ref = db.collection('userData').doc(result.user.email);
                 ref.set({
-                    photo: result.user.photoURL,
+                    photo:
+                        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
                     name: result.user.displayName,
                     email: result.user.email,
                     canvas: [],
@@ -397,4 +461,5 @@ export {
     googleSignUp,
     uploadUserPhoto,
     setBasicSetting,
+    getAllFiles,
 };

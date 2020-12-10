@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>comment</title>
+    <g id="comment" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M6.66666667,5 C5.74749996,5 5,5.74749996 5,6.66666667 L5,20 L8.99971008,17.0000299 C9.28821084,16.7836408 9.639116,16.6666667 9.99975006,16.6666667 L18.3333333,16.6666667 C19.2525,16.6666667 20,15.9191667 20,15 L20,6.66666667 C20,5.74749996 19.2525,5 18.3333333,5 L6.66666667,5 Z" id="edit-/-comment" fill="#C2C2C2"></path>
+    </g>
+</svg>

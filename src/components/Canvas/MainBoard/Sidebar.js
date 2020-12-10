@@ -282,7 +282,10 @@ const Sidebar = (props) => {
             allSettings.canvas.fire('object:modified');
         } else {
             // remove exist background
-            if (allSettings.canvas.getObjects()[0].specialType === 'background') {
+            if (
+                allSettings.canvas.getObjects()[0] &&
+                allSettings.canvas.getObjects()[0].specialType === 'background'
+            ) {
                 allSettings.canvas.remove(allSettings.canvas.getObjects()[0]);
             }
             document.querySelector('.colorChartWrapper').classList.add('colorChartUnfold');

@@ -25,17 +25,18 @@ export default function App() {
     return (
         <Router>
             <div className='App'>
+                <Route
+                    path='/main'
+                    component={() => (
+                        <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
+                    )}
+                />
                 <Switch>
                     <Route
                         path='/file/:id'
                         render={(props) => <Canvas currentUser={currentUser} {...props} />}
                     />
-                    <Route
-                        path='/main'
-                        component={() => (
-                            <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-                        )}
-                    />
+
                     <Route path='/' exact>
                         {Object.keys(currentUser).length === 0 ? (
                             <LandingPage

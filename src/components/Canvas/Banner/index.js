@@ -22,7 +22,7 @@ const Banner = (props) => {
     return (
         <div className='banner'>
             <div className='logoWrapper'>
-                <Link to='/main'>
+                <Link to='/main/user'>
                     <bannerIcons.Logo className='bannerLogo' />
                 </Link>
             </div>
@@ -32,7 +32,6 @@ const Banner = (props) => {
                     defaultValue={allSettings.canvasSetting.title}
                     onChange={handleTitle}
                 ></input>
-
                 <div
                     onClick={handleSaveFileTemporary}
                     style={{

@@ -39,12 +39,14 @@ const Resize = (props) => {
                 ...allSettings.canvasSetting,
                 width: parseInt(settings.width),
                 height: parseInt(settings.height),
+                type: settings.type,
             };
         } else {
             newCanvasSetting = {
                 ...allSettings.canvasSetting,
                 width: parseInt(customSize.width),
                 height: parseInt(customSize.height),
+                type: 'custom',
             };
         }
         const container = document.querySelector('.canvas-container');
@@ -83,6 +85,7 @@ const Resize = (props) => {
             props.fileId,
             newCanvasSetting.width,
             newCanvasSetting.height,
+            newCanvasSetting.type,
             allSettings.canvas
         );
         // close toggle
