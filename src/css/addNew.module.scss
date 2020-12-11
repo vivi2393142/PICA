@@ -1,0 +1,111 @@
+// color variants
+$main-color: #282c34;
+$dark-green: #1f3642;
+$sub-color: #e89a4f;
+$assist-color-dark: #badada;
+$assist-color-light: #ccd7da;
+$light-grey: #ebebeb;
+$middle-grey: #acacac;
+$dark-grey: #7f7e7e;
+$custom-black: #555555;
+$board-to-window-ratio: 90%;
+$bk-w: #eaecec;
+$bk-y: #d8c2b0;
+$bk-g: #919da3;
+$big-font: 1rem;
+$middle-font: 0.9rem;
+$small-font: 0.8rem;
+$tiny-font: 0.7rem;
+$symbol-font: 0.6rem;
+$like-red: rgb(243, 71, 71);
+
+.addNew {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    .addButton {
+        bottom: 15%;
+        right: 15%;
+        width: 50px;
+        height: 50px;
+        // padding-bottom: ;
+        border: 1px solid $custom-black;
+        background: white;
+        border-radius: 25px;
+        overflow: hidden;
+        position: absolute;
+        transition: width 0.2s ease-in-out;
+        cursor: pointer;
+        &:hover {
+            width: 120px;
+        }
+        &::before,
+        &::after {
+            transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
+            content: '';
+            position: absolute;
+            height: 4px;
+            width: 10px;
+            top: calc(50% - 2px);
+            background: $dark-grey;
+        }
+        &::after {
+            right: 14px;
+            overflow: hidden;
+            border-radius: 2px 2px 0 0;
+        }
+        &::before {
+            left: 14px;
+            border-radius: 2px 2px 0 0;
+        }
+        &:focus {
+            outline: none;
+        }
+        &:hover .btnText {
+            opacity: 1;
+            &::before,
+            &::after {
+                width: 4px;
+                border-radius: 2px;
+            }
+        }
+        &:hover .addIcon::before {
+            left: 15px;
+            height: 4px;
+            top: calc(50% - 2px);
+        }
+        &:hover .addIcon::after {
+            right: 15px;
+            height: 4px;
+            top: calc(50% - 2px);
+        }
+
+        .btnText {
+            opacity: 0;
+            transition: opacity 0.2s;
+            color: $custom-black;
+        }
+        .addIcon {
+            &::after,
+            &::before {
+                transition: all 0.2s ease-in-out;
+                content: '';
+                position: absolute;
+                height: 20px;
+                width: 2px;
+                top: calc(50% - 10px);
+                background: $dark-grey;
+                overflow: hidden;
+            }
+            &::before {
+                left: 22px;
+                border-radius: 2px 2px 0 0;
+            }
+            &::after {
+                right: 22px;
+                border-radius: 2px 2px 0 0;
+            }
+        }
+    }
+}

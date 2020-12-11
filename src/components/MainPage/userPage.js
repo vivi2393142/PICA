@@ -5,15 +5,19 @@ import * as bannerIcons from '../../img/banner';
 import * as firebase from '../../firebase';
 import { nanoid } from 'nanoid';
 import Loader from '../Loader';
+import { doc } from 'prettier';
+import ExploreItem from './exploreItem';
 
 // export default App;
 const UserPage = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [isChoosingSize, setIsChoosingSize] = React.useState(false);
+    const [isSmallLoaded, setIsSmallLoaded] = React.useState(false);
+    const [isAtMyCanvas, setIsAtMyCanvas] = React.useState(true);
+    const [likeList, setLikeList] = React.useState([]);
     const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const [userPhoto, setUserPhoto] = React.useState('');
-    const [isSmallLoaded, setIsSmallLoaded] = React.useState(false);
     const canvasSizeOptions = [
         { name: 'Instagram 貼文', type: 'instagram', width: 1080, height: 1080 },
         { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -29,22 +33,20 @@ const UserPage = (props) => {
         const id = nanoid();
         const canvasSetting = {
             id: id,
-            userEmail: props.currentUser.email,
+            userEmail: props.match.params.userId,
             title: '',
             width: selection.width,
             height: selection.height,
             type: selection.type,
         };
-        firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+        firebase.createNewCanvas(canvasSetting, props.match.params.userId);
     };
-
-    // uploaded function
     const handleUploadImage = (e) => {
         setIsSmallLoaded(true);
         if (e.target.files[0].size > 2097152) {
             alert('請勿上傳超過2mb之圖片');
         } else {
-            firebase.uploadUserPhoto(e, props.currentUser.email, (url) => {
+            firebase.uploadUserPhoto(e, props.match.params.userId, (url) => {
                 setUserPhoto(url);
                 setIsSmallLoaded(false);
             });
@@ -52,17 +54,14 @@ const UserPage = (props) => {
     };
 
     React.useEffect(() => {
-        if (props.currentUser !== {}) {
-            firebase.loadUserData(props.currentUser.email, (dataFromFirebase) => {
-                if (dataFromFirebase) {
-                    setUserDataFromFirebase(dataFromFirebase);
-                    setUserPhoto(dataFromFirebase.photo);
-                    setIsLoaded(false);
-                }
-            });
-        }
-    }, [props.currentUser]);
-
+        firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
+            if (dataFromFirebase) {
+                setUserDataFromFirebase(dataFromFirebase);
+                setUserPhoto(dataFromFirebase.photo);
+                setIsLoaded(false);
+            }
+        });
+    }, []);
     React.useEffect(() => {
         firebase.getAllCanvasData((result) => {
             // console.log(userDataFromFirebase.canvas[0]);
@@ -82,6 +81,22 @@ const UserPage = (props) => {
             }
         });
     }, [userDataFromFirebase.canvas]);
+    React.useEffect(() => {
+        if (props.currentUser) {
+            firebase.getLikeList(props.currentUser.email, (result) => {
+                setLikeList(result);
+            });
+        }
+    }, []);
+
+    const likeHandler = () => console.log('ttt');
+
+    const likeListJsx =
+        likeList.length === 0
+            ? null
+            : likeList.map((item, index) => {
+                  return <ExploreItem key={index} item={item} likeHandler={likeHandler} />;
+              });
 
     const canvasFilesJsx =
         canvasDataWithDataURL.length !== 0
@@ -90,7 +105,7 @@ const UserPage = (props) => {
                       <div key={index} className={styles.fileWrapper}>
                           <div
                               className={styles.file}
-                              onClick={() => (document.location.href = `../file/${item.fileId}`)}
+                              onClick={() => (document.location.href = `../../file/${item.fileId}`)}
                           >
                               <img src={item.snapshot} className={styles.fileImg}></img>
                           </div>
@@ -130,6 +145,7 @@ const UserPage = (props) => {
             );
         }
     });
+
     // render
     return (
         <div className={styles.mainPage}>
@@ -149,13 +165,15 @@ const UserPage = (props) => {
                                 </div>
                             ) : null}
                             <img src={userPhoto} className={styles.memberPhoto}></img>
-                            <label>
-                                <input
-                                    type='file'
-                                    accept='image/png, image/jpeg'
-                                    onChange={handleUploadImage}
-                                ></input>
-                            </label>
+                            {props.currentUser.email === props.match.params.userId ? (
+                                <label>
+                                    <input
+                                        type='file'
+                                        accept='image/png, image/jpeg'
+                                        onChange={handleUploadImage}
+                                    ></input>
+                                </label>
+                            ) : null}
                         </div>
                         <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
                         <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
@@ -163,13 +181,37 @@ const UserPage = (props) => {
                             {userDataFromFirebase.canvas.length} files
                         </div>
                     </div>
-                    <div className={styles.canvasFiles}>
-                        {canvasFilesJsx ? canvasFilesJsx : null}
-                        <div className={styles.fileWrapperNew}>
-                            <div className={styles.addNew} onClick={() => setIsChoosingSize(true)}>
-                                +
-                            </div>
+                    <div className={styles.navTags}>
+                        <div
+                            className={`${styles.tag} ${isAtMyCanvas ? styles.currentTag : ''}`}
+                            onClick={() => {
+                                setIsAtMyCanvas(true);
+                            }}
+                        >
+                            我的作品
                         </div>
+                        <div
+                            className={`${styles.tag} ${isAtMyCanvas ? '' : styles.currentTag}`}
+                            onClick={() => {
+                                setIsAtMyCanvas(false);
+                            }}
+                        >
+                            我的收藏
+                        </div>
+                    </div>
+                    <div className={styles.canvasFiles}>
+                        {isAtMyCanvas ? null : likeListJsx}
+                        {canvasFilesJsx && isAtMyCanvas ? canvasFilesJsx : null}
+                        {/* {props.currentUser.email === props.match.params.userId ? (
+                            <div className={styles.fileWrapperNew}>
+                                <div
+                                    className={styles.addNew}
+                                    onClick={() => setIsChoosingSize(true)}
+                                >
+                                    +
+                                </div>
+                            </div>
+                        ) : null} */}
                     </div>
                 </div>
                 {isChoosingSize ? (
@@ -190,8 +232,8 @@ const UserPage = (props) => {
 };
 
 UserPage.propTypes = {
-    setCurrentUser: PropTypes.func.isRequired,
-    currentUser: PropTypes.object,
+    currentUser: PropTypes.object.isRequired,
+    match: PropTypes.object.isRequired,
 };
 
 export default UserPage;

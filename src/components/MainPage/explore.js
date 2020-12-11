@@ -2,57 +2,55 @@ import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../firebase';
-import { nanoid } from 'nanoid';
 import Loader from '../Loader';
-import MainBanner from './mainBanner';
-import * as mainIcons from '../../img/mainPage';
+import ExploreItem from './exploreItem';
 
 // export default App;
 const Explore = (props) => {
+    const [isLoaded, setIsLoaded] = React.useState(true);
     const [dataArray, setDataArray] = React.useState([]);
+    const [filter, setFilter] = React.useState('all');
+    // all, sample, nonSample
+    const allType = ['Instagram', 'Poster', 'PostCard', 'Web', 'A4', 'NameCard', 'Custom'];
 
     React.useEffect(() => {
         firebase.getAllFiles((dataArray) => {
             setDataArray(dataArray);
+            setIsLoaded(false);
         });
     }, []);
 
-    console.log('render');
+    const likeHandler = (e, item, type) => {
+        e.stopPropagation();
+        firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
+        let oldData = { ...dataArray };
+        const index = dataArray[type].findIndex((x) => x.fileId === item.fileId);
+        oldData[type][index].isLike = !item.isLike;
+        setDataArray(oldData);
+    };
 
-    const rowPosterJsx =
+    const allRowsJsx =
         dataArray.length === 0
             ? null
-            : dataArray.poster.map((item, index) => {
+            : allType.map((type, index) => {
+                  const sampleInner = dataArray[type].map((item, index) => {
+                      if (item.isSample) {
+                          return <ExploreItem key={index} item={item} likeHandler={likeHandler} />;
+                      }
+                  });
+                  const nonSampleInner = dataArray[type].map((item, index) => {
+                      if (!item.isSample) {
+                          return <ExploreItem key={index} item={item} likeHandler={likeHandler} />;
+                      }
+                  });
                   return (
-                      <div className={styles.fileWrapper} key={index}>
-                          <img className={styles.innerImg} src={item.snapshot}></img>
-                          <div className={styles.info}>
-                              <img className={styles.userPhoto} src={item.userPhoto}></img>
-                              <div className={styles.author}>{item.userName}</div>
-                              <mainIcons.Like className={styles.infoIcon} />
-                              <div className={styles.like}>{item.like}</div>
-                              <mainIcons.Comment className={styles.infoIcon} />
-                              <div className={styles.messages}>{item.comment}</div>
+                      <div className={styles.row} key={index}>
+                          <div className={styles.rowTitleWrapper}>
+                              <div className={styles.titleShadow}>{type}</div>
+                              <div className={styles.titleMain}>{type}</div>
                           </div>
-                      </div>
-                  );
-              });
-
-    const rowInstagramJsx =
-        dataArray.length === 0
-            ? null
-            : dataArray.instagram.map((item, index) => {
-                  return (
-                      <div className={styles.fileWrapper} key={index}>
-                          <img className={styles.innerImg} src={item.snapshot}></img>
-                          <div className={styles.info}>
-                              <img className={styles.userPhoto} src={item.userPhoto}></img>
-                              <div className={styles.author}>{item.userName}</div>
-                              <mainIcons.Like className={styles.infoIcon} />
-                              <div className={styles.like}>{item.like}</div>
-                              <mainIcons.Comment className={styles.infoIcon} />
-                              <div className={styles.messages}>{item.comment}</div>
-                          </div>
+                          {filter === 'all' || filter === 'sample' ? sampleInner : null}
+                          {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
                       </div>
                   );
               });
@@ -60,26 +58,45 @@ const Explore = (props) => {
     // render
     return (
         <div className={styles.explore}>
+            {isLoaded ? <Loader></Loader> : null}
             <div className={styles.sidebarWrapper}>
                 <div className={styles.sidebar}>
-                    <div className={styles.tag}>Instagram</div>
+                    <div
+                        className={`${styles.tag} ${filter === 'all' ? styles.currentTag : ''}`}
+                        onClick={() => setFilter('all')}
+                    >
+                        全部作品
+                    </div>
+                    <div
+                        className={`${styles.tag} ${filter === 'sample' ? styles.currentTag : ''}`}
+                        onClick={() => setFilter('sample')}
+                    >
+                        僅限範本
+                    </div>
+                    <div
+                        className={`${styles.tag} ${
+                            filter === 'nonSample' ? styles.currentTag : ''
+                        }`}
+                        onClick={() => setFilter('nonSample')}
+                    >
+                        僅限使用者作品
+                    </div>
+                    {/* <div className={styles.tag}>Instagram</div>
                     <div className={styles.tag}>橫式海報</div>
                     <div className={styles.tag}>明信片</div>
                     <div className={`${styles.tag} ${styles.currentTag}`}>網頁常用</div>
                     <div className={styles.tag}>橫式A4</div>
                     <div className={styles.tag}>名片</div>
-                    <div className={styles.tag}>自訂</div>
+                    <div className={styles.tag}>自訂</div> */}
                 </div>
             </div>
-            <div className={styles.main}>
-                <div className={styles.row}>{rowInstagramJsx}</div>
-                <div className={styles.row}>{rowPosterJsx}</div>
-                <div className={styles.row}>row3</div>
-            </div>
+            <div className={styles.main}>{allRowsJsx}</div>
         </div>
     );
 };
 
-Explore.propTypes = {};
+Explore.propTypes = {
+    currentUser: PropTypes.object.isRequired,
+};
 
-export default React.memo(Explore);
+export default Explore;

@@ -26,7 +26,7 @@ const MainBanner = (props) => {
                 />
                 <div className={styles.leftNav}>
                     <div
-                        onClick={() => history.push('./explore')}
+                        onClick={() => history.push('../explore')}
                         className={`${
                             currentPage === 'exp' || currentPage === 'sho' ? styles.navChosen : ''
                         } `}
@@ -34,7 +34,7 @@ const MainBanner = (props) => {
                         探索作品
                     </div>
                     <div
-                        onClick={() => history.push('./user')}
+                        onClick={() => history.push(`./user/${props.currentUser.email}`)}
                         className={`${currentPage === 'use' ? styles.navChosen : ''} `}
                     >
                         我的作品
@@ -51,6 +51,7 @@ const MainBanner = (props) => {
 
 MainBanner.propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
+    currentUser: PropTypes.object.isRequired,
 };
 
 export default MainBanner;

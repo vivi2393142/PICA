@@ -21,7 +21,28 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.firestore();
 
-// save data URL
+// canvas
+// -- listen
+let initState = true;
+const listenCanvas = (fileId, callback, setUploadedFiles) => {
+    const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
+    let oldData = [];
+    ref.onSnapshot((doc) => {
+        if (doc.data().uploaded !== oldData.uploaded) {
+            setUploadedFiles(doc.data().uploaded);
+        }
+        oldData = doc.data();
+        if (initState) {
+            // 不回應第一次監聽
+            initState = false;
+        } else {
+            console.log('文件更新');
+            callback();
+        }
+    });
+};
+
+// -- save data URL
 const savaDataURL = (canvas, fileId, successCallback) => {
     let exportCanvas;
     if (JSON.stringify(canvas) === '{}') {
@@ -46,7 +67,7 @@ const savaDataURL = (canvas, fileId, successCallback) => {
     );
 };
 
-// firestore
+// -- firestore
 const loadUserData = (userId, callback) => {
     const ref = firebase.firestore().collection('userData').doc(userId);
     ref.get().then((doc) => {
@@ -54,7 +75,6 @@ const loadUserData = (userId, callback) => {
         callback(dataFromFirebase);
     });
 };
-
 const createNewCanvas = (canvasSetting, userId) => {
     // add data to canvasFiles
     const ref = db.collection('canvasFiles').doc(canvasSetting.id);
@@ -66,25 +86,16 @@ const createNewCanvas = (canvasSetting, userId) => {
         }),
         basicSetting: canvasSetting,
         uploaded: [],
-        comment: [],
+        comments: [],
         like: [],
         isSample: false,
     }).then(() => {
         // add data to userData
         const userRef = db.collection('userData').doc(userId);
-        userRef
-            .get()
-            .then((doc) => {
-                let oldCanvas = doc.data().canvas;
-                oldCanvas.push(canvasSetting.id);
-                userRef.update({ canvas: oldCanvas }).then(() => {});
-            })
-            .then(() => {
-                document.location.href = `../file/${canvasSetting.id}`;
-            });
+        userRef.update({ canvas: firebase.firestore.FieldValue.arrayUnion(canvasSetting.id) });
+        document.location.href = `../file/${canvasSetting.id}`;
     });
 };
-
 const loadCanvas = (canvas, callback, fileId) => {
     const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
@@ -95,37 +106,14 @@ const loadCanvas = (canvas, callback, fileId) => {
         if (canvasDataInit.objects.length === 0) {
             savaDataURL(canvas, fileId, (storageRef) => {
                 storageRef.getDownloadURL().then((url) => {
-                    const ref = db.collection('canvasFiles').doc(fileId);
-                    ref.get().then((doc) => {
-                        ref.update({
-                            snapshot: url,
-                        }).then(() => {});
+                    ref.update({
+                        snapshot: url,
                     });
                 });
             });
         }
     });
 };
-
-let initState = true;
-const listenCanvas = (fileId, callback, setUploadedFiles) => {
-    const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
-    let oldData = [];
-    ref.onSnapshot((doc) => {
-        if (doc.data().uploaded !== oldData.uploaded) {
-            setUploadedFiles(doc.data().uploaded);
-        }
-        oldData = doc.data();
-        if (initState) {
-            // 不回應第一次監聽
-            initState = false;
-        } else {
-            console.log('文件更新');
-            callback();
-        }
-    });
-};
-
 const saveCanvasData = (canvas, canvasSetting, fileId) => {
     // save snap shot on storage
     savaDataURL(canvas, fileId, (storageRef) => {
@@ -141,14 +129,12 @@ const saveCanvasData = (canvas, canvasSetting, fileId) => {
         });
     });
 };
-
 const getCanvasData = (id, callback) => {
     const ref = db.collection('canvasFiles').doc(id);
     ref.get().then((doc) => {
         return doc.data();
     });
 };
-
 const getAllCanvasData = (callback) => {
     const ref = db.collection('canvasFiles');
     let result = [];
@@ -159,7 +145,6 @@ const getAllCanvasData = (callback) => {
         callback(result);
     });
 };
-
 const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     let result = {};
     const ref = db.collection('canvasFiles').doc(fileId);
@@ -169,11 +154,13 @@ const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     });
 };
 
+// main page
+// -- firestore
 const getAllFiles = (callback) => {
     let allUsers = [];
     let instagram = [];
     let poster = [];
-    let postcard = [];
+    let postCard = [];
     let web = [];
     let a4 = [];
     let nameCard = [];
@@ -195,22 +182,23 @@ const getAllFiles = (callback) => {
                         // console.log(doc.data());
                         const userId = doc.data().basicSetting.userEmail;
                         const userData = allUsers.find((x) => x.email === userId);
-                        // console.log(userId, userData);
                         const fileData = {
                             userId: userId,
                             userName: userData.name,
                             userPhoto: userData.photo,
                             like: doc.data().like.length,
-                            comment: doc.data().comment.length,
+                            comment: doc.data().comments.length,
                             fileId: doc.data().basicSetting.id,
                             snapshot: doc.data().snapshot,
+                            isSample: doc.data().isSample,
+                            isLike: doc.data().like.includes(userId),
                         };
                         doc.data().basicSetting.type === 'instagram'
                             ? instagram.push(fileData)
                             : doc.data().basicSetting.type === 'poster'
                             ? poster.push(fileData)
-                            : doc.data().basicSetting.type === 'postcard'
-                            ? postcard.push(fileData)
+                            : doc.data().basicSetting.type === 'postCard'
+                            ? postCard.push(fileData)
                             : doc.data().basicSetting.type === 'web'
                             ? web.push(fileData)
                             : doc.data().basicSetting.type === 'a4'
@@ -221,13 +209,132 @@ const getAllFiles = (callback) => {
                     });
                 })
                 .then(() => {
-                    const dataArray = { instagram, poster, postcard, web, a4, nameCard, custom };
+                    const dataArray = {
+                        Instagram: instagram,
+                        Poster: poster,
+                        PostCard: postCard,
+                        Web: web,
+                        A4: a4,
+                        NameCard: nameCard,
+                        Custom: custom,
+                    };
                     callback(dataArray);
                 });
         });
 };
+const getShot = (fileId, currentUserEmail, callback) => {
+    const refUser = db.collection('userData');
+    const refFile = db.collection('canvasFiles').doc(fileId);
+    let allUsers = [];
+    refUser
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                allUsers.push(doc.data());
+            });
+        })
+        .then(() => {
+            refFile.get().then((doc) => {
+                const author = allUsers.find((x) => x.email === doc.data().basicSetting.userEmail);
+                const currentUser = allUsers.find((x) => x.email === currentUserEmail);
+                const comments = doc.data().comments.map((comment) => {
+                    const commenter = allUsers.find((x) => x.email === comment.userId);
+                    comment.userPhoto = commenter.photo;
+                    comment.userName = commenter.name;
+                    return comment;
+                });
+                const result = {
+                    file: {
+                        fileImg: doc.data().snapshot,
+                        fileName: doc.data().basicSetting.title,
+                        userPhoto: author.photo,
+                        userName: author.name,
+                    },
+                    comments: comments,
+                    currentUser: {
+                        userPhoto: currentUser.photo,
+                        isLike: currentUser.like.includes(fileId),
+                    },
+                };
+                callback(result);
+            });
+        });
+};
+const postComment = (textInput, currentUserId, fileId) => {
+    const newComment = {
+        content: textInput,
+        userId: currentUserId,
+    };
+    const ref = db.collection('canvasFiles').doc(fileId);
+    ref.update({
+        comments: firebase.firestore.FieldValue.arrayUnion(newComment),
+    });
+};
+const postLike = (currentUserId, fileId, oldIsLike) => {
+    const refFile = db.collection('canvasFiles').doc(fileId);
+    const refUser = db.collection('userData').doc(currentUserId);
+    if (oldIsLike) {
+        refFile.update({
+            like: firebase.firestore.FieldValue.arrayRemove(currentUserId),
+        });
+        refUser.update({
+            like: firebase.firestore.FieldValue.arrayRemove(fileId),
+        });
+    } else {
+        refFile.update({
+            like: firebase.firestore.FieldValue.arrayUnion(currentUserId),
+        });
+        refUser.update({
+            like: firebase.firestore.FieldValue.arrayUnion(fileId),
+        });
+    }
+};
+const getLikeList = (userId, callback) => {
+    let allUsers = [];
+    let result = [];
+    let currentUserLike = [];
+    const refUser = db.collection('userData');
+    const refFiles = db.collection('canvasFiles');
+    refUser
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                allUsers.push(doc.data());
+                if (doc.id === userId) {
+                    currentUserLike = doc.data().like;
+                }
+            });
+        })
+        .then(() => {
+            refFiles
+                .get()
+                .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                        if (currentUserLike.includes(doc.id)) {
+                            const userId = doc.data().basicSetting.userEmail;
+                            const userData = allUsers.find((x) => x.email === userId);
+                            const fileData = {
+                                userId: userId,
+                                userName: userData.name,
+                                userPhoto: userData.photo,
+                                like: doc.data().like.length,
+                                comment: doc.data().comments.length,
+                                fileId: doc.data().basicSetting.id,
+                                snapshot: doc.data().snapshot,
+                                isSample: doc.data().isSample,
+                                isLike: doc.data().like.includes(userId),
+                            };
+                            result.push(fileData);
+                        }
+                    });
+                })
+                .then(() => {
+                    callback(result);
+                });
+        });
+};
 
-// native login
+// auth
 const checkCurrentUser = (successCallback, failCallback) => {
     // successCallback;
     const user = firebase.auth().currentUser;
@@ -238,7 +345,6 @@ const checkCurrentUser = (successCallback, failCallback) => {
         // failCallback();
     }
 };
-
 const fbSignUp = () => {
     const provider = new firebase.auth.FacebookAuthProvider();
     firebase
@@ -246,15 +352,6 @@ const fbSignUp = () => {
         .signInWithPopup(provider)
         .then(function (result) {
             const ref = db.collection('userData').doc(result.user.email);
-            // // if user had edit photo before, don't renew fb photo
-            // ref.get().then((doc) => {
-            //     if (doc.data().photo.slice(0, 10) === 'https://gr') {
-            //         const userPhoto = `https://graph.facebook.com/${result.additionalUserInfo.profile.id}/picture?access_token=${result.credential.accessToken}&width=700`;
-            //         ref.update({
-            //             photo: userPhoto,
-            //         });
-            //     }
-            // });
             // if it's sign up, set basic data
             if (result.additionalUserInfo.isNewUser) {
                 ref.set({
@@ -263,13 +360,13 @@ const fbSignUp = () => {
                     name: result.user.displayName,
                     email: result.user.email,
                     canvas: [],
+                    like: [],
                 });
             }
             return user;
         })
         .catch(function (error) {});
 };
-
 const googleSignUp = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase
@@ -284,13 +381,13 @@ const googleSignUp = () => {
                     name: result.user.displayName,
                     email: result.user.email,
                     canvas: [],
+                    like: [],
                 });
             }
             return user;
         })
         .catch(function (error) {});
 };
-
 const nativeSignUp = (name, email, pwd) => {
     firebase
         .auth()
@@ -304,19 +401,16 @@ const nativeSignUp = (name, email, pwd) => {
                 name: name,
                 email: email,
                 canvas: [],
+                like: [],
             }).then(() => {
                 // console.log('set data successful');
             });
             return user;
         })
         .catch((error) => {
-            // const errorCode = error.code;
-            // const errorMessage = error.message;
-            // console.log(errorCode, errorMessage);
             alert('請輸入有效之email地址及6位以上密碼');
         });
 };
-
 const nativeSignIn = (email, pwd) => {
     firebase
         .auth()
@@ -331,7 +425,6 @@ const nativeSignIn = (email, pwd) => {
             alert('請輸入正確帳號密碼');
         });
 };
-
 const nativeSignOut = (successCallback) => {
     firebase
         .auth()
@@ -373,19 +466,16 @@ const uploadToStorage = (e, fileId, callback, successCallback, failCallback) => 
             // get upload URL and set into firestore data
             storageRef.getDownloadURL().then((url) => {
                 const ref = db.collection('canvasFiles').doc(fileId);
-                ref.get().then((doc) => {
-                    let oldUploaded = [...doc.data().uploaded];
-                    oldUploaded.push({ src: url, path: `${fileId}/${imgId}` });
-                    // console.log(oldUploaded);
-                    ref.update({
-                        uploaded: oldUploaded,
-                    }).then(() => {});
-                });
+                ref.update({
+                    uploaded: firebase.firestore.FieldValue.arrayUnion({
+                        src: url,
+                        path: `${fileId}/${imgId}`,
+                    }),
+                }).then(() => {});
             });
         }
     );
 };
-
 const uploadUserPhoto = (e, email, successCallback) => {
     const imgId = nanoid();
     const file = e.target.files[0];
@@ -402,23 +492,19 @@ const uploadUserPhoto = (e, email, successCallback) => {
         function complete() {
             storageRef.getDownloadURL().then((url) => {
                 const ref = db.collection('userData').doc(email);
-                ref.get().then((doc) => {
-                    successCallback(url);
-                    ref.update({
-                        photo: url,
-                    }).then(() => {});
-                });
+                successCallback(url);
+                ref.update({
+                    photo: url,
+                }).then(() => {});
             });
         }
     );
 };
-
 const removeUploadImg = (e, fileId) => {
     const storageRef = firebase.storage().ref().child(e.target.id);
     storageRef
         .delete()
         .then(() => {
-            // console.log('刪除成功');
             // get upload URL and set into firestore data
             const ref = db.collection('canvasFiles').doc(fileId);
             ref.get().then((doc) => {
@@ -432,15 +518,6 @@ const removeUploadImg = (e, fileId) => {
             // console.log('刪除失敗');
         });
 };
-
-// const testSaveDataURL = (dataURL, fileId) => {
-//     const storageRef = firebase
-//         .storage()
-//         .ref()
-//         .child('snapshot/' + fileId);
-//     let newDataURL = dataURL.replace('data:image/jpeg;base64,', '');
-//     const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
-// };
 
 export {
     db,
@@ -462,4 +539,8 @@ export {
     uploadUserPhoto,
     setBasicSetting,
     getAllFiles,
+    getShot,
+    postComment,
+    postLike,
+    getLikeList,
 };
