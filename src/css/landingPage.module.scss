@@ -26,7 +26,7 @@ $symbol-font: 0.6rem;
 .bannerWrapper {
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid $middle-grey;
+    box-shadow: 0 0px 2px 0px $middle-grey;
     padding: 1rem 0;
     .banner {
         width: 70%;
@@ -49,7 +49,7 @@ $symbol-font: 0.6rem;
     }
     & .logo {
         margin-right: auto;
-        height: 3rem;
+        height: 2.5rem;
     }
 }
 
@@ -58,9 +58,8 @@ $symbol-font: 0.6rem;
     flex-grow: 1;
     justify-content: center;
     align-items: center;
-    margin-bottom: 10%;
     .main {
-        height: 35%;
+        height: 50%;
         width: 70%;
         display: flex;
         justify-content: space-around;
@@ -85,65 +84,15 @@ $symbol-font: 0.6rem;
                 padding: 0.5rem 1rem;
                 color: white;
                 letter-spacing: 1px;
-                margin-top: 5rem;
+                margin-top: auto;
+                bottom: 0;
                 cursor: pointer;
             }
         }
-
         .mainImg {
-            width: 50%;
+            // width: 50%;
             height: 100%;
             position: relative;
-            margin: 0 3rem;
-            * {
-                width: 45%;
-                stroke: none;
-                position: absolute;
-            }
-            .imageY path {
-                fill: $sub-color;
-            }
-            .imageG path {
-                stroke: none;
-                fill: $dark-green;
-            }
-            .imageB path {
-                stroke: none;
-                fill: $assist-color-dark;
-            }
-            .Y3 {
-                top: 0%;
-                left: 0%;
-                width: 65%;
-            }
-            .Y1 {
-                bottom: 5%;
-                right: 2%;
-                width: 40%;
-                transform: rotate(120deg);
-            }
-            .G1 {
-                bottom: 0;
-                left: 5%;
-                width: 50%;
-            }
-            .B1 {
-                width: 20%;
-                top: 50%;
-                left: 2%;
-                transform: rotate(220deg);
-            }
-            .B3 {
-                width: 45%;
-                right: 0;
-                top: 35%;
-            }
-            .G2 {
-                width: 30%;
-                right: 5%;
-                top: 10%;
-                transform: rotate(50deg);
-            }
         }
     }
 }

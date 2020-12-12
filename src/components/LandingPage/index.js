@@ -2,7 +2,6 @@ import React from 'react';
 import styles from '../../css/landingPage.module.scss';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
-import * as backImg from '../../img/background';
 import * as login from '../../img/landingPage.js';
 import * as firebase from '../../firebase';
 
@@ -64,14 +63,8 @@ const LandingPage = (props) => {
                             GET STARTED
                         </div>
                     </div>
-                    <div className={styles.mainImg}>
-                        <backImg.BackY3 className={`${styles.imageY} ${styles.Y3}`} />
-                        <backImg.BackY1 className={`${styles.imageY} ${styles.Y1}`} />
-                        <backImg.BackG1 className={`${styles.imageG} ${styles.G1}`} />
-                        <backImg.BackW1 className={`${styles.imageB} ${styles.B1}`} />
-                        <backImg.BackW3 className={`${styles.imageB} ${styles.B3}`} />
-                        <backImg.BackW4 className={`${styles.imageG} ${styles.G2}`} />
-                    </div>
+                    {/* <div className={styles.mainImg}> */}
+                    <login.LandingMain className={styles.mainImg} />
                 </div>
             </div>
 

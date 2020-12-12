@@ -20,44 +20,40 @@ $symbol-font: 0.6rem;
 $like-red: rgb(243, 71, 71);
 
 .addNew {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    z-index: 10;
     .addButton {
-        bottom: 15%;
-        right: 15%;
-        width: 50px;
-        height: 50px;
+        // bottom: 15%;
+        right: 0;
+        width: 30px;
+        height: 30px;
         // padding-bottom: ;
-        border: 1px solid $custom-black;
-        background: white;
-        border-radius: 25px;
+        border: 1px solid $sub-color;
+        background: $sub-color;
+        border-radius: 15px;
         overflow: hidden;
-        position: absolute;
+        position: relative;
         transition: width 0.2s ease-in-out;
         cursor: pointer;
         &:hover {
-            width: 120px;
+            width: 110px;
         }
         &::before,
         &::after {
             transition: width 0.2s ease-in-out, border-radius 0.2s ease-in-out;
             content: '';
             position: absolute;
-            height: 4px;
-            width: 10px;
-            top: calc(50% - 2px);
-            background: $dark-grey;
+            height: 2px;
+            width: 6px;
+            top: calc(50% - 0.5px);
+            background: white;
         }
         &::after {
-            right: 14px;
+            right: 8px;
             overflow: hidden;
-            border-radius: 2px 2px 0 0;
+            // border-radius: 2px 2px 0 0;
         }
         &::before {
-            left: 14px;
-            border-radius: 2px 2px 0 0;
+            left: 8px;
+            // border-radius: 1px 1px 0 0;
         }
         &:focus {
             outline: none;
@@ -66,25 +62,25 @@ $like-red: rgb(243, 71, 71);
             opacity: 1;
             &::before,
             &::after {
-                width: 4px;
-                border-radius: 2px;
+                width: 2px;
+                // border-radius: 1px;
             }
         }
         &:hover .addIcon::before {
-            left: 15px;
-            height: 4px;
-            top: calc(50% - 2px);
+            left: 8px;
+            height: 2px;
+            top: calc(50% - 0.5px);
         }
         &:hover .addIcon::after {
-            right: 15px;
-            height: 4px;
-            top: calc(50% - 2px);
+            right: 8px;
+            height: 2px;
+            top: calc(50% - 0.5px);
         }
 
         .btnText {
             opacity: 0;
             transition: opacity 0.2s;
-            color: $custom-black;
+            color: white;
         }
         .addIcon {
             &::after,
@@ -92,19 +88,19 @@ $like-red: rgb(243, 71, 71);
                 transition: all 0.2s ease-in-out;
                 content: '';
                 position: absolute;
-                height: 20px;
-                width: 2px;
-                top: calc(50% - 10px);
-                background: $dark-grey;
+                height: 12px;
+                width: 1px;
+                top: calc(50% - 5px);
+                background: white;
                 overflow: hidden;
             }
             &::before {
-                left: 22px;
-                border-radius: 2px 2px 0 0;
+                left: 14px;
+                border-radius: 1px 1px 0 0;
             }
             &::after {
-                right: 22px;
-                border-radius: 2px 2px 0 0;
+                right: 14px;
+                border-radius: 1px 1px 0 0;
             }
         }
     }

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as firebase from '../../firebase';
 import Loader from '../Loader';
 import ExploreItem from './exploreItem';
+import * as bannerIcons from '../../img/banner';
 
 // export default App;
 const Explore = (props) => {
@@ -44,13 +45,19 @@ const Explore = (props) => {
                       }
                   });
                   return (
-                      <div className={styles.row} key={index}>
-                          <div className={styles.rowTitleWrapper}>
+                      <div key={index} className={styles.rowWrapper}>
+                          <div className={styles.rowTitle}>
+                              <span className={styles.titleFirst}>{type.slice(0, 1)}</span>
+                              {type.substr(1)}
+                          </div>
+                          <div className={styles.row}>
+                              {/* <div className={styles.rowTitleWrapper}>
                               <div className={styles.titleShadow}>{type}</div>
                               <div className={styles.titleMain}>{type}</div>
+                          </div> */}
+                              {filter === 'all' || filter === 'sample' ? sampleInner : null}
+                              {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
                           </div>
-                          {filter === 'all' || filter === 'sample' ? sampleInner : null}
-                          {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
                       </div>
                   );
               });
@@ -58,6 +65,16 @@ const Explore = (props) => {
     // render
     return (
         <div className={styles.explore}>
+            <div className={styles.exploreBanner}>
+                <div className={styles.title}>
+                    還在尋找靈感？
+                    <br />
+                    不如探索畫布，一起激盪點子！
+                    {/* <br /> */}
+                </div>
+                {/* <span>PICA為你準備了數十種範本讓你輕鬆開始一趟設計之旅</span> */}
+                <bannerIcons.Draw className={styles.mainPic} />
+            </div>
             {isLoaded ? <Loader></Loader> : null}
             <div className={styles.sidebarWrapper}>
                 <div className={styles.sidebar}>
@@ -65,13 +82,13 @@ const Explore = (props) => {
                         className={`${styles.tag} ${filter === 'all' ? styles.currentTag : ''}`}
                         onClick={() => setFilter('all')}
                     >
-                        全部作品
+                        全部畫布
                     </div>
                     <div
                         className={`${styles.tag} ${filter === 'sample' ? styles.currentTag : ''}`}
                         onClick={() => setFilter('sample')}
                     >
-                        僅限範本
+                        僅限範本畫布
                     </div>
                     <div
                         className={`${styles.tag} ${
@@ -79,7 +96,7 @@ const Explore = (props) => {
                         }`}
                         onClick={() => setFilter('nonSample')}
                     >
-                        僅限使用者作品
+                        僅限使用者畫布
                     </div>
                     {/* <div className={styles.tag}>Instagram</div>
                     <div className={styles.tag}>橫式海報</div>

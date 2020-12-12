@@ -4,5 +4,7 @@ import { ReactComponent as Logo } from './src/banner/logo.svg';
 import { ReactComponent as Download } from './src/banner/download.svg';
 import { ReactComponent as Share } from './src/banner/share.svg';
 import { ReactComponent as Resize } from './src/banner/resize.svg';
+import { ReactComponent as Draw } from './src/banner/draw.svg';
+import { ReactComponent as Down } from './src/banner/down.svg';
 
-export { Edit, Member, Logo, Download, Share, Resize };
+export { Edit, Member, Logo, Download, Share, Resize, Draw, Down };
