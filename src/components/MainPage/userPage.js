@@ -217,9 +217,9 @@ const UserPage = (props) => {
                             <div className={styles.fileWrapperNew}>
                                 <div
                                     className={styles.addNew}
-                                    onClick={() => {
-                                        setIsChoosingSize(true);
-                                    }}
+                                    // onClick={() => {
+                                    //     setIsChoosingSize(true);
+                                    // }}
                                 >
                                     +
                                 </div>
@@ -231,7 +231,7 @@ const UserPage = (props) => {
                     <div className={styles.chooseNew}>
                         <div
                             className={styles.closeButton}
-                            onClick={() => setIsChoosingSize(false)}
+                            // onClick={() => setIsChoosingSize(false)}
                         >
                             x
                         </div>
