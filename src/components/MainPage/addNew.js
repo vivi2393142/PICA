@@ -54,6 +54,9 @@ const AddNew = (props) => {
             height: choices.height,
             type: choices.type,
         };
+        console.log(canvasSetting);
+        console.log(choices.sampleFileId);
+        console.log(props.currentUser.email);
         if (choices.way === 'sample') {
             firebase.createSampleCanvas(
                 canvasSetting,
