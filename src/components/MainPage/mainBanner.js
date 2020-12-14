@@ -25,12 +25,12 @@ const MainBanner = (props) => {
         <div className={styles.bannerWrapper}>
             <div className={styles.banner}>
                 <bannerIcons.LogoW
-                    onClick={() => history.push('./explore')}
+                    onClick={() => history.push('/main/explore')}
                     className={styles.logo}
                 />
                 <div className={styles.leftNav}>
                     <div
-                        onClick={() => history.push('../explore')}
+                        onClick={() => history.push('/main/explore')}
                         className={`${
                             currentPage === 'exp' ||
                             currentPage === 'sho' ||
@@ -42,7 +42,7 @@ const MainBanner = (props) => {
                         探索畫布
                     </div>
                     <div
-                        onClick={() => history.push(`./user/${props.currentUser.email}`)}
+                        onClick={() => history.push(`/main/user/${props.currentUser.email}`)}
                         className={`${
                             currentPage === 'use' && props.currentUser.email === currentUserPage
                                 ? styles.navChosen

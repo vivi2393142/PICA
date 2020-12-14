@@ -220,7 +220,7 @@ $sizeBase: 2rem;
                     opacity: 0.3;
                 }
                 .chosenRex {
-                    z-index: 1;
+                    // z-index: 1;
                     opacity: 1;
                     border: 2px solid $dark-grey;
                     .text {
@@ -412,6 +412,7 @@ $sizeBase: 2rem;
             opacity: 0;
             transition: opacity 0.2s;
             color: white;
+            font-size: $middle-font;
         }
         .addIcon {
             &::after,

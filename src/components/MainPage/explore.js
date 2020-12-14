@@ -113,13 +113,6 @@ const Explore = (props) => {
                     >
                         僅限使用者畫布
                     </div>
-                    {/* <div className={styles.tag}>Instagram</div>
-                    <div className={styles.tag}>橫式海報</div>
-                    <div className={styles.tag}>明信片</div>
-                    <div className={`${styles.tag} ${styles.currentTag}`}>網頁常用</div>
-                    <div className={styles.tag}>橫式A4</div>
-                    <div className={styles.tag}>名片</div>
-                    <div className={styles.tag}>自訂</div> */}
                 </div>
             </div>
             <div className={styles.main}>{allRowsJsx}</div>

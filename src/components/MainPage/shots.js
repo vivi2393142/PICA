@@ -61,7 +61,7 @@ const Shots = (props) => {
                     <div className={styles.singleComment} key={index}>
                         <img
                             src={comment.userPhoto}
-                            onClick={() => history.push(`../user/${comment.userId}`)}
+                            onClick={() => history.push(`/main/user/${comment.userId}`)}
                         />
                         <div className={styles.commentText}>
                             {comment.userId === props.currentUser.email ? (
@@ -72,7 +72,7 @@ const Shots = (props) => {
                             ) : null}
                             <div
                                 className={styles.commentUser}
-                                onClick={() => history.push(`../user/${comment.userId}`)}
+                                onClick={() => history.push(`/main/user/${comment.userId}`)}
                             >
                                 {comment.userName}
                             </div>
@@ -108,7 +108,7 @@ const Shots = (props) => {
                         <div className={styles.subTitle}>作者資訊</div>
                         <div
                             className={styles.userWrapper}
-                            onClick={() => history.push(`../user/${commentData.file.userId}`)}
+                            onClick={() => history.push(`/main/user/${commentData.file.userId}`)}
                         >
                             <img src={commentData.file.userPhoto} className={styles.authorImg} />
                             <div className={styles.userName}>{commentData.file.userName}</div>
