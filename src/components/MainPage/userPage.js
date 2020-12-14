@@ -1,11 +1,9 @@
 import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
-import * as bannerIcons from '../../img/banner';
 import * as firebase from '../../firebase';
 import { nanoid } from 'nanoid';
 import Loader from '../Loader';
-import { doc } from 'prettier';
 import ExploreItem from './exploreItem';
 
 // export default App;

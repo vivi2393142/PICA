@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as firebase from '../../firebase';
 import Loader from '../Loader';
 import ExploreItem from './exploreItem';
+import * as mainIcons from '../../img/mainPage';
 import * as bannerIcons from '../../img/banner';
 
 // export default App;
@@ -11,8 +12,18 @@ const Explore = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [dataArray, setDataArray] = React.useState([]);
     const [filter, setFilter] = React.useState('all');
+    const [arrowState, setArrowState] = React.useState({
+        Instagram: 'left',
+        Poster: 'left',
+        PostCard: 'left',
+        Web: 'left',
+        A4: 'left',
+        NameCard: 'left',
+        Custom: 'left',
+    });
     // all, sample, nonSample
     const allType = ['Instagram', 'Poster', 'PostCard', 'Web', 'A4', 'NameCard', 'Custom'];
+    const scrollRef = React.useRef([]);
 
     React.useEffect(() => {
         firebase.getAllFiles(props.currentUser.email, (dataArray) => {
@@ -21,6 +32,29 @@ const Explore = (props) => {
         });
     }, []);
 
+    const listenScroll = (e, type) => {
+        const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
+        if (e.target.scrollLeft === 0) {
+            let oldState = { ...arrowState };
+            oldState[type] = 'left';
+            setArrowState(oldState);
+        } else if (scrollRight === 0) {
+            let oldState = { ...arrowState };
+            oldState[type] = 'right';
+            setArrowState(oldState);
+        } else if (e.target.scrollLeft === 1 || scrollRight === 1) {
+            let oldState = { ...arrowState };
+            oldState[type] = '';
+            setArrowState(oldState);
+        }
+    };
+    const swipeHandler = (direction, index) => {
+        if (direction === 'left') {
+            scrollRef.current[index].scrollLeft -= scrollRef.current[index].clientWidth;
+        } else {
+            scrollRef.current[index].scrollLeft += scrollRef.current[index].clientWidth;
+        }
+    };
     const likeHandler = (e, item, type) => {
         e.stopPropagation();
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
@@ -69,10 +103,26 @@ const Explore = (props) => {
                               <span className={styles.titleFirst}>{type.slice(0, 1)}</span>
                               {type.substr(1)}
                           </div>
-                          <div className={styles.row}>
+                          <div
+                              className={styles.row}
+                              onScroll={(e) => listenScroll(e, type)}
+                              ref={(el) => (scrollRef.current[index] = el)}
+                          >
                               {filter === 'all' || filter === 'sample' ? sampleInner : null}
                               {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
                           </div>
+                          {arrowState[type] !== 'left' ? (
+                              <mainIcons.ArrowR
+                                  className={`${styles.buttonSvg} ${styles.buttonR}`}
+                                  onClick={() => swipeHandler('left', index)}
+                              />
+                          ) : null}
+                          {arrowState[type] !== 'right' ? (
+                              <mainIcons.ArrowL
+                                  className={`${styles.buttonSvg} ${styles.buttonL}`}
+                                  onClick={() => swipeHandler('right', index)}
+                              />
+                          ) : null}
                       </div>
                   );
               });

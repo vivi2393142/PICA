@@ -22,7 +22,10 @@ $like-red: rgb(243, 71, 71);
 .fileWrapper {
     min-width: 23%;
     max-width: 23%;
-    margin: 0 1%;
+    margin-right: 3%;
+    &:last-child {
+        padding-right: 2rem;
+    }
     .innerImg {
         width: 100%;
         border-radius: 1rem;
