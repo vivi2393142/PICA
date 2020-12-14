@@ -76,14 +76,14 @@ const LandingPage = (props) => {
                             <h1>還沒成為會員？</h1>
                             <h4>歡迎來到PICA，若您已經尚未加入會員，請點選下方按鈕進行註冊。</h4>
                             <div className={styles.button} onClick={toggleSign}>
-                                註冊
+                                切換至註冊
                             </div>
                         </div>
                         <div className={styles.textBox}>
                             <h1>已經擁有帳號了嗎？</h1>
                             <h4>歡迎來到PICA，若您已經擁有帳號，請點選下方按鈕進行登入。</h4>
                             <div className={styles.button} onClick={toggleSign}>
-                                登入
+                                切換至登入
                             </div>
                         </div>
                     </div>
