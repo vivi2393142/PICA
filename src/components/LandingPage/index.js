@@ -24,7 +24,7 @@ const LandingPage = (props) => {
         <div className={styles.landingPage}>
             <div className={styles.bannerWrapper}>
                 <div className={styles.banner}>
-                    <bannerIcons.Logo className={styles.logo} />
+                    <bannerIcons.LogoW className={styles.logo} />
                     <div
                         className={styles.button}
                         onClick={() => {
@@ -60,7 +60,7 @@ const LandingPage = (props) => {
                                 setChooseLogin(true);
                             }}
                         >
-                            GET STARTED
+                            馬上體驗
                         </div>
                     </div>
                     {/* <div className={styles.mainImg}> */}
@@ -76,14 +76,14 @@ const LandingPage = (props) => {
                             <h1>還沒成為會員？</h1>
                             <h4>歡迎來到PICA，若您已經尚未加入會員，請點選下方按鈕進行註冊。</h4>
                             <div className={styles.button} onClick={toggleSign}>
-                                SIGN UP
+                                註冊
                             </div>
                         </div>
                         <div className={styles.textBox}>
                             <h1>已經擁有帳號了嗎？</h1>
                             <h4>歡迎來到PICA，若您已經擁有帳號，請點選下方按鈕進行登入。</h4>
                             <div className={styles.button} onClick={toggleSign}>
-                                LOGIN
+                                登入
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ const LandingPage = (props) => {
                                     user ? props.setCurrentUser(user) : props.setCurrentUser({});
                                 }}
                             >
-                                LOGIN
+                                登入
                             </div>
                             <div className={styles.otherSign}>
                                 <div className={styles.or}></div>
@@ -183,7 +183,7 @@ const LandingPage = (props) => {
                                     user ? props.setCurrentUser(user) : props.setCurrentUser({});
                                 }}
                             >
-                                SIGN UP
+                                註冊
                             </div>
                             <div className={styles.otherSign}>
                                 <div className={styles.or}></div>

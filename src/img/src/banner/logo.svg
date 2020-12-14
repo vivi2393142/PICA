@@ -1,14 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="60px" height="60px" viewBox="0 0 60 60" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <title>Logo</title>
-    <g id="Logo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Logo" transform="translate(-39.000000, -20.000000)">
-            <g id="Logo" transform="translate(39.000000, 20.000000)">
-                <rect id="Rectangle-3" fill="#7F7E7E" x="0" y="0" width="60" height="60" rx="3"></rect>
-                <text id="LOGO" font-family="Helvetica" font-size="16" font-weight="normal" fill="#FFFFFF">
-                    <tspan x="6.8828125" y="36">LOGO</tspan>
-                </text>
-            </g>
-        </g>
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66.55 67.26"><defs><style>.cls-1,.cls-2{fill:#b7d6d6;}.cls-2{stroke:#b7d6d6;stroke-width:0.25px;}.cls-2,.cls-3,.cls-4{stroke-miterlimit:10;}.cls-3,.cls-4{fill:none;stroke:#1d3541;}.cls-3{stroke-width:3px;}.cls-4{stroke-width:3.5px;}</style></defs><g id="PICA"><polygon class="cls-1" points="64.99 56.09 40.07 6.43 15.35 56.09 64.99 56.09"/><path class="cls-2" d="M62.27,58.65H6L34,2.32ZM11.73,55.08H56.49L34,10.3Z"/><path class="cls-3" d="M9.43,61.15a2.94,2.94,0,1,1-2.94-2.94A2.93,2.93,0,0,1,9.43,61.15Z"/><path class="cls-3" d="M29.81,34.57a2.95,2.95,0,1,1-2.95-2.94A2.94,2.94,0,0,1,29.81,34.57Z"/><path class="cls-4" d="M30.76,34.79c5,0,9.11,3.06,9.11,6.83s-4.08,6.83-9.11,6.83V59.66h25.8L32.19,11.09,8,59.66"/></g></svg>

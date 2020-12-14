@@ -15,7 +15,7 @@ const Explore = (props) => {
     const allType = ['Instagram', 'Poster', 'PostCard', 'Web', 'A4', 'NameCard', 'Custom'];
 
     React.useEffect(() => {
-        firebase.getAllFiles((dataArray) => {
+        firebase.getAllFiles(props.currentUser.email, (dataArray) => {
             setDataArray(dataArray);
             setIsLoaded(false);
         });
@@ -26,6 +26,11 @@ const Explore = (props) => {
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
         let oldData = { ...dataArray };
         const index = dataArray[type].findIndex((x) => x.fileId === item.fileId);
+        if (item.isLike) {
+            oldData[type][index].like -= 1;
+        } else {
+            oldData[type][index].like += 1;
+        }
         oldData[type][index].isLike = !item.isLike;
         setDataArray(oldData);
     };
@@ -36,12 +41,26 @@ const Explore = (props) => {
             : allType.map((type, index) => {
                   const sampleInner = dataArray[type].map((item, index) => {
                       if (item.isSample) {
-                          return <ExploreItem key={index} item={item} likeHandler={likeHandler} />;
+                          return (
+                              <ExploreItem
+                                  key={index}
+                                  item={item}
+                                  type={type}
+                                  likeHandler={likeHandler}
+                              />
+                          );
                       }
                   });
                   const nonSampleInner = dataArray[type].map((item, index) => {
                       if (!item.isSample) {
-                          return <ExploreItem key={index} item={item} likeHandler={likeHandler} />;
+                          return (
+                              <ExploreItem
+                                  key={index}
+                                  item={item}
+                                  type={type}
+                                  likeHandler={likeHandler}
+                              />
+                          );
                       }
                   });
                   return (
@@ -51,10 +70,6 @@ const Explore = (props) => {
                               {type.substr(1)}
                           </div>
                           <div className={styles.row}>
-                              {/* <div className={styles.rowTitleWrapper}>
-                              <div className={styles.titleShadow}>{type}</div>
-                              <div className={styles.titleMain}>{type}</div>
-                          </div> */}
                               {filter === 'all' || filter === 'sample' ? sampleInner : null}
                               {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
                           </div>

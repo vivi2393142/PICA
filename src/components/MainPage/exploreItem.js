@@ -24,7 +24,7 @@ const ExploreItem = (props) => {
                     ) : null}
                     <div
                         className={`${styles.like} ${props.item.isLike ? styles.isLike : ''}`}
-                        onClick={(e) => props.likeHandler(e, props.item, type)}
+                        onClick={(e) => props.likeHandler(e, props.item, props.type)}
                     >
                         <mainIcons.Like className={styles.buttonIcon} />
                     </div>
@@ -46,6 +46,7 @@ const ExploreItem = (props) => {
 
 ExploreItem.propTypes = {
     item: PropTypes.object.isRequired,
+    type: PropTypes.string,
     likeHandler: PropTypes.func.isRequired,
 };
 

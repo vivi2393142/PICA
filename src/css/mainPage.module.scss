@@ -87,7 +87,7 @@ body {
         }
     }
     & .logo {
-        height: 2rem;
+        height: 1.8rem;
         cursor: pointer;
     }
     .leftNav {
@@ -116,8 +116,7 @@ body {
     }
 }
 .mainPage {
-    padding-top: 4rem;
-
+    padding-top: 3rem;
     .mainWrapper {
         display: flex;
         justify-content: center;
@@ -130,16 +129,26 @@ body {
             .navTags {
                 display: flex;
                 margin: 0 auto;
-                padding: 1rem 0;
+                padding-top: 1rem;
                 .tag {
+                    width: 8rem;
+                    text-align: center;
+                    color: $dark-grey;
+                    font-size: $small-font;
+                    padding: 0.2rem 0;
+                    font-weight: 400;
                     cursor: pointer;
-                    padding: 0 1rem;
-                    &:first-child {
-                        border-right: 1px solid $middle-grey;
-                    }
+
+                    border-radius: 2rem;
+                    color: $custom-black;
+                    margin: 0 0.5rem;
+                    border: 1px solid $dark-grey;
                 }
                 .currentTag {
-                    color: $sub-color;
+                    background-color: $sub-color;
+                    font-weight: 700;
+                    color: white;
+                    border: 1px solid $sub-color;
                 }
             }
             .memberDetails {
@@ -152,6 +161,7 @@ body {
                     margin: 0.5rem auto;
                     overflow: hidden;
                     position: relative;
+                    border: 1px solid $light-grey;
                     label {
                         width: 100%;
                         height: 100%;
@@ -206,13 +216,13 @@ body {
         .canvasFiles {
             display: flex;
             flex-wrap: wrap;
-            padding: 2rem 0;
+            padding-bottom: 2rem;
+            padding-top: 1.5rem;
             .fileWrapper,
             .fileWrapperNew {
                 width: 25%;
-                padding: 1rem 0;
                 box-sizing: border-box;
-                padding: 0.5rem 1%;
+                padding: 0 1% 1rem 1%;
                 box-sizing: border-box;
                 position: relative;
             }
@@ -409,6 +419,7 @@ body {
             font-size: 2rem;
             font-weight: 600;
             color: $custom-black;
+            line-height: 1.8;
             span {
                 font-size: $small-font;
             }
@@ -479,72 +490,139 @@ body {
     }
 }
 
-.shots {
-    & * {
-        // border: 1px solid red;
+.shotsWrapper {
+    padding-top: 5rem;
+    height: calc(100vh - 5rem);
+    .back {
+        width: 100%;
+        padding: 0.5rem 0 0.8rem 0;
+        color: $dark-grey;
+        font-size: $middle-font;
+        cursor: pointer;
+        &:hover {
+            color: $sub-color;
+        }
     }
-    width: 70%;
-    margin: 0 auto;
-    padding: 1rem 0;
-    display: flex;
-    .leftInfo,
-    .rightInfo {
-        width: 50%;
-        padding: 1rem;
-    }
-    .leftInfo {
+    .shots {
+        height: 95%;
+        width: 70%;
+        margin: 0 auto;
         display: flex;
         flex-wrap: wrap;
-        .like {
-            margin-left: auto;
-            cursor: pointer;
+        justify-content: space-between;
+
+        .leftInfo,
+        .rightInfo {
+            width: 48%;
+            // padding: 1rem 0;
         }
-        .isLike {
-            & path {
-                fill: $like-red;
-            }
-        }
-        .fileImg {
-            border-radius: 1rem;
-            box-shadow: 0 0 1px 0 $dark-grey;
-            width: 100%;
-        }
-    }
-    .rightInfo {
-        .userWrapper {
-            display: flex;
-            img {
-                border-radius: 100%;
-                width: 2rem;
-                padding: 0.3rem;
-            }
-        }
-        .commentWrapper {
+        .leftInfo {
             display: flex;
             flex-direction: column;
-            .singleComment {
+            .fileNameWrapper {
+                color: $custom-black;
+                font-weight: 500;
                 display: flex;
+                padding: 0.5rem 0 0.5rem 0.3rem;
+                .like {
+                    cursor: pointer;
+                    margin-left: auto;
+                }
+                .isLike {
+                    & path {
+                        fill: $like-red;
+                    }
+                }
+            }
+            img {
                 width: 100%;
-                margin: 0.5rem 0;
+                border-radius: 1rem;
+                box-shadow: 0 0 1px 0 $dark-grey;
+            }
+        }
+        .rightInfo {
+            font-size: $middle-font;
+            color: $custom-black;
+            height: 100%;
+            box-sizing: content-box;
+            // border: 1px solid red;
+            .subTitle {
+                width: 100%;
+                padding-bottom: 0.2rem;
+                font-weight: 800;
+            }
+            .userWrapper {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                padding-bottom: 1.5rem;
+                cursor: pointer;
+                .fileNumber {
+                    margin-left: auto;
+                }
                 img {
                     border-radius: 100%;
                     width: 2rem;
                     height: 2rem;
-                    cursor: pointer;
                     padding: 0.3rem;
                 }
-                .commentText {
-                    margin-left: 0.3rem;
-                    border-radius: 1rem;
-                    border: 1px solid $custom-black;
+                .userName {
+                    padding-left: 1rem;
+                    font-weight: 500;
+                }
+            }
+            .commentWrapper {
+                display: flex;
+                flex-direction: column;
+                overflow-y: scroll;
+                border-bottom: 1px solid $light-grey;
+                padding-bottom: 0.3rem;
+
+                .noComment {
+                    padding: 1rem 0;
+                }
+                // height: 60%;
+                .singleComment {
                     display: flex;
-                    flex-direction: column;
                     width: 100%;
-                    padding: 0.2rem 1rem;
-                    font-size: $middle-font;
-                    .commentUser {
+                    margin: 0.5rem 0;
+                    img {
+                        border-radius: 100%;
+                        width: 2rem;
+                        height: 2rem;
                         cursor: pointer;
-                        font-weight: 500;
+                        padding: 0.3rem;
+                    }
+                    .commentText {
+                        margin-left: 0.3rem;
+                        border-radius: 1rem;
+                        border: 1px solid $dark-grey;
+                        display: flex;
+                        flex-direction: column;
+                        width: 100%;
+                        padding: 0.3rem 1rem;
+                        font-size: $middle-font;
+                        position: relative;
+                        .commentUser {
+                            cursor: pointer;
+                            font-weight: 500;
+                            padding-right: 0.5rem;
+                            display: flex;
+                            justify-content: center;
+                            margin-right: auto;
+                        }
+                        .delete {
+                            width: 1rem;
+                            height: 1rem;
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            right: 1rem;
+                            cursor: pointer;
+                            &:hover path {
+                                fill: $dark-grey;
+                            }
+                        }
                     }
                 }
             }
@@ -553,19 +631,25 @@ body {
                 margin: 0.5rem 0;
                 display: flex;
                 align-items: center;
+                padding-top: 0.3rem;
+                position: relative;
+                padding-bottom: 1rem;
                 .commentText {
                     margin-left: 0.3rem;
                     border-radius: 1rem;
-                    border: 1px solid $custom-black;
+                    border: 1px solid $dark-grey;
                     padding: 0.5rem 1rem;
                     flex: 1;
+                    resize: none;
+                    font-family: sans-serif;
+                    outline: none;
+                    height: 1.8rem;
                 }
                 .submit {
                     width: 2rem;
-                    height: 100%;
-                    margin-left: 0.3rem;
+                    margin-left: 0.8rem;
                     background-color: $sub-color;
-                    border-radius: 0.5rem;
+                    border-radius: 0.6rem;
                     padding: 0.2rem 0.5rem;
                     color: white;
                     display: flex;

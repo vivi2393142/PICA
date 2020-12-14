@@ -96,6 +96,27 @@ const createNewCanvas = (canvasSetting, userId) => {
         document.location.href = `../file/${canvasSetting.id}`;
     });
 };
+const createSampleCanvas = (canvasSetting, userId, sampleFileId) => {
+    // add data to canvasFiles
+    const refSample = db.collection('canvasFiles').doc(sampleFileId);
+    const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+    refSample.get().then((doc) => {
+        const sampleData = doc.data();
+        ref.set({
+            data: sampleData.data,
+            basicSetting: canvasSetting,
+            uploaded: [],
+            comments: [],
+            like: [],
+            isSample: false,
+        }).then(() => {
+            // add data to userData
+            const userRef = db.collection('userData').doc(userId);
+            userRef.update({ canvas: firebase.firestore.FieldValue.arrayUnion(canvasSetting.id) });
+            document.location.href = `../file/${canvasSetting.id}`;
+        });
+    });
+};
 const loadCanvas = (canvas, callback, fileId) => {
     const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
@@ -156,7 +177,7 @@ const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
 
 // main page
 // -- firestore
-const getAllFiles = (callback) => {
+const getAllFiles = (currentUserId, callback) => {
     let allUsers = [];
     let instagram = [];
     let poster = [];
@@ -179,7 +200,6 @@ const getAllFiles = (callback) => {
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
-                        // console.log(doc.data());
                         const userId = doc.data().basicSetting.userEmail;
                         const userData = allUsers.find((x) => x.email === userId);
                         const fileData = {
@@ -191,7 +211,7 @@ const getAllFiles = (callback) => {
                             fileId: doc.data().basicSetting.id,
                             snapshot: doc.data().snapshot,
                             isSample: doc.data().isSample,
-                            isLike: doc.data().like.includes(userId),
+                            isLike: doc.data().like.includes(currentUserId),
                         };
                         doc.data().basicSetting.type === 'instagram'
                             ? instagram.push(fileData)
@@ -249,6 +269,8 @@ const getShot = (fileId, currentUserEmail, callback) => {
                         fileName: doc.data().basicSetting.title,
                         userPhoto: author.photo,
                         userName: author.name,
+                        userId: author.email,
+                        fileNumber: author.canvas.length,
                     },
                     comments: comments,
                     currentUser: {
@@ -268,6 +290,14 @@ const postComment = (textInput, currentUserId, fileId) => {
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.update({
         comments: firebase.firestore.FieldValue.arrayUnion(newComment),
+    });
+};
+const deleteComment = (index, fileId) => {
+    const ref = db.collection('canvasFiles').doc(fileId);
+    ref.get().then((doc) => {
+        let newData = doc.data();
+        newData.comments.splice(index, 1);
+        ref.update(newData);
     });
 };
 const postLike = (currentUserId, fileId, oldIsLike) => {
@@ -311,7 +341,6 @@ const getLikeList = (userId, callback) => {
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         if (currentUserLike.includes(doc.id)) {
-                            const userId = doc.data().basicSetting.userEmail;
                             const userData = allUsers.find((x) => x.email === userId);
                             const fileData = {
                                 userId: userId,
@@ -331,6 +360,21 @@ const getLikeList = (userId, callback) => {
                 .then(() => {
                     callback(result);
                 });
+        });
+};
+const getSampleList = (type, callback) => {
+    let result = [];
+    const refFiles = db.collection('canvasFiles');
+    refFiles
+        .where('isSample', '==', true)
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                if (doc.data().basicSetting.type === type) {
+                    result.push(doc.data());
+                }
+            });
+            callback(result);
         });
 };
 
@@ -543,4 +587,7 @@ export {
     postComment,
     postLike,
     getLikeList,
+    deleteComment,
+    getSampleList,
+    createSampleCanvas,
 };

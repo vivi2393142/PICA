@@ -18,8 +18,339 @@ $small-font: 0.8rem;
 $tiny-font: 0.7rem;
 $symbol-font: 0.6rem;
 $like-red: rgb(243, 71, 71);
+$sizeBase: 2rem;
 
 .addNew {
+    .cover {
+        background-color: rgba(0, 0, 0, 0.7);
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .box {
+            width: 40rem;
+            height: 30rem;
+            background-color: white;
+            box-shadow: 0 0 7px 0 $custom-black;
+            border-radius: 2rem;
+            position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 2.5rem 0;
+            .stepContentWrapper {
+                width: 100%;
+                display: flex;
+                height: 73%;
+                justify-content: center;
+                flex-wrap: wrap;
+                padding-bottom: 5%;
+                label {
+                    font-size: $middle-font;
+                    color: $custom-black;
+                    align-self: center;
+                    .nameInput {
+                        margin-left: 1rem;
+                        height: 1.5rem;
+                        border-radius: 0.5rem;
+                        border: 1px solid $middle-grey;
+                        padding: 0.1rem 0.5rem;
+                    }
+                }
+                .sampleList {
+                    align-self: center;
+                    height: 55%;
+                    width: 80%;
+                    padding: 0 1rem;
+                    overflow-x: auto;
+                    display: flex;
+                    align-items: center;
+                    .sampleImg {
+                        height: 11rem;
+                        margin-right: 1rem;
+                        border-radius: 1rem;
+                        border: 1px solid $middle-grey;
+                        cursor: pointer;
+                        &:hover {
+                            box-shadow: 0 0 5px 0 $dark-grey;
+                        }
+                    }
+                    .chosenSampleImg {
+                        box-shadow: 0 0 5px 0 $dark-grey;
+                    }
+                    .notChosenSampleImg {
+                        opacity: 0.5;
+                    }
+                }
+                .optionsWrapper {
+                    width: 100%;
+                    align-items: center;
+                    display: flex;
+                    justify-content: center;
+                    .option {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        width: 30%;
+                        height: 50%;
+                        margin: 0 1.5rem;
+                        border-radius: 1rem;
+                        border: 2px solid $middle-grey;
+                        color: $custom-black;
+                        font-size: $middle-font;
+                        padding: 0.5rem 0;
+                        cursor: pointer;
+                        .icon {
+                            width: 100%;
+                            height: 100%;
+                        }
+                    }
+                    .optionSample {
+                        height: 1.2rem;
+                        overflow: hidden;
+                        // transition: height 0.2s;
+                        // .icon {
+                        //     width: 0;
+                        //     height: 0;
+                        //     transition: height 0.5s;
+                        // }
+                    }
+                    .notChosenOption {
+                        opacity: 0.2;
+                    }
+                }
+            }
+            .nextStepWrapper {
+                padding: 1rem 0rem;
+                width: 7rem;
+                display: flex;
+                .nextStep {
+                    width: 5rem;
+                    text-align: center;
+                    background-color: $sub-color;
+                    color: white;
+                    font-weight: 900;
+                    margin: auto;
+                    font-size: $small-font;
+                    border-radius: 0.3rem;
+                    padding: 0.2rem 0;
+                    cursor: pointer;
+                    &:hover {
+                        opacity: 0.6;
+                    }
+                }
+                .disableStep {
+                    background-color: $light-grey;
+                    cursor: default;
+                }
+            }
+            .close {
+                position: absolute;
+                top: 2rem;
+                right: 2rem;
+                width: 1rem;
+                height: 1rem;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 100%;
+                border: 1px solid $custom-black;
+                color: $custom-black;
+                font-size: $tiny-font;
+                cursor: pointer;
+                &:hover {
+                    opacity: 0.7;
+                }
+            }
+            .stepTitle {
+                width: 100%;
+                font-size: $big-font;
+                font-weight: 600;
+                color: $sub-color;
+                text-align: center;
+                height: 5%;
+            }
+            .sizeOptions {
+                width: 22%;
+                font-size: $middle-font;
+                color: $custom-black;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                .option {
+                    margin-bottom: 0.4rem;
+                    padding: 0.1rem 0.4rem;
+                    cursor: pointer;
+                    border-radius: 0.3rem;
+                    &:hover {
+                        background-color: $light-grey;
+                    }
+                    .title {
+                        padding-bottom: 2px;
+                    }
+                    .details {
+                        font-size: $tiny-font;
+                        color: $dark-grey;
+                    }
+                    &:last-child {
+                        margin: 0;
+                    }
+                }
+                .chosenOptions {
+                    background-color: $light-grey;
+                }
+            }
+            .sizeImg {
+                // border: 1px solid red;
+                width: 55%;
+                position: relative;
+                display: flex;
+                align-items: flex-end;
+                padding-left: 2rem;
+                .rec {
+                    border: 1px solid $dark-grey;
+                    position: absolute;
+                    cursor: pointer;
+                }
+                .recTransparent {
+                    opacity: 0.3;
+                }
+                .chosenRex {
+                    z-index: 1;
+                    opacity: 1;
+                    border: 2px solid $dark-grey;
+                    .text {
+                        font-weight: 600;
+                    }
+                }
+                .rec:hover {
+                    opacity: 1;
+                    border: 2px solid $custom-black;
+                    .text {
+                        font-weight: 600;
+                    }
+                    .arrowH,
+                    .arrowV {
+                        display: flex;
+                    }
+                }
+                .text {
+                    position: absolute;
+                    right: 0rem;
+                    top: -1.1rem;
+                    font-size: $tiny-font;
+                    color: $dark-grey;
+                }
+                .arrowH,
+                .arrowV {
+                    position: absolute;
+                    height: 0;
+                    border-bottom: 1px solid $dark-grey;
+                    color: $dark-grey;
+                    bottom: -15px;
+                    display: none;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: $tiny-font;
+                    .arrowText {
+                        position: absolute;
+                        top: 0.2rem;
+                    }
+                }
+                .arrowV {
+                    transform: rotate(-90deg);
+                    .arrowText {
+                        top: -15px;
+                    }
+                }
+                .arrowH::before,
+                .arrowV::before {
+                    content: '▶';
+                    transform: translateY(1px);
+                    font-size: $tiny-font;
+                    right: -0.2rem;
+                    position: absolute;
+                }
+                .arrowH::after,
+                .arrowV::after {
+                    content: '◀';
+                    transform: translateY(1px);
+                    font-size: $tiny-font;
+                    left: -0.2rem;
+                    position: absolute;
+                }
+                .show {
+                    display: flex;
+                }
+            }
+            .steps {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 10%;
+                .step {
+                    width: 20%;
+                    background-color: $light-grey;
+                    height: 0.2rem;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    &:last-child {
+                        width: 0;
+                    }
+                    .text {
+                        position: absolute;
+                        top: -2rem;
+                        transform: translateX(-50%);
+                        font-size: $small-font;
+                        color: $custom-black;
+                        opacity: 0.5;
+                    }
+                    .textShow {
+                        opacity: 1;
+                        color: $sub-color;
+                        font-weight: 600;
+                    }
+                    &::before {
+                        content: '';
+                        position: absolute;
+                        width: 0.6rem;
+                        height: 0.6rem;
+                        background-color: white;
+                        border-radius: 100%;
+                        border: 3px solid $light-grey;
+                        transform: translateX(-50%);
+                    }
+                }
+                .current::before {
+                    border: 3px solid $sub-color;
+                    width: 1rem;
+                    height: 1rem;
+                }
+                .chosen {
+                    background-color: $sub-color;
+                }
+                .chosen::before {
+                    content: 'v';
+                    width: 0.6rem;
+                    height: 0.6rem;
+                    border: 3px solid $sub-color;
+                    font-weight: 700;
+                    font-size: $tiny-font;
+                    color: white;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: $sub-color;
+                }
+            }
+        }
+    }
     .addButton {
         // bottom: 15%;
         right: 0;

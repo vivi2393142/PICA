@@ -95,7 +95,14 @@ const UserPage = (props) => {
         likeList.length === 0
             ? null
             : likeList.map((item, index) => {
-                  return <ExploreItem key={index} item={item} likeHandler={likeHandler} />;
+                  return (
+                      <ExploreItem
+                          key={index}
+                          item={item}
+                          likeHandler={likeHandler}
+                          className={styles.likeItem}
+                      />
+                  );
               });
 
     const canvasFilesJsx =
@@ -188,7 +195,9 @@ const UserPage = (props) => {
                                 setIsAtMyCanvas(true);
                             }}
                         >
-                            我的作品
+                            {props.currentUser.email === props.match.params.userId
+                                ? '我的畫布'
+                                : '他的畫布'}
                         </div>
                         <div
                             className={`${styles.tag} ${isAtMyCanvas ? '' : styles.currentTag}`}
@@ -196,13 +205,15 @@ const UserPage = (props) => {
                                 setIsAtMyCanvas(false);
                             }}
                         >
-                            我的收藏
+                            {props.currentUser.email === props.match.params.userId
+                                ? '我的收藏'
+                                : '他的收藏'}
                         </div>
                     </div>
                     <div className={styles.canvasFiles}>
                         {isAtMyCanvas ? null : likeListJsx}
                         {canvasFilesJsx && isAtMyCanvas ? canvasFilesJsx : null}
-                        {/* {props.currentUser.email === props.match.params.userId ? (
+                        {props.currentUser.email === props.match.params.userId && isAtMyCanvas ? (
                             <div className={styles.fileWrapperNew}>
                                 <div
                                     className={styles.addNew}
@@ -211,7 +222,7 @@ const UserPage = (props) => {
                                     +
                                 </div>
                             </div>
-                        ) : null} */}
+                        ) : null}
                     </div>
                 </div>
                 {isChoosingSize ? (

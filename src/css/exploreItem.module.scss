@@ -20,9 +20,9 @@ $symbol-font: 0.6rem;
 $like-red: rgb(243, 71, 71);
 
 .fileWrapper {
-    min-width: 25%;
-    max-width: 25%;
-    margin-right: 3%;
+    min-width: 23%;
+    max-width: 23%;
+    margin: 0 1%;
     .innerImg {
         width: 100%;
         border-radius: 1rem;
@@ -122,6 +122,7 @@ $like-red: rgb(243, 71, 71);
             font-size: $tiny-font;
         }
         .infoIcon {
+            padding-left: 0.3rem;
             width: 1.2rem;
             height: 1.2rem;
         }
