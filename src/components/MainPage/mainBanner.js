@@ -9,6 +9,7 @@ import AddNew from './addNew';
 // export default App;
 const MainBanner = (props) => {
     const [showSignOut, setShowSignOut] = React.useState(false);
+
     let history = useHistory();
     let currentPage = history.location.pathname.slice(6, 9);
     let currentUserPage = history.location.pathname.slice(11);

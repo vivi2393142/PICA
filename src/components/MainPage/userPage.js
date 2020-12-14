@@ -217,7 +217,9 @@ const UserPage = (props) => {
                             <div className={styles.fileWrapperNew}>
                                 <div
                                     className={styles.addNew}
-                                    onClick={() => setIsChoosingSize(true)}
+                                    onClick={() => {
+                                        setIsChoosingSize(true);
+                                    }}
                                 >
                                     +
                                 </div>

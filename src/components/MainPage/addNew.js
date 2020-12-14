@@ -30,7 +30,6 @@ const AddNew = (props) => {
         { name: '明信片', type: 'postCard', width: 560, height: 288, mmW: 198, mmH: 102 },
         { name: '名片', type: 'nameCard', width: 255, height: 153, mmW: 90, mmH: 54 },
     ];
-
     const sizeChoosingHandler = (type, width, height) => {
         setChosenRec(type);
         setChoices({ ...choices, type, width, height });

@@ -171,6 +171,7 @@ const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
         result = { ...doc.data().basicSetting, width: newWidth, height: newHeight, type: newType };
+        console.log(result);
         saveCanvasData(canvas, result, fileId);
     });
 };

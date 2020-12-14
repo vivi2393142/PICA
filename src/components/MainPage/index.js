@@ -13,7 +13,6 @@ const MainPage = (props) => {
     return (
         <div>
             <MainBanner currentUser={props.currentUser} setCurrentUser={props.setCurrentUser} />
-            {/* <AddNew /> */}
             <Switch>
                 <Route
                     path='/main/explore'

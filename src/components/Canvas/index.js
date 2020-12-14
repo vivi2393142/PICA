@@ -514,7 +514,11 @@ const Canvas = (props) => {
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
             <Background />
-            <Banner allSettings={allSettings} fileId={props.match.params.id} />
+            <Banner
+                allSettings={allSettings}
+                fileId={props.match.params.id}
+                currentUser={props.currentUser}
+            />
             <MainBoard
                 allSettings={allSettings}
                 currentUser={props.currentUser}

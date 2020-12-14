@@ -515,6 +515,14 @@ const Sidebar = (props) => {
         'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdancing.svg?alt=media&token=7835db16-23f8-4908-82f7-e097999e1520',
         'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdog-jump.svg?alt=media&token=f9877759-4a82-4330-aa5f-9db031ca8c3c',
         'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffloat.svg?alt=media&token=2e447975-657a-4dca-9dbb-91d870aace7e',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-01png.png?alt=media&token=a4e036ed-30f8-4fa3-929f-d51a6d281256',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-02.png?alt=media&token=8812fd2a-600b-4b16-9331-48cf4e870de6',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-03.png?alt=media&token=604b3548-6d4a-4d51-bf15-73a57d11e22a',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-04.png?alt=media&token=06360b8a-f9ca-4034-884e-b79674026cb9',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-05.png?alt=media&token=de15967e-73c6-47cf-8416-8afa6677b732',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-06.png?alt=media&token=d798ddaa-f957-4f63-af5b-72e602db2cc7',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-07.png?alt=media&token=e60cbd02-9169-4016-97ee-4cdeadb7eb28',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-08.png?alt=media&token=145cdf4c-cf19-4910-9b80-2a32a3f6dbc1',
     ];
     const stickerJsx = stickerArray.map((item, index) => {
         return (

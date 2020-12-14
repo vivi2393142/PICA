@@ -5,9 +5,11 @@ import Resize from './Resize';
 import Export from './Export';
 import * as firebase from '../../../firebase';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const Banner = (props) => {
     const allSettings = props.allSettings;
+    let history = useHistory();
     // title setting
     const handleTitle = (e) => {
         const newCanvasSetting = { ...allSettings.canvasSetting, title: e.target.value };
@@ -55,7 +57,10 @@ const Banner = (props) => {
                     <bannerIcons.Share className='bannerIcons' />
                 </div>
                 <Export drawingAreaSettings={allSettings} />
-                <div className='memberIconWrapper'>
+                <div
+                    className='memberIconWrapper'
+                    onClick={() => history.push(`../main/user/${props.currentUser.email}`)}
+                >
                     <bannerIcons.Member className='bannerIcons' />
                 </div>
             </div>
@@ -67,6 +72,7 @@ Banner.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     allSettings: PropTypes.object.isRequired,
     fileId: PropTypes.string.isRequired,
+    currentUser: PropTypes.object.isRequired,
 };
 
 export default Banner;
