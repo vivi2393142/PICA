@@ -52,18 +52,3 @@ export default function App() {
         </Router>
     );
 }
-
-// <Route path='/file/:id' exact>
-//     {Object.keys(currentUser).length !== 0 ? (
-//         <Canvas currentUser={currentUser} />
-//     ) : (
-//         <Redirect to='/' />
-//     )}
-// </Route>
-// <Route path='/main' exact>
-//     {Object.keys(currentUser).length !== 0 ? (
-//         <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-//     ) : (
-//         <Redirect to='/' />
-//     )}
-// </Route>

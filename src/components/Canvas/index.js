@@ -26,7 +26,7 @@ const Canvas = (props) => {
         { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
-    console.log('render canvas');
+    // console.log('render canvas');
     // handleSaveFile
     const handleSaveFile = (canvas, canvasSetting) => {
         firebase.saveCanvasData(canvas, canvasSetting, props.match.params.id);
@@ -35,7 +35,9 @@ const Canvas = (props) => {
     const showSaveStatus = () => {
         document.querySelector('.status').classList.add('showStatus');
         setTimeout(() => {
-            document.querySelector('.status').classList.remove('showStatus');
+            if (document.querySelector('.status').classList) {
+                document.querySelector('.status').classList.remove('showStatus');
+            }
         }, 3000);
     };
     // handle responsive size
@@ -106,7 +108,7 @@ const Canvas = (props) => {
     };
 
     React.useEffect(() => {
-        console.log('render useEffect');
+        // console.log('render useEffect');
         // get firebase data according to URL params
         firebase.loadCanvas(
             canvas,
@@ -114,7 +116,6 @@ const Canvas = (props) => {
                 // set canvas setting state by firebase canvas data
                 setCanvasSetting(canvasSettingInit);
                 setCanvasData(canvasDataInit);
-
                 // create new canvas then load firebase data in
                 const canvasInit = new fabric.Canvas('fabric-canvas', {
                     height: canvasSettingInit.height,

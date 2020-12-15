@@ -430,6 +430,12 @@ const Sidebar = (props) => {
     // jsx : sidebar
     const sidebarArray = [
         {
+            EN: 'template',
+            CH: '範本',
+            icon: <icons.SidebarSample className='sidebarIcon' />,
+            iconB: <icons.SidebarSampleB className='sidebarIcon' />,
+        },
+        {
             EN: 'text',
             CH: '文字',
             icon: <icons.SidebarText className='sidebarIcon' />,
@@ -465,24 +471,19 @@ const Sidebar = (props) => {
             icon: <icons.SidebarBackground className='sidebarIcon' />,
             iconB: <icons.SidebarBackgroundB className='sidebarIcon' />,
         },
-        {
-            EN: 'frame',
-            CH: '框架',
-            icon: <icons.SidebarFrame className='sidebarIcon' />,
-            iconB: <icons.SidebarFrameB className='sidebarIcon' />,
-        },
+
         {
             EN: 'upload',
             CH: '上傳',
             icon: <icons.SidebarUpload className='sidebarIcon' />,
             iconB: <icons.SidebarUploadB className='sidebarIcon' />,
         },
-        {
-            EN: 'more',
-            CH: '更多',
-            icon: <icons.SidebarMore className='sidebarIcon' />,
-            iconB: <icons.SidebarMoreB className='sidebarIcon' />,
-        },
+        // {
+        //     EN: 'more',
+        //     CH: '更多',
+        //     icon: <icons.SidebarMore className='sidebarIcon' />,
+        //     iconB: <icons.SidebarMoreB className='sidebarIcon' />,
+        // },
     ];
     const sidebarFoldJsx = sidebarArray.map((item, index) => (
         <div

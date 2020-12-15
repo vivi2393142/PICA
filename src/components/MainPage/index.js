@@ -4,7 +4,6 @@ import MainBanner from './mainBanner';
 import UserPage from './userPage';
 import Explore from './explore';
 import Shots from './shots';
-// import AddNew from './addNew';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 // export default App;

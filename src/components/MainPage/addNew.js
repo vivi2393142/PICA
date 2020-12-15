@@ -35,9 +35,16 @@ const AddNew = (props) => {
         setChoices({ ...choices, type, width, height });
     };
     const restartHandler = () => {
-        setIsAddingNew(false);
         setCurrentStep(1);
         setChosenRec(null);
+        setChoices({
+            type: null,
+            way: null,
+            width: null,
+            height: null,
+            name: '',
+            sampleFileId: null,
+        });
     };
     const samplerListHandler = (type) => {
         firebase.getSampleList(type, (result) => {
@@ -54,15 +61,8 @@ const AddNew = (props) => {
             height: choices.height,
             type: choices.type,
         };
-        console.log(canvasSetting);
-        console.log(choices.sampleFileId);
-        console.log(props.currentUser.email);
         if (choices.way === 'sample') {
-            firebase.createSampleCanvas(
-                canvasSetting,
-                props.currentUser.email,
-                choices.sampleFileId
-            );
+            firebase.createSampleCanvas(canvasSetting, choices.sampleFileId);
         } else {
             firebase.createNewCanvas(canvasSetting, props.currentUser.email);
         }
@@ -160,7 +160,14 @@ const AddNew = (props) => {
         <div className={styles.addNew}>
             <button className={styles.addButton}>
                 <div className={styles.addIcon}></div>
-                <div className={styles.btnText} onClick={() => setIsAddingNew(true)}>
+                <div
+                    className={styles.btnText}
+                    onClick={() => {
+                        restartHandler();
+
+                        setIsAddingNew(true);
+                    }}
+                >
                     新增畫布
                 </div>
             </button>
@@ -279,7 +286,9 @@ const AddNew = (props) => {
                             </div>
                         ) : null}
                         {(currentStep === 1 && choices.type) ||
-                        (currentStep === 2 && choices.way) ? (
+                        (currentStep === 2 &&
+                            (choices.way === 'blank' ||
+                                (choices.way === 'sample' && choices.sampleFileId))) ? (
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}
@@ -302,7 +311,7 @@ const AddNew = (props) => {
                             </div>
                         ) : null}
 
-                        <div className={styles.close} onClick={restartHandler}>
+                        <div className={styles.close} onClick={() => setIsAddingNew(false)}>
                             x
                         </div>
                     </div>

@@ -81,6 +81,7 @@ const Explore = (props) => {
                                   item={item}
                                   type={type}
                                   likeHandler={likeHandler}
+                                  currentUser={props.currentUser}
                               />
                           );
                       }
@@ -93,6 +94,7 @@ const Explore = (props) => {
                                   item={item}
                                   type={type}
                                   likeHandler={likeHandler}
+                                  currentUser={props.currentUser}
                               />
                           );
                       }
@@ -110,6 +112,7 @@ const Explore = (props) => {
                           >
                               {filter === 'all' || filter === 'sample' ? sampleInner : null}
                               {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
+                              <div style={{ paddingRight: '2rem' }}></div>
                           </div>
                           {arrowState[type] !== 'left' ? (
                               <mainIcons.ArrowR

@@ -46,11 +46,15 @@ const listenCanvas = (fileId, callback, setUploadedFiles) => {
 const savaDataURL = (canvas, fileId, successCallback) => {
     let exportCanvas;
     if (JSON.stringify(canvas) === '{}') {
+        console.log('1');
         exportCanvas = document.getElementById('fabric-canvas');
     } else {
+        console.log('2');
         exportCanvas = canvas;
     }
+    console.log(exportCanvas);
     let dataURL = exportCanvas.toDataURL('image/png', 1);
+    console.log(dataURL);
     const storageRef = firebase
         .storage()
         .ref()
@@ -96,24 +100,30 @@ const createNewCanvas = (canvasSetting, userId) => {
         document.location.href = `../file/${canvasSetting.id}`;
     });
 };
-const createSampleCanvas = (canvasSetting, userId, sampleFileId) => {
+const createSampleCanvas = (canvasSetting, sampleFileId) => {
     // add data to canvasFiles
     const refSample = db.collection('canvasFiles').doc(sampleFileId);
     const ref = db.collection('canvasFiles').doc(canvasSetting.id);
     refSample.get().then((doc) => {
         const sampleData = doc.data();
+        const newCanvasSetting = {
+            ...doc.data().basicSetting,
+            title: canvasSetting.title,
+            userEmail: canvasSetting.userEmail,
+            id: canvasSetting.id,
+        };
         ref.set({
             data: sampleData.data,
-            basicSetting: canvasSetting,
+            basicSetting: newCanvasSetting,
             uploaded: [],
             comments: [],
             like: [],
             isSample: false,
         }).then(() => {
             // add data to userData
-            const userRef = db.collection('userData').doc(userId);
+            const userRef = db.collection('userData').doc(canvasSetting.userEmail);
             userRef.update({ canvas: firebase.firestore.FieldValue.arrayUnion(canvasSetting.id) });
-            document.location.href = `../file/${canvasSetting.id}`;
+            document.location.href = `/file/${canvasSetting.id}`;
         });
     });
 };
@@ -124,7 +134,11 @@ const loadCanvas = (canvas, callback, fileId) => {
         const canvasSettingInit = dataFromFirebase.basicSetting;
         const canvasDataInit = JSON.parse(dataFromFirebase.data);
         callback(canvasSettingInit, canvasDataInit);
-        if (canvasDataInit.objects.length === 0) {
+        // console.log(dataFromFirebase);
+        if (
+            canvasDataInit.objects.length === 0 ||
+            (canvasDataInit.objects.length !== 0 && !doc.data().snapshot)
+        ) {
             savaDataURL(canvas, fileId, (storageRef) => {
                 storageRef.getDownloadURL().then((url) => {
                     ref.update({
@@ -171,8 +185,18 @@ const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
         result = { ...doc.data().basicSetting, width: newWidth, height: newHeight, type: newType };
-        console.log(result);
+        // console.log(result);
         saveCanvasData(canvas, result, fileId);
+    });
+};
+const deleteCanvas = (userId, fileId) => {
+    const refUser = db.collection('userData').doc(userId);
+    const refFiles = db.collection('canvasFiles').doc(fileId);
+    refFiles.delete().then(() => {
+        console.log('delete data successful');
+    });
+    refUser.update({
+        canvas: firebase.firestore.FieldValue.arrayRemove(fileId),
     });
 };
 
@@ -591,4 +615,5 @@ export {
     deleteComment,
     getSampleList,
     createSampleCanvas,
+    deleteCanvas,
 };

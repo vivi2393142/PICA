@@ -5,6 +5,8 @@ import * as firebase from '../../firebase';
 import { nanoid } from 'nanoid';
 import Loader from '../Loader';
 import ExploreItem from './exploreItem';
+import * as mainIcons from '../../img/mainPage';
+import { useHistory } from 'react-router-dom';
 
 // export default App;
 const UserPage = (props) => {
@@ -16,6 +18,8 @@ const UserPage = (props) => {
     const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const [userPhoto, setUserPhoto] = React.useState('');
+    const [titleInput, setTitleInput] = React.useState('');
+    const [isShowInput, setIsShowInput] = React.useState(false);
     const canvasSizeOptions = [
         { name: 'Instagram 貼文', type: 'instagram', width: 1080, height: 1080 },
         { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -26,6 +30,7 @@ const UserPage = (props) => {
         { name: '自訂尺寸->未完成(進畫布可以改)', type: 'custom', width: 0, height: 0 },
     ];
 
+    let history = useHistory();
     const handleCreateNew = (e) => {
         const selection = canvasSizeOptions.find((item) => item.name === e.currentTarget.id);
         const id = nanoid();
@@ -50,6 +55,11 @@ const UserPage = (props) => {
             });
         }
     };
+    const deleteHandler = (fileId) => {
+        firebase.deleteCanvas(props.currentUser.email, fileId);
+        let newData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
+        setCanvasDataWithDataURL(newData);
+    };
 
     React.useEffect(() => {
         firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
@@ -67,6 +77,8 @@ const UserPage = (props) => {
                 let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
                     const fileData = result.find((data) => data.basicSetting.id === item);
                     return {
+                        comments: fileData.comments,
+                        like: fileData.like,
                         fileId: item,
                         snapshot: fileData.snapshot,
                         title:
@@ -87,7 +99,12 @@ const UserPage = (props) => {
         }
     }, []);
 
-    const likeHandler = () => console.log('ttt');
+    const likeHandler = (e, item, type) => {
+        e.stopPropagation();
+        firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
+        let newData = likeList.filter((file) => file.fileId !== item.fileId);
+        setLikeList(newData);
+    };
 
     const likeListJsx =
         likeList.length === 0
@@ -99,6 +116,7 @@ const UserPage = (props) => {
                           item={item}
                           likeHandler={likeHandler}
                           className={styles.likeItem}
+                          currentUser={props.currentUser}
                       />
                   );
               });
@@ -110,11 +128,44 @@ const UserPage = (props) => {
                       <div key={index} className={styles.fileWrapper}>
                           <div
                               className={styles.file}
-                              onClick={() => (document.location.href = `../../file/${item.fileId}`)}
+                              onClick={() => history.push(`/file/${item.fileId}`)}
                           >
                               <img src={item.snapshot} className={styles.fileImg}></img>
+                              <div className={styles.hoverIconsWrapper}>
+                                  <mainIcons.Like className={styles.hoverIcon} />
+                                  <div className={styles.text}>{item.like.length}</div>
+                                  <mainIcons.Comment className={styles.hoverIcon} />
+                                  <div className={styles.text}> {item.comments.length}</div>
+                                  <mainIcons.Show
+                                      className={`${styles.hoverIcon} ${styles.boxIcon}`}
+                                      onClick={(e) => {
+                                          e.stopPropagation();
+                                          history.push(`/main/shots/${item.fileId}`);
+                                      }}
+                                  />
+                                  <mainIcons.Delete
+                                      className={`${styles.hoverIcon} ${styles.boxIcon}`}
+                                      onClick={() => deleteHandler(item.fileId)}
+                                  />
+                              </div>
                           </div>
-                          <div className={styles.fileTitle}>{item.title}</div>
+                          <div className={styles.titleWrapper}>
+                              {isShowInput ? (
+                                  <input
+                                      value={titleInput}
+                                      onChange={(e) => {
+                                          setTitleInput(e.target.value);
+                                      }}
+                                  ></input>
+                              ) : (
+                                  <div
+                                      className={styles.fileTitle}
+                                      onClick={() => setIsShowInput(true)}
+                                  >
+                                      {item.title}
+                                  </div>
+                              )}
+                          </div>
                       </div>
                   );
               })

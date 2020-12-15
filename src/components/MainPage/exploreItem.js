@@ -3,10 +3,23 @@ import styles from '../../css/exploreItem.module.scss';
 import PropTypes from 'prop-types';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
+import { nanoid } from 'nanoid';
+import * as firebase from '../../firebase';
 
 // export default App;
 const ExploreItem = (props) => {
     let history = useHistory();
+    const addNewSampleHandler = (e, sampleFileId) => {
+        e.stopPropagation();
+        console.log('click');
+        const id = nanoid();
+        const canvasSetting = {
+            id: id,
+            userEmail: props.currentUser.email,
+            title: '',
+        };
+        firebase.createSampleCanvas(canvasSetting, sampleFileId);
+    };
 
     return (
         <div
@@ -19,7 +32,10 @@ const ExploreItem = (props) => {
                 <div className={styles.buttons}>
                     {props.item.isSample ? (
                         <div className={styles.edit}>
-                            <mainIcons.Edit className={styles.buttonIcon} />
+                            <mainIcons.Edit
+                                className={styles.buttonIcon}
+                                onClick={(e) => addNewSampleHandler(e, props.item.fileId)}
+                            />
                         </div>
                     ) : null}
                     <div
@@ -48,6 +64,7 @@ ExploreItem.propTypes = {
     item: PropTypes.object.isRequired,
     type: PropTypes.string,
     likeHandler: PropTypes.func.isRequired,
+    currentUser: PropTypes.object.isRequired,
 };
 
 export default ExploreItem;

@@ -226,17 +226,76 @@ body {
                 position: relative;
             }
             .file {
+                cursor: url('../img/src/edit-cursor.svg'), auto;
                 display: flex;
                 align-items: center;
                 background-color: $light-grey;
                 border-radius: 1rem;
                 font-size: 1rem;
-                cursor: pointer;
                 overflow: hidden;
                 border: 1px solid $light-grey;
                 position: relative;
                 flex-direction: column;
                 width: 100%;
+                box-sizing: border-box;
+                .hoverIconsWrapper {
+                    position: absolute;
+                    transition: 0.1s bottom;
+                    display: flex;
+                    bottom: -4rem;
+                    width: 100%;
+                    align-items: flex-end;
+                    padding: 5rem 0 0.8rem 0;
+                    background: linear-gradient(
+                        to top,
+                        rgba(0, 0, 0, 0.6) 0%,
+                        rgba(0, 0, 0, 0.1) 70%,
+                        transparent 100%
+                    );
+                    color: white;
+                    font-size: $tiny-font;
+                    .hoverIcon {
+                        border-radius: 0.2rem;
+                        height: 1.4rem;
+                        width: 1.4rem;
+                        & path {
+                            fill: white;
+                        }
+                        &:first-child {
+                            margin-left: 0.7rem;
+                        }
+                        &:last-child {
+                            margin-right: 0.8rem;
+                        }
+                    }
+                    .text {
+                        &:nth-child(2) {
+                            margin-right: 2px;
+                        }
+                        &:nth-child(4) {
+                            margin-right: auto;
+                        }
+                    }
+                    .boxIcon {
+                        box-shadow: 1px 1px 1px 0 $light-grey;
+                        background-color: rgba(255, 255, 255, 0.9);
+                        padding: 2px;
+                        margin-right: 0.5rem;
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        & path {
+                            fill: $custom-black;
+                        }
+                        cursor: pointer;
+                        &:hover {
+                            transform: translate(-5%, -5%);
+                        }
+                    }
+                }
+                &:hover .hoverIconsWrapper {
+                    display: flex;
+                    bottom: 0rem;
+                }
                 &::after {
                     content: '';
                     display: block;
@@ -269,12 +328,30 @@ body {
                     }
                 }
             }
-            .fileTitle {
-                text-align: center;
-                font-size: 0.9rem;
+            .titleWrapper {
                 width: 100%;
-                color: $custom-black;
-                padding: 0.5rem 0;
+                position: relative;
+                font-size: 0.9rem;
+                text-align: center;
+                .fileTitle {
+                    color: $custom-black;
+                    margin: 0.5rem 0;
+                    position: absolute;
+                    width: 100%;
+                    &:hover {
+                        box-shadow: 0 1px 3px 0 $dark-grey;
+                        cursor: text;
+                        border-radius: 0.5rem;
+                        transform: translate(-1%, -5%);
+                    }
+                }
+                input {
+                    width: 100%;
+                    border-radius: 0.5rem;
+                    border: 1px solid $middle-grey;
+                    margin: 0.5rem 0;
+                    z-index: 1;
+                }
             }
         }
     }
@@ -504,6 +581,7 @@ body {
                 border-radius: 0.5rem;
                 padding: 2rem;
                 margin-bottom: 2rem;
+                margin-right: 1px;
                 position: relative;
                 scroll-behavior: smooth;
                 &::-webkit-scrollbar {

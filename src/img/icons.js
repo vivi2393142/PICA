@@ -27,6 +27,8 @@ import { ReactComponent as TextAlignLeft } from './src/icons/text_align_left.svg
 import { ReactComponent as TextAlignRight } from './src/icons/text_align_right.svg';
 import { ReactComponent as TextAlignCenter } from './src/icons/text_align_center.svg';
 import { ReactComponent as TextSpace } from './src/icons/text_space.svg';
+import { ReactComponent as SidebarSample } from './src/sidebar/sidebar_sample.svg';
+import { ReactComponent as SidebarSampleB } from './src/sidebar/sidebar_sample-b.svg';
 import { ReactComponent as SidebarUpload } from './src/sidebar/sidebar_upload.svg';
 import { ReactComponent as SidebarFrame } from './src/sidebar/sidebar_frame.svg';
 import { ReactComponent as SidebarShape } from './src/sidebar/sidebar_shape.svg';
@@ -94,4 +96,6 @@ export {
     AlignCenterV,
     AlignCenterH,
     Test,
+    SidebarSample,
+    SidebarSampleB,
 };
