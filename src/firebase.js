@@ -402,6 +402,16 @@ const getSampleList = (type, callback) => {
             callback(result);
         });
 };
+const changeTitle = (fileId, newTitle) => {
+    const refFile = db.collection('canvasFiles').doc(fileId);
+    refFile.get().then((doc) => {
+        let allSetting = doc.data().basicSetting;
+        allSetting.title = newTitle;
+        refFile.update({
+            basicSetting: allSetting,
+        });
+    });
+};
 
 // auth
 const checkCurrentUser = (successCallback, failCallback) => {
@@ -616,4 +626,5 @@ export {
     getSampleList,
     createSampleCanvas,
     deleteCanvas,
+    changeTitle,
 };

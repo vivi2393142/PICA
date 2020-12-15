@@ -8,7 +8,52 @@ import ExploreItem from './exploreItem';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
 
-// export default App;
+const TitleInput = (props) => {
+    const [titleInput, setTitleInput] = React.useState(props.initialValue);
+    const [isShowInput, setIsShowInput] = React.useState(false);
+    const handleEdit = (e) => {
+        setIsShowInput(true);
+        e.currentTarget.firstChild.focus();
+        const currentNode = e.currentTarget;
+        const clickedOrNot = (e) => {
+            if (!currentNode.contains(e.target)) {
+                setIsShowInput(false);
+                firebase.changeTitle(props.fileId, titleInput);
+                document.removeEventListener('click', clickedOrNot, true);
+            }
+        };
+        document.addEventListener('click', clickedOrNot, true);
+    };
+
+    return (
+        <div className={styles.titleWrapper} onClick={(e) => handleEdit(e)}>
+            <input
+                value={titleInput}
+                onChange={(e) => {
+                    setTitleInput(e.target.value);
+                }}
+                style={{
+                    opacity: isShowInput ? 1 : 0,
+                    zIndex: isShowInput ? 1 : -1,
+                }}
+            ></input>
+            <div
+                className={styles.fileTitle}
+                style={{
+                    opacity: isShowInput ? 0 : 1,
+                }}
+            >
+                {titleInput}
+            </div>
+        </div>
+    );
+};
+
+TitleInput.propTypes = {
+    initialValue: PropTypes.string.isRequired,
+    fileId: PropTypes.string.isRequired,
+};
+
 const UserPage = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [isChoosingSize, setIsChoosingSize] = React.useState(false);
@@ -18,8 +63,6 @@ const UserPage = (props) => {
     const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const [userPhoto, setUserPhoto] = React.useState('');
-    const [titleInput, setTitleInput] = React.useState('');
-    const [isShowInput, setIsShowInput] = React.useState(false);
     const canvasSizeOptions = [
         { name: 'Instagram 貼文', type: 'instagram', width: 1080, height: 1080 },
         { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -55,10 +98,12 @@ const UserPage = (props) => {
             });
         }
     };
-    const deleteHandler = (fileId) => {
+    const deleteHandler = (e, fileId) => {
+        e.stopPropagation();
+        alert('一但刪除就無法復原囉，是否確定刪除？');
         firebase.deleteCanvas(props.currentUser.email, fileId);
-        let newData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
-        setCanvasDataWithDataURL(newData);
+        let newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
+        setCanvasDataWithDataURL(newFilesData);
     };
 
     React.useEffect(() => {
@@ -72,7 +117,6 @@ const UserPage = (props) => {
     }, []);
     React.useEffect(() => {
         firebase.getAllCanvasData((result) => {
-            // console.log(userDataFromFirebase.canvas[0]);
             if (userDataFromFirebase.canvas[0] !== '') {
                 let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
                     const fileData = result.find((data) => data.basicSetting.id === item);
@@ -145,27 +189,11 @@ const UserPage = (props) => {
                                   />
                                   <mainIcons.Delete
                                       className={`${styles.hoverIcon} ${styles.boxIcon}`}
-                                      onClick={() => deleteHandler(item.fileId)}
+                                      onClick={(e) => deleteHandler(e, item.fileId)}
                                   />
                               </div>
                           </div>
-                          <div className={styles.titleWrapper}>
-                              {isShowInput ? (
-                                  <input
-                                      value={titleInput}
-                                      onChange={(e) => {
-                                          setTitleInput(e.target.value);
-                                      }}
-                                  ></input>
-                              ) : (
-                                  <div
-                                      className={styles.fileTitle}
-                                      onClick={() => setIsShowInput(true)}
-                                  >
-                                      {item.title}
-                                  </div>
-                              )}
-                          </div>
+                          <TitleInput initialValue={item.title} fileId={item.fileId} />
                       </div>
                   );
               })
@@ -234,7 +262,7 @@ const UserPage = (props) => {
                         <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
                         <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
                         <div className={styles.otherDetails}>
-                            {userDataFromFirebase.canvas.length} files
+                            {canvasDataWithDataURL.length} files
                         </div>
                     </div>
                     <div className={styles.navTags}>
