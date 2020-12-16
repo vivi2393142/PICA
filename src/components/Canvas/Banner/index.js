@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import Resize from './Resize';
 import Export from './Export';
+import Share from './Share';
 import * as firebase from '../../../firebase';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
@@ -73,9 +74,10 @@ const Banner = (props) => {
             <div className='bannerRight'>
                 {typeJsx}
                 <Resize drawingAreaSettings={allSettings} fileId={props.fileId} />
-                <div className='shareIconWrapper'>
+                {/* <div className='shareIconWrapper'>
                     <bannerIcons.Share className='bannerIcons' />
-                </div>
+                </div> */}
+                <Share fileId={props.fileId} />
                 <Export drawingAreaSettings={allSettings} />
                 <div
                     className='memberIconWrapper'

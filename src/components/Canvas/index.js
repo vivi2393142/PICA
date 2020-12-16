@@ -130,9 +130,9 @@ const Canvas = (props) => {
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
                     // ---- if currentUser is not the one
-                    if (props.currentUser.email !== canvasSettingInit.userEmail) {
-                        history.push('/main/explore');
-                    }
+                    // if (props.currentUser.email !== canvasSettingInit.userEmail) {
+                    //     history.push('/main/explore');
+                    // }
                     // preset image & iText objects style
                     let imgObjects = canvasInit.getObjects('image');
                     let texObjects = canvasInit.getObjects('i-text');

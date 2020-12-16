@@ -212,157 +212,163 @@ body {
                 letter-spacing: 1px;
             }
         }
+        .canvasLikesFiles {
+            // column-count: 4;
+            column-width: 200px;
+            column-gap: 20px;
+            padding-bottom: 2rem;
+            padding-top: 1.5rem;
+        }
         .canvasFiles {
             display: flex;
             flex-wrap: wrap;
             padding-bottom: 2rem;
             padding-top: 1.5rem;
-            // border: 1px solid red;
-            .fileWrapper,
-            .fileWrapperNew {
-                width: 25%;
-                box-sizing: border-box;
-                padding: 0 1% 1rem 1%;
-                box-sizing: border-box;
-                position: relative;
-            }
-            .file {
-                cursor: url('../img/src/edit-cursor.svg'), auto;
+        }
+        .fileWrapper,
+        .fileWrapperNew {
+            width: 25%;
+            box-sizing: border-box;
+            padding: 0 1% 1rem 1%;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .file {
+            cursor: url('../img/src/edit-cursor.svg'), auto;
+            display: flex;
+            align-items: center;
+            background-color: $light-grey;
+            border-radius: 1rem;
+            font-size: 1rem;
+            overflow: hidden;
+            border: 1px solid $light-grey;
+            position: relative;
+            flex-direction: column;
+            width: 100%;
+            box-sizing: border-box;
+            .hoverIconsWrapper {
+                position: absolute;
+                transition: 0.1s bottom;
                 display: flex;
-                align-items: center;
+                bottom: -4rem;
+                width: 100%;
+                align-items: flex-end;
+                padding: 5rem 0 0.8rem 0;
+                background: linear-gradient(
+                    to top,
+                    rgba(0, 0, 0, 0.6) 0%,
+                    rgba(0, 0, 0, 0.1) 70%,
+                    transparent 100%
+                );
+                color: white;
+                font-size: $tiny-font;
+                .hoverIcon {
+                    border-radius: 0.2rem;
+                    height: 1.4rem;
+                    width: 1.4rem;
+                    & path {
+                        fill: white;
+                    }
+                    &:first-child {
+                        margin-left: 0.7rem;
+                    }
+                    &:last-child {
+                        margin-right: 0.8rem;
+                    }
+                }
+                .text {
+                    &:nth-child(2) {
+                        margin-right: 2px;
+                    }
+                    &:nth-child(4) {
+                        margin-right: auto;
+                    }
+                }
+                .boxIcon {
+                    box-shadow: 1px 1px 1px 0 $light-grey;
+                    background-color: rgba(255, 255, 255, 0.9);
+                    padding: 2px;
+                    margin-right: 0.5rem;
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    & path {
+                        fill: $custom-black;
+                    }
+                    cursor: pointer;
+                    &:hover {
+                        transform: translate(-5%, -5%);
+                    }
+                }
+            }
+            &:hover .hoverIconsWrapper {
+                display: flex;
+                bottom: 0rem;
+            }
+            &::after {
+                content: '';
+                display: block;
+                padding-bottom: 75%;
+            }
+            .fileImg {
+                max-width: 60%;
+                position: absolute;
+                top: 10%;
+                box-shadow: 2px 2px 4px 0 $middle-grey;
+                border-radius: 15px;
+            }
+        }
+        .fileWrapperNew {
+            margin-right: auto;
+            .addNew {
+                border: 1px solid $light-grey;
+                width: 100%;
                 background-color: $light-grey;
                 border-radius: 1rem;
-                font-size: 1rem;
-                overflow: hidden;
-                border: 1px solid $light-grey;
-                position: relative;
-                flex-direction: column;
-                width: 100%;
-                box-sizing: border-box;
-                .hoverIconsWrapper {
-                    position: absolute;
-                    transition: 0.1s bottom;
-                    display: flex;
-                    bottom: -4rem;
-                    width: 100%;
-                    align-items: flex-end;
-                    padding: 5rem 0 0.8rem 0;
-                    background: linear-gradient(
-                        to top,
-                        rgba(0, 0, 0, 0.6) 0%,
-                        rgba(0, 0, 0, 0.1) 70%,
-                        transparent 100%
-                    );
-                    color: white;
-                    font-size: $tiny-font;
-                    .hoverIcon {
-                        border-radius: 0.2rem;
-                        height: 1.4rem;
-                        width: 1.4rem;
-                        & path {
-                            fill: white;
-                        }
-                        &:first-child {
-                            margin-left: 0.7rem;
-                        }
-                        &:last-child {
-                            margin-right: 0.8rem;
-                        }
-                    }
-                    .text {
-                        &:nth-child(2) {
-                            margin-right: 2px;
-                        }
-                        &:nth-child(4) {
-                            margin-right: auto;
-                        }
-                    }
-                    .boxIcon {
-                        box-shadow: 1px 1px 1px 0 $light-grey;
-                        background-color: rgba(255, 255, 255, 0.9);
-                        padding: 2px;
-                        margin-right: 0.5rem;
-                        width: 1.5rem;
-                        height: 1.5rem;
-                        & path {
-                            fill: $custom-black;
-                        }
-                        cursor: pointer;
-                        &:hover {
-                            transform: translate(-5%, -5%);
-                        }
-                    }
-                }
-                &:hover .hoverIconsWrapper {
-                    display: flex;
-                    bottom: 0rem;
-                }
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2.5rem;
+                cursor: pointer;
                 &::after {
                     content: '';
                     display: block;
                     padding-bottom: 75%;
                 }
-                .fileImg {
-                    max-width: 60%;
-                    position: absolute;
-                    top: 10%;
-                    box-shadow: 2px 2px 4px 0 $middle-grey;
-                    border-radius: 15px;
-                }
             }
-            .fileWrapperNew {
-                margin-right: auto;
-                .addNew {
-                    border: 1px solid $light-grey;
-                    width: 100%;
-                    background-color: $light-grey;
-                    border-radius: 1rem;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 2.5rem;
-                    cursor: pointer;
-                    &::after {
-                        content: '';
-                        display: block;
-                        padding-bottom: 75%;
-                    }
-                }
-            }
-            .titleWrapper {
+        }
+        .titleWrapper {
+            width: 100%;
+            position: relative;
+            font-size: 0.9rem;
+            text-align: center;
+            margin: 0.5rem 0;
+            height: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .fileTitle {
+                color: $custom-black;
+                position: absolute;
                 width: 100%;
-                position: relative;
-                font-size: 0.9rem;
-                text-align: center;
-                margin: 0.5rem 0;
-                height: 1.5rem;
+                height: 100%;
                 display: flex;
-                justify-content: center;
                 align-items: center;
-                .fileTitle {
-                    color: $custom-black;
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    &:hover {
-                        box-shadow: 0 1px 3px 0 $dark-grey;
-                        cursor: text;
-                        border-radius: 0.5rem;
-                        transform: translate(-1%, -5%);
-                    }
+                justify-content: center;
+                &:hover {
+                    box-shadow: 0 1px 3px 0 $dark-grey;
+                    cursor: text;
+                    border-radius: 0.5rem;
+                    transform: translate(-1%, -5%);
                 }
-                input {
-                    color: $custom-black;
-                    box-sizing: border-box;
-                    width: 95%;
-                    height: 100%;
-                    border-radius: 0.8rem;
-                    border: 1px solid $middle-grey;
-                    text-align: center;
-                }
+            }
+            input {
+                color: $custom-black;
+                box-sizing: border-box;
+                width: 95%;
+                height: 100%;
+                border-radius: 0.8rem;
+                border: 1px solid $middle-grey;
+                text-align: center;
             }
         }
     }
@@ -786,4 +792,12 @@ body {
             }
         }
     }
+}
+
+// media query
+@media (max-width: 1000px) {
+    .canvasLikesFiles {
+    }
+}
+@media (max-width: 700px) {
 }

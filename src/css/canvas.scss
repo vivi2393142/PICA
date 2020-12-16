@@ -7,6 +7,7 @@ $light-grey: #ebebeb;
 $middle-grey: #acacac;
 $dark-grey: #7f7e7e;
 $custom-black: #555555;
+$dark-green: #1f3642;
 $board-to-window-ratio: 90%;
 $bk-w: #eeeeee;
 $bk-y: #f5dfcd;
@@ -925,7 +926,8 @@ input[type='range'].imgAdjustRange {
     }
 }
 .resizeIconWrapper,
-.exportIconWrapper {
+.exportIconWrapper,
+.shareIconWrapper {
     position: relative;
     display: flex;
     align-items: center;
@@ -1016,10 +1018,8 @@ input[type='range'].imgAdjustRange {
     letter-spacing: 1px;
 }
 // banner - share
-.export {
-    position: relative;
-}
-.exportWrapper {
+.exportWrapper,
+.shareWrapper {
     position: absolute;
     top: 150%;
     right: 50%;
@@ -1037,7 +1037,76 @@ input[type='range'].imgAdjustRange {
     & * {
         padding: 0.6rem 0;
         display: flex;
+    }
+}
+.exportWrapper {
+    & * {
         cursor: pointer;
+    }
+}
+.shareWrapper {
+    width: 25rem;
+    cursor: default;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-bottom: 1rem;
+    .mainTitle {
+        font-size: $middle-font;
+        font-weight: 500;
+        padding: 1rem 0 1rem 0.1rem;
+        width: 100%;
+    }
+    input {
+        padding: 0.3rem 0.5rem;
+        color: $custom-black;
+        width: 100%;
+        background-color: $light-grey;
+        border: 1px solid $middle-grey;
+    }
+    .hint {
+        font-size: $tiny-font;
+        padding: 0.6rem 0 0.5rem 0.2rem;
+        margin-right: auto;
+    }
+    .copy {
+        background-color: $sub-color;
+        color: white;
+        font-weight: 500;
+        border-radius: 0.2rem;
+        padding: 0.2rem 0;
+        width: 5rem;
+        display: flex;
+        cursor: pointer;
+        justify-content: center;
+        align-items: center;
+        font-size: $small-font;
+        margin: 0.7rem 0 auto 0;
+        &::after {
+            content: '複製';
+        }
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+    .copyComplete {
+        background-color: $dark-green;
+        animation-name: copyComplete;
+        animation-duration: 200ms;
+        cursor: default;
+        &::after {
+            content: '✓ 完成';
+        }
+        &:hover {
+            opacity: 1;
+        }
+    }
+    @keyframes copyComplete {
+        0% {
+            background-color: $sub-color;
+        }
+        100% {
+            background-color: $dark-green;
+        }
     }
 }
 

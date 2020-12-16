@@ -87,6 +87,7 @@ const Explore = (props) => {
                                   type={type}
                                   likeHandler={likeHandler}
                                   currentUser={props.currentUser}
+                                  parentNodeForClass={'explore'}
                               />
                           );
                       }
@@ -100,6 +101,7 @@ const Explore = (props) => {
                                   type={type}
                                   likeHandler={likeHandler}
                                   currentUser={props.currentUser}
+                                  parentNodeForClass={'explore'}
                               />
                           );
                       }

@@ -19,130 +19,149 @@ $tiny-font: 0.7rem;
 $symbol-font: 0.6rem;
 $like-red: rgb(243, 71, 71);
 
-.fileWrapper {
-    min-width: 23%;
-    max-width: 23%;
-    margin: 1%;
-    .innerImg {
-        width: 100%;
-        border-radius: 1rem;
-        box-shadow: 0 0 1px 0 $dark-grey;
-        cursor: pointer;
-    }
-    .isSample {
-        right: 0;
-        top: 0.5rem;
-        font-size: $small-font;
+.innerImg {
+    width: 100%;
+    border-radius: 1rem;
+    // box-shadow: 0 0 1px 0 $dark-grey;
+    border: 1px solid $light-grey;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.isSample {
+    right: 0;
+    top: 0.5rem;
+    font-size: $small-font;
+    position: absolute;
+    padding: 3px 5px 3px 8px;
+    background: $dark-green;
+    box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.3);
+    color: white;
+    border-radius: 5px 0 0 5px;
+    font-weight: 500;
+    &::before,
+    &::after {
+        content: '';
         position: absolute;
-        padding: 3px 5px 3px 8px;
-        background: $dark-green;
-        box-shadow: -1px 2px 3px rgba(0, 0, 0, 0.3);
-        color: white;
-        border-radius: 5px 0 0 5px;
-        font-weight: 500;
-        &::before,
-        &::after {
-            content: '';
-            position: absolute;
-        }
-        &::before {
-            width: 7px;
-            height: 100%;
-            top: 0;
-            right: -6.5px;
-            padding: 0 0 7px;
-            background: inherit;
-            border-radius: 0 5px 5px 0;
-        }
-        &::after {
-            width: 5px;
-            height: 5px;
-            bottom: -5px;
-            right: -4.5px;
-            background: #4d6c80;
-            border-radius: 0 5px 5px 0;
-        }
     }
-    .cover {
-        width: 100%;
-        position: relative;
-        &:hover {
-            .innerImg {
-                box-shadow: 0 3px 8px 1px $dark-grey;
-            }
-            .buttons {
-                opacity: 1;
-            }
-        }
+    &::before {
+        width: 7px;
+        height: 100%;
+        top: 0;
+        right: -6.5px;
+        padding: 0 0 7px;
+        background: inherit;
+        border-radius: 0 5px 5px 0;
+    }
+    &::after {
+        width: 5px;
+        height: 5px;
+        bottom: -5px;
+        right: -4.5px;
+        background: #4d6c80;
+        border-radius: 0 5px 5px 0;
+    }
+}
+.cover {
+    width: 100%;
+    position: relative;
+    &:hover {
         .buttons {
-            right: 0rem;
-            overflow: hidden;
-            bottom: 3px;
-            padding: 1rem 0.5rem 0.5rem 0;
-            border-radius: 0 0 1rem 1rem;
-            box-sizing: border-box;
-            position: absolute;
-            display: flex;
-            justify-content: flex-end;
-            opacity: 0;
-            width: 100%;
-            background: linear-gradient(
-                to top,
-                rgba(0, 0, 0, 0.6) 0%,
-                rgba(0, 0, 0, 0.1) 70%,
-                transparent 100%
-            );
-            width: 100%;
-            .edit,
-            .like {
-                box-shadow: 1px 1px 1px 0 $light-grey;
-                background-color: rgba(255, 255, 255, 1);
-                border-radius: 0.3rem;
-                height: 1.8rem;
-                width: 1.8rem;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                &:hover {
-                    background-color: rgba(233, 233, 233, 0.8);
-                }
-            }
-
-            .edit {
-                margin-right: 0.4rem;
-            }
+            opacity: 1;
         }
     }
-    .info {
+    .buttons {
+        right: 0rem;
+        bottom: 3px;
+        padding: 1rem 0.5rem 0.5rem 0;
+        border-radius: 0 0 1rem 1rem;
+        box-sizing: border-box;
+        position: absolute;
         display: flex;
-        color: $dark-grey;
-        padding: 0.5rem 0.3rem 0 0.3rem;
-        align-items: center;
-        .userPhoto {
-            width: 1rem;
-            height: 1rem;
-            border-radius: 100%;
+        justify-content: flex-end;
+        opacity: 0;
+        width: 100%;
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.1) 70%,
+            transparent 100%
+        );
+        width: 100%;
+        .edit,
+        .like {
+            box-shadow: 1px 1px 1px 0 $light-grey;
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 0.3rem;
+            height: 1.8rem;
+            width: 1.8rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            &:hover {
+                background-color: rgba(233, 233, 233, 0.8);
+            }
         }
-        .author {
-            margin-right: auto;
-            font-weight: 700;
-            margin-left: 0.2rem;
-            font-size: $small-font;
-        }
-        .like,
-        .messages {
-            font-size: $tiny-font;
-        }
-        .infoIcon {
-            padding-left: 0.3rem;
-            width: 1.2rem;
-            height: 1.2rem;
+
+        .edit {
+            margin-right: 0.4rem;
         }
     }
 }
+.info {
+    display: flex;
+    color: $dark-grey;
+    padding: 0.5rem 0.3rem 1rem 0.3rem;
+    align-items: center;
+    .userPhoto {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 100%;
+    }
+    .author {
+        margin-right: auto;
+        font-weight: 700;
+        margin-left: 0.2rem;
+        font-size: $small-font;
+    }
+    .like,
+    .messages {
+        font-size: $tiny-font;
+    }
+    .infoIcon {
+        padding-left: 0.3rem;
+        width: 1.2rem;
+        height: 1.2rem;
+    }
+}
+
 .isLike {
     & path {
         fill: $like-red;
+    }
+}
+
+.exploreFileWrapper {
+    min-width: 23%;
+    max-width: 23%;
+    margin: 1%;
+}
+// for waterfall layout
+.userFileWrapper {
+    column-span: none;
+    position: relative;
+    .innerImg {
+        margin-bottom: 2.3rem;
+    }
+    .buttons {
+        bottom: calc(2.3rem + 3px);
+    }
+    .info {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 0;
+        height: 1.6rem;
+        padding-bottom: 0.7rem;
     }
 }

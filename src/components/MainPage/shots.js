@@ -120,7 +120,13 @@ const Shots = (props) => {
                 <div className={styles.shots}>
                     <div className={styles.back} onClick={() => history.goBack()}>{`< 返回`}</div>
                     <div className={styles.leftInfo}>
-                        <img src={commentData.file.fileImg} className={styles.fileImg} />
+                        <img
+                            src={commentData.file.fileImg}
+                            className={styles.fileImg}
+                            onLoad={() => {
+                                console.log('loaded');
+                            }}
+                        />
                         <div className={styles.fileNameWrapper}>
                             {commentData.file.fileName}
                             <mainIcons.Like

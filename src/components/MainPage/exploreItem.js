@@ -23,7 +23,11 @@ const ExploreItem = (props) => {
 
     return (
         <div
-            className={styles.fileWrapper}
+            className={`${
+                props.parentNodeForClass === 'explore'
+                    ? styles.exploreFileWrapper
+                    : styles.userFileWrapper
+            }`}
             onClick={() => history.push(`/main/shots/${props.item.fileId}`)}
         >
             <div className={styles.cover}>
@@ -65,6 +69,7 @@ ExploreItem.propTypes = {
     type: PropTypes.string,
     likeHandler: PropTypes.func.isRequired,
     currentUser: PropTypes.object.isRequired,
+    parentNodeForClass: PropTypes.string,
 };
 
 export default ExploreItem;

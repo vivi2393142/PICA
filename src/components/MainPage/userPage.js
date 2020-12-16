@@ -176,6 +176,7 @@ const UserPage = (props) => {
                           likeHandler={likeHandler}
                           className={styles.likeItem}
                           currentUser={props.currentUser}
+                          parentNodeForClass={'user'}
                       />
                   );
               });
@@ -313,22 +314,26 @@ const UserPage = (props) => {
                                 : '他的收藏'}
                         </div>
                     </div>
-                    <div className={styles.canvasFiles}>
-                        {isAtMyCanvas ? null : likeListJsx}
-                        {canvasFilesJsx && isAtMyCanvas ? canvasFilesJsx : null}
-                        {props.currentUser.email === props.match.params.userId && isAtMyCanvas ? (
-                            <div className={styles.fileWrapperNew}>
-                                <div
-                                    className={styles.addNew}
-                                    // onClick={() => {
-                                    //     setIsChoosingSize(true);
-                                    // }}
-                                >
-                                    +
+                    {isAtMyCanvas ? null : (
+                        <div className={styles.canvasLikesFiles}>{likeListJsx}</div>
+                    )}
+                    {canvasFilesJsx && isAtMyCanvas ? (
+                        <div className={styles.canvasFiles}>
+                            {canvasFilesJsx}
+                            {props.currentUser.email === props.match.params.userId ? (
+                                <div className={styles.fileWrapperNew}>
+                                    <div
+                                        className={styles.addNew}
+                                        // onClick={() => {
+                                        //     setIsChoosingSize(true);
+                                        // }}
+                                    >
+                                        +
+                                    </div>
                                 </div>
-                            </div>
-                        ) : null}
-                    </div>
+                            ) : null}
+                        </div>
+                    ) : null}
                 </div>
                 {isChoosingSize ? (
                     <div className={styles.chooseNew}>
