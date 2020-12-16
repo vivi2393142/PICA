@@ -9,7 +9,7 @@
     "@testing-library/user-event": "^12.2.2",
     "fabric": "^4.2.0",
     "fabric-history": "^1.6.0",
-    "firebase": "^8.1.1",
+    "firebase": "^8.2.0",
     "firebaseui": "^4.7.1",
     "fontfaceobserver": "^2.1.0",
     "husky": "^4.3.0",

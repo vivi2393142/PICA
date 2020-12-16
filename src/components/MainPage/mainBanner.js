@@ -9,14 +9,11 @@ import AddNew from './addNew';
 // export default App;
 const MainBanner = (props) => {
     const [showSignOut, setShowSignOut] = React.useState(false);
-
     let history = useHistory();
-    let currentPage = history.location.pathname.slice(6, 9);
-    let currentUserPage = history.location.pathname.slice(11);
     const signOutHandler = () => {
         firebase.nativeSignOut(() => {
             props.setCurrentUser({});
-            history.push('../');
+            history.push('/');
         });
     };
 
@@ -31,23 +28,13 @@ const MainBanner = (props) => {
                 <div className={styles.leftNav}>
                     <div
                         onClick={() => history.push('/main/explore')}
-                        className={`${
-                            currentPage === 'exp' ||
-                            currentPage === 'sho' ||
-                            (currentPage === 'use' && props.currentUser.email !== currentUserPage)
-                                ? styles.navChosen
-                                : ''
-                        } `}
+                        className={`${props.currentPage === 'explore' ? styles.navChosen : ''} `}
                     >
                         探索畫布
                     </div>
                     <div
                         onClick={() => history.push(`/main/user/${props.currentUser.email}`)}
-                        className={`${
-                            currentPage === 'use' && props.currentUser.email === currentUserPage
-                                ? styles.navChosen
-                                : ''
-                        } `}
+                        className={`${props.currentPage !== 'explore' ? styles.navChosen : ''} `}
                     >
                         我的畫布
                     </div>
@@ -74,6 +61,7 @@ const MainBanner = (props) => {
 MainBanner.propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
     currentUser: PropTypes.object.isRequired,
+    currentPage: PropTypes.string.isRequired,
 };
 
 export default MainBanner;

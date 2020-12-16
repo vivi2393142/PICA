@@ -1,10 +1,8 @@
 import firebase from 'firebase/app';
-import 'firebase/analytics';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { nanoid } from 'nanoid';
-import { auth } from 'firebaseui';
 
 // init firebase
 const firebaseConfig = {
@@ -46,15 +44,15 @@ const listenCanvas = (fileId, callback, setUploadedFiles) => {
 const savaDataURL = (canvas, fileId, successCallback) => {
     let exportCanvas;
     if (JSON.stringify(canvas) === '{}') {
-        console.log('1');
+        // console.log('1');
         exportCanvas = document.getElementById('fabric-canvas');
     } else {
-        console.log('2');
+        // console.log('2');
         exportCanvas = canvas;
     }
-    console.log(exportCanvas);
+    // console.log(exportCanvas);
     let dataURL = exportCanvas.toDataURL('image/png', 1);
-    console.log(dataURL);
+    // console.log(dataURL);
     const storageRef = firebase
         .storage()
         .ref()
@@ -308,14 +306,59 @@ const getShot = (fileId, currentUserEmail, callback) => {
         });
 };
 const postComment = (textInput, currentUserId, fileId) => {
-    const newComment = {
-        content: textInput,
-        userId: currentUserId,
-    };
-    const ref = db.collection('canvasFiles').doc(fileId);
-    ref.update({
-        comments: firebase.firestore.FieldValue.arrayUnion(newComment),
-    });
+    const refFiles = db.collection('canvasFiles').doc(fileId);
+    refFiles
+        .update({
+            latestTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(() => {
+            refFiles.get().then((doc) => {
+                const newComment = {
+                    content: textInput,
+                    userId: currentUserId,
+                    timestamp: doc.data().latestTimestamp,
+                };
+                refFiles.update({
+                    comments: firebase.firestore.FieldValue.arrayUnion(newComment),
+                });
+            });
+        });
+};
+let setTime = 0;
+let initCommentState = true;
+const listenToComment = (fileId, callback) => {
+    const refUser = db.collection('userData');
+    const refFiles = db.collection('canvasFiles').doc(fileId);
+    let allUsers = [];
+    let oldData = [];
+    // 不重複設置監聽
+    if (setTime < 1) {
+        setTime += 1;
+        refFiles.onSnapshot((doc) => {
+            if (initCommentState) {
+                initCommentState = false;
+                oldData = doc.data();
+            } else if (doc.data().comments.length !== oldData.comments.length) {
+                // refUser
+                //     .get()
+                //     .then((querySnapshot) => {
+                //         querySnapshot.forEach((doc) => {
+                //             allUsers.push(doc.data());
+                //         });
+                //     })
+                //     .then(() => {
+                //         const newComments = doc.data().comments.map((comment) => {
+                //             const commenter = allUsers.find((x) => x.email === comment.userId);
+                //             comment.userPhoto = commenter.photo;
+                //             comment.userName = commenter.name;
+                //             return comment;
+                //         });
+                callback();
+                // });
+                oldData = doc.data();
+            }
+        });
+    }
 };
 const deleteComment = (index, fileId) => {
     const ref = db.collection('canvasFiles').doc(fileId);
@@ -627,4 +670,5 @@ export {
     createSampleCanvas,
     deleteCanvas,
     changeTitle,
+    listenToComment,
 };

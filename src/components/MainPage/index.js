@@ -5,29 +5,46 @@ import UserPage from './userPage';
 import Explore from './explore';
 import Shots from './shots';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 // export default App;
 const MainPage = (props) => {
+    const [currentPage, setCurrentPage] = React.useState('explore');
+
     // render
     return (
         <div>
-            <MainBanner currentUser={props.currentUser} setCurrentUser={props.setCurrentUser} />
+            <MainBanner
+                currentUser={props.currentUser}
+                setCurrentUser={props.setCurrentUser}
+                currentPage={currentPage}
+            />
             <Switch>
                 <Route
                     path='/main/explore'
-                    component={() => <Explore currentUser={props.currentUser} />}
+                    component={() => (
+                        <Explore currentUser={props.currentUser} setCurrentPage={setCurrentPage} />
+                    )}
                 />
                 <Route
                     path='/main/user/:userId'
                     exact
                     component={(ownProps) => (
-                        <UserPage currentUser={props.currentUser} {...ownProps} />
+                        <UserPage
+                            currentUser={props.currentUser}
+                            {...ownProps}
+                            setCurrentPage={setCurrentPage}
+                        />
                     )}
                 />
                 <Route
                     path='/main/shots/:fileId'
                     component={(ownProps) => (
-                        <Shots currentUser={props.currentUser} {...ownProps} />
+                        <Shots
+                            currentUser={props.currentUser}
+                            {...ownProps}
+                            setCurrentPage={setCurrentPage}
+                        />
                     )}
                 />
                 <Redirect from='/main' to='/main/explore' />

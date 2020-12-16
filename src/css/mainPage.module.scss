@@ -217,6 +217,7 @@ body {
             flex-wrap: wrap;
             padding-bottom: 2rem;
             padding-top: 1.5rem;
+            // border: 1px solid red;
             .fileWrapper,
             .fileWrapperNew {
                 width: 25%;
@@ -722,6 +723,13 @@ body {
                             display: flex;
                             justify-content: center;
                             margin-right: auto;
+                            align-items: center;
+                            span {
+                                font-size: $tiny-font;
+                                font-weight: 400;
+                                padding-left: 0.5rem;
+                                color: $dark-grey;
+                            }
                         }
                         .delete {
                             width: 1rem;

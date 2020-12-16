@@ -7,9 +7,11 @@ import initAligningGuidelines from '../../aligning_guidelines.js';
 import * as backImg from '../../img/background';
 import * as firebase from '../../firebase';
 import Loader from '../Loader';
+import { useHistory } from 'react-router-dom';
 
 // export default App;
 const Canvas = (props) => {
+    let history = useHistory();
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [canvas, setCanvas] = React.useState({});
     const [canvasSetting, setCanvasSetting] = React.useState({});
@@ -26,7 +28,6 @@ const Canvas = (props) => {
         { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
-    // console.log('render canvas');
     // handleSaveFile
     const handleSaveFile = (canvas, canvasSetting) => {
         firebase.saveCanvasData(canvas, canvasSetting, props.match.params.id);
@@ -35,7 +36,7 @@ const Canvas = (props) => {
     const showSaveStatus = () => {
         document.querySelector('.status').classList.add('showStatus');
         setTimeout(() => {
-            if (document.querySelector('.status').classList) {
+            if (document.querySelector('.status') !== null) {
                 document.querySelector('.status').classList.remove('showStatus');
             }
         }, 3000);
@@ -128,7 +129,10 @@ const Canvas = (props) => {
                     await canvasInit.renderAll();
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
-
+                    // ---- if currentUser is not the one
+                    if (props.currentUser.email !== canvasSettingInit.userEmail) {
+                        history.push('/main/explore');
+                    }
                     // preset image & iText objects style
                     let imgObjects = canvasInit.getObjects('image');
                     let texObjects = canvasInit.getObjects('i-text');

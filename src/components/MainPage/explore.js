@@ -26,10 +26,15 @@ const Explore = (props) => {
     const scrollRef = React.useRef([]);
 
     React.useEffect(() => {
+        props.setCurrentPage('explore');
+        let mounted = true;
         firebase.getAllFiles(props.currentUser.email, (dataArray) => {
-            setDataArray(dataArray);
-            setIsLoaded(false);
+            if (mounted) {
+                setDataArray(dataArray);
+                setIsLoaded(false);
+            }
         });
+        return () => (mounted = false);
     }, []);
 
     const listenScroll = (e, type) => {
@@ -175,6 +180,7 @@ const Explore = (props) => {
 
 Explore.propTypes = {
     currentUser: PropTypes.object.isRequired,
+    setCurrentPage: PropTypes.func.isRequired,
 };
 
 export default Explore;

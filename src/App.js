@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import Canvas from './components/Canvas/index';
 import LandingPage from './components/LandingPage/index';
 import MainPage from './components/MainPage/index';
+import { useHistory } from 'react-router-dom';
 
 // export default App;
 export default function App() {
@@ -16,6 +17,8 @@ export default function App() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user && user !== currentUser) {
                 setCurrentUser(user);
+            } else if (document.location.pathname !== '/' && user === null) {
+                document.location.href = '/';
             }
         });
         setCurrentUserTimes(1);
@@ -25,12 +28,13 @@ export default function App() {
     return (
         <Router>
             <div className='App'>
-                <Route
-                    path='/main'
-                    component={() => (
-                        <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-                    )}
-                />
+                <Route path='/main'>
+                    {/* {Object.keys(currentUser).length !== 0 ? ( */}
+                    <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
+                    {/* ) : (
+                        <Redirect to='/' />
+                    )} */}
+                </Route>
                 <Switch>
                     <Route
                         path='/file/:id'

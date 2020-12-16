@@ -24,7 +24,6 @@ const TitleInput = (props) => {
         };
         document.addEventListener('click', clickedOrNot, true);
     };
-
     return (
         <div className={styles.titleWrapper} onClick={(e) => handleEdit(e)}>
             <input
@@ -107,41 +106,57 @@ const UserPage = (props) => {
     };
 
     React.useEffect(() => {
+        let mounted = true;
+        // set current page tag
+        props.currentUser.email === props.match.params.userId
+            ? props.setCurrentPage('user')
+            : props.setCurrentPage('explore');
+        // get user data
         firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
-            if (dataFromFirebase) {
-                setUserDataFromFirebase(dataFromFirebase);
-                setUserPhoto(dataFromFirebase.photo);
-                setIsLoaded(false);
+            if (mounted) {
+                if (dataFromFirebase) {
+                    setUserDataFromFirebase(dataFromFirebase);
+                    setUserPhoto(dataFromFirebase.photo);
+                    setIsLoaded(false);
+                }
             }
         });
-    }, []);
-    React.useEffect(() => {
-        firebase.getAllCanvasData((result) => {
-            if (userDataFromFirebase.canvas[0] !== '') {
-                let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
-                    const fileData = result.find((data) => data.basicSetting.id === item);
-                    return {
-                        comments: fileData.comments,
-                        like: fileData.like,
-                        fileId: item,
-                        snapshot: fileData.snapshot,
-                        title:
-                            fileData.basicSetting.title === ''
-                                ? '未命名畫布'
-                                : fileData.basicSetting.title,
-                    };
-                });
-                setCanvasDataWithDataURL(canvasDataWithImg);
-            }
-        });
-    }, [userDataFromFirebase.canvas]);
-    React.useEffect(() => {
+        // get like list
         if (props.currentUser) {
             firebase.getLikeList(props.currentUser.email, (result) => {
-                setLikeList(result);
+                if (mounted) {
+                    setLikeList(result);
+                }
             });
         }
+
+        return () => (mounted = false);
     }, []);
+    React.useEffect(() => {
+        let mounted = true;
+        firebase.getAllCanvasData((result) => {
+            if (mounted) {
+                if (userDataFromFirebase.canvas[0] !== '') {
+                    let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
+                        const fileData = result.find((data) => data.basicSetting.id === item);
+                        return {
+                            comments: fileData.comments,
+                            like: fileData.like,
+                            fileId: item,
+                            snapshot: fileData.snapshot,
+                            title:
+                                fileData.basicSetting.title === ''
+                                    ? '未命名畫布'
+                                    : fileData.basicSetting.title,
+                        };
+                    });
+                    setCanvasDataWithDataURL(canvasDataWithImg);
+                }
+            }
+        });
+
+        return () => (mounted = false);
+    }, [userDataFromFirebase.canvas]);
 
     const likeHandler = (e, item, type) => {
         e.stopPropagation();
@@ -172,7 +187,16 @@ const UserPage = (props) => {
                       <div key={index} className={styles.fileWrapper}>
                           <div
                               className={styles.file}
-                              onClick={() => history.push(`/file/${item.fileId}`)}
+                              onClick={() => {
+                                  props.currentUser.email === props.match.params.userId
+                                      ? history.push(`/file/${item.fileId}`)
+                                      : null;
+                              }}
+                              style={
+                                  props.currentUser.email !== props.match.params.userId
+                                      ? { cursor: 'default' }
+                                      : {}
+                              }
                           >
                               <img src={item.snapshot} className={styles.fileImg}></img>
                               <div className={styles.hoverIconsWrapper}>
@@ -187,10 +211,12 @@ const UserPage = (props) => {
                                           history.push(`/main/shots/${item.fileId}`);
                                       }}
                                   />
-                                  <mainIcons.Delete
-                                      className={`${styles.hoverIcon} ${styles.boxIcon}`}
-                                      onClick={(e) => deleteHandler(e, item.fileId)}
-                                  />
+                                  {props.currentUser.email === props.match.params.userId ? (
+                                      <mainIcons.Delete
+                                          className={`${styles.hoverIcon} ${styles.boxIcon}`}
+                                          onClick={(e) => deleteHandler(e, item.fileId)}
+                                      />
+                                  ) : null}
                               </div>
                           </div>
                           <TitleInput initialValue={item.title} fileId={item.fileId} />
@@ -324,6 +350,7 @@ const UserPage = (props) => {
 UserPage.propTypes = {
     currentUser: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
+    setCurrentPage: PropTypes.func.isRequired,
 };
 
 export default UserPage;

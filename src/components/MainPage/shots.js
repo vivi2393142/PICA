@@ -12,42 +12,68 @@ const Shots = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [commentData, setCommentData] = React.useState(null);
     const [textInput, setTextInput] = React.useState('');
-    const [currentUserPhoto, setCurrentUserPhoto] = React.useState('');
     let history = useHistory();
+
+    // listen to updated comments
+    React.useEffect(() => {
+        if (props.currentUser.email) {
+            firebase.listenToComment(props.match.params.fileId, () => {
+                firebase.getShot(
+                    props.match.params.fileId,
+                    props.currentUser.email,
+                    (dataArray) => {
+                        setCommentData(dataArray);
+                    }
+                );
+            });
+        }
+    }, [props.currentUser]);
+
     const sendCommentHandler = () => {
         firebase.postComment(textInput, props.currentUser.email, props.match.params.fileId);
-        const newComment = {
-            content: textInput,
-            userId: props.currentUser.email,
-            userName: props.currentUser.displayName,
-            userPhoto: currentUserPhoto,
-        };
-        let oldComments = [...commentData.comments];
-        oldComments.push(newComment);
-        setCommentData({ ...commentData, comments: oldComments });
         setTextInput('');
     };
-
     const deleteCommentHandler = (index) => {
-        let oldComments = { ...commentData };
-        oldComments.comments.splice(index, 1);
-        setCommentData(oldComments);
         firebase.deleteComment(index, props.match.params.fileId);
     };
-
     const likeHandler = (oldIsLike) => {
         firebase.postLike(props.currentUser.email, props.match.params.fileId, oldIsLike);
         let oldComments = { ...commentData };
         oldComments.currentUser.isLike = !oldIsLike;
         setCommentData(oldComments);
     };
+    const countDateDiff = (timeStamp) => {
+        const current = new Date();
+        const previous = timeStamp.toDate();
+        const msPerMinute = 60 * 1000;
+        const msPerHour = msPerMinute * 60;
+        const msPerDay = msPerHour * 24;
+        const msPerMonth = msPerDay * 30;
+        const msPerYear = msPerDay * 365;
+        const elapsed = current - previous;
+        if (elapsed < msPerMinute) {
+            return Math.round(elapsed / 1000) + '秒';
+        } else if (elapsed < msPerHour) {
+            return Math.round(elapsed / msPerMinute) + '分鐘';
+        } else if (elapsed < msPerDay) {
+            return Math.round(elapsed / msPerHour) + '小時';
+        } else if (elapsed < msPerMonth) {
+            return 'approximately ' + Math.round(elapsed / msPerDay) + '天';
+        } else if (elapsed < msPerYear) {
+            return 'approximately ' + Math.round(elapsed / msPerMonth) + '月';
+        } else {
+            return 'approximately ' + Math.round(elapsed / msPerYear) + '年';
+        }
+    };
 
     React.useEffect(() => {
+        // set current page tag
+        props.setCurrentPage('explore');
+        // data initialize
         if (props.match.params.fileId && props.currentUser.email) {
             firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
                 setCommentData(dataArray);
                 setIsLoaded(false);
-                setCurrentUserPhoto(dataArray.currentUser.userPhoto);
             });
         }
     }, []);
@@ -75,6 +101,7 @@ const Shots = (props) => {
                                 onClick={() => history.push(`/main/user/${comment.userId}`)}
                             >
                                 {comment.userName}
+                                <span>{countDateDiff(comment.timestamp)}</span>
                             </div>
                             <div className={styles.commentContent}>{comment.content}</div>
                         </div>
@@ -142,6 +169,7 @@ const Shots = (props) => {
 Shots.propTypes = {
     match: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
+    setCurrentPage: PropTypes.func.isRequired,
 };
 
 export default Shots;
