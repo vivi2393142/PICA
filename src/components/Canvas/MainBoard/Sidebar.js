@@ -22,6 +22,8 @@ const Sidebar = (props) => {
     const mainColor = '#e89a4f';
     const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
     const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
+    const [sampleList, setSampleList] = React.useState([]);
+
     // set next add in component position
     const adjSetNextPosition = () => {
         if (
@@ -635,6 +637,29 @@ const Sidebar = (props) => {
         );
     });
 
+    // jsx: sidebar - sample
+    React.useEffect(() => {
+        if (props.allSettings.canvasSetting.type) {
+            firebase.getSampleList(props.allSettings.canvasSetting.type, (result) => {
+                setSampleList(result);
+            });
+        }
+    }, [props.allSettings.canvasSetting]);
+
+    const sampleJsx = sampleList.map((item, index) => {
+        return (
+            <div key={index} className='unfoldItemGalleryWrapper'>
+                <img
+                    key={index}
+                    draggable='false'
+                    // onClick={backgroundImageHandler}
+                    className='unfoldItem unfoldItemGallery'
+                    src={item.snapshot}
+                ></img>
+            </div>
+        );
+    });
+
     // get current image styles
     React.useEffect(() => {
         if (allSettings.activeObj.type === 'image') {
@@ -832,6 +857,13 @@ const Sidebar = (props) => {
                             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
                             {stickerJsx}
+                        </div>
+                    ) : props.currentSidebar === 'template' ? (
+                        <div
+                            className='sidebarUnfoldInner sidebarUnfoldSample'
+                            // onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+                        >
+                            {sampleJsx}
                         </div>
                     ) : props.currentSidebar === 'more' ? (
                         <div className='sidebarUnfoldInner'>
