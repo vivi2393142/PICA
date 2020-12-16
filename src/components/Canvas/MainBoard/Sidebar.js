@@ -489,9 +489,9 @@ const Sidebar = (props) => {
         <div
             key={index}
             className={`sideButton ${
-                props.currentSidebar === 'text' && props.currentSidebar === item.EN
+                props.currentSidebar === 'template' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen firstButton'
-                    : props.currentSidebar === 'more' && props.currentSidebar === item.EN
+                    : props.currentSidebar === 'upload' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen lastButton'
                     : props.currentSidebar === item.EN
                     ? 'sideButtonChosen'
@@ -664,7 +664,7 @@ const Sidebar = (props) => {
             {props.currentSidebar !== '' ? (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${
-                        props.currentSidebar === 'text' ? 'firstUnfold' : ''
+                        props.currentSidebar === 'template' ? 'firstUnfold' : ''
                     }`}
                 >
                     {props.currentSidebar === 'text' ? (

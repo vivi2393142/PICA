@@ -460,7 +460,7 @@ input[type='range'].imgAdjustRange {
             color: $custom-black;
             font-weight: 600;
             cursor: pointer;
-            height: 11%;
+            height: calc(100% / 8);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -481,7 +481,7 @@ input[type='range'].imgAdjustRange {
         .sideButtonChosen {
             position: relative;
             width: 100%;
-            height: 11%;
+            height: calc(100% / 8);
             background-color: $main-color;
             z-index: 1;
             &::before {
@@ -512,6 +512,15 @@ input[type='range'].imgAdjustRange {
                     $main-color
                 );
             }
+        }
+        .firstButton::after {
+            content: '';
+            height: 0;
+            width: 0;
+        }
+        .lastButton::before {
+            content: '';
+            height: 0;
         }
     }
     .sidebarUnfold {
@@ -550,18 +559,10 @@ input[type='range'].imgAdjustRange {
             }
         }
     }
-    // if chosen is the first one
-    .firstButton::after {
-        content: '';
-        height: 0;
-    }
     .firstUnfold {
         border-radius: 0 2rem 0 0;
     }
-    .lastButton::before {
-        content: '';
-        height: 0;
-    }
+    // if chosen is the first one
 }
 
 .unfoldItem,
@@ -1117,7 +1118,7 @@ input[type='range'].imgAdjustRange {
 .sidebarUnfoldUpload {
     display: flex;
     flex-wrap: wrap;
-    max-height: 95%;
+    max-height: 100%;
     &::after {
         content: '';
         flex-grow: 999999999;
