@@ -690,7 +690,7 @@ body {
                 overflow-y: scroll;
                 border-bottom: 1px solid $light-grey;
                 padding-bottom: 0.3rem;
-
+                max-height: calc(100vh - 20rem);
                 .noComment {
                     padding: 1rem 0;
                 }

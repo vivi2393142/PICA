@@ -29,6 +29,18 @@ const Shots = (props) => {
         }
     }, [props.currentUser]);
 
+    React.useEffect(() => {
+        // set current page tag
+        props.setCurrentPage('explore');
+        // data initialize
+        if (props.match.params.fileId && props.currentUser.email) {
+            firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
+                setCommentData(dataArray);
+                setIsLoaded(false);
+            });
+        }
+    }, []);
+
     const sendCommentHandler = () => {
         firebase.postComment(textInput, props.currentUser.email, props.match.params.fileId);
         setTextInput('');
@@ -66,18 +78,6 @@ const Shots = (props) => {
         }
     };
 
-    React.useEffect(() => {
-        // set current page tag
-        props.setCurrentPage('explore');
-        // data initialize
-        if (props.match.params.fileId && props.currentUser.email) {
-            firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
-                setCommentData(dataArray);
-                setIsLoaded(false);
-            });
-        }
-    }, []);
-
     const commentsJsx =
         commentData && commentData.comments.length === 0 ? (
             <div className={styles.noComment}>目前尚無留言</div>
@@ -100,7 +100,9 @@ const Shots = (props) => {
                                 className={styles.commentUser}
                                 onClick={() => history.push(`/main/user/${comment.userId}`)}
                             >
-                                {comment.userName}
+                                {comment.userId === props.currentUser.email
+                                    ? '我自己'
+                                    : comment.userName}
                                 <span>{countDateDiff(comment.timestamp)}</span>
                             </div>
                             <div className={styles.commentContent}>{comment.content}</div>
@@ -118,9 +120,7 @@ const Shots = (props) => {
                 <div className={styles.shots}>
                     <div className={styles.back} onClick={() => history.goBack()}>{`< 返回`}</div>
                     <div className={styles.leftInfo}>
-                        {/* <div className={styles.imgWrapper}> */}
                         <img src={commentData.file.fileImg} className={styles.fileImg} />
-                        {/* </div> */}
                         <div className={styles.fileNameWrapper}>
                             {commentData.file.fileName}
                             <mainIcons.Like
