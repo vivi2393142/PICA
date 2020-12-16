@@ -297,8 +297,8 @@ const getShot = (fileId, currentUserEmail, callback) => {
                     },
                     comments: comments,
                     currentUser: {
-                        userPhoto: currentUser.photo,
-                        isLike: currentUser.like.includes(fileId),
+                        userPhoto: currentUser ? currentUser.photo : null,
+                        isLike: currentUser ? currentUser.like.includes(fileId) : null,
                     },
                 };
                 callback(result);
@@ -339,22 +339,7 @@ const listenToComment = (fileId, callback) => {
                 initCommentState = false;
                 oldData = doc.data();
             } else if (doc.data().comments.length !== oldData.comments.length) {
-                // refUser
-                //     .get()
-                //     .then((querySnapshot) => {
-                //         querySnapshot.forEach((doc) => {
-                //             allUsers.push(doc.data());
-                //         });
-                //     })
-                //     .then(() => {
-                //         const newComments = doc.data().comments.map((comment) => {
-                //             const commenter = allUsers.find((x) => x.email === comment.userId);
-                //             comment.userPhoto = commenter.photo;
-                //             comment.userName = commenter.name;
-                //             return comment;
-                //         });
                 callback();
-                // });
                 oldData = doc.data();
             }
         });
@@ -453,6 +438,12 @@ const changeTitle = (fileId, newTitle) => {
         refFile.update({
             basicSetting: allSetting,
         });
+    });
+};
+const getUserPhoto = (userId, callback) => {
+    const refUser = db.collection('userData').doc(userId);
+    refUser.get().then((doc) => {
+        callback(doc.data().photo);
     });
 };
 
@@ -636,9 +627,7 @@ const removeUploadImg = (e, fileId) => {
                 }).then(() => {});
             });
         })
-        .catch(function (error) {
-            // console.log('刪除失敗');
-        });
+        .catch(function (error) {});
 };
 
 export {
@@ -671,4 +660,5 @@ export {
     deleteCanvas,
     changeTitle,
     listenToComment,
+    getUserPhoto,
 };

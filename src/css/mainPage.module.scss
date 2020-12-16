@@ -26,7 +26,6 @@ body {
     display: flex;
     justify-content: center;
     height: 2.5rem;
-    // border-bottom: 1px solid $light-grey;
     box-shadow: 0 0px 2px 0px $middle-grey;
     padding: 1rem 0;
     background-color: white;
@@ -38,21 +37,51 @@ body {
         display: flex;
         color: $custom-black;
         align-items: center;
-        .signWrapper {
-            // padding: 0.3rem 1rem;
+        .memberWrapper {
             margin-left: 1rem;
             font-weight: 500;
             cursor: pointer;
-            // border: 1px solid red;
             border-radius: 100%;
-            height: 1.5rem;
-            width: 1.5rem;
+            height: 30px;
+            width: 30px;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+            border: 1px solid rgb(202, 202, 202);
+            .memberPhoto {
+                width: 100%;
+                height: 100%;
+            }
             &:hover {
-                background-color: $light-grey;
+                opacity: 0.8;
+            }
+        }
+        .defaultWrapper {
+            cursor: pointer;
+            height: 30px;
+            padding: 0 0.8rem;
+            margin-left: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-sizing: border-box;
+            border: 1px solid $sub-color;
+            border-radius: 5px;
+            .defaultPhoto {
+                font-weight: 500;
+                color: $sub-color;
+                align-items: center;
+                display: flex;
+                white-space: nowrap;
+                font-size: $small-font;
+                height: 70%;
+            }
+            &:hover {
+                opacity: 0.8;
             }
         }
         .down {
@@ -61,14 +90,14 @@ body {
         }
         .signOut {
             display: flex;
-
+            flex-direction: column;
             position: absolute;
             top: 4.2rem;
             // border: 1px solid red;
             box-shadow: 0 0 8px rgb(224, 224, 224);
             background-color: white;
             border-radius: 0.5rem;
-            padding: 0.5rem;
+            padding: 0.2rem 0.5rem;
             justify-content: center;
             right: 15%;
             font-size: $middle-font;
@@ -80,9 +109,10 @@ body {
                 border-radius: 0.3rem;
                 padding: 0.3rem 0.6rem;
                 cursor: pointer;
-            }
-            &:hover .inner {
-                background-color: $light-grey;
+                margin: 0.5rem;
+                &:hover {
+                    background-color: $light-grey;
+                }
             }
         }
     }
@@ -760,6 +790,12 @@ body {
                 padding-top: 0.3rem;
                 position: relative;
                 padding-bottom: 1rem;
+                .notSignIn {
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    padding: 0.3rem 0;
+                }
                 .commentText {
                     margin-left: 0.3rem;
                     border-radius: 1rem;

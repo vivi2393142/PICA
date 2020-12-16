@@ -36,17 +36,19 @@ $symbol-font: 0.6rem;
         color: $custom-black;
         align-items: center;
         .button {
-            padding: 0.3rem 1rem;
-            margin-left: 1.5rem;
+            border: 1px solid $sub-color;
+            color: $sub-color;
+            padding: 0.2rem 1rem;
+            margin-left: 1.2rem;
             font-weight: 500;
             cursor: pointer;
+            border-radius: 5px;
+            font-size: $middle-font;
+            letter-spacing: 1px;
         }
         .signUp {
             background: $sub-color;
-            border-radius: 5px;
-            padding: 0.3rem 1rem;
             color: white;
-            letter-spacing: 1px;
         }
     }
     & .logo {
@@ -81,16 +83,26 @@ $symbol-font: 0.6rem;
                 color: $sub-color;
                 font-weight: 900;
             }
-            .startButton {
-                background: $sub-color;
-                border-radius: 5px;
-                margin-right: auto;
-                padding: 0.5rem 1rem;
-                color: white;
-                letter-spacing: 1px;
-                margin-top: auto;
+            .startButtonWrapper {
+                display: flex;
+                // margin-right: auto;
                 bottom: 0;
-                cursor: pointer;
+                margin-top: auto;
+                .startButton {
+                    background: $sub-color;
+                    border-radius: 5px;
+                    padding: 0.5rem 1rem;
+                    color: white;
+                    letter-spacing: 1px;
+                    cursor: pointer;
+                    margin-right: 1rem;
+                    border: 1.5px solid $sub-color;
+                    &:nth-child(1) {
+                        background-color: white;
+                        color: $sub-color;
+                        font-weight: 500;
+                    }
+                }
             }
         }
         .mainImg {
@@ -113,10 +125,18 @@ $symbol-font: 0.6rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    .rectGreen {
+        background-color: $dark-green;
+        transition: background-color ease-in-out 0.2s;
+    }
+    .rectYellow {
+        background-color: $sub-color;
+        transition: background-color ease-in-out 0.2s;
+    }
     .loginRect {
         width: 42rem;
-        height: 20rem;
-        background-color: $dark-green;
+        height: 22rem;
+        // background-color: $dark-green;
         display: flex;
         position: absolute;
         border-radius: 5px;
@@ -127,6 +147,14 @@ $symbol-font: 0.6rem;
             color: white;
             width: 40%;
             height: 60%;
+            .try {
+                font-size: $tiny-font;
+                padding: 0.5rem 0.1rem;
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
             // border: 1px solid $custom-black;
             h1 {
                 font-size: 1.5rem;
@@ -139,13 +167,13 @@ $symbol-font: 0.6rem;
             }
             .button {
                 font-size: $small-font;
-                border: 1px solid white;
                 padding: 0.3rem 2rem;
                 display: inline-block;
                 border-radius: 5px;
                 font-weight: 500;
                 space-between: 2px;
                 cursor: pointer;
+                border: 1px solid white;
                 transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
                 &:hover {
                     color: $custom-black;
@@ -269,7 +297,7 @@ $symbol-font: 0.6rem;
     .submit {
         // border: 1px solid $custom-black;
         padding: 0.4rem 2.5rem;
-        border-radius: 3rem;
+        border-radius: 0.5rem;
         cursor: pointer;
         align-self: flex-start;
         background-color: $sub-color;
@@ -289,6 +317,12 @@ $symbol-font: 0.6rem;
 .loginBlockLeft {
     left: 0;
     animation: loginToLeft 700ms;
+    .inputTop {
+        color: $dark-green;
+    }
+    .submit {
+        background-color: $dark-green;
+    }
 }
 @keyframes signUpToLeft {
     0% {
@@ -374,7 +408,6 @@ $symbol-font: 0.6rem;
     }
 }
 .loginWayF {
-    // transition: color 0.2s ease-in-out, color 0.2s ease-in-out;
     &:hover {
         color: #3b5998;
         border: 1px solid #3b5998;
@@ -384,7 +417,6 @@ $symbol-font: 0.6rem;
     }
 }
 .loginWayG {
-    // transition: color 0.2s, border 0.2s;
     &:hover {
         color: #eb4537;
         border: 1px solid #eb4537;

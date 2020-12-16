@@ -9,36 +9,32 @@ import * as mainIcons from '../../img/mainPage';
 
 // export default App;
 const Shots = (props) => {
-    const [isLoaded, setIsLoaded] = React.useState(true);
+    const [isLoaded, setIsLoaded] = React.useState(false);
     const [commentData, setCommentData] = React.useState(null);
     const [textInput, setTextInput] = React.useState('');
     let history = useHistory();
 
     // listen to updated comments
     React.useEffect(() => {
-        if (props.currentUser.email) {
-            firebase.listenToComment(props.match.params.fileId, () => {
-                firebase.getShot(
-                    props.match.params.fileId,
-                    props.currentUser.email,
-                    (dataArray) => {
-                        setCommentData(dataArray);
-                    }
-                );
+        // if (props.currentUser.email) {
+        firebase.listenToComment(props.match.params.fileId, () => {
+            firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
+                setCommentData(dataArray);
             });
-        }
+        });
+        // }
     }, [props.currentUser]);
 
     React.useEffect(() => {
         // set current page tag
         props.setCurrentPage('explore');
         // data initialize
-        if (props.match.params.fileId && props.currentUser.email) {
-            firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
-                setCommentData(dataArray);
-                setIsLoaded(false);
-            });
-        }
+        // if (props.match.params.fileId) {
+        firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
+            setCommentData(dataArray);
+            setIsLoaded(false);
+        });
+        // }
     }, []);
 
     const sendCommentHandler = () => {
@@ -133,7 +129,13 @@ const Shots = (props) => {
                                 className={`${styles.like} ${
                                     commentData.currentUser.isLike ? styles.isLike : ''
                                 }`}
-                                onClick={() => likeHandler(commentData.currentUser.isLike)}
+                                onClick={() => {
+                                    if (Object.keys(props.currentUser).length === 0) {
+                                        alert('請先註冊或登入會員，以收藏作品');
+                                    } else {
+                                        likeHandler(commentData.currentUser.isLike);
+                                    }
+                                }}
                             />
                         </div>
                     </div>
@@ -151,20 +153,26 @@ const Shots = (props) => {
                         </div>
                         <div className={styles.subTitle}>留言區</div>
                         <div className={styles.commentWrapper}>{commentsJsx}</div>
-                        <div className={styles.myComment}>
-                            <img src={commentData.currentUser.userPhoto} />
-                            <textarea
-                                className={styles.commentText}
-                                placeholder='輸入留言'
-                                value={textInput}
-                                onChange={(e) => {
-                                    setTextInput(e.target.value);
-                                }}
-                            ></textarea>
-                            <div className={styles.submit} onClick={sendCommentHandler}>
-                                送出
+                        {Object.keys(props.currentUser).length === 0 ? (
+                            <div className={styles.myComment}>
+                                <div className={styles.notSignIn}>請註冊或登入以進行留言</div>
                             </div>
-                        </div>
+                        ) : (
+                            <div className={styles.myComment}>
+                                <img src={commentData.currentUser.userPhoto} />
+                                <textarea
+                                    className={styles.commentText}
+                                    placeholder='輸入留言'
+                                    value={textInput}
+                                    onChange={(e) => {
+                                        setTextInput(e.target.value);
+                                    }}
+                                ></textarea>
+                                <div className={styles.submit} onClick={sendCommentHandler}>
+                                    送出
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : null}

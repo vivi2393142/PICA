@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 // export default App;
 const MainPage = (props) => {
     const [currentPage, setCurrentPage] = React.useState('explore');
+    const [isAddingNew, setIsAddingNew] = React.useState(false);
 
     // render
     return (
@@ -18,6 +19,8 @@ const MainPage = (props) => {
                 currentUser={props.currentUser}
                 setCurrentUser={props.setCurrentUser}
                 currentPage={currentPage}
+                setIsAddingNew={setIsAddingNew}
+                isAddingNew={isAddingNew}
             />
             <Switch>
                 <Route
@@ -34,6 +37,7 @@ const MainPage = (props) => {
                             currentUser={props.currentUser}
                             {...ownProps}
                             setCurrentPage={setCurrentPage}
+                            setIsAddingNew={setIsAddingNew}
                         />
                     )}
                 />

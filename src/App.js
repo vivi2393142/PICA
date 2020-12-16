@@ -17,9 +17,10 @@ export default function App() {
         firebase.auth().onAuthStateChanged((user) => {
             if (user && user !== currentUser) {
                 setCurrentUser(user);
-            } else if (document.location.pathname !== '/' && user === null) {
-                document.location.href = '/';
             }
+            // else if (document.location.pathname !== '/' && user === null) {
+            //     document.location.href = '/';
+            // }
         });
         setCurrentUserTimes(1);
     }

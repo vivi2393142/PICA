@@ -5,17 +5,39 @@ import * as bannerIcons from '../../img/banner';
 import * as firebase from '../../firebase';
 import { useHistory, Link } from 'react-router-dom';
 import AddNew from './addNew';
+import Login from '../Login';
+import memberDefault from '../../img/src/login.svg';
 
 // export default App;
 const MainBanner = (props) => {
-    const [showSignOut, setShowSignOut] = React.useState(false);
     let history = useHistory();
+    const [showSignOut, setShowSignOut] = React.useState(false);
+    const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
+    const [chooseLogin, setChooseLogin] = React.useState(true);
+    const [photoSrc, setPhotoSrc] = React.useState(null);
+
     const signOutHandler = () => {
         firebase.nativeSignOut(() => {
             props.setCurrentUser({});
-            history.push('/');
+            history.go(0);
         });
     };
+
+    const toggleMember = (e) => {
+        e.stopPropagation();
+        setShowSignOut(true);
+        const closeMemberSelect = () => {
+            setShowSignOut(false);
+            document.removeEventListener('click', closeMemberSelect);
+        };
+        document.addEventListener('click', closeMemberSelect);
+    };
+
+    if (Object.keys(props.currentUser).length !== 0) {
+        firebase.getUserPhoto(props.currentUser.email, (photoURL) => {
+            setPhotoSrc(photoURL);
+        });
+    }
 
     // render
     return (
@@ -39,19 +61,61 @@ const MainBanner = (props) => {
                         我的畫布
                     </div>
                 </div>
-                <AddNew currentUser={props.currentUser} />
-                <div className={styles.signWrapper}>
-                    <bannerIcons.Down
-                        className={styles.down}
-                        onClick={() => setShowSignOut(!showSignOut)}
-                    />
+                <AddNew
+                    currentUser={props.currentUser}
+                    setIsAddingNew={props.setIsAddingNew}
+                    isAddingNew={props.isAddingNew}
+                />
+                <div className={`${photoSrc ? styles.memberWrapper : styles.defaultWrapper}`}>
+                    {photoSrc ? (
+                        <img className={styles.memberPhoto} src={photoSrc} onClick={toggleMember} />
+                    ) : (
+                        <div className={styles.defaultPhoto} onClick={toggleMember}>
+                            註冊 / 登入
+                        </div>
+                    )}
                 </div>
                 {showSignOut ? (
-                    <div className={styles.signOut}>
-                        <div className={styles.inner} onClick={signOutHandler}>
-                            登出
-                        </div>
+                    <div className={styles.signOut} onClick={(e) => e.stopPropagation()}>
+                        {Object.keys(props.currentUser).length === 0 ? (
+                            <div
+                                className={styles.inner}
+                                onClick={() => {
+                                    setIsLoginOrSignup(true);
+                                    setChooseLogin(true);
+                                    setShowSignOut(false);
+                                }}
+                            >
+                                會員登入
+                            </div>
+                        ) : null}
+                        {Object.keys(props.currentUser).length === 0 ? (
+                            <div
+                                className={styles.inner}
+                                onClick={() => {
+                                    setIsLoginOrSignup(true);
+                                    setChooseLogin(false);
+                                    setShowSignOut(false);
+                                }}
+                            >
+                                會員註冊
+                            </div>
+                        ) : null}
+                        {Object.keys(props.currentUser).length !== 0 ? (
+                            <div className={styles.inner} onClick={signOutHandler}>
+                                登出
+                            </div>
+                        ) : null}
                     </div>
+                ) : null}
+                {Object.keys(props.currentUser).length === 0 && isLoginOrSignup ? (
+                    <Login
+                        isLoginOrSignup={isLoginOrSignup}
+                        setIsLoginOrSignup={setIsLoginOrSignup}
+                        setChooseLogin={setChooseLogin}
+                        chooseLogin={chooseLogin}
+                        setCurrentUser={props.setCurrentUser}
+                    />
                 ) : null}
             </div>
         </div>
@@ -62,6 +126,8 @@ MainBanner.propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
     currentUser: PropTypes.object.isRequired,
     currentPage: PropTypes.string.isRequired,
+    isAddingNew: PropTypes.bool.isRequired,
+    setIsAddingNew: PropTypes.func.isRequired,
 };
 
 export default MainBanner;

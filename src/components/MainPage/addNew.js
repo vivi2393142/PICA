@@ -7,7 +7,6 @@ import { nanoid } from 'nanoid';
 
 // export default App;
 const AddNew = (props) => {
-    const [isAddingNew, setIsAddingNew] = React.useState(false);
     const [currentStep, setCurrentStep] = React.useState(1);
     const [chosenRec, setChosenRec] = React.useState(null);
     const [titleInput, setTitleInput] = React.useState('');
@@ -163,15 +162,18 @@ const AddNew = (props) => {
                 <div
                     className={styles.btnText}
                     onClick={() => {
-                        restartHandler();
-
-                        setIsAddingNew(true);
+                        if (Object.keys(props.currentUser).length === 0) {
+                            alert('請先註冊或登入會員，新增畫布');
+                        } else {
+                            restartHandler();
+                            props.setIsAddingNew(true);
+                        }
                     }}
                 >
                     新增畫布
                 </div>
             </button>
-            {isAddingNew ? (
+            {props.isAddingNew ? (
                 <div className={styles.cover}>
                     <div className={styles.box}>
                         <div className={styles.steps}>
@@ -311,7 +313,7 @@ const AddNew = (props) => {
                             </div>
                         ) : null}
 
-                        <div className={styles.close} onClick={() => setIsAddingNew(false)}>
+                        <div className={styles.close} onClick={() => props.setIsAddingNew(false)}>
                             x
                         </div>
                     </div>
@@ -323,6 +325,8 @@ const AddNew = (props) => {
 
 AddNew.propTypes = {
     currentUser: PropTypes.object.isRequired,
+    isAddingNew: PropTypes.bool.isRequired,
+    setIsAddingNew: PropTypes.func.isRequired,
 };
 
 export default AddNew;

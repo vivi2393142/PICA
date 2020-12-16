@@ -1,0 +1,177 @@
+import React from 'react';
+import styles from '../css/landingPage.module.scss';
+import PropTypes from 'prop-types';
+import * as login from '../img/landingPage.js';
+import * as firebase from '../firebase';
+import { useHistory } from 'react-router-dom';
+
+// export default App;
+const Login = (props) => {
+    let history = useHistory();
+    const [inputId, setInputId] = React.useState('');
+    const [inputPwd, setInputPwd] = React.useState('');
+    const [inputName, setInputName] = React.useState('');
+    const toggleClose = (e) => {
+        props.setIsLoginOrSignup(false);
+    };
+    const toggleSign = () => {
+        props.setChooseLogin(!props.chooseLogin);
+    };
+
+    return (
+        <div className={styles.loginCover} onClick={toggleClose}>
+            <div
+                className={`${styles.loginRect} ${
+                    props.chooseLogin ? styles.rectGreen : styles.rectYellow
+                }`}
+                onClick={(e) => e.stopPropagation()}
+            >
+                <div className={styles.textBox}>
+                    <h1>還沒成為會員？</h1>
+                    <h4>歡迎來到PICA，若您尚未加入會員，請點選下方按鈕進行註冊。</h4>
+                    <div className={styles.button} onClick={toggleSign}>
+                        切換至註冊
+                    </div>
+                    <div className={styles.try} onClick={() => history.push('/main/explore')}>
+                        或點此以非會員身份試用體驗
+                    </div>
+                </div>
+                <div className={styles.textBox}>
+                    <h1>已經擁有帳號了嗎？</h1>
+                    <h4>歡迎來到PICA，若您已經擁有帳號，請點選下方按鈕進行登入。</h4>
+                    <div className={styles.button} onClick={toggleSign}>
+                        切換至登入
+                    </div>
+                    <div className={styles.try} onClick={() => history.push('/main/explore')}>
+                        或點此以非會員身份試用體驗
+                    </div>
+                </div>
+            </div>
+            <div
+                className={`${styles.blockWrapper} ${
+                    props.chooseLogin ? styles.blockWrapperRightAni : styles.blockWrapperLeftAni
+                } ${props.chooseLogin ? styles.blockWrapperRight : styles.blockWrapperLeft} `}
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+            >
+                <div
+                    className={`${styles.loginBlock} ${
+                        props.chooseLogin ? styles.loginBlockLeft : styles.loginBlockRight
+                    }`}
+                >
+                    <div className={styles.inputTop}>會員登入</div>
+                    <input
+                        value={inputId}
+                        onChange={(e) => setInputId(e.target.value)}
+                        placeholder='Email'
+                    ></input>
+                    <input
+                        type='password'
+                        value={inputPwd}
+                        onChange={(e) => setInputPwd(e.target.value)}
+                        placeholder='密碼'
+                    ></input>
+                    <div
+                        className={styles.submit}
+                        onClick={() => {
+                            const user = firebase.nativeSignIn(inputId, inputPwd);
+                            user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                        }}
+                    >
+                        登入
+                    </div>
+                    <div className={styles.otherSign}>
+                        <div className={styles.or}></div>
+                        <div
+                            className={styles.loginWayF}
+                            onClick={() => {
+                                const user = firebase.fbSignUp();
+                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                            }}
+                        >
+                            <login.Facebook className={styles.loginIcon} />
+                            <span>Facebook</span>
+                        </div>
+                        <div
+                            className={styles.loginWayG}
+                            onClick={() => {
+                                const user = firebase.googleSignUp();
+                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                            }}
+                        >
+                            <login.Google className={styles.loginIcon} />
+                            <span>Google</span>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    className={`${styles.signupBlock} ${
+                        props.chooseLogin ? styles.signupBlockLeft : styles.signupBlockRight
+                    }`}
+                >
+                    <div className={styles.inputTop}>註冊新帳號</div>
+                    <input
+                        value={inputName}
+                        onChange={(e) => setInputName(e.target.value)}
+                        placeholder='姓名'
+                    ></input>
+                    <input
+                        value={inputId}
+                        onChange={(e) => setInputId(e.target.value)}
+                        placeholder='Email'
+                    ></input>
+                    <input
+                        type='password'
+                        value={inputPwd}
+                        onChange={(e) => setInputPwd(e.target.value)}
+                        placeholder='密碼(6位以上)'
+                    ></input>
+                    <div
+                        className={styles.submit}
+                        onClick={() => {
+                            const user = firebase.nativeSignUp(inputName, inputId, inputPwd);
+                            console.log(user);
+                            user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                        }}
+                    >
+                        註冊
+                    </div>
+                    <div className={styles.otherSign}>
+                        <div className={styles.or}></div>
+                        <div
+                            className={styles.loginWayF}
+                            onClick={() => {
+                                const user = firebase.fbSignUp();
+                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                            }}
+                        >
+                            <login.Facebook className={styles.loginIcon} />
+                            <span>Facebook</span>
+                        </div>
+                        <div
+                            className={styles.loginWayG}
+                            onClick={() => {
+                                const user = firebase.googleSignUp();
+                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                            }}
+                        >
+                            <login.Google className={styles.loginIcon} />
+                            <span>Google</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+Login.propTypes = {
+    setCurrentUser: PropTypes.func.isRequired,
+    chooseLogin: PropTypes.bool.isRequired,
+    setChooseLogin: PropTypes.func.isRequired,
+    isLoginOrSignup: PropTypes.bool.isRequired,
+    setIsLoginOrSignup: PropTypes.func.isRequired,
+};
+
+export default Login;

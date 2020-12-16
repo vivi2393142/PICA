@@ -55,7 +55,6 @@ TitleInput.propTypes = {
 
 const UserPage = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
-    const [isChoosingSize, setIsChoosingSize] = React.useState(false);
     const [isSmallLoaded, setIsSmallLoaded] = React.useState(false);
     const [isAtMyCanvas, setIsAtMyCanvas] = React.useState(true);
     const [likeList, setLikeList] = React.useState([]);
@@ -71,6 +70,13 @@ const UserPage = (props) => {
         { name: '名片', type: 'nameCard', width: 1063, height: 638, mmW: 90, mmH: 54 },
         { name: '自訂尺寸->未完成(進畫布可以改)', type: 'custom', width: 0, height: 0 },
     ];
+
+    React.useEffect(() => {
+        if (Object.keys(props.currentUser).length === 0) {
+            alert('請先註冊或登入會員，以檢視我的畫布');
+            history.push('/main/explore');
+        }
+    }, []);
 
     let history = useHistory();
     const handleCreateNew = (e) => {
@@ -324,9 +330,9 @@ const UserPage = (props) => {
                                 <div className={styles.fileWrapperNew}>
                                     <div
                                         className={styles.addNew}
-                                        // onClick={() => {
-                                        //     setIsChoosingSize(true);
-                                        // }}
+                                        onClick={() => {
+                                            props.setIsAddingNew(true);
+                                        }}
                                     >
                                         +
                                     </div>
@@ -335,18 +341,6 @@ const UserPage = (props) => {
                         </div>
                     ) : null}
                 </div>
-                {isChoosingSize ? (
-                    <div className={styles.chooseNew}>
-                        <div
-                            className={styles.closeButton}
-                            // onClick={() => setIsChoosingSize(false)}
-                        >
-                            x
-                        </div>
-                        <div className={styles.chooseNewTitle}>選擇畫布尺寸</div>
-                        {sizeSelectionJsx}
-                    </div>
-                ) : null}
             </div>
         </div>
     );
@@ -356,6 +350,7 @@ UserPage.propTypes = {
     currentUser: PropTypes.object.isRequired,
     match: PropTypes.object.isRequired,
     setCurrentPage: PropTypes.func.isRequired,
+    setIsAddingNew: PropTypes.func.isRequired,
 };
 
 export default UserPage;

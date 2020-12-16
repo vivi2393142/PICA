@@ -145,6 +145,9 @@ $like-red: rgb(243, 71, 71);
     min-width: 23%;
     max-width: 23%;
     margin: 1%;
+    .info {
+        padding-bottom: 0.3rem;
+    }
 }
 // for waterfall layout
 .userFileWrapper {

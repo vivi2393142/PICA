@@ -11,14 +11,22 @@ const ExploreItem = (props) => {
     let history = useHistory();
     const addNewSampleHandler = (e, sampleFileId) => {
         e.stopPropagation();
-        console.log('click');
-        const id = nanoid();
-        const canvasSetting = {
-            id: id,
-            userEmail: props.currentUser.email,
-            title: '',
-        };
-        firebase.createSampleCanvas(canvasSetting, sampleFileId);
+        notLoginAlert(() => {
+            const id = nanoid();
+            const canvasSetting = {
+                id: id,
+                userEmail: props.currentUser.email,
+                title: '',
+            };
+            firebase.createSampleCanvas(canvasSetting, sampleFileId);
+        }, '請先註冊或登入會員，以建立範本畫布');
+    };
+    const notLoginAlert = (successCallback, text) => {
+        if (Object.keys(props.currentUser).length === 0) {
+            alert(text);
+        } else {
+            successCallback();
+        }
     };
 
     return (
@@ -44,7 +52,12 @@ const ExploreItem = (props) => {
                     ) : null}
                     <div
                         className={`${styles.like} ${props.item.isLike ? styles.isLike : ''}`}
-                        onClick={(e) => props.likeHandler(e, props.item, props.type)}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            notLoginAlert((e) => {
+                                props.likeHandler(e, props.item, props.type);
+                            }, '請先註冊或登入會員，以收藏作品');
+                        }}
                     >
                         <mainIcons.Like className={styles.buttonIcon} />
                     </div>
