@@ -15,7 +15,6 @@ import line6 from '../../../img/src/sidebarItems/line6.svg';
 import square from '../../../img/src/sidebarItems/square.svg';
 import triangle from '../../../img/src/sidebarItems/triangle.svg';
 import circle from '../../../img/src/sidebarItems/circle.svg';
-import { isDOMComponentElement } from 'react-dom/test-utils';
 
 const Sidebar = (props) => {
     const allSettings = props.allSettings;
@@ -45,6 +44,7 @@ const Sidebar = (props) => {
             height: 100 * shapeRatio,
             width: 100 * shapeRatio,
             fill: mainColor,
+            objectCaching: false,
         });
         allSettings.canvas.add(rect);
         allSettings.canvas.requestRenderAll();
