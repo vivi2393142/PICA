@@ -71,7 +71,7 @@ const LandingPage = (props) => {
                     <login.LandingMain className={styles.mainImg} />
                 </div>
             </div>
-            {isLoginOrSignup ? (
+            {isLoginOrSignup && (
                 <Login
                     isLoginOrSignup={isLoginOrSignup}
                     setIsLoginOrSignup={setIsLoginOrSignup}
@@ -79,7 +79,7 @@ const LandingPage = (props) => {
                     chooseLogin={chooseLogin}
                     setCurrentUser={props.setCurrentUser}
                 />
-            ) : null}
+            )}
         </div>
     );
 };

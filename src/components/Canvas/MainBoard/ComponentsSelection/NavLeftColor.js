@@ -49,9 +49,9 @@ const NavLeftColor = (props) => {
                 style={{ backgroundColor: colorChosen.background }}
                 onClick={toggleColorSelection}
             ></div>
-            {isChoosingColor ? (
+            {isChoosingColor && (
                 <ChromePicker color={colorChosen.background} onChange={handleColorChange} />
-            ) : null}
+            )}
         </div>
     );
 };

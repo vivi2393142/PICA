@@ -144,8 +144,8 @@ const Resize = (props) => {
     return (
         <div className='resizeIconWrapper'>
             <bannerIcons.Resize className='bannerIcons' onClick={toggleSizeChoosing} />
-            {isChoosingCanvasSize ? <div className='sizeSelection'>{sizeSelectionJsx}</div> : null}
-            {isTypingSize ? (
+            {isChoosingCanvasSize && <div className='sizeSelection'>{sizeSelectionJsx}</div>}
+            {isTypingSize && (
                 <div className='customSizeWrapper' onMouseLeave={() => setIsTypingSize(false)}>
                     <div className='customSizeInputOuter'>
                         <input
@@ -172,7 +172,7 @@ const Resize = (props) => {
                         確認
                     </div>
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

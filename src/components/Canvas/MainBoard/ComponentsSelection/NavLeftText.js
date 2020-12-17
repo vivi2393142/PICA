@@ -163,7 +163,7 @@ const NavLeftText = (props) => {
             />
             <div className='spaceBoxOuter'>
                 <icons.TextSpace className='specificButton' onClick={toggleSpaceSelection} />
-                {isChoosingSpace ? (
+                {isChoosingSpace && (
                     <div className='spaceBoxes'>
                         <div className='spaceBox'>
                             <div className='spaceBoxText'>行距</div>
@@ -192,7 +192,7 @@ const NavLeftText = (props) => {
                             <div className='rangeValue'>{textSpacing}</div>
                         </div>
                     </div>
-                ) : null}
+                )}
             </div>
         </div>
     );

@@ -297,8 +297,8 @@ const getShot = (fileId, currentUserEmail, callback) => {
                     },
                     comments: comments,
                     currentUser: {
-                        userPhoto: currentUser ? currentUser.photo : null,
-                        isLike: currentUser ? currentUser.like.includes(fileId) : null,
+                        userPhoto: currentUser && currentUser.photo,
+                        isLike: currentUser && currentUser.like.includes(fileId),
                     },
                 };
                 callback(result);

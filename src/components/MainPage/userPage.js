@@ -112,56 +112,44 @@ const UserPage = (props) => {
     };
 
     React.useEffect(() => {
-        let mounted = true;
         // set current page tag
         props.currentUser.email === props.match.params.userId
             ? props.setCurrentPage('user')
             : props.setCurrentPage('explore');
         // get user data
         firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
-            if (mounted) {
-                if (dataFromFirebase) {
-                    setUserDataFromFirebase(dataFromFirebase);
-                    setUserPhoto(dataFromFirebase.photo);
-                    setIsLoaded(false);
-                }
+            if (dataFromFirebase) {
+                setUserDataFromFirebase(dataFromFirebase);
+                setUserPhoto(dataFromFirebase.photo);
+                setIsLoaded(false);
             }
         });
         // get like list
         if (props.currentUser) {
             firebase.getLikeList(props.currentUser.email, (result) => {
-                if (mounted) {
-                    setLikeList(result);
-                }
+                setLikeList(result);
             });
         }
-
-        return () => (mounted = false);
     }, []);
     React.useEffect(() => {
-        let mounted = true;
         firebase.getAllCanvasData((result) => {
-            if (mounted) {
-                if (userDataFromFirebase.canvas[0] !== '') {
-                    let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
-                        const fileData = result.find((data) => data.basicSetting.id === item);
-                        return {
-                            comments: fileData.comments,
-                            like: fileData.like,
-                            fileId: item,
-                            snapshot: fileData.snapshot,
-                            title:
-                                fileData.basicSetting.title === ''
-                                    ? '未命名畫布'
-                                    : fileData.basicSetting.title,
-                        };
-                    });
-                    setCanvasDataWithDataURL(canvasDataWithImg);
-                }
+            if (userDataFromFirebase.canvas[0] !== '') {
+                let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
+                    const fileData = result.find((data) => data.basicSetting.id === item);
+                    return {
+                        comments: fileData.comments,
+                        like: fileData.like,
+                        fileId: item,
+                        snapshot: fileData.snapshot,
+                        title:
+                            fileData.basicSetting.title === ''
+                                ? '未命名畫布'
+                                : fileData.basicSetting.title,
+                    };
+                });
+                setCanvasDataWithDataURL(canvasDataWithImg);
             }
         });
-
-        return () => (mounted = false);
     }, [userDataFromFirebase.canvas]);
 
     const likeHandler = (e, item, type) => {
@@ -188,50 +176,47 @@ const UserPage = (props) => {
               });
 
     const canvasFilesJsx =
-        canvasDataWithDataURL.length !== 0
-            ? canvasDataWithDataURL.map((item, index) => {
-                  return (
-                      <div key={index} className={styles.fileWrapper}>
-                          <div
-                              className={styles.file}
-                              onClick={() => {
-                                  props.currentUser.email === props.match.params.userId
-                                      ? history.push(`/file/${item.fileId}`)
-                                      : null;
-                              }}
-                              style={
-                                  props.currentUser.email !== props.match.params.userId
-                                      ? { cursor: 'default' }
-                                      : {}
-                              }
-                          >
-                              <img src={item.snapshot} className={styles.fileImg}></img>
-                              <div className={styles.hoverIconsWrapper}>
-                                  <mainIcons.Like className={styles.hoverIcon} />
-                                  <div className={styles.text}>{item.like.length}</div>
-                                  <mainIcons.Comment className={styles.hoverIcon} />
-                                  <div className={styles.text}> {item.comments.length}</div>
-                                  <mainIcons.Show
-                                      className={`${styles.hoverIcon} ${styles.boxIcon}`}
-                                      onClick={(e) => {
-                                          e.stopPropagation();
-                                          history.push(`/main/shots/${item.fileId}`);
-                                      }}
-                                  />
-                                  {props.currentUser.email === props.match.params.userId ? (
-                                      <mainIcons.Delete
-                                          className={`${styles.hoverIcon} ${styles.boxIcon}`}
-                                          onClick={(e) => deleteHandler(e, item.fileId)}
-                                      />
-                                  ) : null}
-                              </div>
-                          </div>
-                          <TitleInput initialValue={item.title} fileId={item.fileId} />
-                      </div>
-                  );
-              })
-            : null;
-
+        canvasDataWithDataURL.length !== 0 &&
+        canvasDataWithDataURL.map((item, index) => {
+            return (
+                <div key={index} className={styles.fileWrapper}>
+                    <div
+                        className={styles.file}
+                        onClick={() => {
+                            props.currentUser.email === props.match.params.userId &&
+                                history.push(`/file/${item.fileId}`);
+                        }}
+                        style={
+                            props.currentUser.email !== props.match.params.userId
+                                ? { cursor: 'default' }
+                                : {}
+                        }
+                    >
+                        <img src={item.snapshot} className={styles.fileImg}></img>
+                        <div className={styles.hoverIconsWrapper}>
+                            <mainIcons.Like className={styles.hoverIcon} />
+                            <div className={styles.text}>{item.like.length}</div>
+                            <mainIcons.Comment className={styles.hoverIcon} />
+                            <div className={styles.text}> {item.comments.length}</div>
+                            <mainIcons.Show
+                                className={`${styles.hoverIcon} ${styles.boxIcon}`}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    history.push(`/main/shots/${item.fileId}`);
+                                }}
+                            />
+                            {props.currentUser.email === props.match.params.userId && (
+                                <mainIcons.Delete
+                                    className={`${styles.hoverIcon} ${styles.boxIcon}`}
+                                    onClick={(e) => deleteHandler(e, item.fileId)}
+                                />
+                            )}
+                        </div>
+                    </div>
+                    <TitleInput initialValue={item.title} fileId={item.fileId} />
+                </div>
+            );
+        });
     const sizeSelectionJsx = canvasSizeOptions.map((item, index) => {
         if (item.name !== '自訂尺寸') {
             return (
@@ -266,12 +251,12 @@ const UserPage = (props) => {
     // render
     return (
         <div className={styles.mainPage}>
-            {isLoaded ? <Loader></Loader> : null}
+            {isLoaded && <Loader></Loader>}
             <div className={styles.mainWrapper}>
                 <div className={styles.main}>
                     <div className={styles.memberDetails}>
                         <div className={styles.memberPhotoWrapper}>
-                            {isSmallLoaded ? (
+                            {isSmallLoaded && (
                                 <div className={styles.loaderWrapper}>
                                     <div className={styles.smallLoader}>
                                         <div></div>
@@ -280,9 +265,9 @@ const UserPage = (props) => {
                                         <div></div>
                                     </div>
                                 </div>
-                            ) : null}
+                            )}
                             <img src={userPhoto} className={styles.memberPhoto}></img>
-                            {props.currentUser.email === props.match.params.userId ? (
+                            {props.currentUser.email === props.match.params.userId && (
                                 <label>
                                     <input
                                         type='file'
@@ -290,7 +275,7 @@ const UserPage = (props) => {
                                         onChange={handleUploadImage}
                                     ></input>
                                 </label>
-                            ) : null}
+                            )}
                         </div>
                         <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
                         <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
@@ -323,10 +308,10 @@ const UserPage = (props) => {
                     {isAtMyCanvas ? null : (
                         <div className={styles.canvasLikesFiles}>{likeListJsx}</div>
                     )}
-                    {canvasFilesJsx && isAtMyCanvas ? (
+                    {canvasFilesJsx && isAtMyCanvas && (
                         <div className={styles.canvasFiles}>
                             {canvasFilesJsx}
-                            {props.currentUser.email === props.match.params.userId ? (
+                            {props.currentUser.email === props.match.params.userId && (
                                 <div className={styles.fileWrapperNew}>
                                     <div
                                         className={styles.addNew}
@@ -337,9 +322,9 @@ const UserPage = (props) => {
                                         +
                                     </div>
                                 </div>
-                            ) : null}
+                            )}
                         </div>
-                    ) : null}
+                    )}
                 </div>
             </div>
         </div>

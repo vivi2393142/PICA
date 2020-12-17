@@ -9,7 +9,7 @@ import * as mainIcons from '../../img/mainPage';
 
 // export default App;
 const Shots = (props) => {
-    const [isLoaded, setIsLoaded] = React.useState(false);
+    const [isLoaded, setIsLoaded] = React.useState(true);
     const [commentData, setCommentData] = React.useState(null);
     const [textInput, setTextInput] = React.useState('');
     let history = useHistory();
@@ -86,12 +86,12 @@ const Shots = (props) => {
                             onClick={() => history.push(`/main/user/${comment.userId}`)}
                         />
                         <div className={styles.commentText}>
-                            {comment.userId === props.currentUser.email ? (
+                            {comment.userId === props.currentUser.email && (
                                 <mainIcons.Delete
                                     className={styles.delete}
                                     onClick={(e) => deleteCommentHandler(index)}
                                 />
-                            ) : null}
+                            )}
                             <div
                                 className={styles.commentUser}
                                 onClick={() => history.push(`/main/user/${comment.userId}`)}
@@ -111,8 +111,8 @@ const Shots = (props) => {
     // render
     return (
         <div className={styles.shotsWrapper}>
-            {isLoaded ? <Loader></Loader> : null}
-            {commentData ? (
+            {isLoaded && <Loader></Loader>}
+            {commentData && (
                 <div className={styles.shots}>
                     <div className={styles.back} onClick={() => history.goBack()}>{`< 返回`}</div>
                     <div className={styles.leftInfo}>
@@ -175,7 +175,7 @@ const Shots = (props) => {
                         )}
                     </div>
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

@@ -27,14 +27,11 @@ const Explore = (props) => {
 
     React.useEffect(() => {
         props.setCurrentPage('explore');
-        let mounted = true;
         firebase.getAllFiles(props.currentUser.email, (dataArray) => {
-            if (mounted) {
-                setDataArray(dataArray);
-                setIsLoaded(false);
-            }
+            setDataArray(dataArray);
+            setIsLoaded(false);
         });
-        return () => (mounted = false);
+        return () => {};
     }, []);
 
     const listenScroll = (e, type) => {
@@ -75,67 +72,66 @@ const Explore = (props) => {
     };
 
     const allRowsJsx =
-        dataArray.length === 0
-            ? null
-            : allType.map((type, index) => {
-                  const sampleInner = dataArray[type].map((item, index) => {
-                      if (item.isSample) {
-                          return (
-                              <ExploreItem
-                                  key={index}
-                                  item={item}
-                                  type={type}
-                                  likeHandler={likeHandler}
-                                  currentUser={props.currentUser}
-                                  parentNodeForClass={'explore'}
-                              />
-                          );
-                      }
-                  });
-                  const nonSampleInner = dataArray[type].map((item, index) => {
-                      if (!item.isSample) {
-                          return (
-                              <ExploreItem
-                                  key={index}
-                                  item={item}
-                                  type={type}
-                                  likeHandler={likeHandler}
-                                  currentUser={props.currentUser}
-                                  parentNodeForClass={'explore'}
-                              />
-                          );
-                      }
-                  });
-                  return (
-                      <div key={index} className={styles.rowWrapper}>
-                          <div className={styles.rowTitle}>
-                              <span className={styles.titleFirst}>{type.slice(0, 1)}</span>
-                              {type.substr(1)}
-                          </div>
-                          <div
-                              className={styles.row}
-                              onScroll={(e) => listenScroll(e, type)}
-                              ref={(el) => (scrollRef.current[index] = el)}
-                          >
-                              {filter === 'all' || filter === 'sample' ? sampleInner : null}
-                              {filter === 'all' || filter === 'nonSample' ? nonSampleInner : null}
-                              <div style={{ paddingRight: '2rem' }}></div>
-                          </div>
-                          {arrowState[type] !== 'left' ? (
-                              <mainIcons.ArrowR
-                                  className={`${styles.buttonSvg} ${styles.buttonR}`}
-                                  onClick={() => swipeHandler('left', index)}
-                              />
-                          ) : null}
-                          {arrowState[type] !== 'right' ? (
-                              <mainIcons.ArrowL
-                                  className={`${styles.buttonSvg} ${styles.buttonL}`}
-                                  onClick={() => swipeHandler('right', index)}
-                              />
-                          ) : null}
-                      </div>
-                  );
-              });
+        dataArray.length !== 0 &&
+        allType.map((type, index) => {
+            const sampleInner = dataArray[type].map((item, index) => {
+                if (item.isSample) {
+                    return (
+                        <ExploreItem
+                            key={index}
+                            item={item}
+                            type={type}
+                            likeHandler={likeHandler}
+                            currentUser={props.currentUser}
+                            parentNodeForClass={'explore'}
+                        />
+                    );
+                }
+            });
+            const nonSampleInner = dataArray[type].map((item, index) => {
+                if (!item.isSample) {
+                    return (
+                        <ExploreItem
+                            key={index}
+                            item={item}
+                            type={type}
+                            likeHandler={likeHandler}
+                            currentUser={props.currentUser}
+                            parentNodeForClass={'explore'}
+                        />
+                    );
+                }
+            });
+            return (
+                <div key={index} className={styles.rowWrapper}>
+                    <div className={styles.rowTitle}>
+                        <span className={styles.titleFirst}>{type.slice(0, 1)}</span>
+                        {type.substr(1)}
+                    </div>
+                    <div
+                        className={styles.row}
+                        onScroll={(e) => listenScroll(e, type)}
+                        ref={(el) => (scrollRef.current[index] = el)}
+                    >
+                        {(filter === 'all' || filter === 'sample') && sampleInner}
+                        {(filter === 'all' || filter === 'nonSample') && nonSampleInner}
+                        <div style={{ paddingRight: '2rem' }}></div>
+                    </div>
+                    {arrowState[type] !== 'left' && (
+                        <mainIcons.ArrowR
+                            className={`${styles.buttonSvg} ${styles.buttonR}`}
+                            onClick={() => swipeHandler('left', index)}
+                        />
+                    )}
+                    {arrowState[type] !== 'right' && (
+                        <mainIcons.ArrowL
+                            className={`${styles.buttonSvg} ${styles.buttonL}`}
+                            onClick={() => swipeHandler('right', index)}
+                        />
+                    )}
+                </div>
+            );
+        });
 
     // render
     return (
@@ -150,7 +146,7 @@ const Explore = (props) => {
                 {/* <span>PICA為你準備了數十種範本讓你輕鬆開始一趟設計之旅</span> */}
                 <bannerIcons.Draw className={styles.mainPic} />
             </div>
-            {isLoaded ? <Loader></Loader> : null}
+            {isLoaded && <Loader></Loader>}
             <div className={styles.sidebarWrapper}>
                 <div className={styles.sidebar}>
                     <div

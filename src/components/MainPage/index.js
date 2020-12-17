@@ -23,16 +23,13 @@ const MainPage = (props) => {
                 isAddingNew={isAddingNew}
             />
             <Switch>
-                <Route
-                    path='/main/explore'
-                    component={() => (
-                        <Explore currentUser={props.currentUser} setCurrentPage={setCurrentPage} />
-                    )}
-                />
+                <Route path='/main/explore'>
+                    <Explore currentUser={props.currentUser} setCurrentPage={setCurrentPage} />
+                </Route>
                 <Route
                     path='/main/user/:userId'
                     exact
-                    component={(ownProps) => (
+                    render={(ownProps) => (
                         <UserPage
                             currentUser={props.currentUser}
                             {...ownProps}
@@ -43,7 +40,7 @@ const MainPage = (props) => {
                 />
                 <Route
                     path='/main/shots/:fileId'
-                    component={(ownProps) => (
+                    render={(ownProps) => (
                         <Shots
                             currentUser={props.currentUser}
                             {...ownProps}

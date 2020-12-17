@@ -235,33 +235,33 @@ const Sidebar = (props) => {
             );
         }
     };
-    const uploadedImgJsx = allSettings.uploadedFiles
-        ? allSettings.uploadedFiles.map((item, index) => {
-              return (
-                  <div
-                      key={index}
-                      className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
-                      onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                  >
-                      <div>
-                          <img
-                              className='unfoldItemImg unfoldItemGallery'
-                              onClick={addImage}
-                              draggable='true'
-                              src={item.src}
-                          ></img>
-                      </div>
-                      <div
-                          className='close'
-                          id={item.path}
-                          onClick={(e) => firebase.removeUploadImg(e, props.fileId)}
-                      >
-                          x
-                      </div>
-                  </div>
-              );
-          })
-        : null;
+    const uploadedImgJsx =
+        allSettings.uploadedFiles &&
+        allSettings.uploadedFiles.map((item, index) => {
+            return (
+                <div
+                    key={index}
+                    className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
+                    onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+                >
+                    <div>
+                        <img
+                            className='unfoldItemImg unfoldItemGallery'
+                            onClick={addImage}
+                            draggable='true'
+                            src={item.src}
+                        ></img>
+                    </div>
+                    <div
+                        className='close'
+                        id={item.path}
+                        onClick={(e) => firebase.removeUploadImg(e, props.fileId)}
+                    >
+                        x
+                    </div>
+                </div>
+            );
+        });
 
     // backgroundColor
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
@@ -686,7 +686,7 @@ const Sidebar = (props) => {
     return (
         <div className='sidebar'>
             <div className='sidebarFold'>{sidebarFoldJsx}</div>
-            {props.currentSidebar !== '' ? (
+            {props.currentSidebar !== '' && (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${
                         props.currentSidebar === 'template' ? 'firstUnfold' : ''
@@ -807,13 +807,13 @@ const Sidebar = (props) => {
                                         style={{ backgroundColor: backColorChosen.background }}
                                         onClick={toggleBackColorSelection}
                                     ></div>
-                                    {isChoosingBackColor ? (
+                                    {isChoosingBackColor && (
                                         <ChromePicker
                                             className='backgroundPicker'
                                             color={backColorChosen.background}
                                             onChange={handleBackColorChange}
                                         />
-                                    ) : null}
+                                    )}
                                 </div>
                                 <div className='backgroundColorChart'>{backgroundColorJsx}</div>
                             </div>
@@ -879,7 +879,7 @@ const Sidebar = (props) => {
                             </div>
                         </div>
                     ) : null}
-                    {props.currentSidebar !== 'imageAdjustment' ? (
+                    {props.currentSidebar !== 'imageAdjustment' && (
                         <div
                             className='sidebarCloseButton'
                             onClick={() => {
@@ -888,9 +888,9 @@ const Sidebar = (props) => {
                         >
                             {'<'}
                         </div>
-                    ) : null}
+                    )}
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

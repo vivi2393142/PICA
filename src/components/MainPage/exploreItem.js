@@ -40,16 +40,16 @@ const ExploreItem = (props) => {
         >
             <div className={styles.cover}>
                 <img className={styles.innerImg} src={props.item.snapshot}></img>
-                {props.item.isSample ? <div className={styles.isSample}>範本</div> : null}
+                {props.item.isSample && <div className={styles.isSample}>範本</div>}
                 <div className={styles.buttons}>
-                    {props.item.isSample ? (
+                    {props.item.isSample && (
                         <div className={styles.edit}>
                             <mainIcons.Edit
                                 className={styles.buttonIcon}
                                 onClick={(e) => addNewSampleHandler(e, props.item.fileId)}
                             />
                         </div>
-                    ) : null}
+                    )}
                     <div
                         className={`${styles.like} ${props.item.isLike ? styles.isLike : ''}`}
                         onClick={(e) => {

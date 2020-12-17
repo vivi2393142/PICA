@@ -32,7 +32,7 @@ const Share = (props) => {
     return (
         <div className='shareIconWrapper'>
             <bannerIcons.Share className='bannerIcons' onClick={toggleShare} />
-            {isChoosingShare ? (
+            {isChoosingShare && (
                 <div className='shareWrapper'>
                     <div className='mainTitle'>分享我的作品</div>
                     <input
@@ -43,7 +43,7 @@ const Share = (props) => {
                     <div className='hint'>任何人可以透過此連結檢視作品簡介</div>
                     <div className='copy' onClick={copyLinkHandler}></div>
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

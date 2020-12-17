@@ -161,46 +161,46 @@ const ComponentsSelection = (props) => {
                     allSettings.activeObj.type === 'triangle' ||
                     allSettings.activeObj.type === 'path' ||
                     allSettings.activeObj.type === 'polygon') &&
-                allSettings.activeObj.specialType !== 'cropbox' ? (
-                    <NavLeftColor
-                        canvas={allSettings.canvas}
-                        activeObj={allSettings.activeObj}
-                        trackOutSideClick={props.trackOutSideClick}
-                    />
-                ) : null}
+                    allSettings.activeObj.specialType !== 'cropbox' && (
+                        <NavLeftColor
+                            canvas={allSettings.canvas}
+                            activeObj={allSettings.activeObj}
+                            trackOutSideClick={props.trackOutSideClick}
+                        />
+                    )}
                 {(allSettings.activeObj.type === 'image' || croppingObj !== {}) &&
-                allSettings.activeObj.specialType !== 'background' ? (
-                    <NavLeftImg
-                        currentSidebar={props.currentSidebar}
-                        setCurrentSidebar={props.setCurrentSidebar}
-                        trackOutSideClick={props.trackOutSideClick}
-                        croppingObj={croppingObj}
-                        setCroppingObj={setCroppingObj}
-                        allSettings={allSettings}
-                    />
-                ) : null}
-                {allSettings.activeObj.type === 'i-text' ? (
+                    allSettings.activeObj.specialType !== 'background' && (
+                        <NavLeftImg
+                            currentSidebar={props.currentSidebar}
+                            setCurrentSidebar={props.setCurrentSidebar}
+                            trackOutSideClick={props.trackOutSideClick}
+                            croppingObj={croppingObj}
+                            setCroppingObj={setCroppingObj}
+                            allSettings={allSettings}
+                        />
+                    )}
+                {allSettings.activeObj.type === 'i-text' && (
                     <NavLeftText
                         setTextIsEditing={setTextIsEditing}
                         canvas={allSettings.canvas}
                         activeObj={allSettings.activeObj}
                         trackOutSideClick={props.trackOutSideClick}
                     />
-                ) : null}
+                )}
                 {(allSettings.activeObj.type === 'rect' ||
                     allSettings.activeObj.type === 'circle' ||
                     allSettings.activeObj.type === 'triangle') &&
-                allSettings.activeObj.specialType !== 'cropbox' ? (
-                    <NavLeftShape
-                        trackOutSideClick={props.trackOutSideClick}
-                        canvas={allSettings.canvas}
-                        activeObj={allSettings.activeObj}
-                    />
-                ) : null}
+                    allSettings.activeObj.specialType !== 'cropbox' && (
+                        <NavLeftShape
+                            trackOutSideClick={props.trackOutSideClick}
+                            canvas={allSettings.canvas}
+                            activeObj={allSettings.activeObj}
+                        />
+                    )}
             </div>
-            {allSettings.activeObj.specialType !== 'cropbox' ? (
+            {allSettings.activeObj.specialType !== 'cropbox' && (
                 <div className='componentsNavRight'>
-                    {allSettings.activeObj.type ? (
+                    {allSettings.activeObj.type && (
                         <NavRightPartial
                             copyHandler={copyHandler}
                             cutHandler={cutHandler}
@@ -211,13 +211,13 @@ const ComponentsSelection = (props) => {
                             setActiveObj={allSettings.setActiveObj}
                             trackOutSideClick={props.trackOutSideClick}
                         />
-                    ) : null}
-                    {clipboard ? (
+                    )}
+                    {clipboard && (
                         <div className='paste'>
                             <icons.Paste className='activeButton' onClick={pasteHandler} />
                         </div>
-                    ) : null}
-                    {allSettings.hasUndo ? (
+                    )}
+                    {allSettings.hasUndo && (
                         <div className='undo'>
                             <icons.Undo
                                 className='activeButton'
@@ -227,8 +227,8 @@ const ComponentsSelection = (props) => {
                                 }}
                             />
                         </div>
-                    ) : null}
-                    {allSettings.hasRedo ? (
+                    )}
+                    {allSettings.hasRedo && (
                         <div className='redo'>
                             <icons.Redo
                                 className='activeButton'
@@ -238,14 +238,14 @@ const ComponentsSelection = (props) => {
                                 }}
                             />
                         </div>
-                    ) : null}
-                    {allSettings.activeObj.specialType !== 'background' ? (
+                    )}
+                    {allSettings.activeObj.specialType !== 'background' && (
                         <div className='selectAll'>
                             <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
                         </div>
-                    ) : null}
+                    )}
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

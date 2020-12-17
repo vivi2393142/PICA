@@ -63,12 +63,12 @@ const NavLeftShape = (props) => {
                     style={{ borderColor: borderColorChosen.background }}
                     onClick={toggleBorderColorSelection}
                 ></div>
-                {isChoosingBorderColor ? (
+                {isChoosingBorderColor && (
                     <ChromePicker
                         color={borderColorChosen.background}
                         onChange={handleBorderColorChange}
                     />
-                ) : null}
+                )}
             </div>
             <div className='specificButton textSizeOuter borderWidth'>
                 <select className='textSizeSelect' value={rectStroke} onChange={handleRectStoke}>

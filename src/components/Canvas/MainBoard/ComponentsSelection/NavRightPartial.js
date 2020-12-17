@@ -167,32 +167,32 @@ const NavRightPartial = (props) => {
     };
     return (
         <div className='componentsNavRightPartial'>
-            {props.activeObj.type === 'activeSelection' ? (
+            {props.activeObj.type === 'activeSelection' && (
                 <icons.Group className='activeButton' onClick={groupHandler} />
-            ) : null}
-            {props.activeObj.type === 'group' ? (
+            )}
+            {props.activeObj.type === 'group' && (
                 <icons.Ungroup className='activeButton' onClick={ungroupHandler} />
-            ) : null}
+            )}
             <div className='trashCan'>
                 <icons.TrashCan className='activeButton' onClick={props.delHandler} />
             </div>
-            {props.activeObj.specialType !== 'background' ? (
+            {props.activeObj.specialType !== 'background' && (
                 <div className='layer'>
                     <icons.Layer className='activeButton' onClick={toggleLayerSelection} />
-                    {isLayerChoosing ? (
+                    {isLayerChoosing && (
                         <div className='layerChoosingBox'>
                             <icons.ToBottom className='activeButton' onClick={toBottomHandler} />
                             <icons.ToTop className='activeButton' onClick={toTopHandler} />
                             <icons.Upper className='activeButton' onClick={upperHandler} />
                             <icons.Downer className='activeButton' onClick={downerHandler} />
                         </div>
-                    ) : null}
+                    )}
                 </div>
-            ) : null}
-            {props.activeObj.specialType !== 'background' ? (
+            )}
+            {props.activeObj.specialType !== 'background' && (
                 <div className='align'>
                     <icons.Align className='activeButton' onClick={toggleAlignSelection} />
-                    {isAlignChoosing ? (
+                    {isAlignChoosing && (
                         <div className='alignChoosingBox'>
                             <icons.AlignCenterH
                                 className='activeButton'
@@ -219,19 +219,19 @@ const NavRightPartial = (props) => {
                                 onClick={() => alignHandler('bottom')}
                             />
                         </div>
-                    ) : null}
+                    )}
                 </div>
-            ) : null}
-            {props.activeObj.specialType !== 'background' ? (
+            )}
+            {props.activeObj.specialType !== 'background' && (
                 <div className='copy'>
                     <icons.Copy className='activeButton' onClick={props.copyHandler} />
                 </div>
-            ) : null}
-            {props.activeObj.specialType !== 'background' ? (
+            )}
+            {props.activeObj.specialType !== 'background' && (
                 <div className='cut'>
                     <icons.Cut className='activeButton' onClick={props.cutHandler} />{' '}
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

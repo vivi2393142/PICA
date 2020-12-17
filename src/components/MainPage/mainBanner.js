@@ -75,9 +75,9 @@ const MainBanner = (props) => {
                         </div>
                     )}
                 </div>
-                {showSignOut ? (
+                {showSignOut && (
                     <div className={styles.signOut} onClick={(e) => e.stopPropagation()}>
-                        {Object.keys(props.currentUser).length === 0 ? (
+                        {Object.keys(props.currentUser).length === 0 && (
                             <div
                                 className={styles.inner}
                                 onClick={() => {
@@ -88,8 +88,8 @@ const MainBanner = (props) => {
                             >
                                 會員登入
                             </div>
-                        ) : null}
-                        {Object.keys(props.currentUser).length === 0 ? (
+                        )}
+                        {Object.keys(props.currentUser).length === 0 && (
                             <div
                                 className={styles.inner}
                                 onClick={() => {
@@ -100,15 +100,15 @@ const MainBanner = (props) => {
                             >
                                 會員註冊
                             </div>
-                        ) : null}
-                        {Object.keys(props.currentUser).length !== 0 ? (
+                        )}
+                        {Object.keys(props.currentUser).length !== 0 && (
                             <div className={styles.inner} onClick={signOutHandler}>
                                 登出
                             </div>
-                        ) : null}
+                        )}
                     </div>
-                ) : null}
-                {Object.keys(props.currentUser).length === 0 && isLoginOrSignup ? (
+                )}
+                {Object.keys(props.currentUser).length === 0 && isLoginOrSignup && (
                     <Login
                         isLoginOrSignup={isLoginOrSignup}
                         setIsLoginOrSignup={setIsLoginOrSignup}
@@ -116,7 +116,7 @@ const MainBanner = (props) => {
                         chooseLogin={chooseLogin}
                         setCurrentUser={props.setCurrentUser}
                     />
-                ) : null}
+                )}
             </div>
         </div>
     );

@@ -67,27 +67,27 @@ const AddNew = (props) => {
         }
     };
 
-    const sampleListJsx = sampleList
-        ? sampleList.map((item, index) => {
-              return (
-                  <div key={index}>
-                      <img
-                          src={item.snapshot}
-                          className={`${styles.sampleImg} ${
-                              choices.sampleFileId ? styles.notChosenSampleImg : ''
-                          }${
-                              choices.sampleFileId === item.basicSetting.id
-                                  ? styles.chosenSampleImg
-                                  : ''
-                          }`}
-                          onClick={() => {
-                              setChoices({ ...choices, sampleFileId: item.basicSetting.id });
-                          }}
-                      ></img>
-                  </div>
-              );
-          })
-        : null;
+    const sampleListJsx =
+        sampleList &&
+        sampleList.map((item, index) => {
+            return (
+                <div key={index}>
+                    <img
+                        src={item.snapshot}
+                        className={`${styles.sampleImg} ${
+                            choices.sampleFileId ? styles.notChosenSampleImg : ''
+                        }${
+                            choices.sampleFileId === item.basicSetting.id
+                                ? styles.chosenSampleImg
+                                : ''
+                        }`}
+                        onClick={() => {
+                            setChoices({ ...choices, sampleFileId: item.basicSetting.id });
+                        }}
+                    ></img>
+                </div>
+            );
+        });
     const sizeImgJsx = canvasSizeOptions.map((item, index) => {
         return (
             <div
@@ -173,7 +173,7 @@ const AddNew = (props) => {
                     新增畫布
                 </div>
             </button>
-            {props.isAddingNew ? (
+            {props.isAddingNew && (
                 <div className={styles.cover}>
                     <div className={styles.box}>
                         <div className={styles.steps}>
@@ -260,9 +260,9 @@ const AddNew = (props) => {
                                         建立空白畫布
                                     </div>
                                 </div>
-                                {choices.way === 'sample' ? (
+                                {choices.way === 'sample' && (
                                     <div className={styles.sampleList}>{sampleListJsx}</div>
-                                ) : null}
+                                )}
                             </div>
                         ) : currentStep === 3 ? (
                             <div className={styles.stepContentWrapper}>
@@ -277,7 +277,7 @@ const AddNew = (props) => {
                                 </label>
                             </div>
                         ) : null}
-                        {currentStep > 1 ? (
+                        {currentStep > 1 && (
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}
@@ -286,7 +286,7 @@ const AddNew = (props) => {
                                     上一步
                                 </div>
                             </div>
-                        ) : null}
+                        )}
                         {(currentStep === 1 && choices.type) ||
                         (currentStep === 2 &&
                             (choices.way === 'blank' ||
@@ -318,7 +318,7 @@ const AddNew = (props) => {
                         </div>
                     </div>
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

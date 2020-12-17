@@ -144,26 +144,26 @@ const NavLeftImg = (props) => {
     // render
     return (
         <div className='specificNav'>
-            {allSettings.activeObj.type === 'image' && !props.croppingObj.type ? (
+            {allSettings.activeObj.type === 'image' && !props.croppingObj.type && (
                 <div className={'specificButton'} onClick={toggleImageAdjustmentNav}>
                     調整圖片參數
                 </div>
-            ) : null}
-            {allSettings.activeObj.type === 'image' && !props.croppingObj.type ? (
+            )}
+            {allSettings.activeObj.type === 'image' && !props.croppingObj.type && (
                 <div className='specificButton' onClick={startCropping}>
                     裁剪圖片
                 </div>
-            ) : null}
-            {props.croppingObj.type ? (
+            )}
+            {props.croppingObj.type && (
                 <div className='specificButton' onClick={cancelCropping}>
                     X 取消
                 </div>
-            ) : null}
-            {props.croppingObj.type ? (
+            )}
+            {props.croppingObj.type && (
                 <div className='specificButton' onClick={confirmCropping}>
                     O 完成
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };

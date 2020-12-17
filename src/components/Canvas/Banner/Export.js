@@ -58,13 +58,13 @@ const Export = (props) => {
     return (
         <div className='exportIconWrapper'>
             <bannerIcons.Download className='bannerIcons' onClick={toggleExport} />
-            {isChoosingExport ? (
+            {isChoosingExport && (
                 <div className='exportWrapper'>
                     <div onClick={() => handleExport('jpg')}>下載 JPG</div>
                     <div onClick={() => handleExport('png')}>下載 PNG</div>
                     <div onClick={() => handleExport('pdf')}>下載為 PDF</div>
                 </div>
-            ) : null}
+            )}
         </div>
     );
 };
