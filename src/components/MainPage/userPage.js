@@ -166,7 +166,11 @@ const UserPage = (props) => {
             : likeList.map((item, index) => {
                   return (
                       <ExploreItem
+                          isLikeLoader={isLikeLoader}
+                          setIsLikeLoader={setIsLikeLoader}
                           key={index}
+                          index={index}
+                          length={length}
                           item={item}
                           likeHandler={likeHandler}
                           className={styles.likeItem}
@@ -180,7 +184,13 @@ const UserPage = (props) => {
         canvasDataWithDataURL.length !== 0 &&
         canvasDataWithDataURL.map((item, index) => {
             return (
-                <div key={index} className={styles.fileWrapper}>
+                <div
+                    key={index}
+                    className={styles.fileWrapper}
+                    style={{
+                        animationDelay: `${index * 0.05}s`,
+                    }}
+                >
                     <div
                         className={styles.file}
                         onClick={() => {
@@ -289,6 +299,7 @@ const UserPage = (props) => {
                             className={`${styles.tag} ${isAtMyCanvas ? styles.currentTag : ''}`}
                             onClick={() => {
                                 setIsAtMyCanvas(true);
+                                setIsLikeLoader(true);
                             }}
                         >
                             {props.currentUser.email === props.match.params.userId
@@ -309,9 +320,6 @@ const UserPage = (props) => {
                     {!isAtMyCanvas && (
                         <div
                             className={styles.canvasLikesFiles}
-                            onLoad={() => {
-                                setIsLikeLoader(false);
-                            }}
                             style={{ display: isLikeLoader ? 'none' : 'block' }}
                         >
                             {likeListJsx}
@@ -326,11 +334,16 @@ const UserPage = (props) => {
                         </div>
                     )}
 
-                    {canvasFilesJsx && isAtMyCanvas && (
+                    {canvasFilesJsx && isAtMyCanvas ? (
                         <div className={styles.canvasFiles}>
                             {canvasFilesJsx}
                             {props.currentUser.email === props.match.params.userId && (
-                                <div className={styles.fileWrapperNew}>
+                                <div
+                                    className={styles.fileWrapperNew}
+                                    style={{
+                                        animationDelay: `${canvasDataWithDataURL.length * 0.05}s`,
+                                    }}
+                                >
                                     <div
                                         className={styles.addNew}
                                         onClick={() => {
@@ -342,7 +355,7 @@ const UserPage = (props) => {
                                 </div>
                             )}
                         </div>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </div>

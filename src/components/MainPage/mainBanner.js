@@ -44,7 +44,11 @@ const MainBanner = (props) => {
         <div className={styles.bannerWrapper}>
             <div className={styles.banner}>
                 <bannerIcons.LogoW
-                    onClick={() => history.push('/main/explore')}
+                    onClick={() => {
+                        props.currentUser.email === 'noUser'
+                            ? history.push('/')
+                            : history.push('/main/explore');
+                    }}
                     className={styles.logo}
                 />
                 <div className={styles.leftNav}>

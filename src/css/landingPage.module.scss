@@ -31,7 +31,8 @@ $symbol-font: 0.6rem;
     height: 2.5rem;
     color: $custom-black;
     .banner {
-        width: 70%;
+        width: 90%;
+        max-width: 1000px;
         display: flex;
         color: $custom-black;
         align-items: center;
@@ -65,7 +66,8 @@ $symbol-font: 0.6rem;
     align-items: center;
     .main {
         height: 50%;
-        width: 70%;
+        width: 90%;
+        max-width: 1000px;
         display: flex;
         justify-content: space-around;
         .mainText {

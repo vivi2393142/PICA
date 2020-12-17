@@ -17,7 +17,7 @@ const LandingPage = (props) => {
         if (props.currentUser.email && props.currentUser.email !== 'noUser') {
             history.push('/main/explore');
         }
-    }, []);
+    }, [props.currentUser]);
 
     // render
     return (

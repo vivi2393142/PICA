@@ -9,6 +9,7 @@ import * as firebase from '../../firebase';
 // export default App;
 const ExploreItem = (props) => {
     let history = useHistory();
+    const [likeListImageLoad, setLikeListImageLoad] = React.useState(0);
     const addNewSampleHandler = (e, sampleFileId) => {
         e.stopPropagation();
         notLoginAlert(() => {
@@ -37,9 +38,27 @@ const ExploreItem = (props) => {
                     : styles.userFileWrapper
             }`}
             onClick={() => history.push(`/main/shots/${props.item.fileId}`)}
+            style={{
+                animationDelay:
+                    !props.isLikeLoader &&
+                    props.parentNodeForClass !== 'explore' &&
+                    `${props.index * 0.05}s`,
+            }}
         >
             <div className={styles.cover}>
-                <img className={styles.innerImg} src={props.item.snapshot}></img>
+                <img
+                    className={styles.innerImg}
+                    src={props.item.snapshot}
+                    onLoad={() => {
+                        if (props.parentNodeForClass !== 'explore') {
+                            setLikeListImageLoad(likeListImageLoad + 1);
+                            if (props.length === likeListImageLoad) {
+                                props.setIsLikeLoader(false);
+                                setLikeListImageLoad(0);
+                            }
+                        }
+                    }}
+                ></img>
                 {props.item.isSample && <div className={styles.isSample}>範本</div>}
                 <div className={styles.buttons}>
                     {props.item.isSample && (
@@ -79,10 +98,14 @@ const ExploreItem = (props) => {
 
 ExploreItem.propTypes = {
     item: PropTypes.object.isRequired,
+    index: PropTypes.number,
     type: PropTypes.string,
     likeHandler: PropTypes.func.isRequired,
     currentUser: PropTypes.object,
     parentNodeForClass: PropTypes.string,
+    isLikeLoader: PropTypes.bool,
+    setIsLikeLoader: PropTypes.func,
+    length: PropTypes.number,
 };
 
 export default ExploreItem;

@@ -145,14 +145,24 @@ $like-red: rgb(243, 71, 71);
     min-width: 23%;
     max-width: 23%;
     margin: 1%;
+
+    // test for square
+    // min-width: 46%;
+    // max-width: 46%;
+    // margin: 3%;
+
     .info {
         padding-bottom: 0.3rem;
     }
 }
+
 // for waterfall layout
 .userFileWrapper {
     column-span: none;
     position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+    animation-fill-mode: both;
+    opacity: 0;
     .innerImg {
         margin-bottom: 2.3rem;
     }
@@ -166,5 +176,16 @@ $like-red: rgb(243, 71, 71);
         padding: 0;
         height: 1.6rem;
         padding-bottom: 0.7rem;
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
     }
 }
