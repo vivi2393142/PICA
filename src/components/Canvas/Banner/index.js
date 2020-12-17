@@ -94,7 +94,7 @@ Banner.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     allSettings: PropTypes.object.isRequired,
     fileId: PropTypes.string.isRequired,
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
 };
 
 export default Banner;

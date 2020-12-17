@@ -18,7 +18,7 @@ const MainBanner = (props) => {
 
     const signOutHandler = () => {
         firebase.nativeSignOut(() => {
-            props.setCurrentUser({});
+            props.setCurrentUser({ email: 'noUser' });
             history.go(0);
         });
     };
@@ -33,7 +33,7 @@ const MainBanner = (props) => {
         document.addEventListener('click', closeMemberSelect);
     };
 
-    if (Object.keys(props.currentUser).length !== 0) {
+    if (props.currentUser.email && props.currentUser.email !== 'noUser') {
         firebase.getUserPhoto(props.currentUser.email, (photoURL) => {
             setPhotoSrc(photoURL);
         });
@@ -77,7 +77,7 @@ const MainBanner = (props) => {
                 </div>
                 {showSignOut && (
                     <div className={styles.signOut} onClick={(e) => e.stopPropagation()}>
-                        {Object.keys(props.currentUser).length === 0 && (
+                        {props.currentUser.email === 'noUser' && (
                             <div
                                 className={styles.inner}
                                 onClick={() => {
@@ -89,7 +89,7 @@ const MainBanner = (props) => {
                                 會員登入
                             </div>
                         )}
-                        {Object.keys(props.currentUser).length === 0 && (
+                        {props.currentUser.email === 'noUser' && (
                             <div
                                 className={styles.inner}
                                 onClick={() => {
@@ -101,14 +101,14 @@ const MainBanner = (props) => {
                                 會員註冊
                             </div>
                         )}
-                        {Object.keys(props.currentUser).length !== 0 && (
+                        {props.currentUser.email && props.currentUser.email !== 'noUser' && (
                             <div className={styles.inner} onClick={signOutHandler}>
                                 登出
                             </div>
                         )}
                     </div>
                 )}
-                {Object.keys(props.currentUser).length === 0 && isLoginOrSignup && (
+                {props.currentUser.email === 'noUser' && isLoginOrSignup && (
                     <Login
                         isLoginOrSignup={isLoginOrSignup}
                         setIsLoginOrSignup={setIsLoginOrSignup}
@@ -124,7 +124,7 @@ const MainBanner = (props) => {
 
 MainBanner.propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
     currentPage: PropTypes.string.isRequired,
     isAddingNew: PropTypes.bool.isRequired,
     setIsAddingNew: PropTypes.func.isRequired,

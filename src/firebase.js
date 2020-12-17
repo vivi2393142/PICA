@@ -394,9 +394,11 @@ const getLikeList = (userId, callback) => {
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
                         if (currentUserLike.includes(doc.id)) {
-                            const userData = allUsers.find((x) => x.email === userId);
+                            const userData = allUsers.find(
+                                (x) => x.email === doc.data().basicSetting.userEmail
+                            );
                             const fileData = {
-                                userId: userId,
+                                userId: userData.id,
                                 userName: userData.name,
                                 userPhoto: userData.photo,
                                 like: doc.data().like.length,

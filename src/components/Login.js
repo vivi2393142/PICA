@@ -76,7 +76,9 @@ const Login = (props) => {
                         className={styles.submit}
                         onClick={() => {
                             const user = firebase.nativeSignIn(inputId, inputPwd);
-                            user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                            user
+                                ? props.setCurrentUser(user)
+                                : props.setCurrentUser({ email: 'noUser' });
                         }}
                     >
                         登入
@@ -87,7 +89,9 @@ const Login = (props) => {
                             className={styles.loginWayF}
                             onClick={() => {
                                 const user = firebase.fbSignUp();
-                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                                user
+                                    ? props.setCurrentUser(user)
+                                    : props.setCurrentUser({ email: 'noUser' });
                             }}
                         >
                             <login.Facebook className={styles.loginIcon} />
@@ -97,7 +101,9 @@ const Login = (props) => {
                             className={styles.loginWayG}
                             onClick={() => {
                                 const user = firebase.googleSignUp();
-                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                                user
+                                    ? props.setCurrentUser(user)
+                                    : props.setCurrentUser({ email: 'noUser' });
                             }}
                         >
                             <login.Google className={styles.loginIcon} />
@@ -132,7 +138,9 @@ const Login = (props) => {
                         onClick={() => {
                             const user = firebase.nativeSignUp(inputName, inputId, inputPwd);
                             console.log(user);
-                            user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                            user
+                                ? props.setCurrentUser(user)
+                                : props.setCurrentUser({ email: 'noUser' });
                         }}
                     >
                         註冊
@@ -143,7 +151,9 @@ const Login = (props) => {
                             className={styles.loginWayF}
                             onClick={() => {
                                 const user = firebase.fbSignUp();
-                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                                user
+                                    ? props.setCurrentUser(user)
+                                    : props.setCurrentUser({ email: 'noUser' });
                             }}
                         >
                             <login.Facebook className={styles.loginIcon} />
@@ -153,7 +163,9 @@ const Login = (props) => {
                             className={styles.loginWayG}
                             onClick={() => {
                                 const user = firebase.googleSignUp();
-                                user ? props.setCurrentUser(user) : props.setCurrentUser({});
+                                user
+                                    ? props.setCurrentUser(user)
+                                    : props.setCurrentUser({ email: 'noUser' });
                             }}
                         >
                             <login.Google className={styles.loginIcon} />

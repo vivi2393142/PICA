@@ -10,17 +10,16 @@ import { useHistory } from 'react-router-dom';
 
 // export default App;
 export default function App() {
-    const [currentUser, setCurrentUser] = React.useState({});
+    const [currentUser, setCurrentUser] = React.useState({ email: null });
     const [currentUserTimes, setCurrentUserTimes] = React.useState(0);
     // trackCurrentUser
     if (currentUserTimes === 0) {
         firebase.auth().onAuthStateChanged((user) => {
-            if (user && user !== currentUser) {
+            if (user) {
                 setCurrentUser(user);
+            } else {
+                setCurrentUser({ email: 'noUser' });
             }
-            // else if (document.location.pathname !== '/' && user === null) {
-            //     document.location.href = '/';
-            // }
         });
         setCurrentUserTimes(1);
     }
@@ -43,14 +42,7 @@ export default function App() {
                     />
 
                     <Route path='/' exact>
-                        {Object.keys(currentUser).length === 0 ? (
-                            <LandingPage
-                                currentUser={currentUser}
-                                setCurrentUser={setCurrentUser}
-                            />
-                        ) : (
-                            <Redirect to='/main' />
-                        )}
+                        <LandingPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
                     </Route>
                 </Switch>
             </div>

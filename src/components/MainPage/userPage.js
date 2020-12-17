@@ -61,6 +61,7 @@ const UserPage = (props) => {
     const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const [userPhoto, setUserPhoto] = React.useState('');
+    const [isLikeLoader, setIsLikeLoader] = React.useState(true);
     const canvasSizeOptions = [
         { name: 'Instagram 貼文', type: 'instagram', width: 1080, height: 1080 },
         { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -72,11 +73,11 @@ const UserPage = (props) => {
     ];
 
     React.useEffect(() => {
-        if (Object.keys(props.currentUser).length === 0) {
+        if (props.currentUser.email === 'noUser') {
             alert('請先註冊或登入會員，以檢視我的畫布');
             history.push('/main/explore');
         }
-    }, []);
+    }, [props.currentUser]);
 
     let history = useHistory();
     const handleCreateNew = (e) => {
@@ -130,7 +131,7 @@ const UserPage = (props) => {
                 setLikeList(result);
             });
         }
-    }, []);
+    }, [props.currentUser]);
     React.useEffect(() => {
         firebase.getAllCanvasData((result) => {
             if (userDataFromFirebase.canvas[0] !== '') {
@@ -305,9 +306,26 @@ const UserPage = (props) => {
                                 : '他的收藏'}
                         </div>
                     </div>
-                    {isAtMyCanvas ? null : (
-                        <div className={styles.canvasLikesFiles}>{likeListJsx}</div>
+                    {!isAtMyCanvas && (
+                        <div
+                            className={styles.canvasLikesFiles}
+                            onLoad={() => {
+                                setIsLikeLoader(false);
+                            }}
+                            style={{ display: isLikeLoader ? 'none' : 'block' }}
+                        >
+                            {likeListJsx}
+                        </div>
                     )}
+                    {!isAtMyCanvas && isLikeLoader && (
+                        <div className={styles.smallLoaderLike}>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                    )}
+
                     {canvasFilesJsx && isAtMyCanvas && (
                         <div className={styles.canvasFiles}>
                             {canvasFilesJsx}
@@ -332,7 +350,7 @@ const UserPage = (props) => {
 };
 
 UserPage.propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
     match: PropTypes.object.isRequired,
     setCurrentPage: PropTypes.func.isRequired,
     setIsAddingNew: PropTypes.func.isRequired,

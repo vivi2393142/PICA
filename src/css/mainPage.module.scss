@@ -248,6 +248,7 @@ body {
             column-gap: 20px;
             padding-bottom: 2rem;
             padding-top: 1.5rem;
+            position: relative;
         }
         .canvasFiles {
             display: flex;
@@ -468,36 +469,53 @@ body {
     width: 100%;
     height: 100%;
 }
+.smallLoaderLike,
 .smallLoader {
     display: inline-block;
     position: relative;
     width: 40px;
     height: 40px;
 }
+.smallLoaderLike div,
 .smallLoader div {
     position: absolute;
     top: 41.25%;
     width: 12%;
     height: 12%;
     border-radius: 50%;
-    background: #fff;
+    background: $custom-black;
     animation-timing-function: cubic-bezier(0, 1, 1, 0);
 }
+.smallLoaderLike div:nth-child(1),
 .smallLoader div:nth-child(1) {
     left: 10%;
     animation: smallLoader1 0.6s infinite;
 }
+.smallLoaderLike div:nth-child(2),
 .smallLoader div:nth-child(2) {
     left: 10%;
     animation: smallLoader2 0.6s infinite;
 }
+.smallLoaderLike div:nth-child(3),
 .smallLoader div:nth-child(3) {
     left: 40%;
     animation: smallLoader2 0.6s infinite;
 }
+.smallLoaderLike div:nth-child(4),
 .smallLoader div:nth-child(4) {
     left: 70%;
     animation: smallLoader3 0.6s infinite;
+}
+.smallLoaderLike {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 55%;
+    top: 60%;
+    // background-color: ;
+    div {
+        background-color: $sub-color;
+    }
 }
 @keyframes smallLoader1 {
     0% {

@@ -223,7 +223,7 @@ const Sidebar = (props) => {
         );
     };
 
-    // uploaded function
+    // handlers: uploaded function
     const handleUploadImage = (e) => {
         if (e.target.files[0].size > 5242880) {
             alert('請勿上傳超過5mb之圖片');
@@ -236,69 +236,7 @@ const Sidebar = (props) => {
             );
         }
     };
-    const uploadedImgJsx = (
-        <div
-            className='sidebarUnfoldInner sidebarUnfoldUpload'
-            style={{ display: props.currentSidebar === 'upload' ? 'flex' : 'none' }}
-        >
-            {uploadProgressValue === 0 ? (
-                <label className='unfoldItem uploadLabel'>
-                    上傳圖片
-                    <input
-                        className='uploadInput'
-                        type='file'
-                        accept='image/png, image/jpeg'
-                        onChange={handleUploadImage}
-                    ></input>
-                </label>
-            ) : (
-                <div className='progressWrapper'>
-                    <progress
-                        className='uploadProgress'
-                        value={uploadProgressValue}
-                        max='100'
-                    ></progress>
-                    <div>LOADING</div>
-                    <div>{uploadProgressValue}%</div>
-                </div>
-            )}
-            {allSettings.uploadedFiles &&
-                allSettings.uploadedFiles.map((item, index) => {
-                    return (
-                        <div
-                            key={index}
-                            className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
-                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                        >
-                            <div>
-                                <img
-                                    className='unfoldItemImg unfoldItemGallery'
-                                    onClick={addImage}
-                                    draggable='true'
-                                    src={item.src}
-                                ></img>
-                            </div>
-                            <div
-                                className='close'
-                                id={item.path}
-                                onClick={(e) => firebase.removeUploadImg(e, props.fileId)}
-                            >
-                                x
-                            </div>
-                        </div>
-                    );
-                })}
-            {showUploadCover && (
-                <div className='uploadCover'>
-                    <icons.CoverUpload className='uploadIcon' />
-                    <div>拖曳以上傳檔案</div>
-                    <span>您可以上傳jpg或png檔案，一次限上傳一張圖片</span>
-                </div>
-            )}
-        </div>
-    );
-
-    // drop to upload
+    // handlers: drop to upload
     const dragoverHandler = (e) => {
         e.preventDefault();
     };
@@ -344,8 +282,7 @@ const Sidebar = (props) => {
             document.removeEventListener('dragenter', dragEnterHandler);
         };
     }, []);
-
-    // backgroundColor
+    // handlers: backgroundColor
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
     const [backColorChosen, setBackColorChosen] = React.useState({
         background: {
@@ -400,22 +337,36 @@ const Sidebar = (props) => {
         backgroundColorHandler(color);
         allSettings.canvas.requestRenderAll();
     };
-
-    // use template
+    // handlers: use template
     const handleTemplateUse = (e) => {
         alert('請注意，套用範本將自動刪除現存在在畫布上的所有物件');
         firebase.getSingleSample(e.target.id, (data) => {
             allSettings.canvas.loadFromJSON(data);
         });
     };
-
-    // TODO: 測試用資料，待刪除
-    const logCurrentCanvas = () => {
-        var json = allSettings.canvas.toJSON();
-        console.log(JSON.stringify(json));
-    };
-
-    // jsx + functions: img adjustment
+    // handler: img adjustment
+    // get current image styles
+    React.useEffect(() => {
+        if (allSettings.activeObj.type === 'image') {
+            let filtersActive = {
+                brightness: 0,
+                contrast: 0,
+                saturation: 0,
+                rotation: 0,
+                blur: 0,
+                noise: 0,
+            };
+            allSettings.activeObj.filters.forEach((item) => {
+                let type = item.type.toLowerCase();
+                if (type === 'huerotation') {
+                    filtersActive.rotation = parseFloat(item.rotation);
+                } else {
+                    filtersActive[type] = parseFloat(item[type]);
+                }
+            });
+            setCurrentFilters(filtersActive);
+        }
+    }, [allSettings.activeObj]);
     const [currentFilters, setCurrentFilters] = React.useState({
         brightness: 0,
         contrast: 0,
@@ -493,44 +444,12 @@ const Sidebar = (props) => {
         allSettings.activeObj.applyFilters();
         allSettings.canvas.requestRenderAll();
     };
-    const imageFiltersJsx = (
-        <div
-            className='sidebarUnfoldInner unfoldImgAdjustment'
-            style={{
-                display: props.currentSidebar === 'imageAdjustment' ? 'flex' : 'none',
-            }}
-        >
-            {customFilters.map((item, index) => (
-                <div key={index} className='imgAdjustBox'>
-                    <div className='imgAdjustText'>{item.text}</div>
-                    <input
-                        className='imgAdjustRange'
-                        type='range'
-                        min={item.min}
-                        max={item.max}
-                        value={currentFilters[item.attr]}
-                        onInput={(e) => {
-                            let f = fabric.Image.filters;
-                            let newFilters = { ...currentFilters };
-                            newFilters[item.attr] = parseFloat(e.target.value);
-                            setCurrentFilters(newFilters);
-                            const newFilter = new f[item.way]({
-                                [item.attr]: parseFloat(e.target.value),
-                            });
-                            allSettings.activeObj.filters[index] = newFilter;
-                            allSettings.activeObj.applyFilters();
-                            allSettings.canvas.requestRenderAll();
-                        }}
-                        step={item.step}
-                    ></input>
-                    <div className='imgAdjustValue'>{currentFilters[item.attr]}</div>
-                </div>
-            ))}
-            <div className='resetFilterButton' onClick={resetFilters}>
-                重設圖片
-            </div>
-        </div>
-    );
+    // TODO: 測試用資料，待刪除
+    const logCurrentCanvas = () => {
+        var json = allSettings.canvas.toJSON();
+        console.log(JSON.stringify(json));
+    };
+
     // jsx : sidebar
     const sidebarArray = [
         {
@@ -609,7 +528,6 @@ const Sidebar = (props) => {
             </div>
         </div>
     ));
-
     // jsx: sidebar - sample
     React.useEffect(() => {
         if (props.allSettings.canvasSetting.type) {
@@ -639,7 +557,6 @@ const Sidebar = (props) => {
             })}
         </div>
     );
-
     // jsx: sidebar - text
     const textJsx = (
         <div
@@ -729,6 +646,58 @@ const Sidebar = (props) => {
             })}
         </div>
     );
+    // jsx: sidebar - line
+    const lineArray = [line1, line2, line3, line4, line5, line6];
+    const lineJsx = (
+        <div
+            className='sidebarUnfoldInner sidebarUnfoldLine'
+            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            style={{ display: props.currentSidebar === 'line' ? 'flex' : 'none' }}
+        >
+            {lineArray.map((item, index) => {
+                return (
+                    <img
+                        key={index}
+                        src={item}
+                        className='unfoldItem itemLine'
+                        onClick={addShape}
+                        draggable='true'
+                    ></img>
+                );
+            })}
+        </div>
+    );
+    // jsx: sidebar - image
+    const imageArray = [
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727922.jpeg?alt=media&token=68c098f6-4baa-4a9c-b14f-c85b98b78ca2',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727928.jpeg?alt=media&token=22179791-4cd4-46b7-9b52-69ce6d5031a2',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303086.jpeg?alt=media&token=8651f14d-76a2-4a2e-aaa7-52b068b11bef',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303098.jpeg?alt=media&token=a947cd3d-46e2-4766-91bd-b184d873901e',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-maksim-goncharenok-5821029.jpeg?alt=media&token=e81bc877-ad53-4ad5-8479-9dc7bae31a7c',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-pixabay-235970.jpeg?alt=media&token=5242ddcf-69cd-45a9-a92f-aa146798f3ea',
+        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-tejas-prajapati-586744.jpeg?alt=media&token=fa4acca3-5cfa-4a76-afb0-1437ce3c82b3',
+    ];
+    const imageJsx = (
+        <div
+            className='sidebarUnfoldInner sidebarUnfoldImg'
+            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            style={{ display: props.currentSidebar === 'image' ? 'flex' : 'none' }}
+        >
+            {imageArray.map((item, index) => {
+                return (
+                    <div key={index} className='unfoldItemGalleryWrapper'>
+                        <img
+                            onClick={addImage}
+                            className='unfoldItem unfoldItemGallery'
+                            draggable='true'
+                            src={item}
+                        ></img>
+                    </div>
+                );
+            })}
+        </div>
+    );
     // jsx: sidebar - sticker
     const stickerArray = [
         'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fballet.svg?alt=media&token=1d5e5227-2183-4bcc-ad9b-959ac4819763',
@@ -764,59 +733,6 @@ const Sidebar = (props) => {
                             src={item}
                         ></img>
                     </div>
-                );
-            })}
-        </div>
-    );
-
-    // jsx: sidebar - image
-    const imageArray = [
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727922.jpeg?alt=media&token=68c098f6-4baa-4a9c-b14f-c85b98b78ca2',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727928.jpeg?alt=media&token=22179791-4cd4-46b7-9b52-69ce6d5031a2',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303086.jpeg?alt=media&token=8651f14d-76a2-4a2e-aaa7-52b068b11bef',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303098.jpeg?alt=media&token=a947cd3d-46e2-4766-91bd-b184d873901e',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-maksim-goncharenok-5821029.jpeg?alt=media&token=e81bc877-ad53-4ad5-8479-9dc7bae31a7c',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-pixabay-235970.jpeg?alt=media&token=5242ddcf-69cd-45a9-a92f-aa146798f3ea',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-tejas-prajapati-586744.jpeg?alt=media&token=fa4acca3-5cfa-4a76-afb0-1437ce3c82b3',
-    ];
-    const imageJsx = (
-        <div
-            className='sidebarUnfoldInner sidebarUnfoldImg'
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-            style={{ display: props.currentSidebar === 'image' ? 'flex' : 'none' }}
-        >
-            {imageArray.map((item, index) => {
-                return (
-                    <div key={index} className='unfoldItemGalleryWrapper'>
-                        <img
-                            onClick={addImage}
-                            className='unfoldItem unfoldItemGallery'
-                            draggable='true'
-                            src={item}
-                        ></img>
-                    </div>
-                );
-            })}
-        </div>
-    );
-    // jsx: sidebar - line
-    const lineArray = [line1, line2, line3, line4, line5, line6];
-    const lineJsx = (
-        <div
-            className='sidebarUnfoldInner sidebarUnfoldLine'
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-            style={{ display: props.currentSidebar === 'line' ? 'flex' : 'none' }}
-        >
-            {lineArray.map((item, index) => {
-                return (
-                    <img
-                        key={index}
-                        src={item}
-                        className='unfoldItem itemLine'
-                        onClick={addShape}
-                        draggable='true'
-                    ></img>
                 );
             })}
         </div>
@@ -902,6 +818,107 @@ const Sidebar = (props) => {
             <div className='backImgChart'>{backgroundImageJsx}</div>
         </div>
     );
+    // jsx: sidebar - upload image
+    const uploadedImgJsx = (
+        <div
+            className='sidebarUnfoldInner sidebarUnfoldUpload'
+            style={{ display: props.currentSidebar === 'upload' ? 'flex' : 'none' }}
+        >
+            {uploadProgressValue === 0 ? (
+                <label className='unfoldItem uploadLabel'>
+                    上傳圖片
+                    <input
+                        className='uploadInput'
+                        type='file'
+                        accept='image/png, image/jpeg'
+                        onChange={handleUploadImage}
+                    ></input>
+                </label>
+            ) : (
+                <div className='progressWrapper'>
+                    <progress
+                        className='uploadProgress'
+                        value={uploadProgressValue}
+                        max='100'
+                    ></progress>
+                    <div>LOADING</div>
+                    <div>{uploadProgressValue}%</div>
+                </div>
+            )}
+            {allSettings.uploadedFiles &&
+                allSettings.uploadedFiles.map((item, index) => {
+                    return (
+                        <div
+                            key={index}
+                            className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
+                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+                        >
+                            <div>
+                                <img
+                                    className='unfoldItemImg unfoldItemGallery'
+                                    onClick={addImage}
+                                    draggable='true'
+                                    src={item.src}
+                                ></img>
+                            </div>
+                            <div
+                                className='close'
+                                id={item.path}
+                                onClick={(e) => firebase.removeUploadImg(e, props.fileId)}
+                            >
+                                x
+                            </div>
+                        </div>
+                    );
+                })}
+            {showUploadCover && (
+                <div className='uploadCover'>
+                    <icons.CoverUpload className='uploadIcon' />
+                    <div>拖曳以上傳檔案</div>
+                    <span>您可以上傳jpg或png檔案</span>
+                </div>
+            )}
+        </div>
+    );
+    // jsx: image adjustment
+    const imageFiltersJsx = (
+        <div
+            className='sidebarUnfoldInner unfoldImgAdjustment'
+            style={{
+                display: props.currentSidebar === 'imageAdjustment' ? 'flex' : 'none',
+            }}
+        >
+            {customFilters.map((item, index) => (
+                <div key={index} className='imgAdjustBox'>
+                    <div className='imgAdjustText'>{item.text}</div>
+                    <input
+                        className='imgAdjustRange'
+                        type='range'
+                        min={item.min}
+                        max={item.max}
+                        value={currentFilters[item.attr]}
+                        onInput={(e) => {
+                            let f = fabric.Image.filters;
+                            let newFilters = { ...currentFilters };
+                            newFilters[item.attr] = parseFloat(e.target.value);
+                            setCurrentFilters(newFilters);
+                            const newFilter = new f[item.way]({
+                                [item.attr]: parseFloat(e.target.value),
+                            });
+                            allSettings.activeObj.filters[index] = newFilter;
+                            allSettings.activeObj.applyFilters();
+                            allSettings.canvas.requestRenderAll();
+                        }}
+                        step={item.step}
+                    ></input>
+                    <div className='imgAdjustValue'>{currentFilters[item.attr]}</div>
+                </div>
+            ))}
+            <div className='resetFilterButton' onClick={resetFilters}>
+                重設圖片
+            </div>
+        </div>
+    );
     // jsx: sidebar - toggle button
     const toggleButtonJsx = (
         <div
@@ -914,202 +931,25 @@ const Sidebar = (props) => {
         </div>
     );
 
-    // get current image styles
-    React.useEffect(() => {
-        if (allSettings.activeObj.type === 'image') {
-            let filtersActive = {
-                brightness: 0,
-                contrast: 0,
-                saturation: 0,
-                rotation: 0,
-                blur: 0,
-                noise: 0,
-            };
-            allSettings.activeObj.filters.forEach((item) => {
-                let type = item.type.toLowerCase();
-                if (type === 'huerotation') {
-                    filtersActive.rotation = parseFloat(item.rotation);
-                } else {
-                    filtersActive[type] = parseFloat(item[type]);
-                }
-            });
-            setCurrentFilters(filtersActive);
-        }
-    }, [allSettings.activeObj]);
-
     return (
         <div className='sidebar'>
             <div className='sidebarFold'>{sidebarFoldJsx}</div>
             {props.currentSidebar !== '' && (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${
-                        props.currentSidebar === 'template' ? 'firstUnfold' : ''
+                        props.currentSidebar === 'template' && 'firstUnfold'
                     }`}
                 >
-                    {/* {props.currentSidebar === 'text' ? ( */}
                     {textJsx}
-                    {/* // ) : props.currentSidebar === 'shape' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldShape'
-                        onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                        style={{ display: props.currentSidebar === 'shape' ? 'flex' : 'none' }}
-                    >
-                        <div className='sidebarUnfoldSubtitle'>常用形狀</div>
-                        <img
-                            src={square}
-                            className='unfoldItem rectShape '
-                            draggable='true'
-                            onClick={addRect}
-                        ></img>
-                        <img
-                            src={circle}
-                            className='unfoldItem circleShape'
-                            draggable='true'
-                            onClick={addCircle}
-                        ></img>
-                        <img
-                            src={triangle}
-                            className='unfoldItem triangleShape'
-                            draggable='true'
-                            onClick={addTriangle}
-                        ></img>
-                        <div className='sidebarUnfoldSubtitle'>不規則形狀</div> */}
                     {shapeJsx}
-                    {/* </div> */}
-                    {/* // ) : props.currentSidebar === 'line' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldLine'
-                        onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                        style={{ display: props.currentSidebar === 'line' ? 'flex' : 'none' }}
-                    > */}
                     {lineJsx}
-                    {/* </div> */}
-                    {/* // ) : props.currentSidebar === 'image' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldImg'
-                        onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                        style={{ display: props.currentSidebar === 'image' ? 'flex' : 'none' }}
-                    > */}
                     {imageJsx}
-                    {/* </div> */}
-                    {/* // ) : props.currentSidebar === 'background' ? ( */}
                     {backgroundJsxAll}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldBack'
-                        style={{ display: props.currentSidebar === 'background' ? 'flex' : 'none' }}
-                    >
-                        <div className='backgroundTitleOuter'>
-                            <div className='sidebarUnfoldSubtitle backgroundTitle'>背景色彩</div>
-                            {allSettings.hasBackColor ? (
-                                <div
-                                    className='backgroundCheckboxMinus'
-                                    onClick={toggleAddBackColor}
-                                >
-                                    －
-                                </div>
-                            ) : (
-                                <div className='backgroundCheckboxAdd' onClick={toggleAddBackColor}>
-                                    ＋
-                                </div>
-                            )}
-                        </div>
-                        <div className='colorChartWrapper'>
-                            <div className='currentBackground'>
-                                <div
-                                    className='backgroundColorCube currentColorCube'
-                                    style={{ backgroundColor: backColorChosen.background }}
-                                    onClick={toggleBackColorSelection}
-                                ></div>
-                                {isChoosingBackColor && (
-                                    <ChromePicker
-                                        className='backgroundPicker'
-                                        color={backColorChosen.background}
-                                        onChange={handleBackColorChange}
-                                    />
-                                )}
-                            </div>
-                            <div className='backgroundColorChart'>{backgroundColorJsx}</div>
-                        </div>
-                        <div className='sidebarUnfoldSubtitle backgroundTitle'>背景圖片</div>
-                        <div className='backImgChart'>{backgroundImageJsx}</div>
-                    </div> */}
-                    {/* // ) : props.currentSidebar === 'upload' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldUpload'
-                        style={{ display: props.currentSidebar === 'upload' ? 'flex' : 'none' }}
-                    >
-                        {uploadProgressValue === 0 ? (
-                            <label className='unfoldItem uploadLabel'>
-                                上傳圖片
-                                <input
-                                    className='uploadInput'
-                                    type='file'
-                                    accept='image/png, image/jpeg'
-                                    onChange={handleUploadImage}
-                                ></input>
-                            </label>
-                        ) : (
-                            <div className='progressWrapper'>
-                                <progress
-                                    className='uploadProgress'
-                                    value={uploadProgressValue}
-                                    max='100'
-                                ></progress>
-                                <div>LOADING</div>
-                                <div>{uploadProgressValue}%</div>
-                            </div>
-                        )} */}
                     {uploadedImgJsx}
-                    {/* {showUploadCover && (
-                            <div className='uploadCover'>
-                                <icons.CoverUpload className='uploadIcon' />
-                                <div>拖曳以上傳檔案</div>
-                                <span>您可以上傳jpg或png檔案，一次限上傳一張圖片</span>
-                            </div>
-                        )}
-                    </div> */}
-                    {/* // ) : props.currentSidebar === 'frame' ? ( */}
-                    {/* <div className='sidebarUnfoldInner sidebarUnfoldFrame' >
-                        <div className='unfoldItem' onClick={() => addFrameA(5, 10)}>
-                            新增框架
-                        </div>
-                    </div> */}
-                    {/* // ) : props.currentSidebar === 'sticker' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldSticker'
-                        onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                        style={{ display: props.currentSidebar === 'sticker' ? 'flex' : 'none' }}
-                    > */}
                     {stickerJsx}
-                    {/* </div> */}
-                    {/* // ) : props.currentSidebar === 'template' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner sidebarUnfoldSample'
-                        style={{ display: props.currentSidebar === 'template' ? 'flex' : 'none' }}
-                        // onMouseDown={(e) => allSettings.saveDragItem.func(e)}
-                    > */}
                     {sampleJsx}
-                    {/* </div> */}
-                    {/* // ) : props.currentSidebar === 'more' ? ( */}
-                    {/* <div className='sidebarUnfoldInner'>
-                        <div className='unfoldItem' onClick={logCurrentCanvas}>
-                            印出canvas(測試用)
-                        </div>
-                    </div> */}
-                    {/* // ) : props.currentSidebar === 'imageAdjustment' ? ( */}
-                    {/* <div
-                        className='sidebarUnfoldInner unfoldImgAdjustment'
-                        style={{
-                            display: props.currentSidebar === 'imageAdjustment' ? 'flex' : 'none',
-                        }}
-                    > */}
                     {imageFiltersJsx}
-                    {/* <div className='resetFilterButton' onClick={resetFilters}>
-                            重設圖片
-                        </div>
-                    </div> */}
-
-                    {props.currentSidebar !== 'imageAdjustment' && { toggleButtonJsx }}
+                    {props.currentSidebar !== 'imageAdjustment' && toggleButtonJsx}
                 </div>
             )}
         </div>
@@ -1121,7 +961,7 @@ Sidebar.propTypes = {
     setCurrentSidebar: PropTypes.func.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
 };
 

@@ -13,6 +13,12 @@ const LandingPage = (props) => {
     const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
     const [chooseLogin, setChooseLogin] = React.useState(true);
 
+    React.useEffect(() => {
+        if (props.currentUser.email && props.currentUser.email !== 'noUser') {
+            history.push('/main/explore');
+        }
+    }, []);
+
     // render
     return (
         <div className={styles.landingPage}>
@@ -86,6 +92,7 @@ const LandingPage = (props) => {
 
 LandingPage.propTypes = {
     setCurrentUser: PropTypes.func.isRequired,
+    currentUser: PropTypes.object.isRequired,
 };
 
 export default LandingPage;

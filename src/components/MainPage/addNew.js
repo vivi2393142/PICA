@@ -162,7 +162,7 @@ const AddNew = (props) => {
                 <div
                     className={styles.btnText}
                     onClick={() => {
-                        if (Object.keys(props.currentUser).length === 0) {
+                        if (props.currentUser.email === 'noUser') {
                             alert('請先註冊或登入會員，新增畫布');
                         } else {
                             restartHandler();
@@ -324,7 +324,7 @@ const AddNew = (props) => {
 };
 
 AddNew.propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
     isAddingNew: PropTypes.bool.isRequired,
     setIsAddingNew: PropTypes.func.isRequired,
 };

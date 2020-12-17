@@ -1124,7 +1124,7 @@ input[type='range'].imgAdjustRange {
     &::after {
         content: '';
         flex-grow: 999999999;
-        min-width: 300px;
+        min-width: 200px;
         height: 0;
     }
     .unfoldItemGalleryWrapper {

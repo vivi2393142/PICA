@@ -177,7 +177,7 @@ const Explore = (props) => {
 };
 
 Explore.propTypes = {
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
     setCurrentPage: PropTypes.func.isRequired,
 };
 

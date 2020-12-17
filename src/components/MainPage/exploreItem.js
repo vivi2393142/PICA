@@ -22,7 +22,7 @@ const ExploreItem = (props) => {
         }, '請先註冊或登入會員，以建立範本畫布');
     };
     const notLoginAlert = (successCallback, text) => {
-        if (Object.keys(props.currentUser).length === 0) {
+        if (props.currentUser.email === 'noUser') {
             alert(text);
         } else {
             successCallback();
@@ -81,7 +81,7 @@ ExploreItem.propTypes = {
     item: PropTypes.object.isRequired,
     type: PropTypes.string,
     likeHandler: PropTypes.func.isRequired,
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
     parentNodeForClass: PropTypes.string,
 };
 

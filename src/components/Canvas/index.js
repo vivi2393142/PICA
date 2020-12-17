@@ -109,6 +109,17 @@ const Canvas = (props) => {
     };
 
     React.useEffect(() => {
+        // ---- if currentUser is not the one
+        if (
+            canvasSetting.userEmail &&
+            props.currentUser.email &&
+            canvasSetting.userEmail !== props.currentUser.email
+        ) {
+            history.push('/main/explore');
+        }
+    }, [props.currentUser, canvasSetting]);
+
+    React.useEffect(() => {
         // console.log('render useEffect');
         // get firebase data according to URL params
         firebase.loadCanvas(
@@ -129,10 +140,6 @@ const Canvas = (props) => {
                     await canvasInit.renderAll();
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
-                    // ---- if currentUser is not the one
-                    // if (props.currentUser.email !== canvasSettingInit.userEmail) {
-                    //     history.push('/main/explore');
-                    // }
                     // preset image & iText objects style
                     let imgObjects = canvasInit.getObjects('image');
                     let texObjects = canvasInit.getObjects('i-text');
@@ -544,7 +551,7 @@ const Canvas = (props) => {
 
 Canvas.propTypes = {
     match: PropTypes.object.isRequired,
-    currentUser: PropTypes.object.isRequired,
+    currentUser: PropTypes.object,
 };
 
 export default Canvas;
