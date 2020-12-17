@@ -47,6 +47,7 @@ import { ReactComponent as SidebarImageB } from './src/sidebar/sidebar_image-b.s
 import { ReactComponent as SidebarLineB } from './src/sidebar/sidebar_line-b.svg';
 import { ReactComponent as SidebarStickerB } from './src/sidebar/sidebar_sticker-b.svg';
 import { ReactComponent as SidebarTextB } from './src/sidebar/sidebar_text-b.svg';
+import { ReactComponent as CoverUpload } from './src/sidebar/cover-upload.svg';
 
 export {
     SidebarUploadB,
@@ -67,6 +68,7 @@ export {
     SidebarLine,
     SidebarSticker,
     SidebarText,
+    CoverUpload,
     TextSpace,
     TextAlignLeft,
     TextAlignRight,

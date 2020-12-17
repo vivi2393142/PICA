@@ -430,6 +430,12 @@ const getSampleList = (type, callback) => {
             callback(result);
         });
 };
+const getSingleSample = (fileId, callback) => {
+    const refFile = db.collection('canvasFiles').doc(fileId);
+    refFile.get().then((doc) => {
+        callback(doc.data().data);
+    });
+};
 const changeTitle = (fileId, newTitle) => {
     const refFile = db.collection('canvasFiles').doc(fileId);
     refFile.get().then((doc) => {
@@ -555,9 +561,9 @@ const nativeSignOut = (successCallback) => {
 
 // storage
 const storage = firebase.storage();
-const uploadToStorage = (e, fileId, callback, successCallback, failCallback) => {
+const uploadToStorage = (filesList, fileId, callback, successCallback, failCallback) => {
     const imgId = nanoid();
-    const file = e.target.files[0];
+    const file = filesList[0];
     const storageRef = firebase
         .storage()
         .ref()
@@ -571,11 +577,11 @@ const uploadToStorage = (e, fileId, callback, successCallback, failCallback) => 
             callback(uploadValue.toFixed(0));
         },
         function error(err) {
-            // console.log('上傳失敗');
+            console.log('上傳失敗');
         },
         function complete() {
             successCallback();
-            // console.log('上傳成功');
+            console.log('上傳成功');
             // get upload URL and set into firestore data
             storageRef.getDownloadURL().then((url) => {
                 const ref = db.collection('canvasFiles').doc(fileId);
@@ -661,4 +667,5 @@ export {
     changeTitle,
     listenToComment,
     getUserPhoto,
+    getSingleSample,
 };

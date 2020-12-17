@@ -15,14 +15,15 @@ import line6 from '../../../img/src/sidebarItems/line6.svg';
 import square from '../../../img/src/sidebarItems/square.svg';
 import triangle from '../../../img/src/sidebarItems/triangle.svg';
 import circle from '../../../img/src/sidebarItems/circle.svg';
+import { isDOMComponentElement } from 'react-dom/test-utils';
 
 const Sidebar = (props) => {
     const allSettings = props.allSettings;
-    // console.log(allSettings.uploadedFiles);
     const mainColor = '#e89a4f';
     const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
     const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
     const [sampleList, setSampleList] = React.useState([]);
+    const [showUploadCover, setShowUploadCover] = React.useState(false);
 
     // set next add in component position
     const adjSetNextPosition = () => {
@@ -228,7 +229,7 @@ const Sidebar = (props) => {
             alert('請勿上傳超過5mb之圖片');
         } else {
             firebase.uploadToStorage(
-                e,
+                e.target.files,
                 props.fileId,
                 (uploadValue) => setUploadProgressValue(uploadValue),
                 () => setUploadProgressValue(0)
@@ -262,6 +263,53 @@ const Sidebar = (props) => {
                 </div>
             );
         });
+
+    // drop to upload
+    const dragoverHandler = (e) => {
+        e.preventDefault();
+    };
+    const dropHandler = (e) => {
+        e.preventDefault();
+        setShowUploadCover(false);
+        // prevent canvas drop event
+        if (e.dataTransfer.files.length > 0) {
+            const files = e.dataTransfer.files;
+            if (e.dataTransfer.files.length > 1) {
+                alert('上傳錯誤，一次限上傳一張圖片');
+            } else if (files[0].size > 5242880) {
+                alert('上傳錯誤，請勿上傳超過5mb之圖片');
+            } else if (
+                e.dataTransfer.files[0].type !== 'image/png' &&
+                e.dataTransfer.files[0].type !== 'image/jpeg'
+            ) {
+                alert('上傳錯誤，請上傳jpeg或png格式檔案');
+            } else {
+                firebase.uploadToStorage(
+                    files,
+                    props.fileId,
+                    (uploadValue) => setUploadProgressValue(uploadValue),
+                    () => setUploadProgressValue(0)
+                );
+            }
+        }
+    };
+    const dragEnterHandler = (e) => {
+        if (e.dataTransfer.types[0] === 'Files') {
+            setShowUploadCover(true);
+            props.setCurrentSidebar('upload');
+        }
+    };
+    React.useEffect(() => {
+        // let start = false;
+        document.addEventListener('dragover', dragoverHandler);
+        document.addEventListener('drop', dropHandler);
+        document.addEventListener('dragenter', dragEnterHandler);
+        return () => {
+            document.removeEventListener('dragover', dragoverHandler);
+            document.removeEventListener('drop', dropHandler);
+            document.removeEventListener('dragenter', dragEnterHandler);
+        };
+    }, []);
 
     // backgroundColor
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
@@ -317,6 +365,14 @@ const Sidebar = (props) => {
         setBackColorChosen({ background: color });
         backgroundColorHandler(color);
         allSettings.canvas.requestRenderAll();
+    };
+
+    // use template
+    const handleTemplateUse = (e) => {
+        alert('請注意，套用範本將自動刪除現存在在畫布上的所有物件');
+        firebase.getSingleSample(e.target.id, (data) => {
+            allSettings.canvas.loadFromJSON(data);
+        });
     };
 
     // TODO: 測試用資料，待刪除
@@ -539,7 +595,6 @@ const Sidebar = (props) => {
             </div>
         );
     });
-
     // jsx: sidebar - image
     const imageArray = [
         'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
@@ -563,7 +618,6 @@ const Sidebar = (props) => {
             </div>
         );
     });
-
     // jsx: sidebar - line
     const lineArray = [line1, line2, line3, line4, line5, line6];
     const lineJsx = lineArray.map((item, index) => {
@@ -577,7 +631,6 @@ const Sidebar = (props) => {
             ></img>
         );
     });
-
     // jsx: sidebar - background color cube
     const colorArray = [
         '#FCB900',
@@ -601,7 +654,6 @@ const Sidebar = (props) => {
             ></div>
         );
     });
-
     // jsx: sidebar - background image
     const backgroundImageArray = [
         'https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg',
@@ -622,7 +674,6 @@ const Sidebar = (props) => {
             </div>
         );
     });
-
     // jsx: sidebar - shape
     const abnormalShapeArray = [shape1, shape2, shape3];
     const abnShapeJsx = abnormalShapeArray.map((item, index) => {
@@ -645,16 +696,16 @@ const Sidebar = (props) => {
             });
         }
     }, [props.allSettings.canvasSetting]);
-
     const sampleJsx = sampleList.map((item, index) => {
         return (
             <div key={index} className='unfoldItemGalleryWrapper'>
                 <img
                     key={index}
                     draggable='false'
-                    // onClick={backgroundImageHandler}
+                    onClick={handleTemplateUse}
                     className='unfoldItem unfoldItemGallery'
                     src={item.snapshot}
+                    id={item.basicSetting.id}
                 ></img>
             </div>
         );
@@ -824,7 +875,7 @@ const Sidebar = (props) => {
                         <div className='sidebarUnfoldInner sidebarUnfoldUpload'>
                             {uploadProgressValue === 0 ? (
                                 <label className='unfoldItem uploadLabel'>
-                                    點擊以上傳圖片
+                                    上傳圖片
                                     <input
                                         className='uploadInput'
                                         type='file'
@@ -844,6 +895,13 @@ const Sidebar = (props) => {
                                 </div>
                             )}
                             {uploadedImgJsx}
+                            {showUploadCover && (
+                                <div className='uploadCover'>
+                                    <icons.CoverUpload className='uploadIcon' />
+                                    <div>拖曳以上傳檔案</div>
+                                    <span>您可以上傳jpg或png檔案，一次限上傳一張圖片</span>
+                                </div>
+                            )}
                         </div>
                     ) : props.currentSidebar === 'frame' ? (
                         <div className='sidebarUnfoldInner sidebarUnfoldFrame' t>

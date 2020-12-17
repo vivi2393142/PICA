@@ -309,158 +309,167 @@ const Canvas = (props) => {
                 setSaveDragItem({ func: saveDragItemFunc });
                 // --- listener to drop then add the dragging one
                 const dropItem = (e, canvas) => {
-                    const currentSizeRatio =
-                        parseInt(document.querySelector('.canvas-container').style.width) /
-                        canvas.width;
-                    const { offsetX, offsetY } = e.e;
-                    const src = movingItem.src;
-                    const scaleRatio = Math.max(
-                        canvas.width / 4 / movingItem.naturalWidth,
-                        canvas.height / 4 / movingItem.naturalHeight
-                    );
-                    if (
-                        movingItem.parentNode.parentNode.classList.contains('sidebarUnfoldImg') ||
-                        movingItem.parentNode.parentNode.classList.contains('unfoldItemImgWrapper')
-                    ) {
-                        fabric.Image.fromURL(
-                            src,
-                            (img) => {
-                                const imgItem = img.set({
-                                    scaleX: scaleRatio,
-                                    scaleY: scaleRatio,
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                });
-                                canvasInit.add(imgItem);
-                                imgItem.setControlsVisibility({
-                                    mb: false,
-                                    mt: false,
-                                    ml: false,
-                                    mr: false,
-                                });
-                            },
-                            {
-                                crossOrigin: 'anonymous',
-                            }
+                    if (Object.keys(movingItem).length !== 0) {
+                        const currentSizeRatio =
+                            parseInt(document.querySelector('.canvas-container').style.width) /
+                            canvas.width;
+                        const { offsetX, offsetY } = e.e;
+                        const src = movingItem.src;
+                        const scaleRatio = Math.max(
+                            canvas.width / 4 / movingItem.naturalWidth,
+                            canvas.height / 4 / movingItem.naturalHeight
                         );
-                        canvasInit.requestRenderAll();
-                    } else if (movingItem.parentNode.classList.contains('sidebarUnfoldText')) {
-                        let currentTextSetting = {};
-                        movingItem.classList.contains('addTextBig')
-                            ? (currentTextSetting = textSetting[0])
-                            : movingItem.classList.contains('addTextMiddle')
-                            ? (currentTextSetting = textSetting[1])
-                            : movingItem.classList.contains('addTextSmall')
-                            ? (currentTextSetting = textSetting[2])
-                            : null;
-                        const textRatio = canvas.width / 600;
-                        const textItem = new fabric.IText(currentTextSetting.title, {
-                            top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                            left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                            fill: '#555555',
-                            fontSize: currentTextSetting.size * textRatio,
-                            fontWeight: currentTextSetting.fontWeight,
-                        });
-                        canvasInit.add(textItem);
-                        canvasInit.requestRenderAll();
-                    } else if (movingItem.parentNode.classList.contains('sidebarUnfoldShape')) {
-                        const shapeRatio = canvas.width / 600;
-                        if (movingItem.classList.contains('rectShape')) {
-                            const rectItem = new fabric.Rect({
+                        if (
+                            movingItem.parentNode.parentNode.classList.contains(
+                                'sidebarUnfoldImg'
+                            ) ||
+                            movingItem.parentNode.parentNode.classList.contains(
+                                'unfoldItemImgWrapper'
+                            )
+                        ) {
+                            fabric.Image.fromURL(
+                                src,
+                                (img) => {
+                                    const imgItem = img.set({
+                                        scaleX: scaleRatio,
+                                        scaleY: scaleRatio,
+                                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    });
+                                    canvasInit.add(imgItem);
+                                    imgItem.setControlsVisibility({
+                                        mb: false,
+                                        mt: false,
+                                        ml: false,
+                                        mr: false,
+                                    });
+                                },
+                                {
+                                    crossOrigin: 'anonymous',
+                                }
+                            );
+                            canvasInit.requestRenderAll();
+                        } else if (movingItem.parentNode.classList.contains('sidebarUnfoldText')) {
+                            let currentTextSetting = {};
+                            movingItem.classList.contains('addTextBig')
+                                ? (currentTextSetting = textSetting[0])
+                                : movingItem.classList.contains('addTextMiddle')
+                                ? (currentTextSetting = textSetting[1])
+                                : movingItem.classList.contains('addTextSmall')
+                                ? (currentTextSetting = textSetting[2])
+                                : null;
+                            const textRatio = canvas.width / 600;
+                            const textItem = new fabric.IText(currentTextSetting.title, {
                                 top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
                                 left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                height: 100 * shapeRatio,
-                                width: 100 * shapeRatio,
-                                fill: '#e89a4f',
+                                fill: '#555555',
+                                fontSize: currentTextSetting.size * textRatio,
+                                fontWeight: currentTextSetting.fontWeight,
                             });
-                            canvasInit.add(rectItem);
+                            canvasInit.add(textItem);
                             canvasInit.requestRenderAll();
-                        } else if (movingItem.classList.contains('circleShape')) {
-                            const circleItem = new fabric.Circle({
-                                top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                radius: 50 * shapeRatio,
-                                fill: '#e89a4f',
-                            });
-                            canvasInit.add(circleItem);
-                            canvasInit.requestRenderAll();
-                        } else if (movingItem.classList.contains('triangleShape')) {
-                            const triangleItem = new fabric.Triangle({
-                                top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                width: 100 * shapeRatio,
-                                height: 100 * shapeRatio,
-                                fill: '#e89a4f',
-                            });
-                            canvasInit.add(triangleItem);
-                            canvasInit.requestRenderAll();
-                        } else if (movingItem.classList.contains('abnormalShape')) {
-                            fabric.loadSVGFromURL(src, (objects, options) => {
-                                const abnormalShapeItem = fabric.util.groupSVGElements(
-                                    objects,
-                                    options
-                                );
-                                abnormalShapeItem.set({
+                        } else if (movingItem.parentNode.classList.contains('sidebarUnfoldShape')) {
+                            const shapeRatio = canvas.width / 600;
+                            if (movingItem.classList.contains('rectShape')) {
+                                const rectItem = new fabric.Rect({
                                     top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
                                     left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                    scaleX: 2.2 * shapeRatio,
-                                    scaleY: 2.2 * shapeRatio,
+                                    height: 100 * shapeRatio,
+                                    width: 100 * shapeRatio,
+                                    fill: '#e89a4f',
+                                });
+                                canvasInit.add(rectItem);
+                                canvasInit.requestRenderAll();
+                            } else if (movingItem.classList.contains('circleShape')) {
+                                const circleItem = new fabric.Circle({
+                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    radius: 50 * shapeRatio,
+                                    fill: '#e89a4f',
+                                });
+                                canvasInit.add(circleItem);
+                                canvasInit.requestRenderAll();
+                            } else if (movingItem.classList.contains('triangleShape')) {
+                                const triangleItem = new fabric.Triangle({
+                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    width: 100 * shapeRatio,
+                                    height: 100 * shapeRatio,
+                                    fill: '#e89a4f',
+                                });
+                                canvasInit.add(triangleItem);
+                                canvasInit.requestRenderAll();
+                            } else if (movingItem.classList.contains('abnormalShape')) {
+                                fabric.loadSVGFromURL(src, (objects, options) => {
+                                    const abnormalShapeItem = fabric.util.groupSVGElements(
+                                        objects,
+                                        options
+                                    );
+                                    abnormalShapeItem.set({
+                                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                        scaleX: 2.2 * shapeRatio,
+                                        scaleY: 2.2 * shapeRatio,
+                                        // specialType: 'shape',
+                                    });
+                                    canvasInit.add(abnormalShapeItem);
+                                    canvasInit.requestRenderAll();
+                                });
+                            }
+                        } else if (movingItem.parentNode.classList.contains('sidebarUnfoldLine')) {
+                            const lineRatio = canvas.width / 600;
+                            fabric.loadSVGFromURL(src, (objects, options) => {
+                                const svgItem = fabric.util.groupSVGElements(objects, options);
+                                svgItem.set({
+                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    scaleX: 2.2 * lineRatio,
+                                    scaleY: 2.2 * lineRatio,
                                     // specialType: 'shape',
                                 });
-                                canvasInit.add(abnormalShapeItem);
+                                canvasInit.add(svgItem);
                                 canvasInit.requestRenderAll();
                             });
-                        }
-                    } else if (movingItem.parentNode.classList.contains('sidebarUnfoldLine')) {
-                        const lineRatio = canvas.width / 600;
-                        fabric.loadSVGFromURL(src, (objects, options) => {
-                            const svgItem = fabric.util.groupSVGElements(objects, options);
-                            svgItem.set({
-                                top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                scaleX: 2.2 * lineRatio,
-                                scaleY: 2.2 * lineRatio,
-                                // specialType: 'shape',
-                            });
-                            canvasInit.add(svgItem);
+                        } else if (
+                            movingItem.parentNode.parentNode.classList.contains(
+                                'sidebarUnfoldSticker'
+                            )
+                        ) {
+                            fabric.Image.fromURL(
+                                src,
+                                (img) => {
+                                    const stickerItem = img.set({
+                                        scaleX: scaleRatio,
+                                        scaleY: scaleRatio,
+                                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                        specialType: 'sticker',
+                                    });
+                                    stickerItem.toObject = (function (toObject) {
+                                        return function (propertiesToInclude) {
+                                            return fabric.util.object.extend(
+                                                toObject.call(this, propertiesToInclude),
+                                                {
+                                                    specialType: 'sticker', //my custom property
+                                                }
+                                            );
+                                        };
+                                    })(stickerItem.toObject);
+                                    canvasInit.add(stickerItem);
+                                    stickerItem.setControlsVisibility({
+                                        mb: false,
+                                        mt: false,
+                                        ml: false,
+                                        mr: false,
+                                    });
+                                },
+                                {
+                                    crossOrigin: 'anonymous',
+                                }
+                            );
                             canvasInit.requestRenderAll();
-                        });
-                    } else if (
-                        movingItem.parentNode.parentNode.classList.contains('sidebarUnfoldSticker')
-                    ) {
-                        fabric.Image.fromURL(
-                            src,
-                            (img) => {
-                                const stickerItem = img.set({
-                                    scaleX: scaleRatio,
-                                    scaleY: scaleRatio,
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
-                                    specialType: 'sticker',
-                                });
-                                stickerItem.toObject = (function (toObject) {
-                                    return function (propertiesToInclude) {
-                                        return fabric.util.object.extend(
-                                            toObject.call(this, propertiesToInclude),
-                                            {
-                                                specialType: 'sticker', //my custom property
-                                            }
-                                        );
-                                    };
-                                })(stickerItem.toObject);
-                                canvasInit.add(stickerItem);
-                                stickerItem.setControlsVisibility({
-                                    mb: false,
-                                    mt: false,
-                                    ml: false,
-                                    mr: false,
-                                });
-                            },
-                            {
-                                crossOrigin: 'anonymous',
-                            }
-                        );
-                        canvasInit.requestRenderAll();
+                        }
+                        movingItem = {};
                     }
                 };
 
