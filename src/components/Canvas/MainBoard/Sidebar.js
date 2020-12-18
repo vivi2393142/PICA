@@ -276,6 +276,8 @@ const Sidebar = (props) => {
         document.addEventListener('dragover', dragoverHandler);
         document.addEventListener('drop', dropHandler);
         document.addEventListener('dragenter', dragEnterHandler);
+        // document.addEventListener('dragstart', dragStartHandler);
+        // document.addEventListener('dragstart', )
         return () => {
             document.removeEventListener('dragover', dragoverHandler);
             document.removeEventListener('drop', dropHandler);
@@ -543,7 +545,11 @@ const Sidebar = (props) => {
         >
             {sampleList.map((item, index) => {
                 return (
-                    <div key={index} className='unfoldItemGalleryWrapper'>
+                    <div
+                        key={index}
+                        className='unfoldItemGalleryWrapper'
+                        style={{ width: '45%', overflow: 'visible', height: 'auto' }}
+                    >
                         <img
                             key={index}
                             draggable='false'
@@ -551,6 +557,12 @@ const Sidebar = (props) => {
                             className='unfoldItem unfoldItemGallery'
                             src={item.snapshot}
                             id={item.basicSetting.id}
+                            style={{
+                                position: 'relative',
+                                top: 0,
+                                left: 0,
+                                transform: 'translate(0, 0)',
+                            }}
                         ></img>
                     </div>
                 );
@@ -669,14 +681,34 @@ const Sidebar = (props) => {
     );
     // jsx: sidebar - image
     const imageArray = [
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727922.jpeg?alt=media&token=68c098f6-4baa-4a9c-b14f-c85b98b78ca2',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727928.jpeg?alt=media&token=22179791-4cd4-46b7-9b52-69ce6d5031a2',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303086.jpeg?alt=media&token=8651f14d-76a2-4a2e-aaa7-52b068b11bef',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303098.jpeg?alt=media&token=a947cd3d-46e2-4766-91bd-b184d873901e',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-maksim-goncharenok-5821029.jpeg?alt=media&token=e81bc877-ad53-4ad5-8479-9dc7bae31a7c',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-pixabay-235970.jpeg?alt=media&token=5242ddcf-69cd-45a9-a92f-aa146798f3ea',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-tejas-prajapati-586744.jpeg?alt=media&token=fa4acca3-5cfa-4a76-afb0-1437ce3c82b3',
+        {
+            title: '聖誕節',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727922.jpeg?alt=media&token=68c098f6-4baa-4a9c-b14f-c85b98b78ca2',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727928.jpeg?alt=media&token=22179791-4cd4-46b7-9b52-69ce6d5031a2',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303086.jpeg?alt=media&token=8651f14d-76a2-4a2e-aaa7-52b068b11bef',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303098.jpeg?alt=media&token=a947cd3d-46e2-4766-91bd-b184d873901e',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-maksim-goncharenok-5821029.jpeg?alt=media&token=e81bc877-ad53-4ad5-8479-9dc7bae31a7c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-pixabay-235970.jpeg?alt=media&token=5242ddcf-69cd-45a9-a92f-aa146798f3ea',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-tejas-prajapati-586744.jpeg?alt=media&token=fa4acca3-5cfa-4a76-afb0-1437ce3c82b3',
+            ],
+        },
+        {
+            title: '聖誕節2',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727921.jpeg?alt=media&token=9377a8ad-a866-4121-b643-b7e986f01c05',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-tejas-prajapati-586744.jpeg?alt=media&token=fa4acca3-5cfa-4a76-afb0-1437ce3c82b3',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727922.jpeg?alt=media&token=68c098f6-4baa-4a9c-b14f-c85b98b78ca2',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-maksim-goncharenok-5821029.jpeg?alt=media&token=e81bc877-ad53-4ad5-8479-9dc7bae31a7c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-any-lane-5727928.jpeg?alt=media&token=22179791-4cd4-46b7-9b52-69ce6d5031a2',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303086.jpeg?alt=media&token=8651f14d-76a2-4a2e-aaa7-52b068b11bef',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-giftpunditscom-1303098.jpeg?alt=media&token=a947cd3d-46e2-4766-91bd-b184d873901e',
+
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/images%2Fpexels-pixabay-235970.jpeg?alt=media&token=5242ddcf-69cd-45a9-a92f-aa146798f3ea',
+                ,
+            ],
+        },
     ];
     const imageJsx = (
         <div
@@ -684,38 +716,78 @@ const Sidebar = (props) => {
             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'image' ? 'flex' : 'none' }}
         >
-            {imageArray.map((item, index) => {
+            {imageArray.map((category, index) => {
                 return (
-                    <div key={index} className='unfoldItemGalleryWrapper'>
-                        <img
-                            onClick={addImage}
-                            className='unfoldItem unfoldItemGallery'
-                            draggable='true'
-                            src={item}
-                        ></img>
+                    <div className='unfoldImgWrapper' key={index}>
+                        <div className='toggleSubtitle'>
+                            {category.title}
+                            <div
+                                onClick={(e) => {
+                                    e.target.parentNode.parentNode.classList.toggle(
+                                        'unfoldImgWrapperToggle'
+                                    );
+                                    e.target.textContent === '+'
+                                        ? (e.target.textContent = '-')
+                                        : (e.target.textContent = '+');
+                                }}
+                                className='toggleButton'
+                            >
+                                -
+                            </div>
+                        </div>
+                        {category.src.map((item, index) => {
+                            return (
+                                <div key={index} className='unfoldItemGalleryWrapper'>
+                                    <img
+                                        onClick={addImage}
+                                        className='unfoldItem unfoldItemGallery'
+                                        draggable='true'
+                                        src={item}
+                                        onLoad={(e) => {
+                                            if (e.target.naturalHeight > e.target.naturalWidth) {
+                                                e.target.parentNode.style.width = '29%';
+                                            } else {
+                                                e.target.parentNode.style.width = '58%';
+                                            }
+                                        }}
+                                    ></img>
+                                </div>
+                            );
+                        })}
                     </div>
                 );
             })}
         </div>
     );
+
     // jsx: sidebar - sticker
-    const stickerArray = [
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fballet.svg?alt=media&token=1d5e5227-2183-4bcc-ad9b-959ac4819763',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2FDoggie.svg?alt=media&token=a2c119c8-b54b-4179-ac98-051cbe8485ff',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fclumsy.svg?alt=media&token=3f7b90d8-c1e2-4137-84cc-03b90c914351',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fbikini.svg?alt=media&token=d1c1eb63-84c8-4d9c-a7f9-f323c4bfd876',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fcoffee.svg?alt=media&token=cf6b586c-75c0-4c03-b81a-e29f8fa43574',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdancing.svg?alt=media&token=7835db16-23f8-4908-82f7-e097999e1520',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdog-jump.svg?alt=media&token=f9877759-4a82-4330-aa5f-9db031ca8c3c',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffloat.svg?alt=media&token=2e447975-657a-4dca-9dbb-91d870aace7e',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-01png.png?alt=media&token=a4e036ed-30f8-4fa3-929f-d51a6d281256',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-02.png?alt=media&token=8812fd2a-600b-4b16-9331-48cf4e870de6',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-03.png?alt=media&token=604b3548-6d4a-4d51-bf15-73a57d11e22a',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-04.png?alt=media&token=06360b8a-f9ca-4034-884e-b79674026cb9',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-05.png?alt=media&token=de15967e-73c6-47cf-8416-8afa6677b732',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-06.png?alt=media&token=d798ddaa-f957-4f63-af5b-72e602db2cc7',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-07.png?alt=media&token=e60cbd02-9169-4016-97ee-4cdeadb7eb28',
-        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-08.png?alt=media&token=145cdf4c-cf19-4910-9b80-2a32a3f6dbc1',
+    const stickerTestArray = [
+        {
+            title: '滑稽人像',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fballet.svg?alt=media&token=1d5e5227-2183-4bcc-ad9b-959ac4819763',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2FDoggie.svg?alt=media&token=a2c119c8-b54b-4179-ac98-051cbe8485ff',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fclumsy.svg?alt=media&token=3f7b90d8-c1e2-4137-84cc-03b90c914351',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fbikini.svg?alt=media&token=d1c1eb63-84c8-4d9c-a7f9-f323c4bfd876',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fcoffee.svg?alt=media&token=cf6b586c-75c0-4c03-b81a-e29f8fa43574',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdancing.svg?alt=media&token=7835db16-23f8-4908-82f7-e097999e1520',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdog-jump.svg?alt=media&token=f9877759-4a82-4330-aa5f-9db031ca8c3c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffloat.svg?alt=media&token=2e447975-657a-4dca-9dbb-91d870aace7e',
+            ],
+        },
+        {
+            title: '紙膠帶',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-01png.png?alt=media&token=a4e036ed-30f8-4fa3-929f-d51a6d281256',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-02.png?alt=media&token=8812fd2a-600b-4b16-9331-48cf4e870de6',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-03.png?alt=media&token=604b3548-6d4a-4d51-bf15-73a57d11e22a',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-04.png?alt=media&token=06360b8a-f9ca-4034-884e-b79674026cb9',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-05.png?alt=media&token=de15967e-73c6-47cf-8416-8afa6677b732',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-06.png?alt=media&token=d798ddaa-f957-4f63-af5b-72e602db2cc7',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-07.png?alt=media&token=e60cbd02-9169-4016-97ee-4cdeadb7eb28',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-08.png?alt=media&token=145cdf4c-cf19-4910-9b80-2a32a3f6dbc1',
+            ],
+        },
     ];
     const stickerJsx = (
         <div
@@ -723,15 +795,44 @@ const Sidebar = (props) => {
             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'sticker' ? 'flex' : 'none' }}
         >
-            {stickerArray.map((item, index) => {
+            {stickerTestArray.map((category, index) => {
                 return (
-                    <div key={index} className='unfoldItemGalleryWrapper'>
-                        <img
-                            onClick={addSticker}
-                            className='unfoldItem unfoldItemGallery'
-                            draggable='true'
-                            src={item}
-                        ></img>
+                    <div className='unfoldImgWrapper' key={index}>
+                        <div className='toggleSubtitle'>
+                            {category.title}
+                            <div
+                                onClick={(e) => {
+                                    e.target.parentNode.parentNode.classList.toggle(
+                                        'unfoldImgWrapperToggle'
+                                    );
+                                    e.target.textContent === '+'
+                                        ? (e.target.textContent = '-')
+                                        : (e.target.textContent = '+');
+                                }}
+                                className='toggleButton'
+                            >
+                                -
+                            </div>
+                        </div>
+                        {category.src.map((item, index) => {
+                            return (
+                                <div key={index} className='unfoldItemGalleryWrapper'>
+                                    <img
+                                        onClick={addSticker}
+                                        className='unfoldItem unfoldItemGallery'
+                                        draggable='true'
+                                        src={item}
+                                        onLoad={(e) => {
+                                            if (e.target.naturalHeight > e.target.naturalWidth) {
+                                                e.target.parentNode.style.width = '29%';
+                                            } else {
+                                                e.target.parentNode.style.width = '58%';
+                                            }
+                                        }}
+                                    ></img>
+                                </div>
+                            );
+                        })}
                     </div>
                 );
             })}
@@ -775,7 +876,15 @@ const Sidebar = (props) => {
                     draggable='false'
                     onClick={backgroundImageHandler}
                     className='unfoldItem unfoldItemGallery'
+                    style={{ position: 'relative' }}
                     src={item}
+                    onLoad={(e) => {
+                        if (e.target.naturalHeight > e.target.naturalWidth) {
+                            e.target.parentNode.style.width = '28%';
+                        } else {
+                            e.target.parentNode.style.width = '56%';
+                        }
+                    }}
                 ></img>
             </div>
         );
@@ -785,39 +894,61 @@ const Sidebar = (props) => {
             className='sidebarUnfoldInner sidebarUnfoldBack'
             style={{ display: props.currentSidebar === 'background' ? 'flex' : 'none' }}
         >
-            <div className='backgroundTitleOuter'>
-                <div className='sidebarUnfoldSubtitle backgroundTitle'>背景色彩</div>
-                {allSettings.hasBackColor ? (
-                    <div className='backgroundCheckboxMinus' onClick={toggleAddBackColor}>
-                        －
+            {isChoosingBackColor && (
+                <ChromePicker
+                    className='backgroundPicker'
+                    color={backColorChosen.background}
+                    onChange={handleBackColorChange}
+                />
+            )}
+            <div className='unfoldImgWrapper'>
+                <div className='toggleSubtitle'>
+                    背景色彩
+                    <div
+                        onClick={(e) => {
+                            e.target.parentNode.parentNode.classList.toggle(
+                                'unfoldImgWrapperToggle'
+                            );
+                            e.target.textContent === '+'
+                                ? (e.target.textContent = '-')
+                                : (e.target.textContent = '+');
+                        }}
+                        className='toggleButton'
+                    >
+                        -
                     </div>
-                ) : (
-                    <div className='backgroundCheckboxAdd' onClick={toggleAddBackColor}>
-                        ＋
-                    </div>
-                )}
-            </div>
-            <div className='colorChartWrapper'>
+                </div>
                 <div className='currentBackground'>
                     <div
                         className='backgroundColorCube currentColorCube'
                         style={{ backgroundColor: backColorChosen.background }}
                         onClick={toggleBackColorSelection}
                     ></div>
-                    {isChoosingBackColor && (
-                        <ChromePicker
-                            className='backgroundPicker'
-                            color={backColorChosen.background}
-                            onChange={handleBackColorChange}
-                        />
-                    )}
                 </div>
                 <div className='backgroundColorChart'>{backgroundColorJsx}</div>
             </div>
-            <div className='sidebarUnfoldSubtitle backgroundTitle'>背景圖片</div>
-            <div className='backImgChart'>{backgroundImageJsx}</div>
+            <div className='unfoldImgWrapper'>
+                <div className='toggleSubtitle'>
+                    背景圖片
+                    <div
+                        onClick={(e) => {
+                            e.target.parentNode.parentNode.classList.toggle(
+                                'unfoldImgWrapperToggle'
+                            );
+                            e.target.textContent === '+'
+                                ? (e.target.textContent = '-')
+                                : (e.target.textContent = '+');
+                        }}
+                        className='toggleButton'
+                    >
+                        -
+                    </div>
+                </div>
+                <div className='backImgChart'>{backgroundImageJsx}</div>
+            </div>
         </div>
     );
+
     // jsx: sidebar - upload image
     const uploadedImgJsx = (
         <div
@@ -853,14 +984,19 @@ const Sidebar = (props) => {
                             className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
                             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
                         >
-                            <div>
-                                <img
-                                    className='unfoldItemImg unfoldItemGallery'
-                                    onClick={addImage}
-                                    draggable='true'
-                                    src={item.src}
-                                ></img>
-                            </div>
+                            <img
+                                className='unfoldItemImg unfoldItemGallery'
+                                onClick={addImage}
+                                draggable='true'
+                                src={item.src}
+                                onLoad={(e) => {
+                                    if (e.target.naturalHeight > e.target.naturalWidth) {
+                                        e.target.parentNode.style.width = '28%';
+                                    } else {
+                                        e.target.parentNode.style.width = '56%';
+                                    }
+                                }}
+                            ></img>
                             <div
                                 className='close'
                                 id={item.path}

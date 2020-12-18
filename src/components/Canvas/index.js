@@ -327,12 +327,10 @@ const Canvas = (props) => {
                             canvas.height / 4 / movingItem.naturalHeight
                         );
                         if (
-                            movingItem.parentNode.parentNode.classList.contains(
+                            movingItem.parentNode.parentNode.parentNode.classList.contains(
                                 'sidebarUnfoldImg'
                             ) ||
-                            movingItem.parentNode.parentNode.classList.contains(
-                                'unfoldItemImgWrapper'
-                            )
+                            movingItem.parentNode.classList.contains('unfoldItemImgWrapper')
                         ) {
                             fabric.Image.fromURL(
                                 src,
@@ -438,7 +436,7 @@ const Canvas = (props) => {
                                 canvasInit.requestRenderAll();
                             });
                         } else if (
-                            movingItem.parentNode.parentNode.classList.contains(
+                            movingItem.parentNode.parentNode.parentNode.classList.contains(
                                 'sidebarUnfoldSticker'
                             )
                         ) {
