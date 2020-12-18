@@ -28,7 +28,7 @@ const MainBoard = (props) => {
         allSettings.setRatioSelectValue(e.target.value);
         const container = document.querySelector('.canvas-container');
         if (e.target.value === 'auto') {
-            allSettings.handleResponsiveSize(container);
+            allSettings.handleResponsiveSize(container, allSettings.canvasSetting);
         } else {
             container.style.width = `${
                 (parseInt(e.target.value) / 100) * allSettings.canvasSetting.width

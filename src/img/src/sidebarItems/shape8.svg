@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>shape8</title>
+    <g id="shape8" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path d="M41,15 C45.418278,15 49,19.7010101 49,25.5 C49,31.2989899 45.418278,36 41,36 L41,36 L10,36 L10.0009654,35.9186064 C9.67306146,35.9723263 9.33899303,36 9,36 C4.581722,36 1,31.2989899 1,25.5 C1,19.7010101 4.581722,15 9,15 C9.33899303,15 9.67306146,15.0276737 10.0009654,15.0813936 L10,15 Z" id="Combined-Shape" fill="#BADADA"></path>
+    </g>
+</svg>

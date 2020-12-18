@@ -6,13 +6,24 @@ import * as firebase from '../../../firebase';
 import shape1 from '../../../img/src/sidebarItems/shape1.svg';
 import shape2 from '../../../img/src/sidebarItems/shape2.svg';
 import shape3 from '../../../img/src/sidebarItems/shape3.svg';
+import shape4 from '../../../img/src/sidebarItems/shape4.svg';
+import shape5 from '../../../img/src/sidebarItems/shape5.svg';
+import shape6 from '../../../img/src/sidebarItems/shape6.svg';
+import shape7 from '../../../img/src/sidebarItems/shape7.svg';
+import shape8 from '../../../img/src/sidebarItems/shape8.svg';
 import line1 from '../../../img/src/sidebarItems/line1.svg';
 import line2 from '../../../img/src/sidebarItems/line2.svg';
 import line3 from '../../../img/src/sidebarItems/line3.svg';
 import line4 from '../../../img/src/sidebarItems/line4.svg';
 import line5 from '../../../img/src/sidebarItems/line5.svg';
 import line6 from '../../../img/src/sidebarItems/line6.svg';
+import line7 from '../../../img/src/sidebarItems/line7.svg';
+import line8 from '../../../img/src/sidebarItems/line8.svg';
+import line9 from '../../../img/src/sidebarItems/line9.svg';
+import line10 from '../../../img/src/sidebarItems/line10.svg';
+import line11 from '../../../img/src/sidebarItems/line11.svg';
 import square from '../../../img/src/sidebarItems/square.svg';
+import radiusSquare from '../../../img/src/sidebarItems/radiusSquare.svg';
 import triangle from '../../../img/src/sidebarItems/triangle.svg';
 import circle from '../../../img/src/sidebarItems/circle.svg';
 
@@ -45,6 +56,22 @@ const Sidebar = (props) => {
             width: 100 * shapeRatio,
             fill: mainColor,
             objectCaching: false,
+        });
+        allSettings.canvas.add(rect);
+        allSettings.canvas.requestRenderAll();
+        adjSetNextPosition();
+    };
+    const addRadiusRect = () => {
+        const shapeRatio = allSettings.canvas.width / 600;
+        const rect = new fabric.Rect({
+            top: nextAddPosition.top,
+            left: nextAddPosition.left,
+            height: 100 * shapeRatio,
+            width: 100 * shapeRatio,
+            fill: mainColor,
+            objectCaching: false,
+            rx: 15,
+            ry: 15,
         });
         allSettings.canvas.add(rect);
         allSettings.canvas.requestRenderAll();
@@ -618,7 +645,7 @@ const Sidebar = (props) => {
         </div>
     );
     // jsx: sidebar - shape
-    const abnormalShapeArray = [shape1, shape2, shape3];
+    const abnormalShapeArray = [shape1, shape2, shape3, shape4, shape5, shape6, shape7, shape8];
     const shapeJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldShape'
@@ -631,6 +658,12 @@ const Sidebar = (props) => {
                 className='unfoldItem rectShape '
                 draggable='true'
                 onClick={addRect}
+            ></img>
+            <img
+                src={radiusSquare}
+                className='unfoldItem radiusRectShape '
+                draggable='true'
+                onClick={addRadiusRect}
             ></img>
             <img
                 src={circle}
@@ -659,7 +692,19 @@ const Sidebar = (props) => {
         </div>
     );
     // jsx: sidebar - line
-    const lineArray = [line1, line2, line3, line4, line5, line6];
+    const lineArray = [
+        line1,
+        line2,
+        line3,
+        line4,
+        line5,
+        line6,
+        line7,
+        line8,
+        line9,
+        line10,
+        line11,
+    ];
     const lineJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldLine'
@@ -718,7 +763,7 @@ const Sidebar = (props) => {
         >
             {imageArray.map((category, index) => {
                 return (
-                    <div className='unfoldImgWrapper' key={index}>
+                    <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={index}>
                         <div className='toggleSubtitle'>
                             {category.title}
                             <div
@@ -732,7 +777,7 @@ const Sidebar = (props) => {
                                 }}
                                 className='toggleButton'
                             >
-                                -
+                                +
                             </div>
                         </div>
                         {category.src.map((item, index) => {
@@ -763,19 +808,6 @@ const Sidebar = (props) => {
     // jsx: sidebar - sticker
     const stickerTestArray = [
         {
-            title: '滑稽人像',
-            src: [
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fballet.svg?alt=media&token=1d5e5227-2183-4bcc-ad9b-959ac4819763',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2FDoggie.svg?alt=media&token=a2c119c8-b54b-4179-ac98-051cbe8485ff',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fclumsy.svg?alt=media&token=3f7b90d8-c1e2-4137-84cc-03b90c914351',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fbikini.svg?alt=media&token=d1c1eb63-84c8-4d9c-a7f9-f323c4bfd876',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fcoffee.svg?alt=media&token=cf6b586c-75c0-4c03-b81a-e29f8fa43574',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdancing.svg?alt=media&token=7835db16-23f8-4908-82f7-e097999e1520',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdog-jump.svg?alt=media&token=f9877759-4a82-4330-aa5f-9db031ca8c3c',
-                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffloat.svg?alt=media&token=2e447975-657a-4dca-9dbb-91d870aace7e',
-            ],
-        },
-        {
             title: '紙膠帶',
             src: [
                 'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-01png.png?alt=media&token=a4e036ed-30f8-4fa3-929f-d51a6d281256',
@@ -788,6 +820,101 @@ const Sidebar = (props) => {
                 'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ftape-08.png?alt=media&token=145cdf4c-cf19-4910-9b80-2a32a3f6dbc1',
             ],
         },
+        {
+            title: '太空',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-01.png?alt=media&token=382718b6-067f-41f3-9e25-7f5fbce5ec38',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-02.png?alt=media&token=e94bf30b-428e-4b84-ad84-daa01633efb9',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-03.png?alt=media&token=1274fc14-ac1f-4579-8c46-ff96b6a0bf0e',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-04.png?alt=media&token=c742d335-1081-4e59-bdf4-b5885f55d759',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-05.png?alt=media&token=6535b95b-8ed0-44ec-b07a-657c03635132',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-06.png?alt=media&token=7f505af0-2189-4bab-828d-07b77692c5a3',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-07.png?alt=media&token=609ed0ef-8661-47e1-8102-0961107ab470',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-08.png?alt=media&token=eb6ff0dd-f7f5-46d9-a080-558c941bc16e',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fspace%2Fspace-09.png?alt=media&token=6161b12a-b70e-4314-beb0-e1caadcec724',
+            ],
+        },
+        {
+            title: '怪獸',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-01.png?alt=media&token=30ac6b79-aa29-4a4c-934f-47811f94107d',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-02.png?alt=media&token=b0fb9d3a-e8f4-439c-8bbf-80b8507b3d39',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-03.png?alt=media&token=5831df4e-68d7-44bf-9776-af691a674156',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-04.png?alt=media&token=9aca3995-62e1-47ce-9ad4-b14b6585ffe3',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-05.png?alt=media&token=25347634-3f0b-4702-95d8-f16eea9a4a97',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-06.png?alt=media&token=c23c4324-d113-48e0-b506-159c2dd6a1c1',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-07.png?alt=media&token=53127e7c-9cdb-46c4-89f2-fe8c7504a20a',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-08.png?alt=media&token=be4cc132-592a-4dde-a1d4-02592e4e808f',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-09.png?alt=media&token=146b6470-1e45-481f-aa3e-63e15f99666c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmonster%2Fmonster-10.png?alt=media&token=892e4cf7-bad9-4dff-acd1-91dea7a4624b',
+            ],
+        },
+        {
+            title: '肉食主義',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-01.png?alt=media&token=d5c54a6c-daa1-4dd2-b8cb-5899b12482ee',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-02.png?alt=media&token=033e4117-244e-4019-a90d-dd1e8e399727',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-03.png?alt=media&token=ddc78c4b-c0a5-4a7b-a458-124067948d8c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-04.png?alt=media&token=bc8b05bd-f145-4683-9eb7-f4bfd3389e01',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-05.png?alt=media&token=fb7b36ac-8b27-424e-acc2-22b2f06c0a83',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-06.png?alt=media&token=25fcf821-b23b-4fc0-9b40-20183855ef2c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-07.png?alt=media&token=2fac748f-7041-43c2-8ad2-306e4ff5e0e8',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-08.png?alt=media&token=1a59f9d7-3c61-4e29-9850-81de456c773d',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-09.png?alt=media&token=c887cd73-9b50-4925-9546-bb3d53b77fe2',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fmeat%2Fmeat-10.png?alt=media&token=ff360cc4-687e-4d80-b2e1-cd2d34414c9f',
+            ],
+        },
+        {
+            title: '健康蔬食',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-01.png?alt=media&token=fb63f563-ba8e-4a66-ab06-2abd7abdac2c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-02.png?alt=media&token=84363afd-1e41-4448-ae10-ceb6540d8c42',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-03.png?alt=media&token=95a4cef5-ce94-4e86-9eb7-f4ea40240d8c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-04.png?alt=media&token=74eeb181-8e4b-4434-9752-7c1abae96640',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-05.png?alt=media&token=0e79df3f-8370-4a65-8a54-5fb6b688004f',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-06.png?alt=media&token=b6a704bd-6e35-4fa8-abd0-f655ad4de40c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-07.png?alt=media&token=680765c6-4ce1-4715-87e4-8d88370e615b',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-08.png?alt=media&token=fa97d719-e137-44a4-bb36-3e44ec6912c1',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-09.png?alt=media&token=98ad0379-92f2-4178-a0bd-1b3d9a545a6f',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-10.png?alt=media&token=ec1ad2c5-c125-4910-b2d2-8a8a159791fc',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-11.png?alt=media&token=7932b439-622a-4898-b596-eb98a19099b5',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-12.png?alt=media&token=66c3593d-179d-42b3-9dea-7d6474ded30f',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-13.png?alt=media&token=0db11f62-9845-4aaf-88dc-fae076cbdcff',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Ffruits%2Ffruit-14.png?alt=media&token=aad60efa-f941-4213-aec8-b143669e9e29',
+            ],
+        },
+        {
+            title: '花朵',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-01.png?alt=media&token=dc3c23fe-c59b-4c87-92ef-8a3feb61b453',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-02.png?alt=media&token=af58386c-ad3d-4e46-b890-78e5b7a5c147',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-03.png?alt=media&token=f55f8083-b6f8-4ff3-9f04-be4ac30b5413',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-04.png?alt=media&token=d276b698-941e-45b5-a55e-758e8a3f1d1d',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-05.png?alt=media&token=b1a57b82-16b0-448d-8e92-fd140a9c9b3c',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-06.png?alt=media&token=f4156701-70ce-4e4f-ad90-fd8d53e72900',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-07.png?alt=media&token=3c94785e-29e4-42b3-bb5d-97ca23217df4',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-08.png?alt=media&token=6b431509-3e9d-45c4-8879-85e7c216c5ac',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-09.png?alt=media&token=1ee86a14-dbaa-4cdd-a725-97aabd889bc0',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-10.png?alt=media&token=eaff0940-e687-4149-8ec2-e64a42bc03ca',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-11.png?alt=media&token=0418a7ef-f548-4896-8418-80ddd96b52d0',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fflowers%2Fflowers-sticker-12.png?alt=media&token=7f667b92-199c-44f3-955e-08c6750bcd94',
+            ],
+        },
+        {
+            title: '恐龍',
+            src: [
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-01.png?alt=media&token=47f05fb0-14ac-4a41-b671-94e8ca0f7225',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-02.png?alt=media&token=b2af85f7-a9cd-4002-8937-24902dc1268a',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-03.png?alt=media&token=6d596744-8cc9-4142-be14-a31399246c35',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-04.png?alt=media&token=0875eb68-3f0a-4550-8a53-88e5cfeaf954',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-05.png?alt=media&token=39fdf74a-aad8-4e68-aeca-6528d5375b0d',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-06.png?alt=media&token=6a9919d6-bcc2-4bda-817d-e238413575e2',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-07.png?alt=media&token=2ca4944f-17f6-4979-a5b5-8b07a12a1624',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-08.png?alt=media&token=30b5d572-66c1-43e6-b596-515badcfddb9',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-09.png?alt=media&token=992255bf-9ec4-45a0-8003-e512e473e852',
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/stickers%2Fdinosaur%2Fdinosaur-10.png?alt=media&token=d0f0fbe0-798d-422e-b495-5d87d5422680',
+            ],
+        },
     ];
     const stickerJsx = (
         <div
@@ -797,7 +924,7 @@ const Sidebar = (props) => {
         >
             {stickerTestArray.map((category, index) => {
                 return (
-                    <div className='unfoldImgWrapper' key={index}>
+                    <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={index}>
                         <div className='toggleSubtitle'>
                             {category.title}
                             <div
@@ -811,7 +938,7 @@ const Sidebar = (props) => {
                                 }}
                                 className='toggleButton'
                             >
-                                -
+                                +
                             </div>
                         </div>
                         {category.src.map((item, index) => {
@@ -824,9 +951,9 @@ const Sidebar = (props) => {
                                         src={item}
                                         onLoad={(e) => {
                                             if (e.target.naturalHeight > e.target.naturalWidth) {
-                                                e.target.parentNode.style.width = '29%';
+                                                e.target.parentNode.style.width = '20%';
                                             } else {
-                                                e.target.parentNode.style.width = '58%';
+                                                e.target.parentNode.style.width = '40%';
                                             }
                                         }}
                                     ></img>
@@ -880,9 +1007,9 @@ const Sidebar = (props) => {
                     src={item}
                     onLoad={(e) => {
                         if (e.target.naturalHeight > e.target.naturalWidth) {
-                            e.target.parentNode.style.width = '28%';
+                            e.target.parentNode.style.width = '29%';
                         } else {
-                            e.target.parentNode.style.width = '56%';
+                            e.target.parentNode.style.width = '58%';
                         }
                     }}
                 ></img>
@@ -901,7 +1028,7 @@ const Sidebar = (props) => {
                     onChange={handleBackColorChange}
                 />
             )}
-            <div className='unfoldImgWrapper'>
+            <div className='unfoldImgWrapper unfoldImgWrapperToggle'>
                 <div className='toggleSubtitle'>
                     背景色彩
                     <div
@@ -915,7 +1042,7 @@ const Sidebar = (props) => {
                         }}
                         className='toggleButton'
                     >
-                        -
+                        +
                     </div>
                 </div>
                 <div className='currentBackground'>
@@ -927,7 +1054,7 @@ const Sidebar = (props) => {
                 </div>
                 <div className='backgroundColorChart'>{backgroundColorJsx}</div>
             </div>
-            <div className='unfoldImgWrapper'>
+            <div className='unfoldImgWrapper unfoldImgWrapperToggle'>
                 <div className='toggleSubtitle'>
                     背景圖片
                     <div
@@ -941,7 +1068,7 @@ const Sidebar = (props) => {
                         }}
                         className='toggleButton'
                     >
-                        -
+                        +
                     </div>
                 </div>
                 <div className='backImgChart'>{backgroundImageJsx}</div>
@@ -991,9 +1118,9 @@ const Sidebar = (props) => {
                                 src={item.src}
                                 onLoad={(e) => {
                                     if (e.target.naturalHeight > e.target.naturalWidth) {
-                                        e.target.parentNode.style.width = '28%';
+                                        e.target.parentNode.style.width = '29%';
                                     } else {
-                                        e.target.parentNode.style.width = '56%';
+                                        e.target.parentNode.style.width = '58%';
                                     }
                                 }}
                             ></img>

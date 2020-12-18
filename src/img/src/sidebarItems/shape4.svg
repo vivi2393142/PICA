@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>shape4</title>
+    <g id="shape4" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Star" fill="#BADADA" points="25 38 10.8931539 45.4164079 13.5873218 29.7082039 2.17464361 18.5835921 17.946577 16.2917961 25 2 32.053423 16.2917961 47.8253564 18.5835921 36.4126782 29.7082039 39.1068461 45.4164079"></polygon>
+    </g>
+</svg>

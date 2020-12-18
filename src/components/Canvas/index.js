@@ -42,13 +42,15 @@ const Canvas = (props) => {
         }, 3000);
     };
     // handle responsive size
-    const handleResponsiveSize = (container) => {
-        let fixRatio = Math.min(
-            (window.innerWidth * 0.72) / canvasSetting.width,
-            (window.innerHeight * 0.72) / canvasSetting.height
-        );
-        container.style.width = `${fixRatio * canvasSetting.width}px`;
-        container.style.height = `${fixRatio * canvasSetting.height}px`;
+    const handleResponsiveSize = (container, canvasSetting) => {
+        if (container) {
+            let fixRatio = Math.min(
+                (window.innerWidth * 0.72) / canvasSetting.width,
+                (window.innerHeight * 0.72) / canvasSetting.height
+            );
+            container.style.width = `${fixRatio * canvasSetting.width}px`;
+            container.style.height = `${fixRatio * canvasSetting.height}px`;
+        }
     };
 
     // preset backgroundImg function
@@ -381,6 +383,18 @@ const Canvas = (props) => {
                                     left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
                                     height: 100 * shapeRatio,
                                     width: 100 * shapeRatio,
+                                    fill: '#e89a4f',
+                                });
+                                canvasInit.add(rectItem);
+                                canvasInit.requestRenderAll();
+                            } else if (movingItem.classList.contains('radiusRectShape')) {
+                                const rectItem = new fabric.Rect({
+                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
+                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    height: 100 * shapeRatio,
+                                    width: 100 * shapeRatio,
+                                    rx: 15,
+                                    ry: 15,
                                     fill: '#e89a4f',
                                 });
                                 canvasInit.add(rectItem);

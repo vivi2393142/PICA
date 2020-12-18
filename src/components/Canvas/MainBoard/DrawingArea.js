@@ -8,17 +8,20 @@ const DrawingArea = (props) => {
 
     // -- handle auto resizing option
     React.useEffect(() => {
-        const handleResize = () => {
-            const container = document.querySelector('.canvas-container');
-            if (allSettings.ratioSelectValue === 'auto') {
-                allSettings.handleResponsiveSize(container);
-            }
-        };
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [allSettings.ratioSelectValue]);
+        if (Object.keys(allSettings.canvasSetting).length !== 0) {
+            const handleResize = () => {
+                const container = document.querySelector('.canvas-container');
+
+                if (allSettings.ratioSelectValue === 'auto') {
+                    allSettings.handleResponsiveSize(container, allSettings.canvasSetting);
+                }
+            };
+            window.addEventListener('resize', handleResize);
+            return () => {
+                window.removeEventListener('resize', handleResize);
+            };
+        }
+    }, [allSettings.ratioSelectValue, allSettings.canvasSetting]);
 
     //render
     return (
