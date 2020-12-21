@@ -44,29 +44,26 @@ const listenCanvas = (fileId, callback, setUploadedFiles) => {
 const savaDataURL = (canvas, fileId, successCallback) => {
     let exportCanvas;
     if (JSON.stringify(canvas) === '{}') {
-        // console.log('1');
         exportCanvas = document.getElementById('fabric-canvas');
     } else {
-        // console.log('2');
         exportCanvas = canvas;
     }
-    // console.log(exportCanvas);
     let dataURL = exportCanvas.toDataURL('image/png', 1);
-    // console.log(dataURL);
     const storageRef = firebase
         .storage()
         .ref()
         .child('snapshot/' + fileId);
-    const newDataURL = dataURL.replace('data:image/png;base64,', '');
-    const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
-    task.on(
-        'state_changed',
-        () => {},
-        function error(err) {},
-        function complete() {
-            successCallback(storageRef);
-        }
-    );
+    successCallback(dataURL);
+    // const newDataURL = dataURL.replace('data:image/png;base64,', '');
+    // const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
+    // task.on(
+    //     'state_changed',
+    //     () => {},
+    //     function error(err) {},
+    //     function complete() {
+    //         successCallback(storageRef);
+    //     }
+    // );
 };
 
 // -- firestore
@@ -132,34 +129,29 @@ const loadCanvas = (canvas, callback, fileId) => {
         const canvasSettingInit = dataFromFirebase.basicSetting;
         const canvasDataInit = JSON.parse(dataFromFirebase.data);
         callback(canvasSettingInit, canvasDataInit);
-        // console.log(dataFromFirebase);
         if (
             canvasDataInit.objects.length === 0 ||
             (canvasDataInit.objects.length !== 0 && !doc.data().snapshot)
         ) {
-            savaDataURL(canvas, fileId, (storageRef) => {
-                storageRef.getDownloadURL().then((url) => {
-                    ref.update({
-                        snapshot: url,
-                    });
+            savaDataURL(canvas, fileId, (dataURL) => {
+                ref.update({
+                    snapshot: dataURL,
                 });
             });
         }
     });
 };
 const saveCanvasData = (canvas, canvasSetting, fileId) => {
-    // save snap shot on storage
-    savaDataURL(canvas, fileId, (storageRef) => {
-        storageRef.getDownloadURL().then((url) => {
-            // update file data
-            const canvasData = JSON.stringify(canvas.toJSON());
-            const ref = db.collection('canvasFiles').doc(canvasSetting.id);
-            ref.update({
-                data: canvasData,
-                basicSetting: canvasSetting,
-                snapshot: url,
-            }).then(() => {});
-        });
+    // save snap shot on dataURL
+    savaDataURL(canvas, fileId, (dataURL) => {
+        // update file data
+        const canvasData = JSON.stringify(canvas.toJSON());
+        const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+        ref.update({
+            data: canvasData,
+            basicSetting: canvasSetting,
+            snapshot: dataURL,
+        }).then(() => {});
     });
 };
 const getCanvasData = (id, callback) => {
