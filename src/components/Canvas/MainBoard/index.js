@@ -36,9 +36,13 @@ const MainBoard = (props) => {
             container.style.height = `${
                 (parseInt(e.target.value) / 100) * allSettings.canvasSetting.height
             }px`;
+            const customBorder = {
+                cornerSize: 8 / (parseInt(e.target.value) / 100),
+            };
+            fabric.Object.prototype.set(customBorder);
         }
         // -- zoom canvas without quality lose
-        // zoomCanvas(canvas);
+        zoomCanvas(allSettings.canvas);
     };
     const zoomCanvas = (canvas) => {
         const currentSizeRatio =
@@ -50,7 +54,7 @@ const MainBoard = (props) => {
             allSettings.canvasSetting.height * allSettings.canvas.getZoom()
         );
     };
-    const ratioOptions = [10, 25, 50, 75, 100, 125, 200, 300];
+    const ratioOptions = [25, 50, 75, 100, 125, 200, 300];
     const givenOptions = ratioOptions.map((item, index) => {
         return (
             <option key={index} value={item}>

@@ -54,6 +54,7 @@ const Banner = (props) => {
                     placeholder='未命名畫布'
                     defaultValue={allSettings.canvasSetting.title}
                     onChange={handleTitle}
+                    onBlur={handleSaveFileTemporary}
                 ></input>
                 <div
                     onClick={handleSaveFileTemporary}

@@ -8,6 +8,15 @@ import * as backImg from '../../img/background';
 import * as firebase from '../../firebase';
 import Loader from '../Loader';
 import { useHistory } from 'react-router-dom';
+const canvasSizeOptions = [
+    { name: '自訂尺寸', type: 'custom', width: 1800, height: 1600 },
+    { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
+    { name: '網頁', type: 'web', width: 1280, height: 1024 },
+    { name: 'Instagram', type: 'instagram', width: 1080, height: 1080 },
+    { name: '橫式A4', type: 'a4', width: 842, height: 595, mmW: 297, mmH: 210 },
+    { name: '明信片', type: 'postCard', width: 560, height: 288, mmW: 198, mmH: 102 },
+    { name: '名片', type: 'nameCard', width: 255, height: 153, mmW: 90, mmH: 54 },
+];
 
 // export default App;
 const Canvas = (props) => {
@@ -20,7 +29,7 @@ const Canvas = (props) => {
     const [activeObj, setActiveObj] = React.useState({});
     const [saveDragItem, setSaveDragItem] = React.useState({});
     const [uploadedFiles, setUploadedFiles] = React.useState([]);
-    const [hasBackColor, setHasBackColor] = React.useState(false);
+    // const [hasBackColor, setHasBackColor] = React.useState(false);
     const [hasUndo, setHasUndo] = React.useState(false);
     const [hasRedo, setHasRedo] = React.useState(false);
     const textSetting = [
@@ -50,6 +59,10 @@ const Canvas = (props) => {
             );
             container.style.width = `${fixRatio * canvasSetting.width}px`;
             container.style.height = `${fixRatio * canvasSetting.height}px`;
+            const customBorder = {
+                cornerSize: 8 * fixRatio,
+            };
+            fabric.Object.prototype.set(customBorder);
         }
     };
 
@@ -122,7 +135,6 @@ const Canvas = (props) => {
     }, [props.currentUser, canvasSetting]);
 
     React.useEffect(() => {
-        // console.log('render useEffect');
         // get firebase data according to URL params
         firebase.loadCanvas(
             canvas,
@@ -273,17 +285,6 @@ const Canvas = (props) => {
                 canvasInit.selectionLineWidth = 1;
                 // -- set layers in canvas
                 canvasInit.preserveObjectStacking = true;
-                // -- customize border style
-                const customBorder = {
-                    borderColor: 'rgba(0,0,0,0.25)',
-                    cornerColor: 'rgba(0,0,0,0.25)',
-                    cornerStrokeColor: 'rgba(0,0,0,0.25)',
-                    cornerSize: 8,
-                    cornerStyle: 'circle',
-                    cornerColor: 'white',
-                };
-                fabric.Object.prototype.set(customBorder);
-
                 // set canvas
                 setCanvas(canvasInit);
 
@@ -302,11 +303,23 @@ const Canvas = (props) => {
                 container.style.width = `${fixRatio * canvasSettingInit.width}px`;
                 container.style.height = `${fixRatio * canvasSettingInit.height}px`;
 
+                // -- customize border style
+                const customBorder = {
+                    borderColor: 'rgba(0,0,0,0.25)',
+                    cornerColor: 'rgba(0,0,0,0.25)',
+                    cornerStrokeColor: 'rgba(0,0,0,0.25)',
+                    cornerSize: 8 * fixRatio,
+                    cornerStyle: 'circle',
+                    cornerColor: 'white',
+                };
+                fabric.Object.prototype.set(customBorder);
+
                 // dnd components event
                 // --- save the dragging target
                 let itemDragOffset = { offsetX: 0, offsetY: 0 };
                 let movingItem = {};
                 const saveDragItemFunc = (e) => {
+                    console.log(e.target);
                     if (e.target.draggable) {
                         itemDragOffset.offsetX =
                             e.clientX - e.target.offsetParent.offsetLeft - e.target.offsetLeft;
@@ -318,10 +331,15 @@ const Canvas = (props) => {
                 setSaveDragItem({ func: saveDragItemFunc });
                 // --- listener to drop then add the dragging one
                 const dropItem = (e, canvas) => {
+                    console.log(canvas.canvasSetting);
+                    console.log(movingItem);
+                    console.log(movingItem.parentNode.parentNode);
+                    console.log(Object.keys(movingItem).length);
                     if (Object.keys(movingItem).length !== 0) {
                         const currentSizeRatio =
                             parseInt(document.querySelector('.canvas-container').style.width) /
                             canvas.width;
+                        console.log(canvas.getWidth(), canvas.width);
                         const { offsetX, offsetY } = e.e;
                         const src = movingItem.src;
                         const scaleRatio = Math.max(
@@ -334,6 +352,14 @@ const Canvas = (props) => {
                             ) ||
                             movingItem.parentNode.classList.contains('unfoldItemImgWrapper')
                         ) {
+                            console.log(
+                                scaleRatio,
+                                offsetY,
+                                offsetX,
+                                itemDragOffset.offsetY,
+                                itemDragOffset.offsetX,
+                                currentSizeRatio
+                            );
                             fabric.Image.fromURL(
                                 src,
                                 (img) => {
@@ -492,6 +518,13 @@ const Canvas = (props) => {
                     }
                 };
 
+                const currentSizeRatio =
+                    parseInt(document.querySelector('.canvas-container').style.width) /
+                    canvasSettingInit.width;
+                canvasInit.setZoom(currentSizeRatio);
+                canvasInit.setWidth(canvasSettingInit.width * canvasInit.getZoom());
+                canvasInit.setHeight(canvasSettingInit.height * canvasInit.getZoom());
+
                 // show save status when firebase find new update
                 firebase.listenCanvas(props.match.params.id, showSaveStatus, (files) =>
                     setUploadedFiles(files)
@@ -518,8 +551,8 @@ const Canvas = (props) => {
         handleResponsiveSize,
         textSetting,
         uploadedFiles,
-        hasBackColor,
-        setHasBackColor,
+        // hasBackColor,
+        // setHasBackColor,
         presetBackgroundImg,
         hasUndo,
         hasRedo,

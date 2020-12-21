@@ -58,15 +58,15 @@ body {
     overflow: hidden;
 }
 .backY1 {
-    width: 18%;
-    top: 93%;
-    left: -4%;
-    transform: rotate(10deg);
+    width: 20%;
+    top: 60%;
+    left: -10%;
+    transform: rotate(-40deg);
 }
 .backY2 {
-    width: 30%;
-    top: -15%;
-    left: 23%;
+    width: 15%;
+    top: -5%;
+    left: 45%;
     transform: rotate(10deg);
 }
 .backG1 {
@@ -83,14 +83,14 @@ body {
 .backW1 {
     width: 15%;
     top: 2%;
-    left: 61%;
+    left: 70%;
     transform: rotate(245deg);
 }
 .backW2 {
     left: -5%;
-    width: 20%;
-    top: 18%;
-    transform: rotate(-50deg);
+    width: 25%;
+    top: -5%;
+    transform: rotate(-180deg);
 }
 .backW3 {
     left: 88%;
@@ -103,10 +103,13 @@ body {
     top: 75%;
 }
 .backL1 {
-    width: 30%;
-    left: 4%;
-    top: -25%;
+    width: 25%;
+    left: 25%;
+    top: -5%;
     transform: rotate(180deg);
+    & path {
+        fill: none;
+    }
 }
 .backL2 {
     width: 25%;
@@ -535,6 +538,20 @@ input[type='range'].imgAdjustRange {
         font-weight: 500;
         font-size: $middle-font;
         height: 100%;
+        // animation: fadeIn 0.1s ease-in-out;
+        // animation-fill-mode: both;
+        // @keyframes fadeIn {
+        //     0% {
+        //         opacity: 0;
+        //         width: 0;
+        //     }
+
+        //     100% {
+        //         opacity: 1;
+        //         width: 16rem;
+        //     }
+        // }
+
         .sidebarUnfoldInner {
             width: 100%;
             height: 95%;
@@ -543,6 +560,7 @@ input[type='range'].imgAdjustRange {
             overflow-y: auto;
             align-items: flex-start;
             align-content: flex-start;
+
             &::-webkit-scrollbar {
                 width: 8px;
             }
@@ -750,30 +768,6 @@ input[type='range'].imgAdjustRange {
     align-items: center;
     width: 100%;
 }
-.currentColorCube {
-    position: relative;
-    &:hover:before {
-        content: '< 點擊選取更多顏色';
-        font-size: $small-font;
-        color: white;
-        position: absolute;
-        width: 10rem;
-        display: flex;
-        left: 3rem;
-        top: 50%;
-        transform: translateY(-50%);
-        // animation-name: cubeAlert;
-        // animation-duration: 1s;
-    }
-}
-// @keyframes cubeAlert {
-//     0% {
-//         width: 0rem;
-//     }
-//     100% {
-//         width: 10rem;
-//     }
-// }
 .backgroundCheckboxAdd {
     color: white;
     border-radius: 100%;
@@ -818,6 +812,44 @@ input[type='range'].imgAdjustRange {
     margin: 0.8rem 0.5rem 0.5rem 0.5rem;
     border: 1px solid rgba(255, 255, 255, 0.5);
     cursor: pointer;
+}
+.currentColorCube {
+    position: relative;
+    &::before {
+        content: '< 點擊選取更多顏色';
+        cursor: default;
+        font-size: $small-font;
+        color: white;
+        position: absolute;
+        width: 10rem;
+        display: flex;
+        overflow: hidden;
+        left: 3rem;
+        top: 50%;
+        opacity: 0;
+        transform: translateY(-50%);
+        visibility: hidden;
+        transition: opacity 0.2s;
+    }
+    &:hover::before {
+        visibility: visible;
+        opacity: 1;
+    }
+}
+.nonColor {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    align-items: center;
+    &::after {
+        content: '';
+        background-color: red;
+        position: absolute;
+        width: 100%;
+        height: 1px;
+        transform: rotate(45deg);
+    }
 }
 .backgroundColorChart {
     display: flex;
@@ -1201,6 +1233,9 @@ input[type='range'].imgAdjustRange {
         height: 0.5em;
         opacity: 1;
     }
+}
+.backImgChart {
+    height: 50rem;
 }
 .sidebarUnfoldImg {
     .categoryTitle {

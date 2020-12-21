@@ -239,11 +239,16 @@ const ComponentsSelection = (props) => {
                             />
                         </div>
                     )}
-                    {allSettings.activeObj.specialType !== 'background' && (
-                        <div className='selectAll'>
-                            <icons.SelectAll className='activeButton' onClick={selectAllHandler} />
-                        </div>
-                    )}
+                    {allSettings.activeObj.specialType !== 'background' &&
+                        allSettings.canvasData.objects &&
+                        allSettings.canvasData.objects.length !== 0 && (
+                            <div className='selectAll'>
+                                <icons.SelectAll
+                                    className='activeButton'
+                                    onClick={selectAllHandler}
+                                />
+                            </div>
+                        )}
                 </div>
             )}
         </div>
