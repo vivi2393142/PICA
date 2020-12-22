@@ -4,12 +4,23 @@ import PropTypes from 'prop-types';
 import * as firebase from '../../firebase';
 import * as mainIcon from '../../img/mainPage';
 import { nanoid } from 'nanoid';
+import Alert from '../Alert';
 
 // export default App;
 const AddNew = (props) => {
     const [currentStep, setCurrentStep] = React.useState(1);
     const [chosenRec, setChosenRec] = React.useState(null);
     const [titleInput, setTitleInput] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertSetting, setAlertSetting] = React.useState({
+        buttonNumber: 0,
+        buttonOneFunction: () => {},
+        buttonTwoFunction: () => {},
+        buttonOneTitle: '',
+        buttonTwoTitle: '',
+        title: '',
+        content: '',
+    });
     const [choices, setChoices] = React.useState({
         type: null,
         way: null,
@@ -157,13 +168,33 @@ const AddNew = (props) => {
 
     return (
         <div className={styles.addNew}>
+            {showAlert && (
+                <Alert
+                    buttonNumber={alertSetting.buttonNumber}
+                    buttonOneFunction={alertSetting.buttonOneFunction}
+                    buttonTwoFunction={alertSetting.buttonTwoFunction}
+                    buttonOneTitle={alertSetting.buttonOneTitle}
+                    buttonTwoTitle={alertSetting.buttonTwoTitle}
+                    title={alertSetting.title}
+                    content={alertSetting.content}
+                />
+            )}
             <button className={styles.addButton}>
                 <div className={styles.addIcon}></div>
                 <div
                     className={styles.btnText}
                     onClick={() => {
                         if (props.currentUser.email === 'noUser') {
-                            alert('請先註冊或登入會員，新增畫布');
+                            setAlertSetting({
+                                buttonNumber: 1,
+                                buttonOneFunction: () => setShowAlert(false),
+                                buttonTwoFunction: () => {},
+                                buttonOneTitle: '關閉',
+                                buttonTwoTitle: '',
+                                title: '新增錯誤',
+                                content: '請先註冊或登入會員以新增畫布',
+                            });
+                            setShowAlert(true);
                         } else {
                             restartHandler();
                             props.setIsAddingNew(true);

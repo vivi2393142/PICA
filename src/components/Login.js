@@ -12,11 +12,11 @@ const Login = (props) => {
     const [inputId, setInputId] = React.useState('');
     const [inputPwd, setInputPwd] = React.useState('');
     const [inputName, setInputName] = React.useState('');
-    const [showAlert, setShowAlert] = React.useState(true);
+    const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         buttonNumber: 0,
-        buttonOneFunction: null,
-        buttonTwoFunction: null,
+        buttonOneFunction: () => {},
+        buttonTwoFunction: () => {},
         buttonOneTitle: '',
         buttonTwoTitle: '',
         title: '',
@@ -33,15 +33,13 @@ const Login = (props) => {
         <div className={styles.loginCover} onClick={toggleClose}>
             {showAlert && (
                 <Alert
-                    buttonNumber={1}
-                    buttonOneFunction={() => {
-                        setShowAlert(flase);
-                    }}
-                    buttonTwoFunction={() => {}}
-                    buttonOneTitle={'關閉'}
-                    buttonTwoTitle={''}
-                    title={'註冊錯誤'}
-                    content={'請輸入有效之email地址及6位以上密碼'}
+                    buttonNumber={alertSetting.buttonNumber}
+                    buttonOneFunction={alertSetting.buttonOneFunction}
+                    buttonTwoFunction={alertSetting.buttonTwoFunction}
+                    buttonOneTitle={alertSetting.buttonOneTitle}
+                    buttonTwoTitle={alertSetting.buttonTwoTitle}
+                    title={alertSetting.title}
+                    content={alertSetting.content}
                 />
             )}
             <div
@@ -99,7 +97,18 @@ const Login = (props) => {
                     <div
                         className={styles.submit}
                         onClick={() => {
-                            const user = firebase.nativeSignIn(inputId, inputPwd);
+                            setAlertSetting({
+                                buttonNumber: 1,
+                                buttonOneFunction: () => setShowAlert(false),
+                                buttonTwoFunction: () => {},
+                                buttonOneTitle: '關閉',
+                                buttonTwoTitle: '',
+                                title: '註冊錯誤',
+                                content: '請輸入正確帳號密碼',
+                            });
+                            const user = firebase.nativeSignIn(inputId, inputPwd, () => {
+                                setShowAlert(true);
+                            });
                             user
                                 ? props.setCurrentUser(user)
                                 : props.setCurrentUser({ email: 'noUser' });
@@ -160,7 +169,23 @@ const Login = (props) => {
                     <div
                         className={styles.submit}
                         onClick={() => {
-                            firebase.nativeSignUp(inputName.toLowerCase(), inputId, inputPwd);
+                            setAlertSetting({
+                                buttonNumber: 1,
+                                buttonOneFunction: () => setShowAlert(false),
+                                buttonTwoFunction: () => {},
+                                buttonOneTitle: '關閉',
+                                buttonTwoTitle: '',
+                                title: '註冊錯誤',
+                                content: '請輸入有效之email地址及6位以上密碼',
+                            });
+                            firebase.nativeSignUp(
+                                inputName.toLowerCase(),
+                                inputId,
+                                inputPwd,
+                                () => {
+                                    setShowAlert(true);
+                                }
+                            );
                         }}
                     >
                         註冊

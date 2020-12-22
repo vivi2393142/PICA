@@ -2,9 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import * as firebase from '../../../firebase';
+import Alert from '../../Alert';
 
 const Resize = (props) => {
     const allSettings = props.drawingAreaSettings;
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertSetting, setAlertSetting] = React.useState({
+        buttonNumber: 0,
+        buttonOneFunction: () => {},
+        buttonTwoFunction: () => {},
+        buttonOneTitle: '',
+        buttonTwoTitle: '',
+        title: '',
+        content: '',
+    });
     // size setting
     const [isChoosingCanvasSize, setIsChoosingCanvasSize] = React.useState(false);
     const canvasSizeOptions = [
@@ -28,12 +39,11 @@ const Resize = (props) => {
         };
         document.addEventListener('click', clickedOrNot, true);
     };
-    const handleCanvasSize = (e, way) => {
-        alert('請注意，若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切');
+    const handleCanvasSize = (target, way) => {
         // reset size on canvas and react state
         let newCanvasSetting = {};
         if (way === 'default') {
-            const settings = canvasSizeOptions.find((option) => option.name === e.currentTarget.id);
+            const settings = canvasSizeOptions.find((option) => option.name === target.id);
             newCanvasSetting = {
                 ...allSettings.canvasSetting,
                 width: parseInt(settings.width),
@@ -91,9 +101,6 @@ const Resize = (props) => {
             newCanvasSetting.type,
             allSettings.canvas
         );
-        // close toggle
-        setIsChoosingCanvasSize(false);
-        setIsTypingSize(false);
     };
     // custom size
     const [isTypingSize, setIsTypingSize] = React.useState(false);
@@ -121,7 +128,28 @@ const Resize = (props) => {
                     key={index}
                     id={item.name}
                     className='sizeOption'
-                    onClick={(e) => handleCanvasSize(e, 'default')}
+                    onClick={(e) => {
+                        const target = e.currentTarget;
+                        setAlertSetting({
+                            buttonNumber: 2,
+                            buttonOneFunction: () => {
+                                setShowAlert(false);
+                                handleCanvasSize(target, 'default');
+                            },
+                            buttonTwoFunction: () => {
+                                setShowAlert(false);
+                                return;
+                            },
+                            buttonOneTitle: '確認重設',
+                            buttonTwoTitle: '取消重設',
+                            title: '即將重設尺寸',
+                            content: '若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切',
+                        });
+                        // close toggle
+                        setIsChoosingCanvasSize(false);
+                        setIsTypingSize(false);
+                        setShowAlert(true);
+                    }}
                 >
                     {item.name}
                     <div className='sizeDetails'>
@@ -147,6 +175,17 @@ const Resize = (props) => {
 
     return (
         <div className='resizeIconWrapper'>
+            {showAlert && (
+                <Alert
+                    buttonNumber={alertSetting.buttonNumber}
+                    buttonOneFunction={alertSetting.buttonOneFunction}
+                    buttonTwoFunction={alertSetting.buttonTwoFunction}
+                    buttonOneTitle={alertSetting.buttonOneTitle}
+                    buttonTwoTitle={alertSetting.buttonTwoTitle}
+                    title={alertSetting.title}
+                    content={alertSetting.content}
+                />
+            )}
             <bannerIcons.Resize className='bannerIcons' onClick={toggleSizeChoosing} />
             {isChoosingCanvasSize && <div className='sizeSelection'>{sizeSelectionJsx}</div>}
             {isTypingSize && (
@@ -169,7 +208,26 @@ const Resize = (props) => {
                         className='customSizeButton'
                         onClick={(e) => {
                             if (customSize.width > 0 && customSize.height > 0) {
-                                handleCanvasSize(e, 'custom');
+                                const target = e.currentTarget;
+                                setAlertSetting({
+                                    buttonNumber: 2,
+                                    buttonOneFunction: () => {
+                                        setShowAlert(false);
+                                        handleCanvasSize(target, 'custom');
+                                    },
+                                    buttonTwoFunction: () => {
+                                        setShowAlert(false);
+                                        return;
+                                    },
+                                    buttonOneTitle: '確認重設',
+                                    buttonTwoTitle: '取消重設',
+                                    title: '即將重設尺寸',
+                                    content: '若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切',
+                                });
+                                // close toggle
+                                setIsChoosingCanvasSize(false);
+                                setIsTypingSize(false);
+                                setShowAlert(true);
                             }
                         }}
                     >

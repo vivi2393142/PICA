@@ -2,16 +2,26 @@ import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../firebase';
-import { nanoid } from 'nanoid';
 import Loader from '../Loader';
 import { useHistory } from 'react-router-dom';
 import * as mainIcons from '../../img/mainPage';
+import Alert from '../Alert';
 
 // export default App;
 const Shots = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [commentData, setCommentData] = React.useState(null);
     const [textInput, setTextInput] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertSetting, setAlertSetting] = React.useState({
+        buttonNumber: 0,
+        buttonOneFunction: () => {},
+        buttonTwoFunction: () => {},
+        buttonOneTitle: '',
+        buttonTwoTitle: '',
+        title: '',
+        content: '',
+    });
     let history = useHistory();
 
     // listen to updated comments
@@ -116,6 +126,17 @@ const Shots = (props) => {
     return (
         <div className={styles.shotsWrapper}>
             {isLoaded && <Loader></Loader>}
+            {showAlert && (
+                <Alert
+                    buttonNumber={alertSetting.buttonNumber}
+                    buttonOneFunction={alertSetting.buttonOneFunction}
+                    buttonTwoFunction={alertSetting.buttonTwoFunction}
+                    buttonOneTitle={alertSetting.buttonOneTitle}
+                    buttonTwoTitle={alertSetting.buttonTwoTitle}
+                    title={alertSetting.title}
+                    content={alertSetting.content}
+                />
+            )}
             {commentData && (
                 <div className={styles.shots}>
                     <div className={styles.back} onClick={() => history.goBack()}>{`< 返回`}</div>
@@ -135,7 +156,16 @@ const Shots = (props) => {
                                 }`}
                                 onClick={() => {
                                     if (props.currentUser.email === 'noUser') {
-                                        alert('請先註冊或登入會員，以收藏作品');
+                                        setAlertSetting({
+                                            buttonNumber: 1,
+                                            buttonOneFunction: () => setShowAlert(false),
+                                            buttonTwoFunction: () => {},
+                                            buttonOneTitle: '關閉',
+                                            buttonTwoTitle: '',
+                                            title: '未登入會員',
+                                            content: '請先註冊或登入會員，以收藏作品',
+                                        });
+                                        setShowAlert(true);
                                     } else {
                                         likeHandler(commentData.currentUser.isLike);
                                     }

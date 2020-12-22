@@ -7,6 +7,7 @@ import Loader from '../Loader';
 import ExploreItem from './exploreItem';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
+import Alert from '../Alert';
 
 const TitleInput = (props) => {
     const [titleInput, setTitleInput] = React.useState(props.initialValue);
@@ -62,6 +63,16 @@ const UserPage = (props) => {
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const [userPhoto, setUserPhoto] = React.useState('');
     const [isLikeLoader, setIsLikeLoader] = React.useState(true);
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertSetting, setAlertSetting] = React.useState({
+        buttonNumber: 0,
+        buttonOneFunction: () => {},
+        buttonTwoFunction: () => {},
+        buttonOneTitle: '',
+        buttonTwoTitle: '',
+        title: '',
+        content: '',
+    });
     const canvasSizeOptions = [
         { name: 'Instagram 貼文', type: 'instagram', width: 1080, height: 1080 },
         { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -74,8 +85,19 @@ const UserPage = (props) => {
 
     React.useEffect(() => {
         if (props.currentUser.email === 'noUser') {
-            alert('請先註冊或登入會員，以檢視我的畫布');
-            history.push('/main/explore');
+            setAlertSetting({
+                buttonNumber: 1,
+                buttonOneFunction: () => {
+                    history.push('/main/explore');
+                },
+                buttonTwoFunction: () => {},
+                buttonOneTitle: '關閉',
+                buttonTwoTitle: '',
+                title: '未登入會員',
+                content: '請先註冊或登入會員，以檢視我的畫布',
+            });
+            setIsLoaded(false);
+            setShowAlert(true);
         }
     }, [props.currentUser]);
 
@@ -96,7 +118,19 @@ const UserPage = (props) => {
     const handleUploadImage = (e) => {
         setIsSmallLoaded(true);
         if (e.target.files[0].size > 2097152) {
-            alert('請勿上傳超過2mb之圖片');
+            setAlertSetting({
+                buttonNumber: 1,
+                buttonOneFunction: () => {
+                    setShowAlert(false);
+                },
+                buttonTwoFunction: () => {},
+                buttonOneTitle: '關閉',
+                buttonTwoTitle: '',
+                title: '上傳錯誤',
+                content: '請勿上傳超過2mb之圖片',
+            });
+            setIsSmallLoaded(false);
+            setShowAlert(true);
         } else {
             firebase.uploadUserPhoto(e, props.match.params.userId, (url) => {
                 setUserPhoto(url);
@@ -106,10 +140,24 @@ const UserPage = (props) => {
     };
     const deleteHandler = (e, fileId) => {
         e.stopPropagation();
-        alert('一但刪除就無法復原囉，是否確定刪除？');
-        firebase.deleteCanvas(props.currentUser.email, fileId);
-        let newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
-        setCanvasDataWithDataURL(newFilesData);
+        setAlertSetting({
+            buttonNumber: 2,
+            buttonOneFunction: () => {
+                setShowAlert(false);
+                firebase.deleteCanvas(props.currentUser.email, fileId);
+                let newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
+                setCanvasDataWithDataURL(newFilesData);
+            },
+            buttonTwoFunction: () => {
+                setShowAlert(false);
+                return;
+            },
+            buttonOneTitle: '確定刪除',
+            buttonTwoTitle: '取消刪除',
+            title: '確定要刪除檔案嗎？',
+            content: '一但刪除將無法復原檔案，請確認是否刪除',
+        });
+        setShowAlert(true);
     };
 
     React.useEffect(() => {
@@ -263,6 +311,17 @@ const UserPage = (props) => {
     return (
         <div className={styles.mainPage}>
             {isLoaded && <Loader></Loader>}
+            {showAlert && (
+                <Alert
+                    buttonNumber={alertSetting.buttonNumber}
+                    buttonOneFunction={alertSetting.buttonOneFunction}
+                    buttonTwoFunction={alertSetting.buttonTwoFunction}
+                    buttonOneTitle={alertSetting.buttonOneTitle}
+                    buttonTwoTitle={alertSetting.buttonTwoTitle}
+                    title={alertSetting.title}
+                    content={alertSetting.content}
+                />
+            )}
             <div className={styles.mainWrapper}>
                 <div className={styles.main}>
                     <div className={styles.memberDetails}>

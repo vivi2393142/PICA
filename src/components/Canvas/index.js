@@ -592,15 +592,6 @@ const Canvas = (props) => {
     return (
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
-            {/* <Alert
-                buttonNumber={2}
-                buttonOneFunction={() => {}}
-                buttonTwoFunction={() => {}}
-                buttonOneTitle={'button1'}
-                buttonTwoTitle={'button2'}
-                title={'title'}
-                content={'content'}
-            /> */}
             <Background />
             <Banner
                 allSettings={allSettings}

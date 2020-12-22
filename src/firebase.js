@@ -528,10 +528,9 @@ const nativeSignUp = (name, email, pwd, failCallback) => {
         })
         .catch((error) => {
             failCallback();
-            // alert('請輸入有效之email地址及6位以上密碼');
         });
 };
-const nativeSignIn = (email, pwd) => {
+const nativeSignIn = (email, pwd, failCallback) => {
     firebase
         .auth()
         .signInWithEmailAndPassword(email, pwd)
@@ -544,8 +543,8 @@ const nativeSignIn = (email, pwd) => {
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
+            failCallback();
             // console.log(errorCode, errorMessage);
-            alert('請輸入正確帳號密碼');
         });
 };
 const nativeSignOut = (successCallback) => {

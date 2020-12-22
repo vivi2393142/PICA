@@ -4,6 +4,7 @@ import { ChromePicker } from 'react-color';
 import * as icons from '../../../img/icons';
 import * as firebase from '../../../firebase';
 import * as sidebarItems from '../../../img/sidebarItems';
+import Alert from '../../Alert';
 
 const Sidebar = (props) => {
     const allSettings = props.allSettings;
@@ -12,6 +13,16 @@ const Sidebar = (props) => {
     const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
     const [sampleList, setSampleList] = React.useState([]);
     const [showUploadCover, setShowUploadCover] = React.useState(false);
+    const [showAlert, setShowAlert] = React.useState(false);
+    const [alertSetting, setAlertSetting] = React.useState({
+        buttonNumber: 0,
+        buttonOneFunction: () => {},
+        buttonTwoFunction: () => {},
+        buttonOneTitle: '',
+        buttonTwoTitle: '',
+        title: '',
+        content: '',
+    });
 
     React.useEffect(() => {
         allSettings.canvas.backgroundColor &&
@@ -223,8 +234,17 @@ const Sidebar = (props) => {
 
     // handlers: uploaded function
     const handleUploadImage = (e) => {
-        if (e.target.files[0].size > 5242880) {
-            alert('請勿上傳超過5mb之圖片');
+        if (e.target.files[0].size > 3145680) {
+            setAlertSetting({
+                buttonNumber: 1,
+                buttonOneFunction: () => setShowAlert(false),
+                buttonTwoFunction: () => {},
+                buttonOneTitle: '關閉',
+                buttonTwoTitle: '',
+                title: '上傳錯誤',
+                content: '請勿上傳超過3mb之圖片',
+            });
+            setShowAlert(true);
         } else {
             firebase.uploadToStorage(
                 e.target.files,
@@ -245,14 +265,41 @@ const Sidebar = (props) => {
         if (e.dataTransfer.files.length > 0) {
             const files = e.dataTransfer.files;
             if (e.dataTransfer.files.length > 1) {
-                alert('上傳錯誤，一次限上傳一張圖片');
-            } else if (files[0].size > 5242880) {
-                alert('上傳錯誤，請勿上傳超過5mb之圖片');
+                setAlertSetting({
+                    buttonNumber: 1,
+                    buttonOneFunction: () => setShowAlert(false),
+                    buttonTwoFunction: () => {},
+                    buttonOneTitle: '關閉',
+                    buttonTwoTitle: '',
+                    title: '上傳錯誤',
+                    content: '一次限上傳一張圖片',
+                });
+                setShowAlert(true);
+            } else if (files[0].size > 3145680) {
+                setAlertSetting({
+                    buttonNumber: 1,
+                    buttonOneFunction: () => setShowAlert(false),
+                    buttonTwoFunction: () => {},
+                    buttonOneTitle: '關閉',
+                    buttonTwoTitle: '',
+                    title: '上傳錯誤',
+                    content: '請勿上傳超過3mb之圖片',
+                });
+                setShowAlert(true);
             } else if (
                 e.dataTransfer.files[0].type !== 'image/png' &&
                 e.dataTransfer.files[0].type !== 'image/jpeg'
             ) {
-                alert('上傳錯誤，請上傳jpeg或png格式檔案');
+                setAlertSetting({
+                    buttonNumber: 1,
+                    buttonOneFunction: () => setShowAlert(false),
+                    buttonTwoFunction: () => {},
+                    buttonOneTitle: '關閉',
+                    buttonTwoTitle: '',
+                    title: '上傳錯誤',
+                    content: '請上傳jpeg或png格式檔案',
+                });
+                setShowAlert(true);
             } else {
                 firebase.uploadToStorage(
                     files,
@@ -329,10 +376,25 @@ const Sidebar = (props) => {
     };
     // handlers: use template
     const handleTemplateUse = (e) => {
-        alert('請注意，套用範本將自動刪除現存在在畫布上的所有物件');
-        firebase.getSingleSample(e.target.id, (data) => {
-            allSettings.canvas.loadFromJSON(data);
+        const targetId = e.target.id;
+        setAlertSetting({
+            buttonNumber: 2,
+            buttonOneFunction: () => {
+                setShowAlert(false);
+                firebase.getSingleSample(targetId, (data) => {
+                    allSettings.canvas.loadFromJSON(data);
+                });
+            },
+            buttonTwoFunction: () => {
+                setShowAlert(false);
+                return;
+            },
+            buttonOneTitle: '確認套用',
+            buttonTwoTitle: '取消套用',
+            title: '即將套用範本',
+            content: '套用範本將自動刪除現存在在畫布上的所有物件',
         });
+        setShowAlert(true);
     };
     // handler: img adjustment
     // get current image styles
@@ -1133,6 +1195,17 @@ const Sidebar = (props) => {
 
     return (
         <div className='sidebar'>
+            {showAlert && (
+                <Alert
+                    buttonNumber={alertSetting.buttonNumber}
+                    buttonOneFunction={alertSetting.buttonOneFunction}
+                    buttonTwoFunction={alertSetting.buttonTwoFunction}
+                    buttonOneTitle={alertSetting.buttonOneTitle}
+                    buttonTwoTitle={alertSetting.buttonTwoTitle}
+                    title={alertSetting.title}
+                    content={alertSetting.content}
+                />
+            )}
             <div className='sidebarFold'>{sidebarFoldJsx}</div>
             {props.currentSidebar !== '' && (
                 <div
