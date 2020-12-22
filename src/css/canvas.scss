@@ -18,6 +18,7 @@ $small-font: 0.8rem;
 $tiny-font: 0.7rem;
 $symbol-font: 0.6rem;
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC&family=Noto+Serif+TC:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat+Alternates:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Heiti SC',
@@ -367,16 +368,17 @@ input:focus {
     box-shadow: 0 0 1px 1px rgb(180, 180, 180) inset;
 }
 // specific nav - text - space
-.spaceBoxOuter {
+.spaceBoxOuter,
+.sizeBoxOuter {
     position: relative;
     font-size: $small-font;
 }
-.spaceBoxes {
+.spaceBoxes,
+.SizeBoxes {
     position: absolute;
     display: flex;
     top: 1.8rem;
     left: 0.5rem;
-
     background-color: white;
     border: 1px solid $middle-grey;
     flex-direction: column;
@@ -385,11 +387,16 @@ input:focus {
     padding: 0.5rem 0;
     color: $custom-black;
 }
+.SizeBoxes {
+    padding: 1.2rem 1.2rem;
+    flex-direction: row;
+}
 .spaceBox {
     display: flex;
     padding: 0.6rem 1.2rem;
 }
-.spaceBoxText {
+.spaceBoxText,
+.sizeBoxText {
     text-align: left;
     width: 2.6rem;
 }
@@ -816,7 +823,7 @@ input[type='range'].imgAdjustRange {
 .currentColorCube {
     position: relative;
     &::before {
-        content: '< 點擊選取更多顏色';
+        content: '點擊選取更多顏色';
         cursor: default;
         font-size: $small-font;
         color: white;
@@ -829,7 +836,7 @@ input[type='range'].imgAdjustRange {
         opacity: 0;
         transform: translateY(-50%);
         visibility: hidden;
-        transition: opacity 0.2s;
+        transition: opacity 0.4s ease-in-out;
     }
     &:hover::before {
         visibility: visible;

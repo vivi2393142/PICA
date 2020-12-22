@@ -13,6 +13,11 @@ const Sidebar = (props) => {
     const [sampleList, setSampleList] = React.useState([]);
     const [showUploadCover, setShowUploadCover] = React.useState(false);
 
+    React.useEffect(() => {
+        allSettings.canvas.backgroundColor &&
+            setBackColorChosen({ background: allSettings.canvas.backgroundColor });
+    }, [allSettings.canvas.backgroundColor]);
+
     // set next add in component position
     const adjSetNextPosition = () => {
         if (
@@ -26,7 +31,7 @@ const Sidebar = (props) => {
     };
     // add new components: rectangle, circle, triangle, text, image, background
     const addRect = () => {
-        const shapeRatio = allSettings.canvas.width / 600;
+        const shapeRatio = allSettings.canvasSetting.width / 600;
         const rect = new fabric.Rect({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
@@ -40,7 +45,7 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addRadiusRect = () => {
-        const shapeRatio = allSettings.canvas.width / 600;
+        const shapeRatio = allSettings.canvasSetting.width / 600;
         const rect = new fabric.Rect({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
@@ -56,7 +61,7 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addCircle = () => {
-        const shapeRatio = allSettings.canvas.width / 600;
+        const shapeRatio = allSettings.canvasSetting.width / 600;
         const circle = new fabric.Circle({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
@@ -68,7 +73,7 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addTriangle = () => {
-        const shapeRatio = allSettings.canvas.width / 600;
+        const shapeRatio = allSettings.canvasSetting.width / 600;
         const triangle = new fabric.Triangle({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
@@ -81,7 +86,7 @@ const Sidebar = (props) => {
         adjSetNextPosition();
     };
     const addShape = (e) => {
-        const shapeRatio = allSettings.canvas.width / 600;
+        const shapeRatio = allSettings.canvasSetting.width / 600;
         fabric.loadSVGFromURL(e.target.src, (objects, options) => {
             const newShape = fabric.util.groupSVGElements(objects, options);
             newShape.set({
@@ -90,20 +95,13 @@ const Sidebar = (props) => {
                 scaleX: 2.2 * shapeRatio,
                 scaleY: 2.2 * shapeRatio,
             });
-            // newShape.toObject = (function (toObject) {
-            //     return function (propertiesToInclude) {
-            //         return fabric.util.object.extend(toObject.call(this, propertiesToInclude), {
-            //             specialType: 'shape', //my custom property
-            //         });
-            //     };
-            // })(newShape.toObject);
             allSettings.canvas.add(newShape);
             allSettings.canvas.requestRenderAll();
             adjSetNextPosition();
         });
     };
     const addIText = (title, size, weight) => {
-        const textRatio = allSettings.canvas.width / 600;
+        const textRatio = allSettings.canvasSetting.width / 600;
         let text = new fabric.IText(title, {});
         text.set({
             top: nextAddPosition.top,
@@ -125,8 +123,8 @@ const Sidebar = (props) => {
     };
     const addImage = (e) => {
         const scaleRatio = Math.max(
-            allSettings.canvas.width / 4 / e.target.naturalWidth,
-            allSettings.canvas.height / 4 / e.target.naturalHeight
+            allSettings.canvasSetting.width / 4 / e.target.naturalWidth,
+            allSettings.canvasSetting.height / 4 / e.target.naturalHeight
         );
         fabric.Image.fromURL(
             e.target.src,
@@ -154,8 +152,8 @@ const Sidebar = (props) => {
     };
     const addSticker = (e) => {
         const scaleRatio = Math.max(
-            allSettings.canvas.width / 4 / e.target.naturalWidth,
-            allSettings.canvas.height / 4 / e.target.naturalHeight
+            allSettings.canvasSetting.width / 4 / e.target.naturalWidth,
+            allSettings.canvasSetting.height / 4 / e.target.naturalHeight
         );
         fabric.Image.fromURL(
             e.target.src,
@@ -187,11 +185,6 @@ const Sidebar = (props) => {
         );
         allSettings.canvas.requestRenderAll();
         adjSetNextPosition();
-    };
-    const backgroundColorHandler = (color) => {
-        allSettings.canvas.backgroundImage = 0;
-        allSettings.canvas.backgroundColor = color;
-        allSettings.canvas.requestRenderAll();
     };
     const backgroundImageHandler = (e) => {
         allSettings.canvas.offHistory();
@@ -308,6 +301,10 @@ const Sidebar = (props) => {
         document.addEventListener('click', clickedOrNot, true);
         setIsChoosingBackColor(true);
     };
+    const backgroundColorHandler = (color) => {
+        allSettings.canvas.backgroundImage = 0;
+        allSettings.canvas.backgroundColor = color;
+    };
     const handleBackColorChange = (color) => {
         const colorRgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
         setBackColorChosen({ background: colorRgba });
@@ -315,6 +312,7 @@ const Sidebar = (props) => {
     };
     const handleBackColorChangeCube = (e) => {
         let color;
+        // allSettings.canvas.fire('object:modified');
         if (e.target.classList.contains('nonColor')) {
             color = 'rgba(255, 255, 255, 1)';
             document.querySelector('.currentColorCube').classList.add('nonColor');
@@ -326,6 +324,7 @@ const Sidebar = (props) => {
         }
         setBackColorChosen({ background: color });
         backgroundColorHandler(color);
+        allSettings.canvas.fire('object:modified');
         allSettings.canvas.requestRenderAll();
     };
     // handlers: use template
@@ -512,7 +511,11 @@ const Sidebar = (props) => {
                     : ''
             }`}
             onClick={() => {
-                props.setCurrentSidebar(item.EN);
+                if (props.currentSidebar === item.EN) {
+                    props.setCurrentSidebar('');
+                } else {
+                    props.setCurrentSidebar(item.EN);
+                }
             }}
         >
             {props.currentSidebar === item.EN ? item.icon : item.iconB}
@@ -905,15 +908,15 @@ const Sidebar = (props) => {
     );
     // jsx: sidebar - background color cube
     const colorArray = [
-        '#FCB900',
-        '#FF6900',
-        '#7BDCB5',
-        '#8ED1FC',
-        '#0693E3',
-        '#ABB8C3',
-        '#EB144C',
-        '#F78DA7',
-        '#9900EF',
+        'rgba(252, 185, 0, 1)',
+        'rgba(255, 105, 0, 1)',
+        'rgba(123, 220, 181, 1)',
+        'rgba(142, 209, 252, 1)',
+        'rgba(6, 147, 227, 1)',
+        'rgba(171, 184, 195, 1)',
+        'rgba(235, 20, 76, 1)',
+        'rgba(247, 141, 167, 1)',
+        'rgba(153, 0, 239, 1)',
     ];
     const backgroundColorJsx = colorArray.map((item, index) => {
         return (
@@ -969,7 +972,10 @@ const Sidebar = (props) => {
                 <ChromePicker
                     className='backgroundPicker'
                     color={backColorChosen.background}
-                    onChange={handleBackColorChange}
+                    onChange={(color) => {
+                        handleBackColorChange(color);
+                        allSettings.canvas.requestRenderAll();
+                    }}
                 />
             )}
             <div className='unfoldImgWrapper '>

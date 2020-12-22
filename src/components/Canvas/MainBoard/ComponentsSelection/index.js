@@ -75,6 +75,10 @@ const ComponentsSelection = (props) => {
         allSettings.canvas.setActiveObject(sel);
         allSettings.canvas.requestRenderAll();
     };
+    const discardHandler = () => {
+        allSettings.canvas.discardActiveObject();
+        allSettings.canvas.requestRenderAll();
+    };
 
     // keyboard functions
     React.useEffect(() => {
@@ -247,6 +251,14 @@ const ComponentsSelection = (props) => {
                                     className='activeButton'
                                     onClick={selectAllHandler}
                                 />
+                            </div>
+                        )}
+                    {allSettings.activeObj.specialType !== 'background' &&
+                        allSettings.canvasData.objects &&
+                        allSettings.canvasData.objects.length !== 0 &&
+                        Object.keys(allSettings.activeObj).length !== 0 && (
+                            <div className='selectAll'>
+                                <icons.Discard className='activeButton' onClick={discardHandler} />
                             </div>
                         )}
                 </div>

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from '../../css/canvas.scss';
 import MainBoard from './MainBoard';
 import Banner from './Banner';
+import Alert from '../Alert';
 import initAligningGuidelines from '../../aligning_guidelines.js';
 import * as backImg from '../../img/background';
 import * as firebase from '../../firebase';
@@ -50,6 +51,7 @@ const Canvas = (props) => {
             }
         }, 3000);
     };
+
     // handle responsive size
     const handleResponsiveSize = (container, canvasSetting) => {
         if (container) {
@@ -59,10 +61,6 @@ const Canvas = (props) => {
             );
             container.style.width = `${fixRatio * canvasSetting.width}px`;
             container.style.height = `${fixRatio * canvasSetting.height}px`;
-            const customBorder = {
-                cornerSize: 8 * fixRatio,
-            };
-            fabric.Object.prototype.set(customBorder);
         }
     };
 
@@ -85,6 +83,7 @@ const Canvas = (props) => {
         backImg.set({
             scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
             scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
+            left: 0,
         });
         if (scaleWay === 'toWidth') {
             backImg.lockMovementX = true;
@@ -101,26 +100,20 @@ const Canvas = (props) => {
         canvas.add(backImg);
         backImg.sendToBack();
         // bounding can't be inside canvas
-        // backImg.on('modified', () => {
-        //     const currentSizeRatio =
-        //         parseInt(document.querySelector('.canvas-container').style.width) /
-        //         canvasSetting.width;
-        //     backImg.setCoords();
-        //     const { top, left, width, height } = backImg.getBoundingRect();
-        //     if (top > 0) {
-        //         backImg.top = 0;
-        //     }
-        //     if (top + height < canvas.getHeight()) {
-        //         backImg.top = canvas.getHeight() - height;
-        //     }
-        //     if (left > 0) {
-        //         backImg.left = 0;
-        //     }
-        //     if (left + width < canvas.getWidth()) {
-        //         backImg.left = canvas.getWidth() - width;
-        //     }
-        //     canvas.requestRenderAll();
-        // });
+        backImg.on('modified', () => {
+            const currentSizeRatio =
+                parseInt(document.querySelector('.canvas-container').style.width) /
+                canvasSetting.width;
+            backImg.setCoords();
+            const { top, left, width, height } = backImg.getBoundingRect();
+            if (left > 0) {
+                backImg.left = 0;
+            }
+            if (left + width < canvas.getWidth()) {
+                backImg.left = canvas.getWidth() - width;
+            }
+            canvas.requestRenderAll();
+        });
     };
 
     React.useEffect(() => {
@@ -136,6 +129,11 @@ const Canvas = (props) => {
 
     React.useEffect(() => {
         // get firebase data according to URL params
+        const FontFaceObserver = require('fontfaceobserver');
+        const fontsArray = ['JetBrains Mono', 'Raleway', 'Montserrat Alternates'];
+        Promise.all(fontsArray.map((font) => new FontFaceObserver(font).load())).then(function () {
+            console.log('load');
+        });
         firebase.loadCanvas(
             canvas,
             (canvasSettingInit, canvasDataInit) => {
@@ -146,12 +144,13 @@ const Canvas = (props) => {
                 const canvasInit = new fabric.Canvas('fabric-canvas', {
                     height: canvasSettingInit.height,
                     width: canvasSettingInit.width,
+                    objectChaching: false,
                 });
                 canvasInit.loadFromJSON(canvasDataInit, presetObjectStyle);
-
                 async function presetObjectStyle() {
                     // -- render initial data then clear init history
                     await canvasInit.renderAll();
+
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
                     // preset image & iText objects style
@@ -259,6 +258,7 @@ const Canvas = (props) => {
                         setHasRedo(canvasInit.historyRedo > 0);
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
+
                     // -- listen to all changes -> set active obj
                     canvasInit.on('selection:created', (e) => {
                         setActiveObj(e.target);
@@ -287,7 +287,6 @@ const Canvas = (props) => {
                 canvasInit.preserveObjectStacking = true;
                 // set canvas
                 setCanvas(canvasInit);
-
                 // responsive canvas size
                 const container = document.querySelector('.canvas-container');
                 container.style.border = '2.8rem solid transparent';
@@ -304,11 +303,12 @@ const Canvas = (props) => {
                 container.style.height = `${fixRatio * canvasSettingInit.height}px`;
 
                 // -- customize border style
+                // console.log(fixRatio);
                 const customBorder = {
                     borderColor: 'rgba(0,0,0,0.25)',
                     cornerColor: 'rgba(0,0,0,0.25)',
                     cornerStrokeColor: 'rgba(0,0,0,0.25)',
-                    cornerSize: 8 * fixRatio,
+                    cornerSize: 10,
                     cornerStyle: 'circle',
                     cornerColor: 'white',
                 };
@@ -331,20 +331,16 @@ const Canvas = (props) => {
                 setSaveDragItem({ func: saveDragItemFunc });
                 // --- listener to drop then add the dragging one
                 const dropItem = (e, canvas) => {
-                    console.log(canvas.canvasSetting);
-                    console.log(movingItem);
-                    console.log(movingItem.parentNode.parentNode);
                     console.log(Object.keys(movingItem).length);
                     if (Object.keys(movingItem).length !== 0) {
                         const currentSizeRatio =
                             parseInt(document.querySelector('.canvas-container').style.width) /
-                            canvas.width;
-                        console.log(canvas.getWidth(), canvas.width);
+                            canvasSettingInit.width;
                         const { offsetX, offsetY } = e.e;
                         const src = movingItem.src;
                         const scaleRatio = Math.max(
-                            canvas.width / 4 / movingItem.naturalWidth,
-                            canvas.height / 4 / movingItem.naturalHeight
+                            canvasSettingInit.width / 4 / movingItem.naturalWidth,
+                            canvasSettingInit.height / 4 / movingItem.naturalHeight
                         );
                         if (
                             movingItem.parentNode.parentNode.parentNode.classList.contains(
@@ -352,22 +348,14 @@ const Canvas = (props) => {
                             ) ||
                             movingItem.parentNode.classList.contains('unfoldItemImgWrapper')
                         ) {
-                            console.log(
-                                scaleRatio,
-                                offsetY,
-                                offsetX,
-                                itemDragOffset.offsetY,
-                                itemDragOffset.offsetX,
-                                currentSizeRatio
-                            );
                             fabric.Image.fromURL(
                                 src,
                                 (img) => {
                                     const imgItem = img.set({
                                         scaleX: scaleRatio,
                                         scaleY: scaleRatio,
-                                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                        top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                        left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                     });
                                     canvasInit.add(imgItem);
                                     imgItem.setControlsVisibility({
@@ -391,10 +379,10 @@ const Canvas = (props) => {
                                 : movingItem.classList.contains('addTextSmall')
                                 ? (currentTextSetting = textSetting[2])
                                 : null;
-                            const textRatio = canvas.width / 600;
+                            const textRatio = canvasSettingInit.width / 600;
                             const textItem = new fabric.IText(currentTextSetting.title, {
-                                top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                 fill: '#555555',
                                 fontSize: currentTextSetting.size * textRatio,
                                 fontWeight: currentTextSetting.fontWeight,
@@ -402,11 +390,11 @@ const Canvas = (props) => {
                             canvasInit.add(textItem);
                             canvasInit.requestRenderAll();
                         } else if (movingItem.parentNode.classList.contains('sidebarUnfoldShape')) {
-                            const shapeRatio = canvas.width / 600;
+                            const shapeRatio = canvasSettingInit.width / 600;
                             if (movingItem.classList.contains('rectShape')) {
                                 const rectItem = new fabric.Rect({
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                     height: 100 * shapeRatio,
                                     width: 100 * shapeRatio,
                                     fill: '#e89a4f',
@@ -415,8 +403,8 @@ const Canvas = (props) => {
                                 canvasInit.requestRenderAll();
                             } else if (movingItem.classList.contains('radiusRectShape')) {
                                 const rectItem = new fabric.Rect({
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                     height: 100 * shapeRatio,
                                     width: 100 * shapeRatio,
                                     rx: 15,
@@ -427,8 +415,8 @@ const Canvas = (props) => {
                                 canvasInit.requestRenderAll();
                             } else if (movingItem.classList.contains('circleShape')) {
                                 const circleItem = new fabric.Circle({
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                     radius: 50 * shapeRatio,
                                     fill: '#e89a4f',
                                 });
@@ -436,8 +424,8 @@ const Canvas = (props) => {
                                 canvasInit.requestRenderAll();
                             } else if (movingItem.classList.contains('triangleShape')) {
                                 const triangleItem = new fabric.Triangle({
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                     width: 100 * shapeRatio,
                                     height: 100 * shapeRatio,
                                     fill: '#e89a4f',
@@ -451,8 +439,8 @@ const Canvas = (props) => {
                                         options
                                     );
                                     abnormalShapeItem.set({
-                                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                        top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                        left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                         scaleX: 2.2 * shapeRatio,
                                         scaleY: 2.2 * shapeRatio,
                                         // specialType: 'shape',
@@ -462,12 +450,12 @@ const Canvas = (props) => {
                                 });
                             }
                         } else if (movingItem.parentNode.classList.contains('sidebarUnfoldLine')) {
-                            const lineRatio = canvas.width / 600;
+                            const lineRatio = canvasSettingInit.width / 600;
                             fabric.loadSVGFromURL(src, (objects, options) => {
                                 const svgItem = fabric.util.groupSVGElements(objects, options);
                                 svgItem.set({
-                                    top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                    left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
+                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
                                     scaleX: 2.2 * lineRatio,
                                     scaleY: 2.2 * lineRatio,
                                     // specialType: 'shape',
@@ -480,14 +468,20 @@ const Canvas = (props) => {
                                 'sidebarUnfoldSticker'
                             )
                         ) {
+                            const layoutZoomRation =
+                                parseInt(movingItem.parentNode.style.width) / 100;
                             fabric.Image.fromURL(
                                 src,
                                 (img) => {
                                     const stickerItem = img.set({
                                         scaleX: scaleRatio,
                                         scaleY: scaleRatio,
-                                        top: offsetY / currentSizeRatio - itemDragOffset.offsetY,
-                                        left: offsetX / currentSizeRatio - itemDragOffset.offsetX,
+                                        top:
+                                            (offsetY - itemDragOffset.offsetY * layoutZoomRation) /
+                                            currentSizeRatio,
+                                        left:
+                                            (offsetX - itemDragOffset.offsetX * layoutZoomRation) /
+                                            currentSizeRatio,
                                         specialType: 'sticker',
                                     });
                                     stickerItem.toObject = (function (toObject) {
@@ -517,14 +511,17 @@ const Canvas = (props) => {
                         movingItem = {};
                     }
                 };
-
                 const currentSizeRatio =
                     parseInt(document.querySelector('.canvas-container').style.width) /
                     canvasSettingInit.width;
                 canvasInit.setZoom(currentSizeRatio);
+                // console.log(canvasInit.getZoom());
                 canvasInit.setWidth(canvasSettingInit.width * canvasInit.getZoom());
                 canvasInit.setHeight(canvasSettingInit.height * canvasInit.getZoom());
-
+                document.querySelectorAll('.drawingArea').forEach((item) => {
+                    item.style.width = '100%';
+                    item.style.height = '100%';
+                });
                 // show save status when firebase find new update
                 firebase.listenCanvas(props.match.params.id, showSaveStatus, (files) =>
                     setUploadedFiles(files)
@@ -533,6 +530,22 @@ const Canvas = (props) => {
             props.match.params.id
         );
     }, []);
+
+    // React.useState(() => {
+    //     console.log(Object.keys(canvas).length);
+    //     if (Object.keys(canvas).length !== 0) {
+    //         const FontFaceObserver = require('fontfaceobserver');
+    //         console.log(canvas);
+    //         const textArray = ['Sans-serif', 'JetBrains Mono', 'Raleway', 'Montserrat Alternates'];
+    //         textArray.forEach((font) => {
+    //             const myFont = new FontFaceObserver(font);
+    //             myFont.load().then(() => {
+    //                 console.log('load');
+    //                 canvas.requestRenderAll();
+    //             });
+    //         });
+    //     }
+    // }, [canvas]);
 
     const allSettings = {
         canvasSetting,
@@ -579,6 +592,15 @@ const Canvas = (props) => {
     return (
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
+            {/* <Alert
+                buttonNumber={2}
+                buttonOneFunction={() => {}}
+                buttonTwoFunction={() => {}}
+                buttonOneTitle={'button1'}
+                buttonTwoTitle={'button2'}
+                title={'title'}
+                content={'content'}
+            /> */}
             <Background />
             <Banner
                 allSettings={allSettings}

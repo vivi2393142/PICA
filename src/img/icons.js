@@ -13,6 +13,7 @@ import { ReactComponent as Paste } from './src/icons/paste.svg';
 import { ReactComponent as Group } from './src/icons/group.svg';
 import { ReactComponent as Ungroup } from './src/icons/ungroup.svg';
 import { ReactComponent as SelectAll } from './src/icons/selectAll.svg';
+import { ReactComponent as Discard } from './src/icons/discard.svg';
 import { ReactComponent as AlignRight } from './src/icons/alignRight.svg';
 import { ReactComponent as AlignLeft } from './src/icons/alignLeft.svg';
 import { ReactComponent as AlignTop } from './src/icons/alignTop.svg';
@@ -20,6 +21,7 @@ import { ReactComponent as AlignBottom } from './src/icons/alignBottom.svg';
 import { ReactComponent as AlignCenterV } from './src/icons/alignCenterV.svg';
 import { ReactComponent as AlignCenterH } from './src/icons/alignCenterH.svg';
 import { ReactComponent as Test } from './src/icons/test.svg';
+import { ReactComponent as TextSize } from './src/icons/text_size.svg';
 import { ReactComponent as TextItalic } from './src/icons/text_italic.svg';
 import { ReactComponent as TextBold } from './src/icons/text_bold.svg';
 import { ReactComponent as TextUnderline } from './src/icons/text_underline.svg';
@@ -100,4 +102,5 @@ export {
     Test,
     SidebarSample,
     SidebarSampleB,
+    TextSize,Discard
 };

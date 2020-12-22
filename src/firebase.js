@@ -476,7 +476,8 @@ const fbSignUp = () => {
                     like: [],
                 });
             }
-            return user;
+            history.go(0);
+            // return user;
         })
         .catch(function (error) {});
 };
@@ -497,11 +498,15 @@ const googleSignUp = () => {
                     like: [],
                 });
             }
-            return user;
+
+            // return user;
+        })
+        .then(() => {
+            history.go(0);
         })
         .catch(function (error) {});
 };
-const nativeSignUp = (name, email, pwd) => {
+const nativeSignUp = (name, email, pwd, failCallback) => {
     firebase
         .auth()
         .createUserWithEmailAndPassword(email, pwd)
@@ -516,12 +521,14 @@ const nativeSignUp = (name, email, pwd) => {
                 canvas: [],
                 like: [],
             }).then(() => {
+                history.go(0);
                 // console.log('set data successful');
             });
-            return user;
+            // return user;
         })
         .catch((error) => {
-            alert('請輸入有效之email地址及6位以上密碼');
+            failCallback();
+            // alert('請輸入有效之email地址及6位以上密碼');
         });
 };
 const nativeSignIn = (email, pwd) => {
@@ -529,7 +536,10 @@ const nativeSignIn = (email, pwd) => {
         .auth()
         .signInWithEmailAndPassword(email, pwd)
         .then((user) => {
-            return user;
+            // return user;
+        })
+        .then(() => {
+            history.go(0);
         })
         .catch((error) => {
             const errorCode = error.code;

@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import * as login from '../img/landingPage.js';
 import * as firebase from '../firebase';
 import { useHistory } from 'react-router-dom';
+import Alert from './Alert';
 
 // export default App;
 const Login = (props) => {
@@ -11,6 +12,16 @@ const Login = (props) => {
     const [inputId, setInputId] = React.useState('');
     const [inputPwd, setInputPwd] = React.useState('');
     const [inputName, setInputName] = React.useState('');
+    const [showAlert, setShowAlert] = React.useState(true);
+    const [alertSetting, setAlertSetting] = React.useState({
+        buttonNumber: 0,
+        buttonOneFunction: null,
+        buttonTwoFunction: null,
+        buttonOneTitle: '',
+        buttonTwoTitle: '',
+        title: '',
+        content: '',
+    });
     const toggleClose = (e) => {
         props.setIsLoginOrSignup(false);
     };
@@ -20,6 +31,19 @@ const Login = (props) => {
 
     return (
         <div className={styles.loginCover} onClick={toggleClose}>
+            {showAlert && (
+                <Alert
+                    buttonNumber={1}
+                    buttonOneFunction={() => {
+                        setShowAlert(flase);
+                    }}
+                    buttonTwoFunction={() => {}}
+                    buttonOneTitle={'關閉'}
+                    buttonTwoTitle={''}
+                    title={'註冊錯誤'}
+                    content={'請輸入有效之email地址及6位以上密碼'}
+                />
+            )}
             <div
                 className={`${styles.loginRect} ${
                     props.chooseLogin ? styles.rectGreen : styles.rectYellow
@@ -136,11 +160,7 @@ const Login = (props) => {
                     <div
                         className={styles.submit}
                         onClick={() => {
-                            const user = firebase.nativeSignUp(inputName, inputId, inputPwd);
-                            console.log(user);
-                            user
-                                ? props.setCurrentUser(user)
-                                : props.setCurrentUser({ email: 'noUser' });
+                            firebase.nativeSignUp(inputName.toLowerCase(), inputId, inputPwd);
                         }}
                     >
                         註冊
@@ -150,10 +170,7 @@ const Login = (props) => {
                         <div
                             className={styles.loginWayF}
                             onClick={() => {
-                                const user = firebase.fbSignUp();
-                                user
-                                    ? props.setCurrentUser(user)
-                                    : props.setCurrentUser({ email: 'noUser' });
+                                firebase.fbSignUp();
                             }}
                         >
                             <login.Facebook className={styles.loginIcon} />
@@ -162,10 +179,7 @@ const Login = (props) => {
                         <div
                             className={styles.loginWayG}
                             onClick={() => {
-                                const user = firebase.googleSignUp();
-                                user
-                                    ? props.setCurrentUser(user)
-                                    : props.setCurrentUser({ email: 'noUser' });
+                                firebase.googleSignUp();
                             }}
                         >
                             <login.Google className={styles.loginIcon} />

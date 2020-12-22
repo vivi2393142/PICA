@@ -36,17 +36,15 @@ const Explore = (props) => {
 
     const listenScroll = (e, type) => {
         const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
-        if (e.target.scrollLeft === 0) {
-            let oldState = { ...arrowState };
-            oldState[type] = 'left';
+        let oldState = { ...arrowState };
+        if (e.target.scrollLeft !== 0 && scrollRight > 1) {
+            oldState[type] = '';
             setArrowState(oldState);
-        } else if (scrollRight === 0) {
-            let oldState = { ...arrowState };
+        } else if (scrollRight <= 1) {
             oldState[type] = 'right';
             setArrowState(oldState);
-        } else if (e.target.scrollLeft === 1 || scrollRight === 1) {
-            let oldState = { ...arrowState };
-            oldState[type] = '';
+        } else if (e.target.scrollLeft === 0) {
+            oldState[type] = 'left';
             setArrowState(oldState);
         }
     };

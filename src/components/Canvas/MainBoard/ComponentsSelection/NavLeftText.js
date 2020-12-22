@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as icons from '../../../../img/icons';
 import NavLeftColor from './NavLeftColor';
+import 'fontfaceobserver';
 
 const NavLeftText = (props) => {
     // unfold nav
     const [isChoosingSpace, setIsChoosingSpace] = React.useState(false);
+    const [isChoosingSize, setIsChoosingSize] = React.useState(false);
     const toggleSpaceSelection = (e) => {
         setIsChoosingSpace(true);
         props.trackOutSideClick(e.currentTarget, () => {
@@ -13,19 +15,30 @@ const NavLeftText = (props) => {
             props.canvas.fire('object:modified');
         });
     };
+    const toggleSizeSelection = (e) => {
+        setIsChoosingSize(true);
+        props.trackOutSideClick(e.currentTarget, () => {
+            setIsChoosingSize(false);
+            props.canvas.fire('object:modified');
+        });
+    };
     // -- text state
-    const [textFont, setTextFont] = React.useState('sans-serif');
-    const FontFaceObserver = require('fontfaceobserver');
+    const [textFont, setTextFont] = React.useState('Sans-serif');
     const handleTextFont = (e) => {
         setTextFont(e.target.value);
-        const myFont = new FontFaceObserver(e.target.value);
-        myFont.load().then(function () {
+        if (e.target.value === 'Sans-serif') {
             props.activeObj.set({
                 fontFamily: e.target.value,
             });
+            props.canvas.fire('object:modified');
             props.canvas.requestRenderAll();
-        });
-        props.canvas.fire('object:modified');
+        } else {
+            props.activeObj.set({
+                fontFamily: e.target.value,
+            });
+            props.canvas.fire('object:modified');
+            props.canvas.requestRenderAll();
+        }
     };
     const [textSize, setTextSize] = React.useState(12);
     const handleTextSize = (e) => {
@@ -34,7 +47,6 @@ const NavLeftText = (props) => {
             fontSize: e.target.value,
         });
         props.canvas.requestRenderAll();
-        props.canvas.fire('object:modified');
     };
     const [textWeight, setTextWeight] = React.useState('normal');
     const handleTextWeight = (e) => {
@@ -43,8 +55,8 @@ const NavLeftText = (props) => {
         props.activeObj.set({
             fontWeight: newWeight,
         });
-        props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
     const [textStyle, setTextStyle] = React.useState('normal');
     const handleTextStyle = () => {
@@ -53,8 +65,8 @@ const NavLeftText = (props) => {
         props.activeObj.set({
             fontStyle: newStyle,
         });
-        props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
     const [textUnderline, setTextUnderline] = React.useState(false);
     const handleTextUnderline = () => {
@@ -62,8 +74,8 @@ const NavLeftText = (props) => {
         props.activeObj.set({
             underline: !textUnderline,
         });
-        props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
     const [textAlign, setTextAlign] = React.useState('');
     const handleTextAlgin = (align) => {
@@ -71,8 +83,8 @@ const NavLeftText = (props) => {
         props.activeObj.set({
             textAlign: align,
         });
-        props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
     const [textLineHeight, setTextLineHeight] = React.useState(0);
     const handleTextLineHeight = (e) => {
@@ -118,14 +130,30 @@ const NavLeftText = (props) => {
                 trackOutSideClick={props.trackOutSideClick}
             />
             <select className='specificButton' value={textFont} onChange={handleTextFont}>
-                <option value='sans-serif'>預設字體</option>
-                <option value='Noto Sans TC'>思源黑體</option>
-                <option value='Noto Serif TC'>思源宋體</option>
+                <option value='Sans-serif'>預設字體</option>
+                <option value='JetBrains Mono'>JetBrains Mono</option>
+                <option value='Raleway'>Raleway</option>
+                <option value='Montserrat Alternates'>Montserrat Alternates</option>
             </select>
-            <div className='specificButton textSizeOuter'>
-                <select className='textSizeSelect' value={textSize} onChange={handleTextSize}>
-                    {textSizeOptions}
-                </select>
+
+            {/* <div className='specificButton textSizeOuter'> */}
+
+            <div className='sizeBoxOuter'>
+                <icons.TextSize className='specificButton textIcon' onClick={toggleSizeSelection} />
+                {isChoosingSize && (
+                    <div className='SizeBoxes'>
+                        <div className='sizeBoxText'>大小</div>
+                        <input
+                            className='inputRange'
+                            type='range'
+                            min='8'
+                            max='100'
+                            value={textSize}
+                            onInput={handleTextSize}
+                            step='1'
+                        ></input>{' '}
+                    </div>
+                )}
             </div>
             <icons.TextBold
                 className={`specificButton textIcon ${

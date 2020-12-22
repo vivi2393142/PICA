@@ -24,21 +24,25 @@ const NavRightPartial = (props) => {
     const downerHandler = () => {
         props.activeObj.sendBackwards();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
         setIsLayerChoosing(false);
     };
     const upperHandler = () => {
         props.activeObj.bringForward();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
         setIsLayerChoosing(false);
     };
     const toTopHandler = () => {
         props.activeObj.bringToFront();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
         setIsLayerChoosing(false);
     };
     const toBottomHandler = () => {
         props.activeObj.sendToBack();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
         setIsLayerChoosing(false);
     };
     // -- methods for component: group, ungroup, selectAll
@@ -160,9 +164,10 @@ const NavRightPartial = (props) => {
                 }
                 break;
         }
-        props.canvas.requestRenderAll();
         // trigger 'object:modified' event
         props.canvas.fire('object:modified', { target: props.activeObj });
+        // props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
         setIsAlignChoosing(false);
     };
     return (

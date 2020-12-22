@@ -56,7 +56,7 @@ const Banner = (props) => {
                     onChange={handleTitle}
                     onBlur={handleSaveFileTemporary}
                 ></input>
-                <div
+                {/* <div
                     onClick={handleSaveFileTemporary}
                     style={{
                         cursor: 'pointer',
@@ -69,10 +69,18 @@ const Banner = (props) => {
                     }}
                 >
                     {'點我儲存(暫時)'}
-                </div>
+                </div> */}
                 <div className='status'>已儲存</div>
             </div>
             <div className='bannerRight'>
+                {/* <div
+                    onClick={() => {
+                        allSettings.canvas.renderAll();
+                        console.log('click');
+                    }}
+                >
+                    測試
+                </div> */}
                 {typeJsx}
                 <Resize drawingAreaSettings={allSettings} fileId={props.fileId} />
                 {/* <div className='shareIconWrapper'>

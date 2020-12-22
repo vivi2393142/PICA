@@ -6,7 +6,6 @@ import * as firebase from '../../firebase';
 import { useHistory, Link } from 'react-router-dom';
 import AddNew from './addNew';
 import Login from '../Login';
-import memberDefault from '../../img/src/login.svg';
 
 // export default App;
 const MainBanner = (props) => {
@@ -18,7 +17,6 @@ const MainBanner = (props) => {
 
     const signOutHandler = () => {
         firebase.nativeSignOut(() => {
-            props.setCurrentUser({ email: 'noUser' });
             history.go(0);
         });
     };

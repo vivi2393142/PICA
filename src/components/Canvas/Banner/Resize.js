@@ -60,6 +60,10 @@ const Resize = (props) => {
         allSettings.canvas.setZoom(fixRatio);
         allSettings.canvas.setWidth(newCanvasSetting.width * allSettings.canvas.getZoom());
         allSettings.canvas.setHeight(newCanvasSetting.height * allSettings.canvas.getZoom());
+        document.querySelectorAll('.drawingArea').forEach((item) => {
+            item.style.width = '100%';
+            item.style.height = '100%';
+        });
         // reset to auto fix
         allSettings.setRatioSelectValue('auto');
         // preset background image object style
