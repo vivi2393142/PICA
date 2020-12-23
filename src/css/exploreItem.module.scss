@@ -70,6 +70,7 @@ $like-red: rgb(243, 71, 71);
         }
     }
     .buttons {
+        transition: all 0.15s ease-in-out;
         right: 0rem;
         bottom: 3px;
         padding: 1rem 0.5rem 0.5rem 0;
@@ -99,10 +100,9 @@ $like-red: rgb(243, 71, 71);
             align-items: center;
             cursor: pointer;
             &:hover {
-                background-color: rgba(233, 233, 233, 0.8);
+                background-color: rgba(233, 233, 233, 0.9);
             }
         }
-
         .edit {
             margin-right: 0.4rem;
         }
@@ -145,12 +145,6 @@ $like-red: rgb(243, 71, 71);
     min-width: 23%;
     max-width: 23%;
     margin: 1%;
-
-    // test for square
-    // min-width: 46%;
-    // max-width: 46%;
-    // margin: 3%;
-
     .info {
         padding-bottom: 0.3rem;
     }

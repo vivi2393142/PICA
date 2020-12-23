@@ -128,6 +128,7 @@ $sizeBase: 2rem;
             .customWrapper {
                 flex-direction: column;
                 .hint {
+                    position: absolute;
                     color: rgb(243, 71, 71);
                     font-size: $small-font;
                     text-align: center;

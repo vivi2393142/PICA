@@ -117,8 +117,9 @@ body {
             }
         }
     }
-    & .logo {
-        height: 1.8rem;
+    .logo {
+        width: 5rem;
+        // height: 1.8rem;
         cursor: pointer;
     }
     .leftNav {
@@ -129,19 +130,38 @@ body {
         div {
             padding: 0 1.5rem;
             cursor: pointer;
+            position: relative;
+            &:hover {
+                opacity: 0.8;
+            }
+            &:before {
+                content: '';
+                opacity: 0;
+                width: 0%;
+                transition: width 0.2s ease-in-out;
+            }
+            &:hover::before {
+                content: '';
+                opacity: 1;
+                width: 15%;
+                height: 105%;
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                border-bottom: 1.5px solid $dark-grey;
+            }
         }
         .navChosen {
             color: $sub-color;
             font-weight: 500;
-            position: relative;
-            &::before {
+            &::after {
                 content: '';
                 width: 15%;
                 height: 105%;
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
-                border-bottom: 1.5px solid $sub-color;
+                border-bottom: 1.6px solid $sub-color;
             }
         }
     }
@@ -174,12 +194,20 @@ body {
                     color: $custom-black;
                     margin: 0 0.5rem;
                     border: 1px solid $dark-grey;
+                    &:hover {
+                        color: $sub-color;
+                        border-color: $sub-color;
+                        // font-size: $middle-font;
+                    }
                 }
                 .currentTag {
                     background-color: $sub-color;
                     font-weight: 700;
                     color: white;
                     border: 1px solid $sub-color;
+                    &:hover {
+                        color: white;
+                    }
                 }
             }
             .memberDetails {
@@ -385,6 +413,11 @@ body {
                 justify-content: center;
                 font-size: 2.5rem;
                 cursor: pointer;
+                transition: all 0.1s ease-in-out;
+                &:hover {
+                    box-shadow: 2px 2px 6px 0 $dark-grey;
+                    font-size: 4rem;
+                }
                 &::after {
                     content: '';
                     display: block;
@@ -613,17 +646,24 @@ body {
                 padding: 0.3rem 0;
                 font-weight: 400;
                 cursor: pointer;
-                // background-color: $custom-black;
                 border-radius: 2rem;
                 color: $custom-black;
                 margin: 0 0.5rem;
                 border: 1px solid $dark-grey;
+                transition: all 0.1s ease-in-out;
+                &:hover {
+                    border-color: $sub-color;
+                    color: $sub-color;
+                }
             }
             .currentTag {
                 background-color: $sub-color;
                 font-weight: 700;
                 color: white;
                 border: 1px solid $sub-color;
+                &:hover {
+                    color: white;
+                }
             }
         }
     }

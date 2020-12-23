@@ -13,25 +13,6 @@ const ComponentsSelection = (props) => {
     const allSettings = props.allSettings;
     const [croppingObj, setCroppingObj] = React.useState({});
     const [textIsEditing, setTextIsEditing] = React.useState(false);
-    const [testColor, setTestColor] = React.useState('rgba(0,0,0,1)');
-
-    if (Object.keys(allSettings.canvas).length !== 0) {
-        const ctx = allSettings.canvas.getContext('2d');
-        allSettings.canvas.on('mouse:down', (e) => {
-            const mouse = allSettings.canvas.getPointer(e.e);
-            var x = e.e.offsetX; //parseInt(mouse.x);
-            var y = e.e.offsetY; //parseInt(mouse.y);
-            // const x = parseInt(mouse.x);
-            // const y = parseInt(mouse.y);
-
-            // get the color array for the pixel under the mouse
-            const px = ctx.getImageData(x, y, 1, 1).data;
-
-            // report that pixel data
-            setTestColor(`rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
-            // console.log(`rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
-        });
-    }
 
     // render
     return (
@@ -40,15 +21,6 @@ const ComponentsSelection = (props) => {
                 props.currentSidebar !== '' && 'componentsSelectionUnfold'
             }`}
         >
-            <div
-                style={{
-                    width: '20px',
-                    height: '20px',
-                    background: testColor,
-                    marginLeft: '2rem',
-                    border: '1px solid rgba(0,0,0,1)',
-                }}
-            ></div>
             <div className='componentsNavLeft'>
                 {(allSettings.activeObj.type === 'rect' ||
                     allSettings.activeObj.type === 'circle' ||
