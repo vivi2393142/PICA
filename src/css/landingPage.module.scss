@@ -46,6 +46,9 @@ $symbol-font: 0.6rem;
             border-radius: 5px;
             font-size: $middle-font;
             letter-spacing: 1px;
+            &:hover {
+                opacity: 0.8;
+            }
         }
         .signUp {
             background: $sub-color;
@@ -99,6 +102,9 @@ $symbol-font: 0.6rem;
                     cursor: pointer;
                     margin-right: 1rem;
                     border: 1.5px solid $sub-color;
+                    &:hover {
+                        opacity: 0.7;
+                    }
                     &:nth-child(1) {
                         background-color: white;
                         color: $sub-color;
@@ -264,7 +270,7 @@ $symbol-font: 0.6rem;
         justify-content: center;
         align-items: center;
         &:hover {
-            opacity: 0.8;
+            opacity: 0.7;
         }
     }
     .toggle {

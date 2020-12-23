@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import styles from '../../css/canvas.scss';
 import MainBoard from './MainBoard';
 import Banner from './Banner';
-import Alert from '../Alert';
 import initAligningGuidelines from '../../aligning_guidelines.js';
 import * as backImg from '../../img/background';
 import * as firebase from '../../firebase';
@@ -30,7 +29,6 @@ const Canvas = (props) => {
     const [activeObj, setActiveObj] = React.useState({});
     const [saveDragItem, setSaveDragItem] = React.useState({});
     const [uploadedFiles, setUploadedFiles] = React.useState([]);
-    // const [hasBackColor, setHasBackColor] = React.useState(false);
     const [hasUndo, setHasUndo] = React.useState(false);
     const [hasRedo, setHasRedo] = React.useState(false);
     const textSetting = [
@@ -44,12 +42,14 @@ const Canvas = (props) => {
     };
     // show save status
     const showSaveStatus = () => {
-        document.querySelector('.status').classList.add('showStatus');
-        setTimeout(() => {
-            if (document.querySelector('.status') !== null) {
-                document.querySelector('.status').classList.remove('showStatus');
-            }
-        }, 3000);
+        if (document.querySelector('.status')) {
+            document.querySelector('.status').classList.add('showStatus');
+            setTimeout(() => {
+                if (document.querySelector('.status') !== null) {
+                    document.querySelector('.status').classList.remove('showStatus');
+                }
+            }, 3000);
+        }
     };
 
     // handle responsive size
@@ -150,7 +150,6 @@ const Canvas = (props) => {
                 async function presetObjectStyle() {
                     // -- render initial data then clear init history
                     await canvasInit.renderAll();
-
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
                     // preset image & iText objects style
@@ -275,7 +274,10 @@ const Canvas = (props) => {
                     });
                     canvasInit.clearHistory();
                 }
-
+                //save dataURL if non
+                if (!canvasData.snapshot) {
+                    firebase.firstSavaDataURL(canvasInit, props.match.params.id);
+                }
                 // preset fabric custom styles
                 // -- init align guide lines extensions
                 initAligningGuidelines(canvasInit);
@@ -530,22 +532,6 @@ const Canvas = (props) => {
             props.match.params.id
         );
     }, []);
-
-    // React.useState(() => {
-    //     console.log(Object.keys(canvas).length);
-    //     if (Object.keys(canvas).length !== 0) {
-    //         const FontFaceObserver = require('fontfaceobserver');
-    //         console.log(canvas);
-    //         const textArray = ['Sans-serif', 'JetBrains Mono', 'Raleway', 'Montserrat Alternates'];
-    //         textArray.forEach((font) => {
-    //             const myFont = new FontFaceObserver(font);
-    //             myFont.load().then(() => {
-    //                 console.log('load');
-    //                 canvas.requestRenderAll();
-    //             });
-    //         });
-    //     }
-    // }, [canvas]);
 
     const allSettings = {
         canvasSetting,

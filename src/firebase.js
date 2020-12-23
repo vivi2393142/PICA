@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { nanoid } from 'nanoid';
+import { isValidElement } from 'react';
 
 // init firebase
 const firebaseConfig = {
@@ -26,16 +27,18 @@ const listenCanvas = (fileId, callback, setUploadedFiles) => {
     const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
     let oldData = [];
     ref.onSnapshot((doc) => {
-        if (doc.data().uploaded !== oldData.uploaded) {
-            setUploadedFiles(doc.data().uploaded);
-        }
-        oldData = doc.data();
-        if (initState) {
-            // 不回應第一次監聽
-            initState = false;
-        } else {
-            console.log('文件更新');
-            callback();
+        if (doc.data()) {
+            if (doc.data().uploaded !== oldData.uploaded) {
+                setUploadedFiles(doc.data().uploaded);
+            }
+            oldData = doc.data();
+            if (initState) {
+                // 不回應第一次監聽
+                initState = false;
+            } else {
+                console.log('文件更新');
+                callback();
+            }
         }
     });
 };
@@ -49,21 +52,21 @@ const savaDataURL = (canvas, fileId, successCallback) => {
         exportCanvas = canvas;
     }
     let dataURL = exportCanvas.toDataURL('image/png', 1);
-    const storageRef = firebase
-        .storage()
-        .ref()
-        .child('snapshot/' + fileId);
     successCallback(dataURL);
-    // const newDataURL = dataURL.replace('data:image/png;base64,', '');
-    // const task = storageRef.putString(newDataURL, 'base64', { contentType: 'image/jpg' });
-    // task.on(
-    //     'state_changed',
-    //     () => {},
-    //     function error(err) {},
-    //     function complete() {
-    //         successCallback(storageRef);
-    //     }
-    // );
+};
+// -- save data URL
+const firstSavaDataURL = (canvas, fileId) => {
+    let exportCanvas;
+    if (JSON.stringify(canvas) === '{}') {
+        exportCanvas = document.getElementById('fabric-canvas');
+    } else {
+        exportCanvas = canvas;
+    }
+    let dataURL = exportCanvas.toDataURL('image/png', 1);
+    const ref = db.collection('canvasFiles').doc(fileId);
+    ref.update({
+        snapshot: dataURL,
+    });
 };
 
 // -- firestore
@@ -92,7 +95,7 @@ const createNewCanvas = (canvasSetting, userId) => {
         // add data to userData
         const userRef = db.collection('userData').doc(userId);
         userRef.update({ canvas: firebase.firestore.FieldValue.arrayUnion(canvasSetting.id) });
-        document.location.href = `../file/${canvasSetting.id}`;
+        document.location.href = `/file/${canvasSetting.id}`;
     });
 };
 const createSampleCanvas = (canvasSetting, sampleFileId) => {
@@ -129,16 +132,6 @@ const loadCanvas = (canvas, callback, fileId) => {
         const canvasSettingInit = dataFromFirebase.basicSetting;
         const canvasDataInit = JSON.parse(dataFromFirebase.data);
         callback(canvasSettingInit, canvasDataInit);
-        if (
-            canvasDataInit.objects.length === 0 ||
-            (canvasDataInit.objects.length !== 0 && !doc.data().snapshot)
-        ) {
-            savaDataURL(canvas, fileId, (dataURL) => {
-                ref.update({
-                    snapshot: dataURL,
-                });
-            });
-        }
     });
 };
 const saveCanvasData = (canvas, canvasSetting, fileId) => {
@@ -299,29 +292,28 @@ const getShot = (fileId, currentUserEmail, callback) => {
 };
 const postComment = (textInput, currentUserId, fileId) => {
     const refFiles = db.collection('canvasFiles').doc(fileId);
-    refFiles
-        .update({
-            latestTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        })
-        .then(() => {
-            refFiles.get().then((doc) => {
-                const newComment = {
-                    content: textInput,
-                    userId: currentUserId,
-                    timestamp: doc.data().latestTimestamp,
-                };
-                refFiles.update({
-                    comments: firebase.firestore.FieldValue.arrayUnion(newComment),
-                });
-            });
+    // refFiles
+    // .update({
+    //     latestTimestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    // })
+    // .then(() => {
+    refFiles.get().then((doc) => {
+        // console.log(doc.data().latestTimestamp);
+        const newComment = {
+            content: textInput,
+            userId: currentUserId,
+            timestamp: new Date(),
+        };
+        refFiles.update({
+            comments: firebase.firestore.FieldValue.arrayUnion(newComment),
         });
+    });
+    // });
 };
 let setTime = 0;
 let initCommentState = true;
 const listenToComment = (fileId, callback) => {
-    const refUser = db.collection('userData');
     const refFiles = db.collection('canvasFiles').doc(fileId);
-    let allUsers = [];
     let oldData = [];
     // 不重複設置監聽
     if (setTime < 1) {
@@ -364,7 +356,7 @@ const postLike = (currentUserId, fileId, oldIsLike) => {
         });
     }
 };
-const getLikeList = (userId, callback) => {
+const getLikeList = (userId, callback, isNoLikeCallback) => {
     let allUsers = [];
     let result = [];
     let currentUserLike = [];
@@ -390,7 +382,7 @@ const getLikeList = (userId, callback) => {
                                 (x) => x.email === doc.data().basicSetting.userEmail
                             );
                             const fileData = {
-                                userId: userData.id,
+                                userId: userData.email,
                                 userName: userData.name,
                                 userPhoto: userData.photo,
                                 like: doc.data().like.length,
@@ -442,8 +434,15 @@ const changeTitle = (fileId, newTitle) => {
 };
 const getUserPhoto = (userId, callback) => {
     const refUser = db.collection('userData').doc(userId);
+
     refUser.get().then((doc) => {
-        callback(doc.data().photo);
+        if (doc.data()) {
+            callback(doc.data().photo);
+        } else {
+            callback(
+                'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea'
+            );
+        }
     });
 };
 
@@ -465,7 +464,6 @@ const fbSignUp = () => {
         .signInWithPopup(provider)
         .then(function (result) {
             const ref = db.collection('userData').doc(result.user.email);
-            // if it's sign up, set basic data
             if (result.additionalUserInfo.isNewUser) {
                 ref.set({
                     photo:
@@ -476,10 +474,12 @@ const fbSignUp = () => {
                     like: [],
                 });
             }
-            history.go(0);
+            // history.go(0);
             // return user;
         })
-        .catch(function (error) {});
+        .catch(function (error) {
+            console.log(error);
+        });
 };
 const googleSignUp = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
@@ -487,8 +487,9 @@ const googleSignUp = () => {
         .auth()
         .signInWithPopup(provider)
         .then(function (result) {
+            const ref = db.collection('userData').doc(result.user.email);
+            console.log(result.user.email, result.user.displayName);
             if (result.additionalUserInfo.isNewUser) {
-                const ref = db.collection('userData').doc(result.user.email);
                 ref.set({
                     photo:
                         'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
@@ -498,13 +499,11 @@ const googleSignUp = () => {
                     like: [],
                 });
             }
-
-            // return user;
+            // history.go(0);
         })
-        .then(() => {
-            history.go(0);
-        })
-        .catch(function (error) {});
+        .catch(function (error) {
+            console.log(error);
+        });
 };
 const nativeSignUp = (name, email, pwd, failCallback) => {
     firebase
@@ -528,6 +527,7 @@ const nativeSignUp = (name, email, pwd, failCallback) => {
         })
         .catch((error) => {
             failCallback();
+            console.log(error);
         });
 };
 const nativeSignIn = (email, pwd, failCallback) => {
@@ -671,4 +671,6 @@ export {
     listenToComment,
     getUserPhoto,
     getSingleSample,
+    savaDataURL,
+    firstSavaDataURL,
 };

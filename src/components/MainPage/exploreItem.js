@@ -10,7 +10,7 @@ import Alert from '../Alert';
 // export default App;
 const ExploreItem = (props) => {
     let history = useHistory();
-    const [likeListImageLoad, setLikeListImageLoad] = React.useState(0);
+    // const [likeListImageLoad, setLikeListImageLoad] = React.useState(0);
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         buttonNumber: 0,
@@ -83,41 +83,44 @@ const ExploreItem = (props) => {
                 <img
                     className={styles.innerImg}
                     src={props.item.snapshot}
-                    onLoad={() => {
-                        if (props.parentNodeForClass !== 'explore') {
-                            setLikeListImageLoad(likeListImageLoad + 1);
-                            if (props.length === likeListImageLoad) {
-                                props.setIsLikeLoader(false);
-                                setLikeListImageLoad(0);
-                            }
-                        }
-                    }}
+                    // onLoad={() => {
+                    //     if (props.parentNodeForClass !== 'explore') {
+                    //         setLikeListImageLoad(likeListImageLoad + 1);
+                    //         if (props.length === likeListImageLoad) {
+                    //             // props.setIsLikeLoader(false);
+                    //             setLikeListImageLoad(0);
+                    //         }
+                    //     }
+                    // }}
                 ></img>
                 {props.item.isSample && <div className={styles.isSample}>範本</div>}
-                <div className={styles.buttons}>
-                    {props.item.isSample && (
-                        <div className={styles.edit}>
-                            <mainIcons.Edit
-                                className={styles.buttonIcon}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    addNewSampleHandler(e, props.item.fileId);
-                                }}
-                            />
+                {props.isNotSameAsCurrentUser ? null : (
+                    <div className={styles.buttons}>
+                        {props.item.isSample && (
+                            <div className={styles.edit}>
+                                <mainIcons.Edit
+                                    className={styles.buttonIcon}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addNewSampleHandler(e, props.item.fileId);
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        <div
+                            className={`${styles.like} ${props.item.isLike ? styles.isLike : ''}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                notLoginAlert((e) => {
+                                    props.likeHandler(e, props.item, props.type);
+                                }, '請先註冊或登入會員，以收藏作品');
+                            }}
+                        >
+                            <mainIcons.Like className={styles.buttonIcon} />
                         </div>
-                    )}
-                    <div
-                        className={`${styles.like} ${props.item.isLike ? styles.isLike : ''}`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            notLoginAlert((e) => {
-                                props.likeHandler(e, props.item, props.type);
-                            }, '請先註冊或登入會員，以收藏作品');
-                        }}
-                    >
-                        <mainIcons.Like className={styles.buttonIcon} />
                     </div>
-                </div>
+                )}
             </div>
             <div className={styles.info}>
                 <img className={styles.userPhoto} src={props.item.userPhoto}></img>
@@ -143,6 +146,7 @@ ExploreItem.propTypes = {
     isLikeLoader: PropTypes.bool,
     setIsLikeLoader: PropTypes.func,
     length: PropTypes.number,
+    isNotSameAsCurrentUser: PropTypes.bool,
 };
 
 export default ExploreItem;

@@ -43,13 +43,13 @@ const Shots = (props) => {
         // set current page tag
         props.setCurrentPage('explore');
         // data initialize
-        // if (props.match.params.fileId) {
-        firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
-            setCommentData(dataArray);
-            setIsLoaded(false);
-        });
-        // }
-    }, []);
+        if (props.match.params.fileId && props.currentUser) {
+            firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
+                setCommentData(dataArray);
+                setIsLoaded(false);
+            });
+        }
+    }, [props.currentUser]);
 
     const sendCommentHandler = () => {
         firebase.postComment(textInput, props.currentUser.email, props.match.params.fileId);
@@ -65,6 +65,7 @@ const Shots = (props) => {
         setCommentData(oldComments);
     };
     const countDateDiff = (timeStamp) => {
+        // console.log(timeStamp);
         const current = new Date();
         const previous = timeStamp.toDate();
         const msPerMinute = 60 * 1000;

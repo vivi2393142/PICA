@@ -6,6 +6,7 @@ import * as firebase from '../../firebase';
 import { useHistory, Link } from 'react-router-dom';
 import AddNew from './addNew';
 import Login from '../Login';
+import Loader from '../Loader';
 
 // export default App;
 const MainBanner = (props) => {
@@ -14,10 +15,13 @@ const MainBanner = (props) => {
     const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
     const [chooseLogin, setChooseLogin] = React.useState(true);
     const [photoSrc, setPhotoSrc] = React.useState(null);
+    const [isLoaded, setIsLoaded] = React.useState(false);
 
     const signOutHandler = () => {
+        setIsLoaded(true);
         firebase.nativeSignOut(() => {
             history.go(0);
+            setIsLoaded(false);
         });
     };
 
@@ -40,6 +44,7 @@ const MainBanner = (props) => {
     // render
     return (
         <div className={styles.bannerWrapper}>
+            {isLoaded && <Loader></Loader>}
             <div className={styles.banner}>
                 <bannerIcons.LogoW
                     onClick={() => {
@@ -57,7 +62,14 @@ const MainBanner = (props) => {
                         探索畫布
                     </div>
                     <div
-                        onClick={() => history.push(`/main/user/${props.currentUser.email}`)}
+                        onClick={() => {
+                            if (history.location.pathname.slice(0, 10) === '/main/user') {
+                                history.push(`/main/user/${props.currentUser.email}`);
+                                history.go(0);
+                            } else {
+                                history.push(`/main/user/${props.currentUser.email}`);
+                            }
+                        }}
                         className={`${props.currentPage !== 'explore' ? styles.navChosen : ''} `}
                     >
                         我的畫布

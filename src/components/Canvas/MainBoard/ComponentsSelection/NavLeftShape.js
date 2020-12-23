@@ -50,7 +50,7 @@ const NavLeftShape = (props) => {
         props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
     };
-    const stokeWidthArray = [0, 1, 2, 3, 4, 5];
+    const stokeWidthArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const stokeWidthOptions = stokeWidthArray.map((width, index) => (
         <option key={index}>{width}</option>
     ));

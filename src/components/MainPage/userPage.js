@@ -175,8 +175,9 @@ const UserPage = (props) => {
         });
         // get like list
         if (props.currentUser) {
-            firebase.getLikeList(props.currentUser.email, (result) => {
+            firebase.getLikeList(props.match.params.userId, (result) => {
                 setLikeList(result);
+                setIsLikeLoader(false);
             });
         }
     }, [props.currentUser]);
@@ -202,31 +203,35 @@ const UserPage = (props) => {
     }, [userDataFromFirebase.canvas]);
 
     const likeHandler = (e, item, type) => {
-        e.stopPropagation();
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
         let newData = likeList.filter((file) => file.fileId !== item.fileId);
         setLikeList(newData);
     };
 
     const likeListJsx =
-        likeList.length === 0
-            ? null
-            : likeList.map((item, index) => {
-                  return (
-                      <ExploreItem
-                          isLikeLoader={isLikeLoader}
-                          setIsLikeLoader={setIsLikeLoader}
-                          key={index}
-                          index={index}
-                          length={length}
-                          item={item}
-                          likeHandler={likeHandler}
-                          className={styles.likeItem}
-                          currentUser={props.currentUser}
-                          parentNodeForClass={'user'}
-                      />
-                  );
-              });
+        likeList.length === 0 ? (
+            <div className={styles.noLike}>尚無收藏畫布</div>
+        ) : (
+            likeList.map((item, index) => {
+                return (
+                    <ExploreItem
+                        isLikeLoader={isLikeLoader}
+                        setIsLikeLoader={setIsLikeLoader}
+                        key={index}
+                        index={index}
+                        length={length}
+                        item={item}
+                        likeHandler={likeHandler}
+                        className={styles.likeItem}
+                        currentUser={props.currentUser}
+                        isNotSameAsCurrentUser={
+                            props.currentUser.email !== props.match.params.userId
+                        }
+                        parentNodeForClass={'user'}
+                    />
+                );
+            })
+        );
 
     const canvasFilesJsx =
         canvasDataWithDataURL.length !== 0 &&
@@ -242,12 +247,13 @@ const UserPage = (props) => {
                     <div
                         className={styles.file}
                         onClick={() => {
-                            props.currentUser.email === props.match.params.userId &&
-                                history.push(`/file/${item.fileId}`);
+                            props.currentUser.email === props.match.params.userId
+                                ? history.push(`/file/${item.fileId}`)
+                                : history.push(`/main/shots/${item.fileId}`);
                         }}
                         style={
                             props.currentUser.email !== props.match.params.userId
-                                ? { cursor: 'default' }
+                                ? { cursor: 'pointer' }
                                 : {}
                         }
                     >
@@ -358,7 +364,7 @@ const UserPage = (props) => {
                             className={`${styles.tag} ${isAtMyCanvas ? styles.currentTag : ''}`}
                             onClick={() => {
                                 setIsAtMyCanvas(true);
-                                setIsLikeLoader(true);
+                                // setIsLikeLoader(true);
                             }}
                         >
                             {props.currentUser.email === props.match.params.userId

@@ -56,7 +56,7 @@ const Explore = (props) => {
         }
     };
     const likeHandler = (e, item, type) => {
-        e.stopPropagation();
+        // e.stopPropagation();
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
         let oldData = { ...dataArray };
         const index = dataArray[type].findIndex((x) => x.fileId === item.fileId);

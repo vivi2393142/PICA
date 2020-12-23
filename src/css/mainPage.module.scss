@@ -245,13 +245,19 @@ body {
             }
         }
         .canvasLikesFiles {
-            // column-count: 4;
             column-width: 200px;
             column-gap: 20px;
             padding-bottom: 2rem;
             padding-top: 1.5rem;
             position: relative;
-            // border: 1px solid red;
+            .noLike {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+                font-size: $middle-font;
+                padding: 3rem 0;
+            }
         }
 
         .canvasFiles {
