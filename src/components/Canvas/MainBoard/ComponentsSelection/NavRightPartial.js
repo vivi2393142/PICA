@@ -97,7 +97,9 @@ const NavRightPartial = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        left: props.canvas.width - props.activeObj.width * props.activeObj.scaleX,
+                        left:
+                            props.canvasSetting.width -
+                            props.activeObj.width * props.activeObj.scaleX,
                         originX: 'left',
                     });
                 }
@@ -128,7 +130,9 @@ const NavRightPartial = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        top: props.canvas.height - props.activeObj.height * props.activeObj.scaleY,
+                        top:
+                            props.canvasSetting.height -
+                            props.activeObj.height * props.activeObj.scaleY,
                         originY: 'top',
                     });
                 }
@@ -143,7 +147,7 @@ const NavRightPartial = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        left: props.canvas.width / 2,
+                        left: props.canvasSetting.width / 2,
                         originX: 'center',
                     });
                 }
@@ -158,7 +162,7 @@ const NavRightPartial = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        top: props.canvas.height / 2,
+                        top: props.canvasSetting.height / 2,
                         originY: 'center',
                     });
                 }
@@ -249,6 +253,7 @@ NavRightPartial.propTypes = {
     activeObj: PropTypes.object.isRequired,
     setActiveObj: PropTypes.func.isRequired,
     canvas: PropTypes.object.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
 };
 

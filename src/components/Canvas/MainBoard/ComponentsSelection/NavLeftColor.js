@@ -8,8 +8,10 @@ const NavLeftColor = (props) => {
     const [isChoosingColor, setIsChoosingColor] = React.useState(false);
     const toggleColorSelection = (e) => {
         setIsChoosingColor(true);
+        props.setIsFocusInput(true);
         props.trackOutSideClick(e.currentTarget, () => {
             setIsChoosingColor(false);
+            props.setIsFocusInput(false);
             props.canvas.fire('object:modified');
         });
     };
@@ -60,6 +62,7 @@ NavLeftColor.propTypes = {
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
+    setIsFocusInput: PropTypes.func,
 };
 
 export default NavLeftColor;

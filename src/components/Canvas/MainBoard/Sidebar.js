@@ -255,10 +255,10 @@ const Sidebar = (props) => {
         }
     };
     // handlers: drop to upload
-    const dragoverHandler = (e) => {
+    ondragover = (e) => {
         e.preventDefault();
     };
-    const dropHandler = (e) => {
+    ondrop = (e) => {
         e.preventDefault();
         setShowUploadCover(false);
         // prevent canvas drop event
@@ -310,23 +310,13 @@ const Sidebar = (props) => {
             }
         }
     };
-    const dragEnterHandler = (e) => {
+    ondragenter = (e) => {
         if (e.dataTransfer.types[0] === 'Files') {
             setShowUploadCover(true);
             props.setCurrentSidebar('upload');
         }
     };
-    React.useEffect(() => {
-        // let start = false;
-        document.addEventListener('dragover', dragoverHandler);
-        document.addEventListener('drop', dropHandler);
-        document.addEventListener('dragenter', dragEnterHandler);
-        return () => {
-            document.removeEventListener('dragover', dragoverHandler);
-            document.removeEventListener('drop', dropHandler);
-            document.removeEventListener('dragenter', dragEnterHandler);
-        };
-    }, []);
+
     // handlers: backgroundColor
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
     const [backColorChosen, setBackColorChosen] = React.useState({
@@ -341,12 +331,14 @@ const Sidebar = (props) => {
         const clickedOrNot = (e) => {
             if (!document.querySelector('.backgroundPicker').contains(e.target)) {
                 setIsChoosingBackColor(false);
+                props.setIsFocusInput(false);
                 allSettings.canvas.fire('object:modified');
                 document.removeEventListener('click', clickedOrNot, true);
             }
         };
         document.addEventListener('click', clickedOrNot, true);
         setIsChoosingBackColor(true);
+        props.setIsFocusInput(true);
     };
     const backgroundColorHandler = (color) => {
         allSettings.canvas.backgroundImage = 0;
@@ -505,12 +497,6 @@ const Sidebar = (props) => {
     // jsx : sidebar
     const sidebarArray = [
         {
-            EN: 'template',
-            CH: '範本',
-            icon: <icons.SidebarSample className='sidebarIcon' />,
-            iconB: <icons.SidebarSampleB className='sidebarIcon' />,
-        },
-        {
             EN: 'text',
             CH: '文字',
             icon: <icons.SidebarText className='sidebarIcon' />,
@@ -553,6 +539,12 @@ const Sidebar = (props) => {
             icon: <icons.SidebarUpload className='sidebarIcon' />,
             iconB: <icons.SidebarUploadB className='sidebarIcon' />,
         },
+        {
+            EN: 'template',
+            CH: '範本',
+            icon: <icons.SidebarSample className='sidebarIcon' />,
+            iconB: <icons.SidebarSampleB className='sidebarIcon' />,
+        },
         // {
         //     EN: 'more',
         //     CH: '更多',
@@ -564,7 +556,7 @@ const Sidebar = (props) => {
         <div
             key={index}
             className={`sideButton ${
-                props.currentSidebar === 'template' && props.currentSidebar === item.EN
+                props.currentSidebar === 'text' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen firstButton'
                     : props.currentSidebar === 'upload' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen lastButton'
@@ -1210,7 +1202,7 @@ const Sidebar = (props) => {
             {props.currentSidebar !== '' && (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${
-                        props.currentSidebar === 'template' && 'firstUnfold'
+                        props.currentSidebar === 'text' && 'firstUnfold'
                     }`}
                 >
                     {textJsx}
@@ -1236,6 +1228,7 @@ Sidebar.propTypes = {
     allSettings: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
+    setIsFocusInput: PropTypes.bool.isRequired,
 };
 
 export default Sidebar;

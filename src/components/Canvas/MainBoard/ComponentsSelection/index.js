@@ -9,6 +9,9 @@ import NavLeftImg from './NavLeftImg';
 import NavLeftShape from './NavLeftShape';
 import NavLeftColor from './NavLeftColor';
 
+let ctrlDown = false;
+let shiftDown = false;
+
 const ComponentsSelection = (props) => {
     const allSettings = props.allSettings;
 
@@ -81,80 +84,67 @@ const ComponentsSelection = (props) => {
     };
 
     // keyboard functions
-    React.useEffect(() => {
-        // -- methods for component: onkeydown setting
-        let ctrlDown = false;
-        let shiftDown = false;
-        const codes = {
-            ctrlKey: 17,
-            cmdKey: 91,
-            delKey: 8,
-            shiftKey: 16,
-            vKey: 86,
-            xKey: 88,
-            cKey: 67,
-            aKey: 65,
-            zKey: 90,
-        };
-        const keydownEvent = (e) => {
-            if (e.keyCode === codes.ctrlKey || e.keyCode === codes.cmdKey) {
-                ctrlDown = true;
+    // -- methods for component: onkeydown setting
+    const codes = {
+        ctrlKey: 17,
+        cmdKey: 91,
+        delKey: 8,
+        shiftKey: 16,
+        vKey: 86,
+        xKey: 88,
+        cKey: 67,
+        aKey: 65,
+        zKey: 90,
+    };
+    onkeydown = (e) => {
+        if (e.keyCode === codes.ctrlKey || e.keyCode === codes.cmdKey) {
+            ctrlDown = true;
+        }
+        if (e.keyCode === codes.shiftKey) {
+            shiftDown = true;
+        }
+        if (ctrlDown && e.keyCode === codes.vKey) {
+            pasteHandler();
+        }
+        if (allSettings.activeObj.type) {
+            if (ctrlDown && e.keyCode === codes.cKey && !props.isFocusInput) {
+                copyHandler();
             }
-            if (e.keyCode === codes.shiftKey) {
-                shiftDown = true;
+            if (ctrlDown && e.keyCode === codes.xKey && !props.isFocusInput) {
+                cutHandler();
             }
-            if (ctrlDown && e.keyCode === codes.vKey) {
-                pasteHandler();
-            }
-            if (allSettings.activeObj.type) {
-                if (ctrlDown && e.keyCode === codes.cKey) {
-                    copyHandler();
-                }
-                if (ctrlDown && e.keyCode === codes.xKey) {
-                    cutHandler();
-                }
-                if (e.keyCode === codes.delKey) {
-                    if (
-                        (allSettings.activeObj.type === 'i-text' &&
-                            allSettings.activeObj.isEditing) ||
-                        textIsEditing
-                    ) {
-                        return;
-                    } else {
-                        delHandler();
-                    }
+            if (e.keyCode === codes.delKey && !props.isFocusInput) {
+                if (
+                    (allSettings.activeObj.type === 'i-text' && allSettings.activeObj.isEditing) ||
+                    textIsEditing
+                ) {
+                    return;
+                } else {
+                    delHandler();
                 }
             }
-            if (ctrlDown && e.keyCode === codes.aKey) {
-                e.preventDefault();
-                selectAllHandler();
-            }
-            if (ctrlDown && e.keyCode === codes.zKey && !shiftDown) {
-                //TODO: 待修正copy paste時復原的錯誤(因會紀錄不只一次紀錄)
-                allSettings.canvas.undo();
-                allSettings.setActiveObj({});
-            }
-            if (ctrlDown && shiftDown && e.keyCode === codes.zKey) {
-                allSettings.canvas.redo();
-                allSettings.setActiveObj({});
-            }
-        };
-        const keyupEvent = (e) => {
-            if (e.keyCode == codes.ctrlKey || e.keyCode == codes.cmdKey) {
-                ctrlDown = false;
-            }
-            if (e.keyCode == codes.shiftKey) {
-                shiftDown = false;
-            }
-        };
-        // add new key function
-        document.addEventListener('keydown', keydownEvent, false);
-        document.addEventListener('keyup', keyupEvent, false);
-        return () => {
-            document.removeEventListener('keydown', keydownEvent, false);
-            document.removeEventListener('keyup', keyupEvent, false);
-        };
-    }, [allSettings.canvas, allSettings.activeObj, clipboard, textIsEditing]);
+        }
+        if (ctrlDown && e.keyCode === codes.aKey && !props.isFocusInput) {
+            e.preventDefault();
+            selectAllHandler();
+        }
+        if (ctrlDown && e.keyCode === codes.zKey && !shiftDown) {
+            allSettings.canvas.undo();
+            allSettings.setActiveObj({});
+        }
+        if (ctrlDown && shiftDown && e.keyCode === codes.zKey) {
+            allSettings.canvas.redo();
+            allSettings.setActiveObj({});
+        }
+    };
+    onkeyup = (e) => {
+        if (e.keyCode == codes.ctrlKey || e.keyCode == codes.cmdKey) {
+            ctrlDown = false;
+        }
+        if (e.keyCode == codes.shiftKey) {
+            shiftDown = false;
+        }
+    };
 
     // render
     return (
@@ -170,6 +160,7 @@ const ComponentsSelection = (props) => {
                             canvas={allSettings.canvas}
                             activeObj={allSettings.activeObj}
                             trackOutSideClick={props.trackOutSideClick}
+                            setIsFocusInput={props.setIsFocusInput}
                         />
                     )}
                 {(allSettings.activeObj.type === 'image' || croppingObj !== {}) &&
@@ -199,6 +190,7 @@ const ComponentsSelection = (props) => {
                             trackOutSideClick={props.trackOutSideClick}
                             canvas={allSettings.canvas}
                             activeObj={allSettings.activeObj}
+                            setIsFocusInput={props.setIsFocusInput}
                         />
                     )}
             </div>
@@ -211,6 +203,7 @@ const ComponentsSelection = (props) => {
                             pasteHandler={pasteHandler}
                             delHandler={delHandler}
                             canvas={allSettings.canvas}
+                            canvasSetting={allSettings.canvasSetting}
                             activeObj={allSettings.activeObj}
                             setActiveObj={allSettings.setActiveObj}
                             trackOutSideClick={props.trackOutSideClick}
@@ -221,7 +214,7 @@ const ComponentsSelection = (props) => {
                             <icons.Paste className='activeButton' onClick={pasteHandler} />
                         </div>
                     )}
-                    {allSettings.hasUndo && (
+                    {allSettings.canvas.historyUndo && allSettings.canvas.historyUndo.length !== 0 && (
                         <div className='undo'>
                             <icons.Undo
                                 className='activeButton'
@@ -232,7 +225,7 @@ const ComponentsSelection = (props) => {
                             />
                         </div>
                     )}
-                    {allSettings.hasRedo && (
+                    {allSettings.canvas.historyRedo && allSettings.canvas.historyRedo.length !== 0 && (
                         <div className='redo'>
                             <icons.Redo
                                 className='activeButton'
@@ -272,6 +265,8 @@ ComponentsSelection.propTypes = {
     setCurrentSidebar: PropTypes.func.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,
+    isFocusInput: PropTypes.bool.isRequired,
+    setIsFocusInput: PropTypes.bool.isRequired,
 };
 
 export default ComponentsSelection;

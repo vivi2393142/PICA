@@ -10,7 +10,6 @@ const DrawingArea = (props) => {
     React.useEffect(() => {
         if (Object.keys(allSettings.canvasSetting).length !== 0) {
             const handleResize = () => {
-                console.log('resize');
                 const container = document.querySelector('.canvas-container');
                 if (allSettings.ratioSelectValue === 'auto') {
                     allSettings.handleResponsiveSize(container, allSettings.canvasSetting);

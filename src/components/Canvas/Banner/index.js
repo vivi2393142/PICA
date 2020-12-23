@@ -53,8 +53,16 @@ const Banner = (props) => {
                 <input
                     placeholder='未命名畫布'
                     defaultValue={allSettings.canvasSetting.title}
+                    onFocus={() => {
+                        props.setIsFocusInput(true);
+                        console.log('focus');
+                    }}
                     onChange={handleTitle}
-                    onBlur={handleSaveFileTemporary}
+                    onBlur={() => {
+                        handleSaveFileTemporary();
+                        props.setIsFocusInput(false);
+                        console.log('nofocus');
+                    }}
                 ></input>
                 {/* <div
                     onClick={handleSaveFileTemporary}
@@ -82,7 +90,11 @@ const Banner = (props) => {
                     測試
                 </div> */}
                 {typeJsx}
-                <Resize drawingAreaSettings={allSettings} fileId={props.fileId} />
+                <Resize
+                    drawingAreaSettings={allSettings}
+                    fileId={props.fileId}
+                    setIsFocusInput={props.setIsFocusInput}
+                />
                 {/* <div className='shareIconWrapper'>
                     <bannerIcons.Share className='bannerIcons' />
                 </div> */}
@@ -104,6 +116,7 @@ Banner.propTypes = {
     allSettings: PropTypes.object.isRequired,
     fileId: PropTypes.string.isRequired,
     currentUser: PropTypes.object,
+    setIsFocusInput: PropTypes.func.isRequired,
 };
 
 export default Banner;

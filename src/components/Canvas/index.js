@@ -29,8 +29,7 @@ const Canvas = (props) => {
     const [activeObj, setActiveObj] = React.useState({});
     const [saveDragItem, setSaveDragItem] = React.useState({});
     const [uploadedFiles, setUploadedFiles] = React.useState([]);
-    const [hasUndo, setHasUndo] = React.useState(false);
-    const [hasRedo, setHasRedo] = React.useState(false);
+    const [isFocusInput, setIsFocusInput] = React.useState(false);
     const textSetting = [
         { title: '雙擊以編輯標題', size: 36, fontWeight: 'bold' },
         { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
@@ -146,6 +145,7 @@ const Canvas = (props) => {
                     width: canvasSettingInit.width,
                     objectChaching: false,
                 });
+                canvasInit.offHistory();
                 canvasInit.loadFromJSON(canvasDataInit, presetObjectStyle);
                 async function presetObjectStyle() {
                     // -- render initial data then clear init history
@@ -227,8 +227,6 @@ const Canvas = (props) => {
                             }
                         }
                         console.log('編輯完畢');
-                        setHasUndo(canvasInit.historyUndo.length > 0);
-                        setHasRedo(canvasInit.historyRedo.length > 0);
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
                     // TODO:處理複製剪下貼上會更新兩次的問題
@@ -242,8 +240,6 @@ const Canvas = (props) => {
                             }
                         }
                         console.log('新增完畢');
-                        setHasUndo(canvasInit.historyUndo > 0);
-                        setHasRedo(canvasInit.historyRedo > 0);
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
                     canvasInit.on('object:removed', (e) => {
@@ -253,8 +249,6 @@ const Canvas = (props) => {
                             }
                         }
                         console.log('移除完畢');
-                        setHasUndo(canvasInit.historyUndo > 0);
-                        setHasRedo(canvasInit.historyRedo > 0);
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
 
@@ -272,6 +266,7 @@ const Canvas = (props) => {
                     canvasInit.on('drop', (e) => {
                         dropItem(e, canvasInit);
                     });
+                    canvasInit.onHistory();
                     canvasInit.clearHistory();
                 }
                 //save dataURL if non
@@ -350,14 +345,20 @@ const Canvas = (props) => {
                             ) ||
                             movingItem.parentNode.classList.contains('unfoldItemImgWrapper')
                         ) {
+                            const layoutZoomRation =
+                                parseInt(movingItem.parentNode.style.width) / 100;
                             fabric.Image.fromURL(
                                 src,
                                 (img) => {
                                     const imgItem = img.set({
                                         scaleX: scaleRatio,
                                         scaleY: scaleRatio,
-                                        top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                        left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
+                                        top:
+                                            (offsetY - itemDragOffset.offsetY * layoutZoomRation) /
+                                            currentSizeRatio,
+                                        left:
+                                            (offsetX - itemDragOffset.offsetX * layoutZoomRation) /
+                                            currentSizeRatio,
                                     });
                                     canvasInit.add(imgItem);
                                     imgItem.setControlsVisibility({
@@ -553,8 +554,6 @@ const Canvas = (props) => {
         // hasBackColor,
         // setHasBackColor,
         presetBackgroundImg,
-        hasUndo,
-        hasRedo,
     };
 
     const Background = () => {
@@ -583,11 +582,14 @@ const Canvas = (props) => {
                 allSettings={allSettings}
                 fileId={props.match.params.id}
                 currentUser={props.currentUser}
+                setIsFocusInput={setIsFocusInput}
             />
             <MainBoard
                 allSettings={allSettings}
                 currentUser={props.currentUser}
                 fileId={props.match.params.id}
+                isFocusInput={isFocusInput}
+                setIsFocusInput={setIsFocusInput}
             />
         </div>
     );

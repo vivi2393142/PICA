@@ -195,12 +195,28 @@ const Resize = (props) => {
                             placeholder='寬度'
                             value={customSize.width}
                             onChange={handleCustomWidth}
+                            onFocus={() => {
+                                props.setIsFocusInput(true);
+                                console.log('focus');
+                            }}
+                            onBlur={() => {
+                                props.setIsFocusInput(false);
+                                console.log('nofocus');
+                            }}
                         ></input>
                         <div className='customSizeInputCross'>×</div>
                         <input
                             placeholder='高度'
                             value={customSize.height}
                             onChange={handleCustomHeight}
+                            onFocus={() => {
+                                props.setIsFocusInput(true);
+                                console.log('focus');
+                            }}
+                            onBlur={() => {
+                                props.setIsFocusInput(false);
+                                console.log('nofocus');
+                            }}
                         ></input>
                         <div className='customSizeInputPx'>像素</div>
                     </div>
@@ -243,6 +259,7 @@ Resize.propTypes = {
     // TODO: 待資料確定後，明確定義 array 內容
     drawingAreaSettings: PropTypes.object.isRequired,
     fileId: PropTypes.string.isRequired,
+    setIsFocusInput: PropTypes.func.isRequired,
 };
 
 export default Resize;

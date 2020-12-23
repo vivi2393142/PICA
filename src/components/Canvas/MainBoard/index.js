@@ -80,6 +80,7 @@ const MainBoard = (props) => {
                 trackOutSideClick={trackOutSideClick}
                 currentUser={props.currentUser}
                 fileId={props.fileId}
+                setIsFocusInput={props.setIsFocusInput}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection
@@ -87,6 +88,8 @@ const MainBoard = (props) => {
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
                     trackOutSideClick={trackOutSideClick}
+                    isFocusInput={props.isFocusInput}
+                    setIsFocusInput={props.setIsFocusInput}
                 />
                 <DrawingArea allSettings={allSettings} zoomCanvas={zoomCanvas} />
             </div>
@@ -99,6 +102,8 @@ MainBoard.propTypes = {
     allSettings: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
+    isFocusInput: PropTypes.bool.isRequired,
+    setIsFocusInput: PropTypes.func.isRequired,
 };
 
 export default MainBoard;

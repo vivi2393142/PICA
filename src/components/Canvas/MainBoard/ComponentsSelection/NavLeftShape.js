@@ -8,8 +8,10 @@ const NavLeftShape = (props) => {
     const [isChoosingBorderColor, setIsChoosingBorderColor] = React.useState(false);
     const toggleBorderColorSelection = (e) => {
         setIsChoosingBorderColor(true);
+        props.setIsFocusInput(true);
         props.trackOutSideClick(e.currentTarget, () => {
             setIsChoosingBorderColor(false);
+            props.setIsFocusInput(false);
             props.canvas.fire('object:modified');
         });
     };
@@ -41,14 +43,16 @@ const NavLeftShape = (props) => {
         }
     }, [props.activeObj]);
     // set stroke width
-    const [rectStroke, setRectStroke] = React.useState(1);
+    const [rectStroke, setRectStroke] = React.useState(
+        props.activeObj.strokeWidth ? props.activeObj.strokeWidth : 0
+    );
     const handleRectStoke = (e) => {
         setRectStroke(parseInt(e.target.value));
         props.activeObj.set({
             strokeWidth: parseInt(e.target.value),
         });
-        props.canvas.requestRenderAll();
         props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
     const stokeWidthArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
     const stokeWidthOptions = stokeWidthArray.map((width, index) => (
@@ -74,11 +78,6 @@ const NavLeftShape = (props) => {
                 <select className='textSizeSelect' value={rectStroke} onChange={handleRectStoke}>
                     {stokeWidthOptions}
                 </select>
-                {/* <input
-                    className='textSizeInput'
-                    value={rectStroke}
-                    onChange={handleRectStoke}
-                ></input> */}
             </div>
         </div>
     );
@@ -88,6 +87,7 @@ NavLeftShape.propTypes = {
     trackOutSideClick: PropTypes.func.isRequired,
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
+    setIsFocusInput: PropTypes.func,
 };
 
 export default NavLeftShape;

@@ -135,9 +135,6 @@ const NavLeftText = (props) => {
                 <option value='Raleway'>Raleway</option>
                 <option value='Montserrat Alternates'>Montserrat Alternates</option>
             </select>
-
-            {/* <div className='specificButton textSizeOuter'> */}
-
             <div className='sizeBoxOuter'>
                 <icons.TextSize className='specificButton textIcon' onClick={toggleSizeSelection} />
                 {isChoosingSize && (
@@ -151,7 +148,7 @@ const NavLeftText = (props) => {
                             value={textSize}
                             onInput={handleTextSize}
                             step='1'
-                        ></input>{' '}
+                        ></input>
                     </div>
                 )}
             </div>
