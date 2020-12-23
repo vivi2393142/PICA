@@ -71,10 +71,41 @@ const AddNew = (props) => {
             height: choices.height,
             type: choices.type,
         };
-        if (choices.way === 'sample') {
+        if (choices.type === 'custom') {
+            canvasSetting.width = customSize.width;
+            canvasSetting.height = customSize.height;
+            firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+        } else if (choices.way === 'sample') {
             firebase.createSampleCanvas(canvasSetting, choices.sampleFileId);
         } else {
             firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+        }
+    };
+    // custom size
+    const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
+    const [showHint, setShowHint] = React.useState(false);
+    const handleCustomWidth = (e) => {
+        if (/^\d*$/.test(e.target.value)) {
+            if (e.target.value < 150 || e.target.value > 2000) {
+                setShowHint(true);
+                e.target.style.borderColor = 'rgb(243, 71, 71)';
+            } else {
+                setShowHint(false);
+                e.target.style.borderColor = '#acacac';
+            }
+            setCustomSize({ ...customSize, width: e.target.value });
+        }
+    };
+    const handleCustomHeight = (e) => {
+        if (/^\d*$/.test(e.target.value)) {
+            if (e.target.value < 150 || e.target.value > 2000) {
+                setShowHint(true);
+                e.target.style.borderColor = 'rgb(243, 71, 71)';
+            } else {
+                setShowHint(false);
+                e.target.style.borderColor = '#acacac';
+            }
+            setCustomSize({ ...customSize, height: e.target.value });
         }
     };
 
@@ -99,6 +130,7 @@ const AddNew = (props) => {
                 </div>
             );
         });
+
     const sizeImgJsx = canvasSizeOptions.map((item, index) => {
         return (
             <div
@@ -126,7 +158,7 @@ const AddNew = (props) => {
                     }}
                 >
                     <div className={styles.arrowText}>
-                        {item.mmW ? item.width + 'px' : item.width + 'mm'}
+                        {item.mmW ? item.mmW + 'mm' : item.width + 'px'}
                     </div>
                 </div>
                 <div
@@ -138,7 +170,7 @@ const AddNew = (props) => {
                     }}
                 >
                     <div className={styles.arrowText}>
-                        {item.mmW ? item.height + 'px' : item.height + 'mm'}
+                        {item.mmH ? item.mmH + 'mm' : item.height + 'px'}
                     </div>
                 </div>
             </div>
@@ -156,8 +188,8 @@ const AddNew = (props) => {
                 <div className={styles.title}> {item.name}</div>
                 {item.type !== 'custom' ? (
                     <div className={styles.details}>
-                        {item.mmW ? item.width + 'px' : item.width + 'mm'} x{' '}
-                        {item.mmW ? item.height + 'px' : item.height + 'mm'}
+                        {item.mmW ? item.mmW + 'mm' : item.width + 'px'} x{' '}
+                        {item.mmH ? item.mmH + 'mm' : item.height + 'px'}
                     </div>
                 ) : (
                     <div className={styles.details}>? px x ? px</div>
@@ -251,6 +283,8 @@ const AddNew = (props) => {
                         <div className={styles.stepTitle}>
                             {currentStep === 1
                                 ? '選擇畫布尺寸'
+                                : currentStep === 2 && chosenRec === 'custom'
+                                ? '輸入自訂尺寸'
                                 : currentStep === 2
                                 ? '選擇建立方式'
                                 : currentStep === 3
@@ -262,7 +296,33 @@ const AddNew = (props) => {
                                 <div className={styles.sizeOptions}>{sizeOptions}</div>
                                 <div className={styles.sizeImg}>{sizeImgJsx}</div>
                             </div>
-                        ) : currentStep === 2 ? (
+                        ) : currentStep === 2 && chosenRec === 'custom' ? (
+                            <div className={`${styles.stepContentWrapper} ${styles.customWrapper}`}>
+                                <label className={styles.customInput}>
+                                    寬度
+                                    <input
+                                        maxLength='4'
+                                        placeholder='須介於150px ~ 2000px'
+                                        value={customSize.width}
+                                        onChange={handleCustomWidth}
+                                    ></input>
+                                    <span className={styles.unit}>px</span>
+                                </label>
+                                <label className={styles.customInput}>
+                                    高度
+                                    <input
+                                        maxLength='4'
+                                        placeholder='須介於150px ~ 2000px'
+                                        value={customSize.height}
+                                        onChange={handleCustomHeight}
+                                    ></input>
+                                    <span className={styles.unit}>px</span>
+                                </label>
+                                {showHint && (
+                                    <div className={styles.hint}>※ 須介於150px ~ 2000px</div>
+                                )}
+                            </div>
+                        ) : currentStep === 2 && chosenRec !== 'custom' ? (
                             <div className={styles.stepContentWrapper}>
                                 <div className={styles.optionsWrapper}>
                                     <div
@@ -312,7 +372,10 @@ const AddNew = (props) => {
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}
-                                    onClick={() => setCurrentStep(currentStep - 1)}
+                                    onClick={() => {
+                                        setCurrentStep(currentStep - 1);
+                                        setShowHint(false);
+                                    }}
                                 >
                                     上一步
                                 </div>
@@ -321,7 +384,12 @@ const AddNew = (props) => {
                         {(currentStep === 1 && choices.type) ||
                         (currentStep === 2 &&
                             (choices.way === 'blank' ||
-                                (choices.way === 'sample' && choices.sampleFileId))) ? (
+                                (choices.way === 'sample' && choices.sampleFileId) ||
+                                (choices.type === 'custom' &&
+                                    customSize.width > 149 &&
+                                    customSize.width < 2001 &&
+                                    customSize.height > 149 &&
+                                    customSize.height < 2001))) ? (
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}

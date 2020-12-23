@@ -3,152 +3,52 @@ import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
 import * as icons from '../../../../img/icons';
-import NavRightPartial from './NavRightPartial';
+import NavRight from './NavRight';
 import NavLeftText from './NavLeftText';
 import NavLeftImg from './NavLeftImg';
 import NavLeftShape from './NavLeftShape';
 import NavLeftColor from './NavLeftColor';
 
-let ctrlDown = false;
-let shiftDown = false;
-
 const ComponentsSelection = (props) => {
     const allSettings = props.allSettings;
-
-    const [clipboard, setClipboard] = React.useState(false);
-    const [textIsEditing, setTextIsEditing] = React.useState(false);
     const [croppingObj, setCroppingObj] = React.useState({});
+    const [textIsEditing, setTextIsEditing] = React.useState(false);
+    const [testColor, setTestColor] = React.useState('rgba(0,0,0,1)');
 
-    // methods for component:
-    // -- methods for component: copy, cut, paste, delete
-    const copyHandler = () => {
-        allSettings.activeObj.clone(function (cloned) {
-            setClipboard(cloned);
-        });
-    };
-    const cutHandler = () => {
-        allSettings.activeObj.clone(function (cloned) {
-            setClipboard(cloned);
-            const activeObject = allSettings.canvas.getActiveObjects();
-            allSettings.canvas.remove(...activeObject);
-            allSettings.canvas.discardActiveObject();
-        });
-    };
-    const pasteHandler = () => {
-        if (clipboard === false) {
-            return;
-        }
-        clipboard.clone(function (clonedObj) {
-            allSettings.canvas.discardActiveObject();
-            clonedObj.set({
-                left: clonedObj.left + 10,
-                top: clonedObj.top + 10,
-                evented: true,
-            });
-            if (clonedObj.type === 'activeSelection') {
-                // active selection needs a reference to the canvas.
-                clonedObj.canvas = allSettings.canvas;
-                clonedObj.forEachObject(function (obj) {
-                    allSettings.canvas.add(obj);
-                });
-                // this should solve the unselect ability
-                clonedObj.setCoords();
-            } else {
-                allSettings.canvas.add(clonedObj);
-            }
-            let newClipBoard = clipboard;
-            newClipBoard.top += 10;
-            newClipBoard.left += 10;
-            setClipboard(newClipBoard);
-            allSettings.canvas.setActiveObject(clonedObj);
-            allSettings.canvas.requestRenderAll();
-        });
-    };
-    const delHandler = () => {
-        const activeObject = allSettings.canvas.getActiveObjects();
-        allSettings.canvas.remove(...activeObject);
-        allSettings.canvas.discardActiveObject();
-    };
-    // -- methods for component: select all
-    const selectAllHandler = () => {
-        allSettings.canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection(allSettings.canvas.getObjects(), {
-            canvas: allSettings.canvas,
-        });
-        allSettings.canvas.setActiveObject(sel);
-        allSettings.canvas.requestRenderAll();
-    };
-    const discardHandler = () => {
-        allSettings.canvas.discardActiveObject();
-        allSettings.canvas.requestRenderAll();
-    };
+    if (Object.keys(allSettings.canvas).length !== 0) {
+        const ctx = allSettings.canvas.getContext('2d');
+        allSettings.canvas.on('mouse:down', (e) => {
+            const mouse = allSettings.canvas.getPointer(e.e);
+            var x = e.e.offsetX; //parseInt(mouse.x);
+            var y = e.e.offsetY; //parseInt(mouse.y);
+            // const x = parseInt(mouse.x);
+            // const y = parseInt(mouse.y);
 
-    // keyboard functions
-    // -- methods for component: onkeydown setting
-    const codes = {
-        ctrlKey: 17,
-        cmdKey: 91,
-        delKey: 8,
-        shiftKey: 16,
-        vKey: 86,
-        xKey: 88,
-        cKey: 67,
-        aKey: 65,
-        zKey: 90,
-    };
-    onkeydown = (e) => {
-        if (e.keyCode === codes.ctrlKey || e.keyCode === codes.cmdKey) {
-            ctrlDown = true;
-        }
-        if (e.keyCode === codes.shiftKey) {
-            shiftDown = true;
-        }
-        if (ctrlDown && e.keyCode === codes.vKey) {
-            pasteHandler();
-        }
-        if (allSettings.activeObj.type) {
-            if (ctrlDown && e.keyCode === codes.cKey && !props.isFocusInput) {
-                copyHandler();
-            }
-            if (ctrlDown && e.keyCode === codes.xKey && !props.isFocusInput) {
-                cutHandler();
-            }
-            if (e.keyCode === codes.delKey && !props.isFocusInput) {
-                if (
-                    (allSettings.activeObj.type === 'i-text' && allSettings.activeObj.isEditing) ||
-                    textIsEditing
-                ) {
-                    return;
-                } else {
-                    delHandler();
-                }
-            }
-        }
-        if (ctrlDown && e.keyCode === codes.aKey && !props.isFocusInput) {
-            e.preventDefault();
-            selectAllHandler();
-        }
-        if (ctrlDown && e.keyCode === codes.zKey && !shiftDown) {
-            allSettings.canvas.undo();
-            allSettings.setActiveObj({});
-        }
-        if (ctrlDown && shiftDown && e.keyCode === codes.zKey) {
-            allSettings.canvas.redo();
-            allSettings.setActiveObj({});
-        }
-    };
-    onkeyup = (e) => {
-        if (e.keyCode == codes.ctrlKey || e.keyCode == codes.cmdKey) {
-            ctrlDown = false;
-        }
-        if (e.keyCode == codes.shiftKey) {
-            shiftDown = false;
-        }
-    };
+            // get the color array for the pixel under the mouse
+            const px = ctx.getImageData(x, y, 1, 1).data;
+
+            // report that pixel data
+            setTestColor(`rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
+            // console.log(`rgba(${px[0]},${px[1]},${px[2]},${px[3]})`);
+        });
+    }
 
     // render
     return (
-        <div className='componentsSelection'>
+        <div
+            className={`componentsSelection ${
+                props.currentSidebar !== '' && 'componentsSelectionUnfold'
+            }`}
+        >
+            <div
+                style={{
+                    width: '20px',
+                    height: '20px',
+                    background: testColor,
+                    marginLeft: '2rem',
+                    border: '1px solid rgba(0,0,0,1)',
+                }}
+            ></div>
             <div className='componentsNavLeft'>
                 {(allSettings.activeObj.type === 'rect' ||
                     allSettings.activeObj.type === 'circle' ||
@@ -194,68 +94,16 @@ const ComponentsSelection = (props) => {
                         />
                     )}
             </div>
-            {allSettings.activeObj.specialType !== 'cropbox' && (
-                <div className='componentsNavRight'>
-                    {allSettings.activeObj.type && (
-                        <NavRightPartial
-                            copyHandler={copyHandler}
-                            cutHandler={cutHandler}
-                            pasteHandler={pasteHandler}
-                            delHandler={delHandler}
-                            canvas={allSettings.canvas}
-                            canvasSetting={allSettings.canvasSetting}
-                            activeObj={allSettings.activeObj}
-                            setActiveObj={allSettings.setActiveObj}
-                            trackOutSideClick={props.trackOutSideClick}
-                        />
-                    )}
-                    {clipboard && (
-                        <div className='paste'>
-                            <icons.Paste className='activeButton' onClick={pasteHandler} />
-                        </div>
-                    )}
-                    {allSettings.canvas.historyUndo && allSettings.canvas.historyUndo.length !== 0 && (
-                        <div className='undo'>
-                            <icons.Undo
-                                className='activeButton'
-                                onClick={() => {
-                                    allSettings.canvas.undo();
-                                    allSettings.setActiveObj({});
-                                }}
-                            />
-                        </div>
-                    )}
-                    {allSettings.canvas.historyRedo && allSettings.canvas.historyRedo.length !== 0 && (
-                        <div className='redo'>
-                            <icons.Redo
-                                className='activeButton'
-                                onClick={() => {
-                                    allSettings.canvas.redo();
-                                    allSettings.setActiveObj({});
-                                }}
-                            />
-                        </div>
-                    )}
-                    {allSettings.activeObj.specialType !== 'background' &&
-                        allSettings.canvasData.objects &&
-                        allSettings.canvasData.objects.length !== 0 && (
-                            <div className='selectAll'>
-                                <icons.SelectAll
-                                    className='activeButton'
-                                    onClick={selectAllHandler}
-                                />
-                            </div>
-                        )}
-                    {allSettings.activeObj.specialType !== 'background' &&
-                        allSettings.canvasData.objects &&
-                        allSettings.canvasData.objects.length !== 0 &&
-                        Object.keys(allSettings.activeObj).length !== 0 && (
-                            <div className='selectAll'>
-                                <icons.Discard className='activeButton' onClick={discardHandler} />
-                            </div>
-                        )}
-                </div>
-            )}
+            <NavRight
+                textIsEditing={textIsEditing}
+                canvas={allSettings.canvas}
+                canvasData={allSettings.canvasData}
+                canvasSetting={allSettings.canvasSetting}
+                activeObj={allSettings.activeObj}
+                setActiveObj={allSettings.setActiveObj}
+                trackOutSideClick={props.trackOutSideClick}
+                isFocusInput={props.isFocusInput}
+            />
         </div>
     );
 };
@@ -266,7 +114,7 @@ ComponentsSelection.propTypes = {
     trackOutSideClick: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,
     isFocusInput: PropTypes.bool.isRequired,
-    setIsFocusInput: PropTypes.bool.isRequired,
+    setIsFocusInput: PropTypes.func.isRequired,
 };
 
 export default ComponentsSelection;

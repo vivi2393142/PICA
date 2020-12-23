@@ -118,6 +118,14 @@ const Resize = (props) => {
     const toggleCustomSizeInput = (e) => {
         setIsTypingSize(true);
         setIsChoosingCanvasSize(false);
+        const clickedOrNot = (e) => {
+            const targetContainer = document.querySelector('.customSizeWrapper');
+            if (!targetContainer.contains(e.target)) {
+                document.removeEventListener('click', clickedOrNot, true);
+                setIsTypingSize(false);
+            }
+        };
+        document.addEventListener('click', clickedOrNot, true);
     };
 
     // jsx: size choosing
@@ -189,9 +197,13 @@ const Resize = (props) => {
             <bannerIcons.Resize className='bannerIcons' onClick={toggleSizeChoosing} />
             {isChoosingCanvasSize && <div className='sizeSelection'>{sizeSelectionJsx}</div>}
             {isTypingSize && (
-                <div className='customSizeWrapper' onMouseLeave={() => setIsTypingSize(false)}>
+                <div
+                    className='customSizeWrapper'
+                    // onMouseLeave={() => setIsTypingSize(false)}
+                >
                     <div className='customSizeInputOuter'>
                         <input
+                            maxLength='4'
                             placeholder='寬度'
                             value={customSize.width}
                             onChange={handleCustomWidth}
@@ -206,24 +218,43 @@ const Resize = (props) => {
                         ></input>
                         <div className='customSizeInputCross'>×</div>
                         <input
+                            maxLength='4'
                             placeholder='高度'
                             value={customSize.height}
                             onChange={handleCustomHeight}
                             onFocus={() => {
                                 props.setIsFocusInput(true);
-                                console.log('focus');
                             }}
                             onBlur={() => {
                                 props.setIsFocusInput(false);
-                                console.log('nofocus');
                             }}
                         ></input>
                         <div className='customSizeInputPx'>像素</div>
                     </div>
+
                     <div
                         className='customSizeButton'
                         onClick={(e) => {
-                            if (customSize.width > 0 && customSize.height > 0) {
+                            if (
+                                customSize.width < 150 ||
+                                customSize.width > 2000 ||
+                                customSize.height < 150 ||
+                                customSize.height > 2000
+                            ) {
+                                setAlertSetting({
+                                    buttonNumber: 1,
+                                    buttonOneFunction: () => {
+                                        setShowAlert(false);
+                                    },
+                                    buttonTwoFunction: () => {},
+                                    buttonOneTitle: '關閉',
+                                    buttonTwoTitle: '',
+                                    title: '設置錯誤',
+                                    content: '寬度或高度須介於 150 ~ 2000 之間',
+                                });
+                                // close toggle
+                                setShowAlert(true);
+                            } else if (customSize.width > 0 && customSize.height > 0) {
                                 const target = e.currentTarget;
                                 setAlertSetting({
                                     buttonNumber: 2,

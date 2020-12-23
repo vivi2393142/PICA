@@ -255,8 +255,9 @@ const Sidebar = (props) => {
         }
     };
     // handlers: drop to upload
-    ondragover = (e) => {
-        e.preventDefault();
+    ondragleave = (e) => {
+        console.log(e);
+        console.log('leave');
     };
     ondrop = (e) => {
         e.preventDefault();
@@ -314,6 +315,13 @@ const Sidebar = (props) => {
         if (e.dataTransfer.types[0] === 'Files') {
             setShowUploadCover(true);
             props.setCurrentSidebar('upload');
+        }
+    };
+    onmouseout = (e) => {
+        const from = e.relatedTarget || e.toElement;
+        if (!from || from.nodeName == 'HTML') {
+            // console.log('left window');
+            setShowUploadCover(false);
         }
     };
 
@@ -1228,7 +1236,7 @@ Sidebar.propTypes = {
     allSettings: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
-    setIsFocusInput: PropTypes.bool.isRequired,
+    setIsFocusInput: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

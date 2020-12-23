@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 
+let croppingObjIndex = 0;
+
 const NavLeftImg = (props) => {
     const allSettings = props.allSettings;
 
@@ -20,7 +22,6 @@ const NavLeftImg = (props) => {
     };
     // crop image
     // -- preset dark background, cropping target index
-    let croppingObjIndex = 0;
     const darkBackground = new fabric.Rect({
         height: allSettings.canvasSetting.height,
         width: allSettings.canvasSetting.width,
@@ -155,13 +156,13 @@ const NavLeftImg = (props) => {
                 </div>
             )}
             {props.croppingObj.type && (
-                <div className='specificButton' onClick={cancelCropping}>
-                    X 取消
+                <div className='specificButton cropSelection' onClick={cancelCropping}>
+                    <span className='cropSelection'>X</span>取消
                 </div>
             )}
             {props.croppingObj.type && (
-                <div className='specificButton' onClick={confirmCropping}>
-                    O 完成
+                <div className='specificButton cropSelection' onClick={confirmCropping}>
+                    <span className='cropSelection'>O</span>完成
                 </div>
             )}
         </div>
