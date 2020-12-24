@@ -128,6 +128,7 @@ const NavLeftText = (props) => {
                 canvas={props.canvas}
                 activeObj={props.activeObj}
                 trackOutSideClick={props.trackOutSideClick}
+                setIsFocusInput={props.setIsFocusInput}
             />
             <select className='specificButton' value={textFont} onChange={handleTextFont}>
                 <option value='Sans-serif'>預設字體</option>
@@ -228,6 +229,7 @@ NavLeftText.propTypes = {
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
     trackOutSideClick: PropTypes.func.isRequired,
+    setIsFocusInput: PropTypes.func,
 };
 
 export default NavLeftText;

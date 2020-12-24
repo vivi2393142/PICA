@@ -27,11 +27,11 @@ const ComponentsSelection = (props) => {
             setArrowState('right');
         }
     };
-    const swipeHandler = (direction) => {
+    const swipeHandler = (e, direction) => {
         if (direction === 'left') {
-            e.target.parentNode.scrollLeft -= e.target.parentNode.clientWidth;
+            e.currentTarget.parentNode.scrollLeft -= e.currentTarget.parentNode.clientWidth / 3;
         } else {
-            e.target.parentNode.scrollLeft += e.target.parentNode.clientWidth;
+            e.currentTarget.parentNode.scrollLeft += e.currentTarget.parentNode.clientWidth / 3;
         }
     };
 
@@ -55,13 +55,16 @@ const ComponentsSelection = (props) => {
         >
             <div className='scrollContainer' onScroll={listenScroll}>
                 {showScroll && (arrowState === 'left' || arrowState === 'both') && (
-                    <div className='directionButton left'>
-                        <img src={arrowRight} onClick={(e) => swipeHandler(e, 'left')}></img>
+                    <div className='directionButton left' onClick={(e) => swipeHandler(e, 'left')}>
+                        <img src={arrowRight}></img>
                     </div>
                 )}
                 {showScroll && (arrowState === 'right' || arrowState === 'both') && (
-                    <div className='directionButton right'>
-                        <img src={arrowLeft} onClick={(e) => swipeHandler(e, 'right')}></img>
+                    <div
+                        className='directionButton right'
+                        onClick={(e) => swipeHandler(e, 'right')}
+                    >
+                        <img src={arrowLeft}></img>
                     </div>
                 )}
                 <div className='componentsNavLeft'>
@@ -95,6 +98,7 @@ const ComponentsSelection = (props) => {
                             canvas={allSettings.canvas}
                             activeObj={allSettings.activeObj}
                             trackOutSideClick={props.trackOutSideClick}
+                            setIsFocusInput={props.setIsFocusInput}
                         />
                     )}
                     {(allSettings.activeObj.type === 'rect' ||

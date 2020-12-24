@@ -2,8 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
+import toggleRight from '../../../../img/src/arrowRight.svg';
 
 const NavLeftColor = (props) => {
+    const [widthSetting, setWidthSetting] = React.useState('14rem');
+
+    React.useEffect(() => {
+        window.innerWidth > 600 ? setWidthSetting('14rem') : setWidthSetting('100%');
+    }, []);
+    React.useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 600) {
+                setWidthSetting('14rem');
+            } else {
+                setWidthSetting('100%');
+            }
+        };
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     // unfold nav
     const [isChoosingColor, setIsChoosingColor] = React.useState(false);
     const toggleColorSelection = (e) => {
@@ -30,7 +50,7 @@ const NavLeftColor = (props) => {
         props.activeObj.set('fill', colorRgba);
         props.canvas.requestRenderAll();
     };
-    // -- preset active object value on specific selection
+
     React.useEffect(() => {
         if (
             props.activeObj.type === 'rect' ||
@@ -52,7 +72,24 @@ const NavLeftColor = (props) => {
                 onClick={toggleColorSelection}
             ></div>
             {isChoosingColor && (
-                <ChromePicker color={colorChosen.background} onChange={handleColorChange} />
+                <ChromePicker
+                    color={colorChosen.background}
+                    onChange={handleColorChange}
+                    className='originalColorPicker'
+                    width={widthSetting}
+                />
+            )}
+            {isChoosingColor && (
+                <div
+                    className='mobileSubmit'
+                    onClick={() => {
+                        setIsChoosingColor(false);
+                        props.setIsFocusInput(false);
+                        props.canvas.fire('object:modified');
+                    }}
+                >
+                    <img src={toggleRight}></img>
+                </div>
             )}
         </div>
     );

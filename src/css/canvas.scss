@@ -322,6 +322,9 @@ body {
     display: inline-block;
     margin: 0 0.8rem 0 0.4rem;
     cursor: pointer;
+    .mobileColorPickerWrapper {
+        display: none;
+    }
 }
 .borderChoosing {
     margin-left: 0.3rem;
@@ -331,7 +334,14 @@ body {
     position: absolute;
     top: 2rem;
     left: 0;
-    padding: 0.3rem 0.3rem 0;
+    width: 10rem;
+    z-index: 1;
+    .hue-horizontal {
+        border-radius: 5px;
+    }
+}
+.mobileSubmit {
+    display: none;
 }
 .currentColor {
     box-sizing: border-box;
@@ -1322,6 +1332,7 @@ input[type='range'].imgAdjustRange {
     .componentsSelectionUnfold {
         width: calc(100% - 27rem);
     }
+
     .mainBoard {
         flex-direction: column;
         position: relative;
@@ -1332,7 +1343,7 @@ input[type='range'].imgAdjustRange {
             bottom: 0;
             background-color: white;
             width: 100%;
-            height: 7%;
+            height: 4rem;
             border-top: 1px solid rgb(218, 218, 218);
             .scrollContainer {
                 padding-top: 0;
@@ -1343,6 +1354,15 @@ input[type='range'].imgAdjustRange {
                 justify-content: flex-start;
                 align-items: flex-end;
                 overflow-x: scroll;
+                scroll-behavior: smooth;
+                &::-webkit-scrollbar {
+                    width: 0px;
+                    height: 0px;
+                }
+                &::-webkit-scrollbar-button {
+                    width: 0px;
+                    height: 0px;
+                }
             }
             .sizeBoxes,
             .spaceBoxes,
@@ -1365,9 +1385,9 @@ input[type='range'].imgAdjustRange {
                 }
             }
             .chrome-picker {
-                left: 0;
-                bottom: 2rem;
                 position: fixed;
+                left: 1.8rem;
+                bottom: 3.2rem;
             }
             .directionButton {
                 display: flex;
@@ -1379,8 +1399,8 @@ input[type='range'].imgAdjustRange {
                 position: fixed;
                 background-color: rgba(255, 255, 255, 0.95);
                 z-index: 2;
-                height: 4%;
-                bottom: 1.5%;
+                height: 2.2rem;
+                bottom: 0.7rem;
                 left: 1%;
                 box-sizing: border-box;
                 &:hover {
@@ -1420,7 +1440,9 @@ input[type='range'].imgAdjustRange {
             .componentsNavLeft,
             .componentsNavRight {
                 width: auto;
-                // padding: 1.5rem 0;
+                padding: 0;
+                position: relative;
+                bottom: 1rem;
                 flex-wrap: nowrap;
             }
             .componentsNavLeft {
@@ -1521,6 +1543,57 @@ input[type='range'].imgAdjustRange {
 //     }
 // }
 @media (max-width: 600px) {
+    .mainBoard {
+        .componentsSelection {
+            .colorChoosingBox {
+                .mobileColorPickerWrapper {
+                    position: fixed;
+                    width: 100%;
+                    height: 5rem;
+                    bottom: 0;
+                    left: 0;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-evenly;
+                }
+                .chrome-picker {
+                    bottom: 0;
+                    left: 0;
+                    div:nth-child(1) {
+                        display: none;
+                        div {
+                            display: block;
+                        }
+                    }
+                    .flexbox-fix {
+                        width: 80%;
+                        margin: 0 auto;
+                        div {
+                            display: block;
+                        }
+                    }
+                }
+                .mobileSubmit {
+                    display: flex;
+                    position: fixed;
+                    bottom: 5.2rem;
+                    left: 1rem;
+                    height: 1.2rem;
+                    width: 1.2rem;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 100%;
+                    z-index: 1;
+                    img {
+                        width: 0.7rem;
+                    }
+                    &:hover {
+                        background-color: $light-grey;
+                    }
+                }
+            }
+        }
+    }
     .banner {
         height: 9%;
         padding: 0 1.5rem;
@@ -1551,7 +1624,6 @@ input[type='range'].imgAdjustRange {
 }
 @media (max-width: 400px) {
     .banner {
-        // height: 6%;
         padding: 0 1rem;
         .bannerLeft {
             input {
@@ -1559,23 +1631,13 @@ input[type='range'].imgAdjustRange {
                 font-size: $small-font;
                 padding: 0.2rem 0.4rem;
             }
-            //     .status {
-            //         font-size: $small-font;
-            //         width: 4rem;
-            //     }
         }
         .bannerIcons {
             margin-right: 0.7rem;
             width: 1.3rem;
             height: 1.3rem;
         }
-        // .memberIconWrapper {
-        //     .bannerIcons {
-        //         margin-right: 0;
-        //     }
-        // }
         .logoWrapper {
-            // width: rem;
             padding-right: 0.5rem;
             a svg {
                 width: 1.8rem;
