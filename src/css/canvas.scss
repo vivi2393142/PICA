@@ -161,12 +161,18 @@ body {
 .componentsSelection {
     z-index: 1;
     display: flex;
-    padding-top: 0.7rem;
     box-sizing: border-box;
     align-items: center;
     flex-grow: 1;
     position: fixed;
     width: calc(100% - 6rem);
+    .scrollContainer {
+        padding-top: 0.7rem;
+        position: absolute;
+        width: 100%;
+        top: 0;
+        display: flex;
+    }
 }
 .componentsSelectionUnfold {
     width: calc(100% - 27rem);
@@ -400,7 +406,7 @@ input:focus {
     font-size: $small-font;
 }
 .spaceBoxes,
-.SizeBoxes {
+.sizeBoxes {
     position: absolute;
     display: flex;
     top: 1.8rem;
@@ -413,7 +419,7 @@ input:focus {
     padding: 0.5rem 0;
     color: $custom-black;
 }
-.SizeBoxes {
+.sizeBoxes {
     padding: 1.2rem 1.2rem;
     flex-direction: row;
 }
@@ -514,6 +520,9 @@ input[type='range'].imgAdjustRange {
                 color: white;
                 font-weight: 600;
             }
+        }
+        .ghostDiv {
+            display: none;
         }
         .sideButtonChosen {
             position: relative;
@@ -983,11 +992,11 @@ input[type='range'].imgAdjustRange {
     align-items: center;
 }
 .status {
-    padding: 0 1.6rem;
     font-size: $middle-font;
     color: $custom-black;
     letter-spacing: 1px;
     opacity: 0;
+    width: 5rem;
 }
 .showStatus {
     animation-name: showStatus;
@@ -1103,6 +1112,7 @@ input[type='range'].imgAdjustRange {
     font-size: $middle-font;
     color: $custom-black;
     letter-spacing: 1px;
+    word-break: break-word;
 }
 // banner - share
 .exportWrapper,
@@ -1294,17 +1304,282 @@ input[type='range'].imgAdjustRange {
         }
         span {
             font-size: $tiny-font;
-
             color: rgba(255, 255, 255, 0.7);
             padding: 0.3rem 0 8rem 0;
         }
     }
 }
+.directionButton {
+    display: none;
+}
 // media query
-@media (max-width: 900px) {
-    .textSizeInput {
-        width: 30%;
+@media (max-width: 1000px) {
+    .banner {
+        .statusSize {
+            display: none;
+        }
+    }
+    .componentsSelectionUnfold {
+        width: calc(100% - 27rem);
+    }
+    .mainBoard {
+        flex-direction: column;
+        position: relative;
+        .componentsSelectionUnfold {
+            width: 100%;
+        }
+        .componentsSelection {
+            bottom: 0;
+            background-color: white;
+            width: 100%;
+            height: 7%;
+            border-top: 1px solid rgb(218, 218, 218);
+            .scrollContainer {
+                padding-top: 0;
+                width: 100%;
+                height: 10rem;
+                top: auto;
+                bottom: 0;
+                justify-content: flex-start;
+                align-items: flex-end;
+                overflow-x: scroll;
+            }
+            .sizeBoxes,
+            .spaceBoxes,
+            .alignChoosingBox,
+            .layerChoosingBox,
+            .chrome-picker {
+                bottom: 130%;
+                left: 0.4rem;
+                right: auto;
+                top: auto;
+            }
+            .alignChoosingBox,
+            .layerChoosingBox {
+                background-color: white;
+                box-shadow: 0 1px 2px 0 $middle-grey;
+                padding: 0.5rem 0.3rem;
+                left: 0;
+                .insideButton:last-child {
+                    margin-right: 0.3rem;
+                }
+            }
+            .chrome-picker {
+                left: 0;
+                bottom: 2rem;
+                position: fixed;
+            }
+            .directionButton {
+                display: flex;
+                border: 1px solid $light-grey;
+                border-radius: 0.2rem;
+                justify-content: center;
+                align-items: center;
+                padding: 0 0.25rem;
+                position: fixed;
+                background-color: rgba(255, 255, 255, 0.95);
+                z-index: 2;
+                height: 4%;
+                bottom: 1.5%;
+                left: 1%;
+                box-sizing: border-box;
+                &:hover {
+                    img {
+                        opacity: 0.6;
+                    }
+                }
+                cursor: pointer;
+                img {
+                    width: 0.7rem;
+                }
+            }
+            .directionButton.left {
+                &::after {
+                    content: '';
+                    position: absolute;
+                    right: calc(100% + 1px);
+                    top: 0;
+                    width: 1rem;
+                    height: 100%;
+                    background-color: white;
+                }
+            }
+            .directionButton.right {
+                left: auto;
+                right: 1%;
+                &::after {
+                    content: '';
+                    position: absolute;
+                    left: calc(100% + 1px);
+                    top: 0;
+                    width: 1rem;
+                    height: 100%;
+                    background-color: white;
+                }
+            }
+            .componentsNavLeft,
+            .componentsNavRight {
+                width: auto;
+                // padding: 1.5rem 0;
+                flex-wrap: nowrap;
+            }
+            .componentsNavLeft {
+                position: relative;
+                padding-left: 1.5rem;
+                div {
+                    flex-wrap: nowrap;
+                }
+                .textButtonActive {
+                    box-shadow: none;
+                    background-color: $light-grey;
+                }
+            }
+            .componentsNavRight {
+                padding-right: 1rem;
+            }
+            .activeButton,
+            .specificButton {
+                background-color: transparent;
+                margin-bottom: 0;
+                padding: 0.2rem;
+                margin-right: 0.6rem;
+                // width: 2rem;
+                // height: 2rem;
+            }
+            .currentColor {
+                margin-bottom: 0;
+            }
+        }
+        .ratioSelect {
+        }
+        .sidebar {
+            display: none;
+            width: 100%;
+            order: 2;
+            height: auto;
+            background-color: white;
+            padding: 1.5rem 0 1rem 0;
+            overflow: visible;
+            position: relative;
+            &::after {
+                content: '';
+                position: absolute;
+                top: -0.9rem;
+                width: 3rem;
+                height: 0.4rem;
+                background-color: white;
+                border-radius: 3px;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 1px solid #a1a1a1;
+            }
+            .sidebarFold {
+                width: 100%;
+                flex-wrap: wrap;
+                flex-direction: row;
+                justify-content: space-between;
+                .sideButton,
+                .ghostDiv {
+                    width: 7rem;
+                    height: 6rem;
+                    flex-grow: 1;
+                }
+                .ghostDiv {
+                    display: flex;
+                    height: 0;
+                }
+            }
+        }
+        .drawingAreaBox {
+            width: 100%;
+            border-radius: 0;
+            box-shadow: none;
+            border: 1px solid rgb(218, 218, 218);
+            .canvasWrapper {
+                top: 47%;
+                margin: 0;
+            }
+        }
+    }
+
+    // .sidebarFold {
+    //     width: 100%;
+    //     flex-direction: row;
+    // }
+    // .sidebarCover {
+    //     width: 100%;
+    //     height: 100%;
+    //     position: fixed;
+    //     z-index: 300;
+    //     top: 0;
+    //     background-color: rgba(0, 0, 0, 0.7);
+    // }
+}
+// @media (max-width: 900px) {
+//     .textSizeInput {
+//         width: 30%;
+//     }
+// }
+@media (max-width: 600px) {
+    .banner {
+        height: 9%;
+        padding: 0 1.5rem;
+        .bannerLeft {
+            input {
+                width: 7rem;
+            }
+            .status {
+                font-size: $small-font;
+                width: 4rem;
+            }
+        }
+        .bannerIcons {
+            margin-right: 0.7rem;
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+        .memberIconWrapper {
+            .bannerIcons {
+                margin-right: 0;
+            }
+        }
+        .logoWrapper {
+            width: auto;
+            padding-right: 1rem;
+        }
     }
 }
-@media (max-width: 700px) {
+@media (max-width: 400px) {
+    .banner {
+        // height: 6%;
+        padding: 0 1rem;
+        .bannerLeft {
+            input {
+                width: 5rem;
+                font-size: $small-font;
+                padding: 0.2rem 0.4rem;
+            }
+            //     .status {
+            //         font-size: $small-font;
+            //         width: 4rem;
+            //     }
+        }
+        .bannerIcons {
+            margin-right: 0.7rem;
+            width: 1.3rem;
+            height: 1.3rem;
+        }
+        // .memberIconWrapper {
+        //     .bannerIcons {
+        //         margin-right: 0;
+        //     }
+        // }
+        .logoWrapper {
+            // width: rem;
+            padding-right: 0.5rem;
+            a svg {
+                width: 1.8rem;
+            }
+        }
+    }
 }

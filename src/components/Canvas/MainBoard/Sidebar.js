@@ -1206,7 +1206,15 @@ const Sidebar = (props) => {
                     content={alertSetting.content}
                 />
             )}
-            <div className='sidebarFold'>{sidebarFoldJsx}</div>
+            <div className='sidebarFold'>
+                {sidebarFoldJsx}
+                <div className='ghostDiv'></div>
+                <div className='ghostDiv'></div>
+                <div className='ghostDiv'></div>
+                <div className='ghostDiv'></div>
+                <div className='ghostDiv'></div>
+                <div className='ghostDiv'></div>
+            </div>
             {props.currentSidebar !== '' && (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${

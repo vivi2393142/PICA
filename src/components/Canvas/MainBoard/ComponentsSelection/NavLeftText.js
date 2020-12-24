@@ -138,7 +138,7 @@ const NavLeftText = (props) => {
             <div className='sizeBoxOuter'>
                 <icons.TextSize className='specificButton textIcon' onClick={toggleSizeSelection} />
                 {isChoosingSize && (
-                    <div className='SizeBoxes'>
+                    <div className='sizeBoxes'>
                         <div className='sizeBoxText'>大小</div>
                         <input
                             className='inputRange'

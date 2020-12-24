@@ -577,6 +577,7 @@ const Canvas = (props) => {
     return (
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
+            {/* <div className='sidebarCover'>cover</div> */}
             <Background />
             <Banner
                 allSettings={allSettings}
