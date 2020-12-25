@@ -12,14 +12,30 @@ const NavRight = (props) => {
     const [isLayerChoosing, setIsLayerChoosing] = React.useState(false);
     const toggleLayerSelection = (e) => {
         setIsLayerChoosing(true);
+        if (document.querySelector('.scrollContainer')) {
+            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
+        }
         props.trackOutSideClick(e.currentTarget, () => {
+            if (document.querySelector('.scrollContainer')) {
+                document
+                    .querySelector('.scrollContainer')
+                    .classList.remove('unfoldScrollContainer');
+            }
             setIsLayerChoosing(false);
         });
     };
     const [isAlignChoosing, setIsAlignChoosing] = React.useState(false);
     const toggleAlignSelection = (e) => {
         setIsAlignChoosing(true);
+        if (document.querySelector('.scrollContainer')) {
+            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
+        }
         props.trackOutSideClick(e.currentTarget, () => {
+            if (document.querySelector('.scrollContainer')) {
+                document
+                    .querySelector('.scrollContainer')
+                    .classList.remove('unfoldScrollContainer');
+            }
             setIsAlignChoosing(false);
         });
     };

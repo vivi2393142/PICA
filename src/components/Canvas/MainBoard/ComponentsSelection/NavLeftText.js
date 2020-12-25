@@ -10,15 +10,31 @@ const NavLeftText = (props) => {
     const [isChoosingSize, setIsChoosingSize] = React.useState(false);
     const toggleSpaceSelection = (e) => {
         setIsChoosingSpace(true);
+        if (document.querySelector('.scrollContainer')) {
+            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
+        }
         props.trackOutSideClick(e.currentTarget, () => {
             setIsChoosingSpace(false);
+            if (document.querySelector('.scrollContainer')) {
+                document
+                    .querySelector('.scrollContainer')
+                    .classList.remove('unfoldScrollContainer');
+            }
             props.canvas.fire('object:modified');
         });
     };
     const toggleSizeSelection = (e) => {
         setIsChoosingSize(true);
+        if (document.querySelector('.scrollContainer')) {
+            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
+        }
         props.trackOutSideClick(e.currentTarget, () => {
             setIsChoosingSize(false);
+            if (document.querySelector('.scrollContainer')) {
+                document
+                    .querySelector('.scrollContainer')
+                    .classList.remove('unfoldScrollContainer');
+            }
             props.canvas.fire('object:modified');
         });
     };

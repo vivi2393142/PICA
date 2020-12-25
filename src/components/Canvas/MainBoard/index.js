@@ -63,6 +63,22 @@ const MainBoard = (props) => {
         );
     });
 
+    // mobile sidebar toggle - show sidebar
+    const toggleMobileSidebar = (e) => {
+        document.querySelector('.sidebar').classList.add('mobileSidebarToggle');
+        document.querySelector('.mobileCover').style.display = 'flex';
+    };
+    const closeMobileSidebar = (e) => {
+        document.querySelector('.sidebar').classList.add('mobileSidebarToggleOut');
+        document.querySelector('.sidebar').classList.remove('mobileSidebarToggle');
+        setTimeout(() => {
+            if (document.querySelector('.sidebar')) {
+                document.querySelector('.sidebar').classList.remove('mobileSidebarToggleOut');
+            }
+        }, 1000);
+        document.querySelector('.mobileCover').style.display = 'none';
+    };
+
     return (
         <div className='mainBoard'>
             <select
@@ -73,6 +89,10 @@ const MainBoard = (props) => {
                 {givenOptions}
                 <option value='auto'>符合畫面大小</option>
             </select>
+            <div className='mobileSidebarAdd' onClick={toggleMobileSidebar}>
+                +
+            </div>
+            <div className='mobileCover' onClick={closeMobileSidebar}></div>
             <Sidebar
                 allSettings={allSettings}
                 currentSidebar={currentSidebar}
@@ -81,6 +101,7 @@ const MainBoard = (props) => {
                 currentUser={props.currentUser}
                 fileId={props.fileId}
                 setIsFocusInput={props.setIsFocusInput}
+                closeMobileSidebar={closeMobileSidebar}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection

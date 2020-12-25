@@ -168,6 +168,7 @@ body {
     width: calc(100% - 6rem);
     .scrollContainer {
         padding-top: 0.7rem;
+        // padding: 0.7rem 0.5rem 0 0.5rem;
         position: absolute;
         width: 100%;
         top: 0;
@@ -217,7 +218,7 @@ body {
 .componentsNavRight {
     flex-wrap: wrap;
     width: 65%;
-    padding-right: 0.8rem;
+    padding-right: 1.2rem;
     justify-content: flex-end;
 }
 .componentsNavLeft {
@@ -310,7 +311,6 @@ body {
         font-weight: 900;
         padding-right: 0.2rem;
         padding-left: 0.5rem;
-        color: $dark-green;
     }
 }
 .specificButton:hover {
@@ -498,11 +498,18 @@ input[type='range'].imgAdjustRange {
     background-color: white;
 }
 // sidebar
+.mobileSidebarAdd {
+    display: none;
+}
 .sidebar {
     height: 100%;
     display: flex;
     z-index: 100;
     overflow: hidden;
+
+    .mobileToggle {
+        display: none;
+    }
     .sidebarFold {
         display: flex;
         flex-direction: column;
@@ -590,20 +597,6 @@ input[type='range'].imgAdjustRange {
         font-weight: 500;
         font-size: $middle-font;
         height: 100%;
-        // animation: fadeIn 0.1s ease-in-out;
-        // animation-fill-mode: both;
-        // @keyframes fadeIn {
-        //     0% {
-        //         opacity: 0;
-        //         width: 0;
-        //     }
-
-        //     100% {
-        //         opacity: 1;
-        //         width: 16rem;
-        //     }
-        // }
-
         .sidebarUnfoldInner {
             width: 100%;
             height: 95%;
@@ -1323,21 +1316,199 @@ input[type='range'].imgAdjustRange {
     display: none;
 }
 // media query
-@media (max-width: 1000px) {
+@media (max-width: 900px) {
     .banner {
         .statusSize {
             display: none;
         }
     }
-    .componentsSelectionUnfold {
-        width: calc(100% - 27rem);
-    }
-
     .mainBoard {
         flex-direction: column;
         position: relative;
+        .mobileSidebarAdd {
+            display: flex;
+            position: fixed;
+            width: 3rem;
+            height: 3rem;
+            background-color: $sub-color;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: white;
+            justify-content: center;
+            align-items: center;
+            right: 1rem;
+            bottom: 4.6rem;
+            z-index: 1;
+            border-radius: 100%;
+            box-shadow: 0 0 2px 0 $custom-black;
+        }
+        .mobileCover {
+            background-color: rgba(0, 0, 0, 0.6);
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 200;
+            position: fixed;
+            display: none;
+        }
+        .sidebar {
+            width: 100%;
+            order: 2;
+            background-color: white;
+            overflow: visible;
+            position: fixed;
+            z-index: 200;
+            height: auto;
+            bottom: 0;
+            display: none;
+            .mobileToggle {
+                display: block;
+                position: absolute;
+                top: -0.8rem;
+                width: 3rem;
+                height: 0.3rem;
+                background-color: white;
+                border-radius: 3px;
+                left: 50%;
+                transform: translateX(-50%);
+                border: 1px solid rgb(218, 218, 218);
+            }
+            .sidebarFold {
+                width: 100%;
+                flex-wrap: wrap;
+                flex-direction: row;
+                justify-content: space-between;
+                .sideButton,
+                .ghostDiv {
+                    width: 7rem;
+                    height: 6rem;
+                    flex-grow: 1;
+                    &:hover {
+                        opacity: 0.7;
+                    }
+                }
+                .ghostDiv {
+                    display: flex;
+                    height: 0;
+                }
+            }
+        }
+        .mobileSidebarToggle {
+            display: flex;
+            padding: 1.5rem 0 1rem 0;
+            opacity: 1;
+            animation-name: sidebarIn;
+            animation-duration: 1s;
+        }
+        @keyframes sidebarIn {
+            0% {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .mobileSidebarToggleOut {
+            display: flex;
+            padding: 1.5rem 0 1rem 0;
+            opacity: 1;
+            animation-name: sidebarOut;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+            .mobileToggle {
+                display: none;
+            }
+        }
+        @keyframes sidebarOut {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(100%);
+            }
+        }
+        .mobileSidebarUnfold {
+            display: flex;
+            flex-direction: column;
+            & * {
+                // border: 1px solid red;
+            }
+            .sidebarFold {
+                flex-wrap: nowrap;
+                overflow-x: scroll;
+                justify-content: flex-start;
+                &::-webkit-scrollbar {
+                    width: 0px;
+                    height: 0px;
+                }
+                &::-webkit-scrollbar-button {
+                    width: 0px;
+                    height: 0px;
+                }
+                svg {
+                    display: none;
+                }
+                .ghostDiv {
+                    display: none;
+                }
+                .sideButton {
+                    flex-grow: 0;
+                    height: auto;
+                    padding: 1rem 0;
+                    min-width: 4.5rem;
+                    &:hover {
+                        opacity: 1;
+                    }
+                }
+                .sideButtonChosen {
+                    // background-color: $main-color;
+                    &::before {
+                        bottom: 0;
+                        top: auto;
+                        left: 100%;
+                        background: radial-gradient(
+                            circle farthest-side at top right,
+                            rgba(0, 0, 0, 0) 0,
+                            rgba(0, 0, 0, 0) 99%,
+                            $main-color
+                        );
+                    }
+                    &::after {
+                        bottom: 0;
+                        top: auto;
+                        right: 100%;
+                        background: radial-gradient(
+                            circle farthest-side at top left,
+                            rgba(0, 0, 0, 0) 0,
+                            rgba(0, 0, 0, 0) 99%,
+                            $main-color
+                        );
+                    }
+                }
+            }
+            .unfoldItem {
+            }
+            .sidebarUnfold {
+                width: 100%;
+                padding: 0;
+                border-radius: 0;
+                .sidebarUnfoldText {
+                    padding: 1rem 0;
+                    .unfoldItem {
+                        margin: 0.5rem auto;
+                    }
+                }
+            }
+        }
+        .ratioSelect {
+        }
+
         .componentsSelectionUnfold {
             width: 100%;
+            width: calc(100% - 27rem);
         }
         .componentsSelection {
             bottom: 0;
@@ -1348,9 +1519,9 @@ input[type='range'].imgAdjustRange {
             .scrollContainer {
                 padding-top: 0;
                 width: 100%;
-                height: 10rem;
                 top: auto;
                 bottom: 0;
+                height: 4rem;
                 justify-content: flex-start;
                 align-items: flex-end;
                 overflow-x: scroll;
@@ -1363,6 +1534,9 @@ input[type='range'].imgAdjustRange {
                     width: 0px;
                     height: 0px;
                 }
+            }
+            .unfoldScrollContainer {
+                height: 9.1rem;
             }
             .sizeBoxes,
             .spaceBoxes,
@@ -1388,6 +1562,11 @@ input[type='range'].imgAdjustRange {
                 position: fixed;
                 left: 1.8rem;
                 bottom: 3.2rem;
+            }
+            .borderChoosing {
+                .chrome-picker {
+                    left: 4.2rem;
+                }
             }
             .directionButton {
                 display: flex;
@@ -1472,46 +1651,7 @@ input[type='range'].imgAdjustRange {
                 margin-bottom: 0;
             }
         }
-        .ratioSelect {
-        }
-        .sidebar {
-            display: none;
-            width: 100%;
-            order: 2;
-            height: auto;
-            background-color: white;
-            padding: 1.5rem 0 1rem 0;
-            overflow: visible;
-            position: relative;
-            &::after {
-                content: '';
-                position: absolute;
-                top: -0.9rem;
-                width: 3rem;
-                height: 0.4rem;
-                background-color: white;
-                border-radius: 3px;
-                left: 50%;
-                transform: translateX(-50%);
-                border: 1px solid #a1a1a1;
-            }
-            .sidebarFold {
-                width: 100%;
-                flex-wrap: wrap;
-                flex-direction: row;
-                justify-content: space-between;
-                .sideButton,
-                .ghostDiv {
-                    width: 7rem;
-                    height: 6rem;
-                    flex-grow: 1;
-                }
-                .ghostDiv {
-                    display: flex;
-                    height: 0;
-                }
-            }
-        }
+
         .drawingAreaBox {
             width: 100%;
             border-radius: 0;
@@ -1523,25 +1663,8 @@ input[type='range'].imgAdjustRange {
             }
         }
     }
-
-    // .sidebarFold {
-    //     width: 100%;
-    //     flex-direction: row;
-    // }
-    // .sidebarCover {
-    //     width: 100%;
-    //     height: 100%;
-    //     position: fixed;
-    //     z-index: 300;
-    //     top: 0;
-    //     background-color: rgba(0, 0, 0, 0.7);
-    // }
 }
-// @media (max-width: 900px) {
-//     .textSizeInput {
-//         width: 30%;
-//     }
-// }
+
 @media (max-width: 600px) {
     .mainBoard {
         .componentsSelection {
@@ -1583,7 +1706,7 @@ input[type='range'].imgAdjustRange {
                     justify-content: center;
                     align-items: center;
                     border-radius: 100%;
-                    z-index: 1;
+                    z-index: 2;
                     img {
                         width: 0.7rem;
                     }

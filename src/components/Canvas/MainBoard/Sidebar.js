@@ -14,6 +14,7 @@ const Sidebar = (props) => {
     const [sampleList, setSampleList] = React.useState([]);
     const [showUploadCover, setShowUploadCover] = React.useState(false);
     const [showAlert, setShowAlert] = React.useState(false);
+    const [isAtMobile, setIsAtMobile] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         buttonNumber: 0,
         buttonOneFunction: () => {},
@@ -24,6 +25,34 @@ const Sidebar = (props) => {
         content: '',
     });
 
+    // if on mobile size, disable draggable
+    const listenScroll = (e) => {
+        // const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
+        if (e.target.scrollLeft !== 0 && scrollRight > 1) {
+            setArrowState('both');
+        } else if (scrollRight <= 1) {
+            setArrowState('left');
+        } else if (e.target.scrollLeft === 0) {
+            setArrowState('right');
+        }
+    };
+    React.useEffect(() => {
+        if (window.innerWidth < 901) {
+            setIsAtMobile(true);
+        } else {
+            setIsAtMobile(false);
+        }
+
+        window.addEventListener('resize', (e) => {
+            if (window.innerWidth < 901) {
+                setIsAtMobile(true);
+            } else {
+                setIsAtMobile(false);
+            }
+        });
+    }, []);
+
+    // preset background
     React.useEffect(() => {
         allSettings.canvas.backgroundColor &&
             setBackColorChosen({ background: allSettings.canvas.backgroundColor });
@@ -566,7 +595,7 @@ const Sidebar = (props) => {
             className={`sideButton ${
                 props.currentSidebar === 'text' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen firstButton'
-                    : props.currentSidebar === 'upload' && props.currentSidebar === item.EN
+                    : props.currentSidebar === 'template' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen lastButton'
                     : props.currentSidebar === item.EN
                     ? 'sideButtonChosen'
@@ -633,7 +662,7 @@ const Sidebar = (props) => {
             onMouseDown={(e) => allSettings.saveDragItem.func(e)}
         >
             <div
-                draggable='true'
+                draggable={!isAtMobile}
                 className='unfoldItem addTextBig '
                 onClick={() =>
                     addIText(
@@ -646,7 +675,7 @@ const Sidebar = (props) => {
                 新增標題
             </div>
             <div
-                draggable='true'
+                draggable={!isAtMobile}
                 className='unfoldItem addTextMiddle '
                 onClick={() =>
                     addIText(
@@ -659,7 +688,7 @@ const Sidebar = (props) => {
                 新增副標
             </div>
             <div
-                draggable='true'
+                draggable={!isAtMobile}
                 className='unfoldItem addTextSmall '
                 onClick={() =>
                     addIText(
@@ -694,25 +723,25 @@ const Sidebar = (props) => {
             <img
                 src={sidebarItems.square}
                 className='unfoldItem rectShape '
-                draggable='true'
+                draggable={!isAtMobile}
                 onClick={addRect}
             ></img>
             <img
                 src={sidebarItems.radiusSquare}
                 className='unfoldItem radiusRectShape '
-                draggable='true'
+                draggable={!isAtMobile}
                 onClick={addRadiusRect}
             ></img>
             <img
                 src={sidebarItems.circle}
                 className='unfoldItem circleShape'
-                draggable='true'
+                draggable={!isAtMobile}
                 onClick={addCircle}
             ></img>
             <img
                 src={sidebarItems.triangle}
                 className='unfoldItem triangleShape'
-                draggable='true'
+                draggable={!isAtMobile}
                 onClick={addTriangle}
             ></img>
             <div className='sidebarUnfoldSubtitle'>不規則形狀</div>
@@ -721,7 +750,7 @@ const Sidebar = (props) => {
                     <img
                         key={index}
                         src={item}
-                        draggable='true'
+                        draggable={!isAtMobile}
                         className='unfoldItem abnormalShape'
                         onClick={addShape}
                     ></img>
@@ -756,7 +785,7 @@ const Sidebar = (props) => {
                         src={item}
                         className='unfoldItem itemLine'
                         onClick={addShape}
-                        draggable='true'
+                        draggable={!isAtMobile}
                     ></img>
                 );
             })}
@@ -832,7 +861,7 @@ const Sidebar = (props) => {
                                     <img
                                         onClick={addImage}
                                         className='unfoldItem unfoldItemGallery'
-                                        draggable='true'
+                                        draggable={!isAtMobile}
                                         src={item}
                                         onLoad={(e) => {
                                             if (e.target.naturalHeight > e.target.naturalWidth) {
@@ -950,7 +979,7 @@ const Sidebar = (props) => {
                                     <img
                                         onClick={addSticker}
                                         className='unfoldItem unfoldItemGallery'
-                                        draggable='true'
+                                        draggable={!isAtMobile}
                                         src={item}
                                         onLoad={(e) => {
                                             if (e.target.naturalHeight > e.target.naturalWidth) {
@@ -1113,7 +1142,7 @@ const Sidebar = (props) => {
                             <img
                                 className='unfoldItemImg unfoldItemGallery'
                                 onClick={addImage}
-                                draggable='true'
+                                draggable={!isAtMobile}
                                 src={item.src}
                                 onLoad={(e) => {
                                     if (e.target.naturalHeight > e.target.naturalWidth) {
@@ -1194,7 +1223,8 @@ const Sidebar = (props) => {
     );
 
     return (
-        <div className='sidebar'>
+        <div className={`sidebar ${props.currentSidebar === '' ? '' : 'mobileSidebarUnfold'}`}>
+            <div className='mobileToggle' onClick={props.closeMobileSidebar}></div>
             {showAlert && (
                 <Alert
                     buttonNumber={alertSetting.buttonNumber}
@@ -1245,6 +1275,7 @@ Sidebar.propTypes = {
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
     setIsFocusInput: PropTypes.func.isRequired,
+    closeMobileSidebar: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

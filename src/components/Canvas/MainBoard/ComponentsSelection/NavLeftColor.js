@@ -29,9 +29,11 @@ const NavLeftColor = (props) => {
     const toggleColorSelection = (e) => {
         setIsChoosingColor(true);
         props.setIsFocusInput(true);
+        document.querySelector('.componentsNavLeft').style.zIndex = '2';
         props.trackOutSideClick(e.currentTarget, () => {
             setIsChoosingColor(false);
             props.setIsFocusInput(false);
+            document.querySelector('.componentsNavLeft').style.zIndex = '1';
             props.canvas.fire('object:modified');
         });
     };
@@ -84,6 +86,7 @@ const NavLeftColor = (props) => {
                     className='mobileSubmit'
                     onClick={() => {
                         setIsChoosingColor(false);
+                        document.querySelector('.componentsNavLeft').style.zIndex = '1';
                         props.setIsFocusInput(false);
                         props.canvas.fire('object:modified');
                     }}
