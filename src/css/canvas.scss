@@ -1431,8 +1431,9 @@ input[type='range'].imgAdjustRange {
             }
         }
         .mobileSidebarUnfold {
-            display: flex;
             flex-direction: column;
+            max-height: 80%;
+            padding: 0;
             & * {
                 // border: 1px solid red;
             }
@@ -1440,6 +1441,10 @@ input[type='range'].imgAdjustRange {
                 flex-wrap: nowrap;
                 overflow-x: scroll;
                 justify-content: flex-start;
+                min-height: 2rem;
+                height: 2rem;
+                scroll-behavior: smooth;
+                border-bottom: 1rem solid $main-color;
                 &::-webkit-scrollbar {
                     width: 0px;
                     height: 0px;
@@ -1456,19 +1461,19 @@ input[type='range'].imgAdjustRange {
                 }
                 .sideButton {
                     flex-grow: 0;
-                    height: auto;
-                    padding: 1rem 0;
+                    height: 100%;
                     min-width: 4.5rem;
                     &:hover {
                         opacity: 1;
                     }
                 }
                 .sideButtonChosen {
-                    // background-color: $main-color;
                     &::before {
                         bottom: 0;
                         top: auto;
                         left: 100%;
+                        width: 0.8rem;
+                        height: 0.8rem;
                         background: radial-gradient(
                             circle farthest-side at top right,
                             rgba(0, 0, 0, 0) 0,
@@ -1477,6 +1482,8 @@ input[type='range'].imgAdjustRange {
                         );
                     }
                     &::after {
+                        width: 0.8rem;
+                        height: 0.8rem;
                         bottom: 0;
                         top: auto;
                         right: 100%;
@@ -1489,17 +1496,87 @@ input[type='range'].imgAdjustRange {
                     }
                 }
             }
-            .unfoldItem {
-            }
+
             .sidebarUnfold {
                 width: 100%;
                 padding: 0;
                 border-radius: 0;
-                .sidebarUnfoldText {
-                    padding: 1rem 0;
+                padding: 0 5% 5% 5%;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                max-height: 100%;
+                .sidebarUnfoldInner {
+                    width: 90%;
+                    overflow-x: hidden;
                     .unfoldItem {
-                        margin: 0.5rem auto;
+                        width: 23%;
+                        margin: 1%;
                     }
+                }
+                .sidebarUnfoldSubtitle {
+                    height: 1.2rem;
+                    padding-left: 1%;
+                }
+                .toggleSubtitle {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding-top: 0;
+                }
+                .unfoldImgWrapperToggle,
+                .backImgChart {
+                    padding-top: 1.2rem;
+                    max-height: none;
+                    flex-wrap: nowrap;
+                    overflow-x: scroll;
+                    scroll-behavior: smooth;
+                    &::-webkit-scrollbar {
+                        width: 0px;
+                        height: 0px;
+                    }
+                    &::-webkit-scrollbar-button {
+                        width: 0px;
+                        height: 0px;
+                    }
+                    .unfoldItemGalleryWrapper {
+                        overflow: visible;
+                        margin: 0.3rem;
+                        width: auto;
+                        .unfoldItem {
+                            top: auto;
+                            left: auto;
+                            transform: none;
+                            margin: 0;
+                            width: auto;
+                            position: relative;
+                            height: 100%;
+                            max-width: none;
+                        }
+                    }
+                }
+                .sidebarUnfoldText {
+                    .unfoldItem {
+                        width: 100%;
+                        margin-bottom: 1rem;
+                        &:last-child {
+                            margin-bottom: 0;
+                        }
+                    }
+                }
+                .sidebarUnfoldLine {
+                    justify-content: flex-start;
+                    .itemLine {
+                        padding: 1.2rem 2%;
+                        width: 19%;
+                    }
+                }
+                .sidebarUnfoldBack {
+                    .unfoldItemGalleryWrapper {
+                        height: 6rem;
+                    }
+                }
+                .toggleButton {
+                    display: none;
                 }
             }
         }

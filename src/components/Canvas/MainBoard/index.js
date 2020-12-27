@@ -71,9 +71,16 @@ const MainBoard = (props) => {
     const closeMobileSidebar = (e) => {
         document.querySelector('.sidebar').classList.add('mobileSidebarToggleOut');
         document.querySelector('.sidebar').classList.remove('mobileSidebarToggle');
+
         setTimeout(() => {
             if (document.querySelector('.sidebar')) {
                 document.querySelector('.sidebar').classList.remove('mobileSidebarToggleOut');
+                if (document.querySelector('.sidebar').classList.contains('mobileSidebarUnfold')) {
+                    document.querySelector('.sidebar').classList.remove('mobileSidebarUnfold');
+                }
+                if (currentSidebar !== '') {
+                    setCurrentSidebar('');
+                }
             }
         }, 1000);
         document.querySelector('.mobileCover').style.display = 'none';

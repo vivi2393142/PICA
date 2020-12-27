@@ -956,7 +956,11 @@ const Sidebar = (props) => {
         >
             {stickerTestArray.map((category, index) => {
                 return (
-                    <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={index}>
+                    <div
+                        className='unfoldImgWrapper unfoldImgWrapperToggle'
+                        key={index}
+                        style={{ width: isAtMobile ? 'auto' : '' }}
+                    >
                         <div className='toggleSubtitle'>
                             {category.title}
                             <div
@@ -1041,7 +1045,7 @@ const Sidebar = (props) => {
                     draggable='false'
                     onClick={backgroundImageHandler}
                     className='unfoldItem unfoldItemGallery'
-                    style={{ position: 'relative', height: '10rem' }}
+                    style={{ position: 'relative', height: isAtMobile ? '100%' : '10rem' }}
                     src={item}
                     onLoad={(e) => {
                         if (e.target.naturalHeight > e.target.naturalWidth) {
@@ -1223,7 +1227,11 @@ const Sidebar = (props) => {
     );
 
     return (
-        <div className={`sidebar ${props.currentSidebar === '' ? '' : 'mobileSidebarUnfold'}`}>
+        <div
+            className={`sidebar ${
+                props.currentSidebar === '' ? '' : 'mobileSidebarToggle mobileSidebarUnfold'
+            }`}
+        >
             <div className='mobileToggle' onClick={props.closeMobileSidebar}></div>
             {showAlert && (
                 <Alert
