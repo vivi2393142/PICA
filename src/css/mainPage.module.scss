@@ -672,22 +672,13 @@ body {
         max-width: 1000px;
         position: relative;
         padding-top: 0.8rem;
-
-        // test for square
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
         padding-top: 1.5rem;
-
         .rowWrapper {
             position: relative;
             width: 100%;
-
-            // test for square
-            // width: 46%;
-            // display: flex;
-            // flex-wrap: wrap;
-
             .rowTitle {
                 font-weight: 800;
                 color: $custom-black;
@@ -699,14 +690,17 @@ body {
                 background-color: white;
                 position: absolute;
                 top: 50%;
-                width: 1rem;
-                height: 1rem;
-                padding: 0.5rem;
+                width: 0.8rem;
+                height: 0.8rem;
+                padding: 0.4rem;
                 border-radius: 100%;
-                border: 1px solid $custom-black;
-                transform: translate(-50%, -25%);
+                border: 1px solid $middle-grey;
+                transform: translate(-50%, calc(-50% - 0.8rem));
                 cursor: pointer;
                 transition: background 0.2s;
+                polygon {
+                    fill: $middle-grey;
+                }
                 &:hover {
                     polygon {
                         fill: white;
@@ -724,10 +718,8 @@ body {
             .row {
                 display: flex;
                 overflow-x: scroll;
-                border: 1px solid $dark-grey;
                 border-radius: 0.5rem;
-                padding: 2rem;
-                margin-bottom: 2rem;
+                margin-bottom: 1%;
                 margin-right: 1px;
                 position: relative;
                 scroll-behavior: smooth;
@@ -854,7 +846,7 @@ body {
                     .commentText {
                         margin-left: 0.3rem;
                         border-radius: 1rem;
-                        border: 1px solid $dark-grey;
+                        border: 1px solid $middle-grey;
                         display: flex;
                         flex-direction: column;
                         width: 100%;
@@ -908,7 +900,7 @@ body {
                 .commentText {
                     margin-left: 0.3rem;
                     border-radius: 1rem;
-                    border: 1px solid $dark-grey;
+                    border: 1px solid $middle-grey;
                     padding: 0.5rem 1rem;
                     flex: 1;
                     resize: none;
@@ -940,9 +932,259 @@ body {
 }
 
 // media query
-@media (max-width: 1000px) {
-    .canvasLikesFiles {
+@media (max-width: 900px) {
+    .shotsWrapper {
+        .shots {
+            .rightInfo {
+                .commentWrapper {
+                    .singleComment {
+                        .commentText {
+                            font-size: 0.8rem;
+                        }
+                    }
+                }
+                .myComment {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+    }
+    .explore {
+        .main {
+            .rowWrapper {
+                .rowTitle {
+                    font-size: 1.4rem;
+                }
+            }
+        }
+        .exploreBanner {
+            .title {
+                font-size: 1.5rem;
+            }
+        }
+    }
+    .mainWrapper .main .canvasFiles {
+        .fileWrapper,
+        .fileWrapperNew {
+            width: 33%;
+        }
     }
 }
-@media (max-width: 700px) {
+@media (max-width: 600px) {
+    .shotsWrapper {
+        .shots {
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: auto;
+            width: 85%;
+            .back {
+                width: auto;
+                align-self: flex-start;
+            }
+            .leftInfo {
+                width: 100%;
+
+                .fileNameWrapper {
+                    padding-bottom: 2rem;
+                    font-size: 1rem;
+                    padding-left: 0;
+                }
+            }
+            .rightInfo {
+                width: 100%;
+                height: auto;
+                .userWrapper {
+                    padding-bottom: 0.5rem;
+                }
+            }
+        }
+    }
+    .explore {
+        .main {
+            .rowWrapper {
+                .rowTitle {
+                    font-size: 1.3rem;
+                }
+            }
+        }
+        .exploreBanner {
+            padding: 2.5rem 1rem 3rem 1rem;
+            .title {
+                font-size: 1.3rem;
+                width: 60%;
+            }
+            .mainPic {
+                width: 40%;
+            }
+        }
+        .sidebarWrapper {
+            .sidebar {
+                .tag {
+                    font-size: 0.8rem;
+                    padding: 0.2rem 0;
+                    width: 7rem;
+                }
+            }
+        }
+        .main {
+            padding-top: 0.8rem;
+        }
+    }
+    .mainPage .mainWrapper .main {
+        .otherDetailsName {
+            font-size: 1.1rem;
+            padding: 0.1rem 0;
+        }
+        .otherDetails {
+            font-size: 0.9rem;
+        }
+        .canvasFiles {
+            .fileWrapper,
+            .fileWrapperNew {
+                width: 50%;
+                padding-bottom: 0.2rem;
+                .titleWrapper {
+                    font-size: 0.8rem;
+                    margin-top: 0.2rem;
+                    input {
+                        font-size: 0.7rem;
+                        height: 95%;
+                    }
+                }
+                .file {
+                    .hoverIconsWrapper {
+                        bottom: 0;
+                        padding: 5rem 0 0.4rem 0;
+                        opacity: 0.9;
+                        .hoverIcon {
+                            &:first-child {
+                                margin-left: 0.4rem;
+                            }
+                        }
+                        .boxIcon {
+                            width: 1.1rem;
+                            height: 1.1rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .bannerWrapper {
+        .leftNav {
+            padding: 0 0.6rem;
+            div {
+                padding: 0 0.6rem;
+            }
+        }
+    }
+}
+@media (max-width: 450px) {
+    .shotsWrapper {
+        .shots {
+            .leftInfo {
+                .fileNameWrapper {
+                    font-size: 0.9rem;
+                }
+            }
+            .rightInfo {
+                .userWrapper {
+                    img {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                    }
+                    .userName {
+                        font-size: 0.8rem;
+                        padding-left: 0.8rem;
+                    }
+                    .fileNumber {
+                        font-size: 0.7rem;
+                    }
+                }
+                .subTitle {
+                    font-size: 0.9rem;
+                    font-weight: 500;
+                }
+                .myComment {
+                    img {
+                        width: 1.5rem;
+                        height: 1.5rem;
+                    }
+                    .commentText {
+                        margin-left: 0.2rem;
+                        padding: 0.3rem 0.8rem;
+                        .commentUser {
+                            span {
+                                font-size: 0.6rem;
+                            }
+                        }
+                    }
+                    .submit {
+                        width: 1.5rem;
+                        font-size: 0.7rem;
+                        margin-left: 0.4rem;
+                    }
+                }
+                .commentWrapper {
+                    .singleComment {
+                        img {
+                            width: 1.5rem;
+                            height: 1.5rem;
+                        }
+                        .commentText {
+                            margin-left: 0.2rem;
+                            padding: 0.3rem 0.8rem;
+                            .delete {
+                                right: 0.8rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .mainWrapper .main .canvasFiles {
+        .fileWrapper,
+        .fileWrapperNew {
+            width: 100%;
+        }
+    }
+    .bannerWrapper {
+        .leftNav {
+            font-size: 0.8rem;
+            div {
+                padding: 0 0.4rem;
+            }
+        }
+        .banner {
+            .logo {
+                width: 4.5rem;
+            }
+            .memberWrapper {
+                margin-left: 0.5rem;
+                width: 25px;
+                height: 25px;
+            }
+        }
+    }
+    .explore {
+        .exploreBanner {
+            padding: 1.5rem 1rem 2rem 1rem;
+            .title {
+                font-size: 1rem;
+            }
+        }
+        .sidebarWrapper {
+            .sidebar {
+                .tag {
+                    margin: 0 1%;
+                    font-size: 0.7rem;
+                    width: auto;
+                    white-space: nowrap;
+                    padding: 0.2rem 0.5rem;
+                }
+            }
+        }
+    }
 }

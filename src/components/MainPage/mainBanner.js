@@ -79,6 +79,7 @@ const MainBanner = (props) => {
                     currentUser={props.currentUser}
                     setIsAddingNew={props.setIsAddingNew}
                     isAddingNew={props.isAddingNew}
+                    isAtMobile={props.isAtMobile}
                 />
                 <div className={`${photoSrc ? styles.memberWrapper : styles.defaultWrapper}`}>
                     {photoSrc ? (
@@ -142,6 +143,7 @@ MainBanner.propTypes = {
     currentPage: PropTypes.string.isRequired,
     isAddingNew: PropTypes.bool.isRequired,
     setIsAddingNew: PropTypes.func.isRequired,
+    isAtMobile: PropTypes.string.isRequired,
 };
 
 export default MainBanner;

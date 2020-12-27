@@ -11,6 +11,25 @@ import { useHistory } from 'react-router-dom';
 const MainPage = (props) => {
     const [currentPage, setCurrentPage] = React.useState('explore');
     const [isAddingNew, setIsAddingNew] = React.useState(false);
+    const [isAtMobile, setIsAtMobile] = React.useState('normal');
+    React.useEffect(() => {
+        if (window.innerWidth < 901 && window.innerWidth > 450) {
+            setIsAtMobile('small');
+        } else if (window.innerWidth <= 450) {
+            setIsAtMobile('superSmall');
+        } else {
+            setIsAtMobile('normal');
+        }
+        window.addEventListener('resize', (e) => {
+            if (window.innerWidth < 901 && window.innerWidth > 450) {
+                setIsAtMobile('small');
+            } else if (window.innerWidth <= 450) {
+                setIsAtMobile('superSmall');
+            } else {
+                setIsAtMobile('normal');
+            }
+        });
+    }, []);
 
     // render
     return (
@@ -21,6 +40,7 @@ const MainPage = (props) => {
                 currentPage={currentPage}
                 setIsAddingNew={setIsAddingNew}
                 isAddingNew={isAddingNew}
+                isAtMobile={isAtMobile}
             />
             <Switch>
                 <Route path='/main/explore'>

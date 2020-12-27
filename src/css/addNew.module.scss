@@ -365,7 +365,6 @@ $sizeBase: 2rem;
                     border-bottom: 0.15rem solid $sub-color;
                     border-color: $sub-color;
                     border-style: dashed;
-                    // background-color: $light-grey;
                     position: relative;
                 }
                 .current::after {
@@ -410,11 +409,9 @@ $sizeBase: 2rem;
         }
     }
     .addButton {
-        // bottom: 15%;
         right: 0;
         width: 30px;
         height: 30px;
-        // padding-bottom: ;
         border: 1px solid $sub-color;
         background: $sub-color;
         border-radius: 15px;
@@ -438,11 +435,9 @@ $sizeBase: 2rem;
         &::after {
             right: 8px;
             overflow: hidden;
-            // border-radius: 2px 2px 0 0;
         }
         &::before {
             left: 8px;
-            // border-radius: 1px 1px 0 0;
         }
         &:focus {
             outline: none;
@@ -452,7 +447,6 @@ $sizeBase: 2rem;
             &::before,
             &::after {
                 width: 2px;
-                // border-radius: 1px;
             }
         }
         &:hover .addIcon::before {
@@ -491,6 +485,187 @@ $sizeBase: 2rem;
             &::after {
                 right: 14px;
                 border-radius: 1px 1px 0 0;
+            }
+        }
+    }
+}
+@media (max-width: 900px) {
+    .addNew {
+        .cover {
+            .box {
+                width: 35rem;
+                height: 28rem;
+                .stepContentWrapper {
+                    .sampleList {
+                        .sampleImg {
+                            height: 10rem;
+                        }
+                    }
+                }
+                .nextStepWrapper {
+                    margin-top: 0.6rem;
+                }
+                .sizeOptions {
+                    .option {
+                        margin-bottom: 0.3rem;
+                        .title {
+                            font-size: 0.8rem;
+                            padding-bottom: 0;
+                        }
+                        .details {
+                            font-size: 0.6rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+@media (max-width: 600px) {
+    .addNew {
+        .cover {
+            .box {
+                width: 80%;
+                height: 28rem;
+                padding: 1.5rem 0;
+                .stepContentWrapper {
+                    height: 300px;
+                    padding-top: 1rem;
+                    .sizeImg {
+                        width: 300px;
+
+                        padding-right: 2rem;
+                    }
+                    .nextStepWrapper {
+                    }
+                    .sizeOptions {
+                        display: none;
+                    }
+                    .optionsWrapper {
+                        .option {
+                            margin: 0;
+                            width: 40%;
+                            &:first-child {
+                                margin-right: 4%;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .addButton {
+            width: 30px;
+            height: 30px;
+            &:hover {
+                width: 30px;
+            }
+            &:hover .btnText {
+                opacity: 0;
+                &::before,
+                &::after {
+                    width: 8px;
+                }
+            }
+            &:hover .addIcon::before {
+                left: 14px;
+                height: 12px;
+                top: calc(50% - 5px);
+            }
+            &:hover .addIcon::after {
+                right: 14px;
+                height: 12px;
+                top: calc(50% - 5px);
+            }
+        }
+    }
+}
+@media (max-width: 450px) {
+    .addNew {
+        width: 25px;
+        height: 25px;
+        .cover {
+            .box {
+                width: 90%;
+                height: 25rem;
+                padding: 0.9rem 0;
+                .stepContentWrapper {
+                    .sampleList {
+                        height: 60%;
+                        .sampleImg {
+                            height: 7rem;
+                        }
+                    }
+                    .optionsWrapper {
+                        .option {
+                            font-size: 0.8rem;
+                            border-width: 1px;
+                            height: 1rem;
+                            width: 38%;
+                        }
+                    }
+                }
+                .close {
+                    right: 0.8rem;
+                    font-size: 8px;
+                    width: 0.9rem;
+                    height: 0.9rem;
+                    top: 1rem;
+                }
+                .nextStepWrapper {
+                    padding: 0;
+                    margin: 0;
+                }
+                .steps {
+                    padding-top: 1rem;
+                    .step {
+                        width: 30%;
+                        .text {
+                            font-size: 0.5rem;
+                            top: -1.8rem;
+                        }
+                    }
+                    .current {
+                        .text {
+                            top: -2rem;
+                        }
+                        &::before {
+                            content: '';
+                            width: 0.8rem;
+                            height: 0.8rem;
+                        }
+                    }
+                }
+                .stepTitle {
+                    font-size: 0.9rem;
+                }
+                .stepContentWrapper {
+                    height: 210px;
+                    padding-top: 0.5rem;
+                    .sizeImg {
+                        width: 225px;
+                    }
+                }
+            }
+        }
+        .addButton {
+            width: 24px;
+            height: 24px;
+            &::before,
+            &::after {
+                content: '';
+                width: 8px;
+            }
+            .addIcon {
+                &::before {
+                    height: 10px;
+                    top: calc(50% - 5px);
+                    left: calc(50% - 1px);
+                }
+                &::after {
+                    height: 10px;
+                    top: calc(50% - 5px);
+                    right: calc(50% - 1px);
+                }
             }
         }
     }

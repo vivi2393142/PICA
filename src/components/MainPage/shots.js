@@ -81,11 +81,11 @@ const Shots = (props) => {
         } else if (elapsed < msPerDay) {
             return Math.round(elapsed / msPerHour) + '小時';
         } else if (elapsed < msPerMonth) {
-            return 'approximately ' + Math.round(elapsed / msPerDay) + '天';
+            return Math.round(elapsed / msPerDay) + '天';
         } else if (elapsed < msPerYear) {
-            return 'approximately ' + Math.round(elapsed / msPerMonth) + '月';
+            return Math.round(elapsed / msPerMonth) + '月';
         } else {
-            return 'approximately ' + Math.round(elapsed / msPerYear) + '年';
+            return Math.round(elapsed / msPerYear) + '年';
         }
     };
 

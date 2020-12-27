@@ -30,7 +30,8 @@ const AddNew = (props) => {
         sampleFileId: null,
     });
     const [sampleList, setSampleList] = React.useState();
-    const imgSizeRatio = 5;
+    const imgSizeRatio =
+        props.isAtMobile === 'superSmall' ? 8 : props.isAtMobile === 'small' ? 6 : 5;
     const canvasSizeOptions = [
         { name: '自訂尺寸', type: 'custom', width: 1800, height: 1600 },
         { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -146,7 +147,6 @@ const AddNew = (props) => {
                 onClick={() => sizeChoosingHandler(item.type, item.width, item.height)}
             >
                 <div className={styles.text}>{item.name}</div>
-
                 <div
                     className={`${styles.arrowV} ${
                         chosenRec === item.type && item.type !== 'custom' ? styles.show : ''
@@ -166,7 +166,7 @@ const AddNew = (props) => {
                         chosenRec === item.type && item.type !== 'custom' ? styles.show : ''
                     }`}
                     style={{
-                        width: item.width / 5 + 'px',
+                        width: item.width / imgSizeRatio + 'px',
                     }}
                 >
                     <div className={styles.arrowText}>
@@ -328,7 +328,7 @@ const AddNew = (props) => {
                                     <div
                                         className={`${styles.option} ${
                                             choices.way === 'sample' || !choices.way
-                                                ? null
+                                                ? ' '
                                                 : styles.notChosenOption
                                         } ${choices.way === 'sample' ? styles.optionSample : ''}`}
                                         onClick={() => {
@@ -426,6 +426,7 @@ AddNew.propTypes = {
     currentUser: PropTypes.object,
     isAddingNew: PropTypes.bool.isRequired,
     setIsAddingNew: PropTypes.func.isRequired,
+    isAtMobile: PropTypes.string.isRequired,
 };
 
 export default AddNew;
