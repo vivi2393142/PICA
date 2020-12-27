@@ -146,12 +146,12 @@ const NavLeftImg = (props) => {
     return (
         <div className='specificNav'>
             {allSettings.activeObj.type === 'image' && !props.croppingObj.type && (
-                <div className={'specificButton'} onClick={toggleImageAdjustmentNav}>
-                    調整圖片參數
+                <div className='specificButton navTypeWord' onClick={toggleImageAdjustmentNav}>
+                    調整圖片
                 </div>
             )}
             {allSettings.activeObj.type === 'image' && !props.croppingObj.type && (
-                <div className='specificButton' onClick={startCropping}>
+                <div className='specificButton navTypeWord' onClick={startCropping}>
                     裁剪圖片
                 </div>
             )}

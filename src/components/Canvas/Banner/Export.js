@@ -27,6 +27,7 @@ const Export = (props) => {
         const fileName = allSettings.canvasSetting.title
             ? allSettings.canvasSetting.title
             : '未命名畫布';
+        const zoomRatio = allSettings.canvasSetting.width / allSettings.canvas.width;
         if (way === 'pdf') {
             let width = allSettings.canvas.width;
             let height = allSettings.canvas.height;
@@ -43,10 +44,18 @@ const Export = (props) => {
             setIsChoosingExport(false);
             return;
         } else if (way === 'jpg') {
-            dataURL = allSettings.canvas.toDataURL('image/jpeg', 1);
+            console.log('下載jpg');
+            dataURL = allSettings.canvas.toDataURL({
+                format: 'jpeg',
+                quality: 1,
+                multiplier: zoomRatio,
+            });
             // console.log(dataURL);
         } else if (way === 'png') {
-            dataURL = allSettings.canvas.toDataURL('image/png');
+            dataURL = allSettings.canvas.toDataURL({
+                format: 'png',
+                multiplier: zoomRatio,
+            });
         }
         const dlLink = document.createElement('a');
         dlLink.download = fileName;

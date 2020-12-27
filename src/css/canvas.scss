@@ -1322,6 +1322,42 @@ input[type='range'].imgAdjustRange {
             display: none;
         }
     }
+    .bannerRight {
+        .bannerIcons:hover {
+            opacity: 1;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 0.2rem;
+        }
+        .sizeSelection,
+        .shareWrapper,
+        .exportWrapper {
+            position: fixed;
+            right: 0;
+            top: calc(9% - 0.3rem);
+        }
+        .shareWrapper {
+            width: 70%;
+            max-width: 20rem;
+            padding: 0.3rem 1rem;
+            .mainTitle {
+                padding: 0.7rem 0;
+            }
+            input {
+                width: 70%;
+            }
+            .copy {
+                width: 2rem;
+                order: 1;
+                flex-grow: 1;
+                margin: 0 0 0 3%;
+                font-size: 0.7rem;
+            }
+            .hint {
+                order: 2;
+                padding: 0.3rem 0 0.3rem 2px;
+            }
+        }
+    }
     .mainBoard {
         flex-direction: column;
         position: relative;
@@ -1501,7 +1537,7 @@ input[type='range'].imgAdjustRange {
                 width: 100%;
                 padding: 0;
                 border-radius: 0;
-                padding: 0 5% 5% 5%;
+                padding: 0 5% 3% 5%;
                 overflow-y: scroll;
                 overflow-x: hidden;
                 max-height: 100%;
@@ -1571,8 +1607,34 @@ input[type='range'].imgAdjustRange {
                     }
                 }
                 .sidebarUnfoldBack {
+                    .backImgChart {
+                        padding-top: 0.2rem;
+                    }
                     .unfoldItemGalleryWrapper {
                         height: 6rem;
+                    }
+                    .toggleSubtitle {
+                        position: relative;
+                    }
+                }
+                .sidebarUnfoldUpload {
+                    .uploadLabel {
+                        width: 100%;
+                    }
+                    .close:hover {
+                        background-color: white;
+                        color: $custom-black;
+                    }
+                    .unfoldItemGalleryWrapper {
+                        margin: 0.3rem;
+                    }
+                }
+                .sidebarUnfoldSample {
+                    .unfoldItemGalleryWrapper {
+                        margin: 0.3rem;
+                        .unfoldItem {
+                            margin: 0;
+                        }
                     }
                 }
                 .toggleButton {
@@ -1593,6 +1655,11 @@ input[type='range'].imgAdjustRange {
             width: 100%;
             height: 4rem;
             border-top: 1px solid rgb(218, 218, 218);
+            .specificNav {
+                .navTypeWord {
+                    white-space: nowrap;
+                }
+            }
             .scrollContainer {
                 padding-top: 0;
                 width: 100%;

@@ -5,6 +5,7 @@ import * as icons from '../../../img/icons';
 import * as firebase from '../../../firebase';
 import * as sidebarItems from '../../../img/sidebarItems';
 import Alert from '../../Alert';
+import deleteLoading from '../../../img/src/deleteLoading.svg';
 
 const Sidebar = (props) => {
     const allSettings = props.allSettings;
@@ -341,7 +342,7 @@ const Sidebar = (props) => {
         }
     };
     ondragenter = (e) => {
-        if (e.dataTransfer.types[0] === 'Files') {
+        if (e.dataTransfer.types[0] === 'Files' && !isAtMobile) {
             setShowUploadCover(true);
             props.setCurrentSidebar('upload');
         }
@@ -420,7 +421,7 @@ const Sidebar = (props) => {
             },
             buttonOneTitle: '確認套用',
             buttonTwoTitle: '取消套用',
-            title: '即將套用範本',
+            title: '即將重設所有物件',
             content: '套用範本將自動刪除現存在在畫布上的所有物件',
         });
         setShowAlert(true);
@@ -633,7 +634,11 @@ const Sidebar = (props) => {
                     <div
                         key={index}
                         className='unfoldItemGalleryWrapper'
-                        style={{ width: '45%', overflow: 'visible', height: 'auto' }}
+                        style={{
+                            width: isAtMobile ? '30%' : '45%',
+                            overflow: 'visible',
+                            height: 'auto',
+                        }}
                     >
                         <img
                             key={index}
@@ -898,7 +903,7 @@ const Sidebar = (props) => {
             ],
         },
         {
-            title: '怪獸',
+            title: '恐龍',
             src: [
                 sidebarItems.SD01,
                 sidebarItems.SD02,
@@ -937,7 +942,7 @@ const Sidebar = (props) => {
             ],
         },
         {
-            title: '恐龍',
+            title: '怪獸',
             src: [
                 sidebarItems.SMO01,
                 sidebarItems.SMO02,
@@ -1159,7 +1164,11 @@ const Sidebar = (props) => {
                             <div
                                 className='close'
                                 id={item.path}
-                                onClick={(e) => firebase.removeUploadImg(e, props.fileId)}
+                                onClick={(e) => {
+                                    e.target.previousElementSibling.src = deleteLoading;
+                                    e.target.previousElementSibling.style.height = '100%';
+                                    firebase.removeUploadImg(e, props.fileId);
+                                }}
                             >
                                 x
                             </div>

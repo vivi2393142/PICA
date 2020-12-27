@@ -130,12 +130,10 @@ const Canvas = (props) => {
         // get firebase data according to URL params
         const FontFaceObserver = require('fontfaceobserver');
         const fontsArray = ['JetBrains Mono', 'Raleway', 'Montserrat Alternates'];
-        Promise.all(fontsArray.map((font) => new FontFaceObserver(font).load())).then(function () {
-            console.log('load');
-        });
+        Promise.all(fontsArray.map((font) => new FontFaceObserver(font).load())).then(() => {});
         firebase.loadCanvas(
             canvas,
-            (canvasSettingInit, canvasDataInit) => {
+            (canvasSettingInit, canvasDataInit, snapshotInit) => {
                 // set canvas setting state by firebase canvas data
                 setCanvasSetting(canvasSettingInit);
                 setCanvasData(canvasDataInit);
@@ -270,7 +268,7 @@ const Canvas = (props) => {
                     canvasInit.clearHistory();
                 }
                 //save dataURL if non
-                if (!canvasData.snapshot) {
+                if (!snapshotInit) {
                     firebase.firstSavaDataURL(canvasInit, props.match.params.id);
                 }
                 // preset fabric custom styles
@@ -316,7 +314,6 @@ const Canvas = (props) => {
                 let itemDragOffset = { offsetX: 0, offsetY: 0 };
                 let movingItem = {};
                 const saveDragItemFunc = (e) => {
-                    console.log(e.target);
                     if (e.target.draggable) {
                         itemDragOffset.offsetX =
                             e.clientX - e.target.offsetParent.offsetLeft - e.target.offsetLeft;

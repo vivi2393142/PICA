@@ -129,6 +129,9 @@ $sizeBase: 2rem;
                 flex-direction: column;
                 .hint {
                     position: absolute;
+                    bottom: 12rem;
+                    left: 50%;
+                    transform: translateX(-50%);
                     color: rgb(243, 71, 71);
                     font-size: $small-font;
                     text-align: center;

@@ -45,6 +45,7 @@ const listenCanvas = (fileId, callback, setUploadedFiles) => {
 
 // -- save data URL
 const savaDataURL = (canvas, fileId, successCallback) => {
+    console.log('執行print');
     let exportCanvas;
     if (JSON.stringify(canvas) === '{}') {
         exportCanvas = document.getElementById('fabric-canvas');
@@ -53,9 +54,11 @@ const savaDataURL = (canvas, fileId, successCallback) => {
     }
     let dataURL = exportCanvas.toDataURL('image/png', 1);
     successCallback(dataURL);
+    console.log(exportCanvas, dataURL);
 };
 // -- save data URL
 const firstSavaDataURL = (canvas, fileId) => {
+    console.log('執行first');
     let exportCanvas;
     if (JSON.stringify(canvas) === '{}') {
         exportCanvas = document.getElementById('fabric-canvas');
@@ -67,6 +70,7 @@ const firstSavaDataURL = (canvas, fileId) => {
     ref.update({
         snapshot: dataURL,
     });
+    // console.log(exportCanvas, dataURL);
 };
 
 // -- firestore
@@ -131,7 +135,8 @@ const loadCanvas = (canvas, callback, fileId) => {
         const dataFromFirebase = doc.data();
         const canvasSettingInit = dataFromFirebase.basicSetting;
         const canvasDataInit = JSON.parse(dataFromFirebase.data);
-        callback(canvasSettingInit, canvasDataInit);
+        const snapshotInit = dataFromFirebase.snapshot ? dataFromFirebase.snapshot : null;
+        callback(canvasSettingInit, canvasDataInit, snapshotInit);
     });
 };
 const saveCanvasData = (canvas, canvasSetting, fileId) => {
