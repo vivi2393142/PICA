@@ -117,6 +117,21 @@ $symbol-font: 0.6rem;
             // width: 50%;
             height: 100%;
             position: relative;
+            animation-name: floating;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: ease-in-out;
+        }
+        @keyframes floating {
+            0% {
+                transform: translateY(-1.5%);
+            }
+            50% {
+                transform: translateY(1.5%);
+            }
+            100% {
+                transform: translateY(-1.5%);
+            }
         }
     }
 }

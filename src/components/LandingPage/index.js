@@ -73,7 +73,6 @@ const LandingPage = (props) => {
                             </div>
                         </div>
                     </div>
-                    {/* <div className={styles.mainImg}> */}
                     <login.LandingMain className={styles.mainImg} />
                 </div>
             </div>

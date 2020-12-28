@@ -285,10 +285,10 @@ const Sidebar = (props) => {
         }
     };
     // handlers: drop to upload
-    ondragleave = (e) => {
-        console.log(e);
-        console.log('leave');
-    };
+    // ondragleave = (e) => {
+    //     console.log(e);
+    //     console.log('leave');
+    // };
     ondrop = (e) => {
         e.preventDefault();
         setShowUploadCover(false);
@@ -1012,7 +1012,7 @@ const Sidebar = (props) => {
         'rgba(255, 105, 0, 1)',
         'rgba(123, 220, 181, 1)',
         'rgba(142, 209, 252, 1)',
-        'rgba(6, 147, 227, 1)',
+        'rgba(6, 34, 117, 1)',
         'rgba(171, 184, 195, 1)',
         'rgba(235, 20, 76, 1)',
         'rgba(247, 141, 167, 1)',

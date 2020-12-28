@@ -12,6 +12,16 @@ const Explore = (props) => {
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [dataArray, setDataArray] = React.useState([]);
     const [filter, setFilter] = React.useState('all');
+    const [hasArrow, setHasArrow] = React.useState({
+        Instagram: false,
+        Poster: false,
+        PostCard: false,
+        Web: false,
+        A4: false,
+        NameCard: false,
+        Custom: false,
+    });
+    const [currentWidth, setCurrentWidth] = React.useState(4);
     const [arrowState, setArrowState] = React.useState({
         Instagram: 'left',
         Poster: 'left',
@@ -26,13 +36,37 @@ const Explore = (props) => {
     const scrollRef = React.useRef([]);
 
     React.useEffect(() => {
+        if (window.innerWidth > 900) {
+            setCurrentWidth(4);
+        } else if (window.innerWidth > 600) {
+            setCurrentWidth(3);
+        } else {
+            setCurrentWidth(2);
+        }
+        window.addEventListener('resize', (e) => {
+            if (window.innerWidth > 900) {
+                setCurrentWidth(4);
+            } else if (window.innerWidth > 600) {
+                setCurrentWidth(3);
+            } else {
+                setCurrentWidth(2);
+            }
+        });
+    }, []);
+
+    React.useEffect(() => {
         props.setCurrentPage('explore');
         firebase.getAllFiles(props.currentUser.email, (dataArray) => {
             setDataArray(dataArray);
+            let oldState = { ...hasArrow };
+            allType.forEach((type) => {
+                oldState[type] = dataArray[type].length > currentWidth;
+            });
+            setHasArrow(oldState);
             setIsLoaded(false);
         });
         return () => {};
-    }, []);
+    }, [currentWidth]);
 
     const listenScroll = (e, type) => {
         const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
@@ -115,13 +149,13 @@ const Explore = (props) => {
                         {(filter === 'all' || filter === 'nonSample') && nonSampleInner}
                         <div style={{ paddingRight: '2rem' }}></div>
                     </div>
-                    {arrowState[type] !== 'left' && (
+                    {arrowState[type] !== 'left' && hasArrow[type] && (
                         <mainIcons.ArrowR
                             className={`${styles.buttonSvg} ${styles.buttonR}`}
                             onClick={() => swipeHandler('left', index)}
                         />
                     )}
-                    {arrowState[type] !== 'right' && (
+                    {arrowState[type] !== 'right' && hasArrow[type] && (
                         <mainIcons.ArrowL
                             className={`${styles.buttonSvg} ${styles.buttonL}`}
                             onClick={() => swipeHandler('right', index)}

@@ -19,7 +19,7 @@ const TitleInput = (props) => {
         const clickedOrNot = (e) => {
             if (!currentNode.contains(e.target)) {
                 setIsShowInput(false);
-                firebase.changeTitle(props.fileId, titleInput);
+                firebase.changeTitle(props.fileId, currentNode.firstElementChild.value);
                 document.removeEventListener('click', clickedOrNot, true);
             }
         };
