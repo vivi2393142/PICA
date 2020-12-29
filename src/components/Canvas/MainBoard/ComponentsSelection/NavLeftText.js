@@ -67,7 +67,7 @@ const NavLeftText = (props) => {
     };
     const [textWeight, setTextWeight] = React.useState('normal');
     const handleTextWeight = (e) => {
-        let newWeight = textWeight === 'normal' ? 'bold' : 'normal';
+        const newWeight = textWeight === 'normal' ? 'bold' : 'normal';
         setTextWeight(newWeight);
         props.activeObj.set({
             fontWeight: newWeight,
@@ -77,7 +77,7 @@ const NavLeftText = (props) => {
     };
     const [textStyle, setTextStyle] = React.useState('normal');
     const handleTextStyle = () => {
-        let newStyle = textStyle === 'normal' ? 'italic' : 'normal';
+        const newStyle = textStyle === 'normal' ? 'italic' : 'normal';
         setTextStyle(newStyle);
         props.activeObj.set({
             fontStyle: newStyle,

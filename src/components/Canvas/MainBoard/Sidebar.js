@@ -4,7 +4,7 @@ import { ChromePicker } from 'react-color';
 import * as icons from '../../../img/icons';
 import * as firebase from '../../../utils/firebase.js';
 import * as sidebarItems from '../../../img/sidebarItems';
-import Alert from '../../Alert';
+import { Alert, defaultAlertSetting } from '../../Alert';
 import deleteLoading from '../../../img/src/deleteLoading.svg';
 import { trackOutSideClick } from '../../../utils/utils.js';
 
@@ -18,13 +18,7 @@ const Sidebar = (props) => {
     const [showAlert, setShowAlert] = React.useState(false);
     const [isAtMobile, setIsAtMobile] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
-        buttonNumber: 0,
-        buttonOneFunction: () => {},
-        buttonTwoFunction: () => {},
-        buttonOneTitle: '',
-        buttonTwoTitle: '',
-        title: '',
-        content: '',
+        ...defaultAlertSetting,
     });
 
     // if on mobile size, disable draggable

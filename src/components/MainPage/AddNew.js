@@ -4,7 +4,30 @@ import PropTypes from 'prop-types';
 import * as firebase from '../../utils/firebase.js';
 import * as mainIcon from '../../img/mainPage';
 import { nanoid } from 'nanoid';
-import Alert from '../Alert';
+import { Alert, defaultAlertSetting } from '../Alert';
+import { canvasSizeOptions } from '../../utils/config.js';
+
+const sizeAdjustForMediaQuery = { superSmall: 8, small: 6, normal: 5 };
+const handleCreateNew = (e) => {
+    const id = nanoid();
+    const canvasSetting = {
+        id: id,
+        userEmail: props.currentUser.email,
+        title: titleInput,
+        width: choices.width,
+        height: choices.height,
+        type: choices.type,
+    };
+    if (choices.type === 'custom') {
+        canvasSetting.width = customSize.width;
+        canvasSetting.height = customSize.height;
+        firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+    } else if (choices.way === 'sample') {
+        firebase.createSampleCanvas(canvasSetting, choices.sampleFileId);
+    } else {
+        firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+    }
+};
 
 // export default App;
 const AddNew = (props) => {
@@ -13,13 +36,7 @@ const AddNew = (props) => {
     const [titleInput, setTitleInput] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
-        buttonNumber: 0,
-        buttonOneFunction: () => {},
-        buttonTwoFunction: () => {},
-        buttonOneTitle: '',
-        buttonTwoTitle: '',
-        title: '',
-        content: '',
+        ...defaultAlertSetting,
     });
     const [choices, setChoices] = React.useState({
         type: null,
@@ -31,16 +48,11 @@ const AddNew = (props) => {
     });
     const [sampleList, setSampleList] = React.useState();
     const imgSizeRatio =
-        props.isAtMobile === 'superSmall' ? 8 : props.isAtMobile === 'small' ? 6 : 5;
-    const canvasSizeOptions = [
-        { name: '自訂尺寸', type: 'custom', width: 1800, height: 1600 },
-        { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
-        { name: '網頁', type: 'web', width: 1280, height: 1024 },
-        { name: 'Instagram', type: 'instagram', width: 1080, height: 1080 },
-        { name: '橫式A4', type: 'a4', width: 842, height: 595, mmW: 297, mmH: 210 },
-        { name: '明信片', type: 'postCard', width: 560, height: 288, mmW: 198, mmH: 102 },
-        { name: '名片', type: 'nameCard', width: 255, height: 153, mmW: 90, mmH: 54 },
-    ];
+        props.isAtMobile === 'superSmall'
+            ? sizeAdjustForMediaQuery.superSmall
+            : props.isAtMobile === 'small'
+            ? sizeAdjustForMediaQuery.small
+            : sizeAdjustForMediaQuery.normal;
     const sizeChoosingHandler = (type, width, height) => {
         setChosenRec(type);
         setChoices({ ...choices, type, width, height });
@@ -61,26 +73,6 @@ const AddNew = (props) => {
         firebase.getSampleList(type, (result) => {
             setSampleList(result);
         });
-    };
-    const handleCreateNew = (e) => {
-        const id = nanoid();
-        const canvasSetting = {
-            id: id,
-            userEmail: props.currentUser.email,
-            title: titleInput,
-            width: choices.width,
-            height: choices.height,
-            type: choices.type,
-        };
-        if (choices.type === 'custom') {
-            canvasSetting.width = customSize.width;
-            canvasSetting.height = customSize.height;
-            firebase.createNewCanvas(canvasSetting, props.currentUser.email);
-        } else if (choices.way === 'sample') {
-            firebase.createSampleCanvas(canvasSetting, choices.sampleFileId);
-        } else {
-            firebase.createNewCanvas(canvasSetting, props.currentUser.email);
-        }
     };
     // custom size
     const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
@@ -131,7 +123,6 @@ const AddNew = (props) => {
                 </div>
             );
         });
-
     const sizeImgJsx = canvasSizeOptions.map((item, index) => {
         return (
             <div

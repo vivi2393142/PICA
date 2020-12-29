@@ -1,4 +1,4 @@
-const trackOutSideClick = (trackTargetNode, callback) => {
+export const trackOutSideClick = (trackTargetNode, callback) => {
     const clickedOrNot = (e) => {
         if (!trackTargetNode.contains(e.target)) {
             callback();
@@ -7,5 +7,3 @@ const trackOutSideClick = (trackTargetNode, callback) => {
     };
     document.addEventListener('click', clickedOrNot, true);
 };
-
-export { trackOutSideClick };

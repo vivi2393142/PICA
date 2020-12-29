@@ -13,22 +13,16 @@ const MainPage = (props) => {
     const [isAddingNew, setIsAddingNew] = React.useState(false);
     const [isAtMobile, setIsAtMobile] = React.useState('normal');
     React.useEffect(() => {
-        if (window.innerWidth < 901 && window.innerWidth > 450) {
-            setIsAtMobile('small');
-        } else if (window.innerWidth <= 450) {
-            setIsAtMobile('superSmall');
-        } else {
-            setIsAtMobile('normal');
-        }
-        window.addEventListener('resize', (e) => {
-            if (window.innerWidth < 901 && window.innerWidth > 450) {
-                setIsAtMobile('small');
-            } else if (window.innerWidth <= 450) {
-                setIsAtMobile('superSmall');
-            } else {
-                setIsAtMobile('normal');
-            }
-        });
+        const mediaQuerySize = { small: 450, medium: 900 };
+        const setSizeState = () => {
+            window.innerWidth <= mediaQuerySize.medium && window.innerWidth > mediaQuerySize.small
+                ? setIsAtMobile('small')
+                : window.innerWidth <= mediaQuerySize.small
+                ? setIsAtMobile('superSmall')
+                : setIsAtMobile('normal');
+        };
+        setSizeState();
+        window.addEventListener('resize', setSizeState);
     }, []);
 
     // render

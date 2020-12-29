@@ -4,8 +4,18 @@ import PropTypes from 'prop-types';
 import alertOuter from '../img/src/alert-outer.svg';
 import alertInner from '../img/src/alert-inner.svg';
 import * as firebase from '../utils/firebase';
-// export default App;
-const Alert = (props) => {
+
+export const defaultAlertSetting = {
+    buttonNumber: 0,
+    buttonOneFunction: () => {},
+    buttonTwoFunction: () => {},
+    buttonOneTitle: '',
+    buttonTwoTitle: '',
+    title: '',
+    content: '',
+};
+
+export const Alert = (props) => {
     return (
         <div className={styles.alertCover}>
             <div className={styles.alertWrapper}>
@@ -39,5 +49,3 @@ Alert.propTypes = {
     title: PropTypes.string.isRequired,
     content: PropTypes.string.isRequired,
 };
-
-export default Alert;

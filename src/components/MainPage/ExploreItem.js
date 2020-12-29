@@ -5,21 +5,15 @@ import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import * as firebase from '../../utils/firebase.js';
-import Alert from '../Alert';
+import { Alert, defaultAlertSetting } from '../Alert';
 
 // export default App;
 const ExploreItem = (props) => {
-    let history = useHistory();
+    const history = useHistory();
     // const [likeListImageLoad, setLikeListImageLoad] = React.useState(0);
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
-        buttonNumber: 0,
-        buttonOneFunction: () => {},
-        buttonTwoFunction: () => {},
-        buttonOneTitle: '',
-        buttonTwoTitle: '',
-        title: '',
-        content: '',
+        ...defaultAlertSetting,
     });
     const addNewSampleHandler = (e, sampleFileId) => {
         e.stopPropagation();

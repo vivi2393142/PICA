@@ -5,27 +5,44 @@ import * as firebase from '../../utils/firebase.js';
 import Loader from '../Loader';
 import { useHistory } from 'react-router-dom';
 import * as mainIcons from '../../img/mainPage';
-import Alert from '../Alert';
+import { Alert, defaultAlertSetting } from '../Alert';
 
-// export default App;
+const countDateDiff = (timeStamp) => {
+    const current = new Date();
+    const previous = timeStamp.toDate();
+    const msPerMinute = 60 * 1000;
+    const msPerHour = msPerMinute * 60;
+    const msPerDay = msPerHour * 24;
+    const msPerMonth = msPerDay * 30;
+    const msPerYear = msPerDay * 365;
+    const elapsed = current - previous;
+    if (elapsed < msPerMinute) {
+        return Math.round(elapsed / 1000) + '秒';
+    } else if (elapsed < msPerHour) {
+        return Math.round(elapsed / msPerMinute) + '分鐘';
+    } else if (elapsed < msPerDay) {
+        return Math.round(elapsed / msPerHour) + '小時';
+    } else if (elapsed < msPerMonth) {
+        return Math.round(elapsed / msPerDay) + '天';
+    } else if (elapsed < msPerYear) {
+        return Math.round(elapsed / msPerMonth) + '月';
+    } else {
+        return Math.round(elapsed / msPerYear) + '年';
+    }
+};
+
 const Shots = (props) => {
+    const history = useHistory();
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [commentData, setCommentData] = React.useState(null);
     const [textInput, setTextInput] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
-        buttonNumber: 0,
-        buttonOneFunction: () => {},
-        buttonTwoFunction: () => {},
-        buttonOneTitle: '',
-        buttonTwoTitle: '',
-        title: '',
-        content: '',
+        ...defaultAlertSetting,
     });
-    let history = useHistory();
 
-    // listen to updated comments
     React.useEffect(() => {
+        // track comment
         if (props.currentUser.email && props.currentUser.email !== 'noUser') {
             firebase.listenToComment(props.match.params.fileId, () => {
                 firebase.getShot(
@@ -37,12 +54,8 @@ const Shots = (props) => {
                 );
             });
         }
-    }, [props.currentUser]);
-
-    React.useEffect(() => {
-        // set current page tag
-        props.setCurrentPage('explore');
         // data initialize
+        props.setCurrentPage('explore');
         if (props.match.params.fileId && props.currentUser) {
             firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
                 setCommentData(dataArray);
@@ -55,38 +68,11 @@ const Shots = (props) => {
         firebase.postComment(textInput, props.currentUser.email, props.match.params.fileId);
         setTextInput('');
     };
-    const deleteCommentHandler = (index) => {
-        firebase.deleteComment(index, props.match.params.fileId);
-    };
     const likeHandler = (oldIsLike) => {
         firebase.postLike(props.currentUser.email, props.match.params.fileId, oldIsLike);
-        let oldComments = { ...commentData };
+        const oldComments = { ...commentData };
         oldComments.currentUser.isLike = !oldIsLike;
         setCommentData(oldComments);
-    };
-    const countDateDiff = (timeStamp) => {
-        // console.log(timeStamp);
-        const current = new Date();
-        const previous = timeStamp.toDate();
-        const msPerMinute = 60 * 1000;
-        const msPerHour = msPerMinute * 60;
-        const msPerDay = msPerHour * 24;
-        const msPerMonth = msPerDay * 30;
-        const msPerYear = msPerDay * 365;
-        const elapsed = current - previous;
-        if (elapsed < msPerMinute) {
-            return Math.round(elapsed / 1000) + '秒';
-        } else if (elapsed < msPerHour) {
-            return Math.round(elapsed / msPerMinute) + '分鐘';
-        } else if (elapsed < msPerDay) {
-            return Math.round(elapsed / msPerHour) + '小時';
-        } else if (elapsed < msPerMonth) {
-            return Math.round(elapsed / msPerDay) + '天';
-        } else if (elapsed < msPerYear) {
-            return Math.round(elapsed / msPerMonth) + '月';
-        } else {
-            return Math.round(elapsed / msPerYear) + '年';
-        }
     };
 
     const commentsJsx =
@@ -104,7 +90,9 @@ const Shots = (props) => {
                             {comment.userId === props.currentUser.email && (
                                 <mainIcons.Delete
                                     className={styles.delete}
-                                    onClick={(e) => deleteCommentHandler(index)}
+                                    onClick={(e) =>
+                                        firebase.deleteComment(index, props.match.params.fileId)
+                                    }
                                 />
                             )}
                             <div
@@ -142,13 +130,7 @@ const Shots = (props) => {
                 <div className={styles.shots}>
                     <div className={styles.back} onClick={() => history.goBack()}>{`< 返回`}</div>
                     <div className={styles.leftInfo}>
-                        <img
-                            src={commentData.file.fileImg}
-                            className={styles.fileImg}
-                            onLoad={() => {
-                                console.log('loaded');
-                            }}
-                        />
+                        <img src={commentData.file.fileImg} className={styles.fileImg} />
                         <div className={styles.fileNameWrapper}>
                             {commentData.file.fileName}
                             <mainIcons.Like

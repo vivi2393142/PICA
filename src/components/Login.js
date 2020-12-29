@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import * as login from '../img/landingPage.js';
 import * as firebase from '../utils/firebase.js';
 import { useHistory } from 'react-router-dom';
-import Alert from './Alert';
+import { Alert, defaultAlertSetting } from './Alert';
 
-// export default App;
 const Login = (props) => {
     const history = useHistory();
     const [inputId, setInputId] = React.useState('');
@@ -14,13 +13,7 @@ const Login = (props) => {
     const [inputName, setInputName] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
-        buttonNumber: 0,
-        buttonOneFunction: () => {},
-        buttonTwoFunction: () => {},
-        buttonOneTitle: '',
-        buttonTwoTitle: '',
-        title: '',
-        content: '',
+        ...defaultAlertSetting,
     });
     const toggleClose = () => {
         props.setIsLoginOrSignup(false);
@@ -47,21 +40,20 @@ const Login = (props) => {
         } else if (way === 'google') {
             firebase.googleSignUp();
         }
-        // user ? props.setCurrentUser(user) : props.setCurrentUser({ email: 'noUser' });
     };
     const handleSignUp = (way) => {
         if (way === 'native') {
-            setAlertSetting({
-                buttonNumber: 1,
-                buttonOneFunction: () => setShowAlert(false),
-                buttonTwoFunction: () => {},
-                buttonOneTitle: '關閉',
-                buttonTwoTitle: '',
-                title: '註冊錯誤',
-                content: '請輸入有效之email地址及6位以上密碼',
-            });
             const inputToLowerCase = inputName.toLowerCase();
-            firebase.nativeSignUp(inputToLowerCase, inputId, inputPwd, () => {
+            firebase.nativeSignUp(inputToLowerCase, inputId, inputPwd, (errorMessage) => {
+                setAlertSetting({
+                    buttonNumber: 1,
+                    buttonOneFunction: () => setShowAlert(false),
+                    buttonTwoFunction: () => {},
+                    buttonOneTitle: '關閉',
+                    buttonTwoTitle: '',
+                    title: '註冊錯誤',
+                    content: errorMessage,
+                });
                 setShowAlert(true);
             });
         } else if (way === 'fb') {

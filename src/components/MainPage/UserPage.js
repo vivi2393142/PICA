@@ -7,8 +7,9 @@ import Loader from '../Loader';
 import ExploreItem from './exploreItem';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
-import Alert from '../Alert';
+import { Alert, defaultAlertSetting } from '../Alert';
 import { trackOutSideClick } from '../../utils/utils.js';
+import { canvasSizeOptions } from '../../utils/config.js';
 
 const TitleInput = (props) => {
     const [titleInput, setTitleInput] = React.useState(props.initialValue);
@@ -62,23 +63,8 @@ const UserPage = (props) => {
     const [isLikeLoader, setIsLikeLoader] = React.useState(true);
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
-        buttonNumber: 0,
-        buttonOneFunction: () => {},
-        buttonTwoFunction: () => {},
-        buttonOneTitle: '',
-        buttonTwoTitle: '',
-        title: '',
-        content: '',
+        ...defaultAlertSetting,
     });
-    const canvasSizeOptions = [
-        { name: 'Instagram 貼文', type: 'instagram', width: 1080, height: 1080 },
-        { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
-        { name: '明信片', type: 'postCard', width: 560, height: 288, mmW: 198, mmH: 102 },
-        { name: '網頁常用', type: 'web', width: 1280, height: 1024 },
-        { name: '橫式A4', type: 'a4', width: 842, height: 595, mmW: 297, mmH: 210 },
-        { name: '名片', type: 'nameCard', width: 1063, height: 638, mmW: 90, mmH: 54 },
-        { name: '自訂尺寸->未完成(進畫布可以改)', type: 'custom', width: 0, height: 0 },
-    ];
 
     React.useEffect(() => {
         if (props.currentUser.email === 'noUser') {

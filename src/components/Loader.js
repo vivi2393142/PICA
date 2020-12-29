@@ -2,9 +2,7 @@ import React from 'react';
 import styles from '../css/loader.module.scss';
 import PropTypes from 'prop-types';
 
-// export default App;
 const Loader = (props) => {
-    // render
     return (
         <div className={styles.loaderCover}>
             <div className={styles.loader}></div>

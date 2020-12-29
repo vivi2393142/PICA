@@ -58,7 +58,7 @@ const Explore = (props) => {
         props.setCurrentPage('explore');
         firebase.getAllFiles(props.currentUser.email, (dataArray) => {
             setDataArray(dataArray);
-            let oldState = { ...hasArrow };
+            const oldState = { ...hasArrow };
             allType.forEach((type) => {
                 oldState[type] = dataArray[type].length > currentWidth;
             });
@@ -70,7 +70,7 @@ const Explore = (props) => {
 
     const listenScroll = (e, type) => {
         const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
-        let oldState = { ...arrowState };
+        const oldState = { ...arrowState };
         if (e.target.scrollLeft !== 0 && scrollRight > 1) {
             oldState[type] = '';
             setArrowState(oldState);
@@ -92,7 +92,7 @@ const Explore = (props) => {
     const likeHandler = (e, item, type) => {
         // e.stopPropagation();
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
-        let oldData = { ...dataArray };
+        const oldData = { ...dataArray };
         const index = dataArray[type].findIndex((x) => x.fileId === item.fileId);
         if (item.isLike) {
             oldData[type][index].like -= 1;
@@ -173,9 +173,7 @@ const Explore = (props) => {
                     還在尋找靈感？
                     <br />
                     不如探索畫布，一起激盪點子！
-                    {/* <br /> */}
                 </div>
-                {/* <span>PICA為你準備了數十種範本讓你輕鬆開始一趟設計之旅</span> */}
                 <bannerIcons.Draw className={styles.mainPic} />
             </div>
             {isLoaded && <Loader></Loader>}

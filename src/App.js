@@ -29,21 +29,19 @@ export default function App() {
         <Router>
             <div className='App'>
                 <Route path='/main'>
-                    {/* {Object.keys(currentUser).length !== 0 ? ( */}
                     <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-                    {/* ) : (
-                        <Redirect to='/' />
-                    )} */}
                 </Route>
                 <Switch>
                     <Route
                         path='/file/:id'
                         render={(props) => <Canvas currentUser={currentUser} {...props} />}
                     />
-
                     <Route path='/' exact>
                         <LandingPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
                     </Route>
+                    {/* <Route path='/'>
+                        <Redirect to='/main/explore' />
+                    </Route> */}
                 </Switch>
             </div>
         </Router>

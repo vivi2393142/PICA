@@ -3,7 +3,7 @@ import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
 import * as firebase from '../../utils/firebase.js';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import AddNew from './addNew';
 import Login from '../Login';
 import Loader from '../Loader';
@@ -24,7 +24,6 @@ const MainBanner = (props) => {
             setIsLoaded(false);
         });
     };
-
     const toggleMember = (e) => {
         e.stopPropagation();
         setShowSignOut(true);
@@ -34,12 +33,14 @@ const MainBanner = (props) => {
         };
         document.addEventListener('click', closeMemberSelect);
     };
-
-    if (props.currentUser.email && props.currentUser.email !== 'noUser') {
-        firebase.getUserPhoto(props.currentUser.email, (photoURL) => {
-            setPhotoSrc(photoURL);
-        });
-    }
+    const getUserPhoto = () => {
+        if (props.currentUser.email && props.currentUser.email !== 'noUser') {
+            firebase.getUserPhoto(props.currentUser.email, (photoURL) => {
+                setPhotoSrc(photoURL);
+            });
+        }
+    };
+    getUserPhoto();
 
     // render
     return (
