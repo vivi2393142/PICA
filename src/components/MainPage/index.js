@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import MainBanner from './mainBanner';
-import UserPage from './userPage';
-import Explore from './explore';
-import Shots from './shots';
+import MainBanner from './MainBanner';
+import UserPage from './UserPage';
+import Explore from './Explore';
+import Shots from './Shots';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import { useHistory } from 'react-router-dom';
+import { mediaQuerySize } from '../../utils/config.js';
 
 // export default App;
 const MainPage = (props) => {
@@ -13,9 +13,8 @@ const MainPage = (props) => {
     const [isAddingNew, setIsAddingNew] = React.useState(false);
     const [isAtMobile, setIsAtMobile] = React.useState('normal');
     React.useEffect(() => {
-        const mediaQuerySize = { small: 450, medium: 900 };
         const setSizeState = () => {
-            window.innerWidth <= mediaQuerySize.medium && window.innerWidth > mediaQuerySize.small
+            window.innerWidth <= mediaQuerySize.big && window.innerWidth > mediaQuerySize.big
                 ? setIsAtMobile('small')
                 : window.innerWidth <= mediaQuerySize.small
                 ? setIsAtMobile('superSmall')

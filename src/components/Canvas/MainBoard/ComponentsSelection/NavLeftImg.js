@@ -11,7 +11,7 @@ const NavLeftImg = (props) => {
     // toggle adjustment nav
     const toggleImageAdjustmentNav = () => {
         props.setCurrentSidebar('imageAdjustment');
-        const targetDiv = document.querySelector('.sidebarUnfold');
+        const targetDiv = document.querySelector('.sidebar');
         trackOutSideClick(targetDiv, () => {
             props.setCurrentSidebar('');
             allSettings.canvas.fire('object:modified');

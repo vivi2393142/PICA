@@ -2,71 +2,30 @@ import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../utils/firebase.js';
-import { nanoid } from 'nanoid';
 import Loader from '../Loader';
-import ExploreItem from './exploreItem';
+import ExploreItem from './ExploreItem';
+import TitleInput from './TitleInput';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
 import { Alert, defaultAlertSetting } from '../Alert';
-import { trackOutSideClick } from '../../utils/utils.js';
-import { canvasSizeOptions } from '../../utils/config.js';
-
-const TitleInput = (props) => {
-    const [titleInput, setTitleInput] = React.useState(props.initialValue);
-    const [isShowInput, setIsShowInput] = React.useState(false);
-    const handleEdit = (e) => {
-        setIsShowInput(true);
-        e.currentTarget.firstChild.focus();
-        const currentNode = e.currentTarget;
-        trackOutSideClick(currentNode, () => {
-            setIsShowInput(false);
-            firebase.changeTitle(props.fileId, currentNode.firstElementChild.value);
-        });
-    };
-    return (
-        <div className={styles.titleWrapper} onClick={(e) => handleEdit(e)}>
-            <input
-                value={titleInput}
-                onChange={(e) => {
-                    setTitleInput(e.target.value);
-                }}
-                style={{
-                    opacity: isShowInput ? 1 : 0,
-                    zIndex: isShowInput ? 1 : -1,
-                }}
-            ></input>
-            <div
-                className={styles.fileTitle}
-                style={{
-                    opacity: isShowInput ? 0 : 1,
-                }}
-            >
-                {titleInput}
-            </div>
-        </div>
-    );
-};
-
-TitleInput.propTypes = {
-    initialValue: PropTypes.string.isRequired,
-    fileId: PropTypes.string.isRequired,
-};
 
 const UserPage = (props) => {
+    const history = useHistory();
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [isSmallLoaded, setIsSmallLoaded] = React.useState(false);
     const [isAtMyCanvas, setIsAtMyCanvas] = React.useState(true);
+    const [isLikeLoader, setIsLikeLoader] = React.useState(true);
+    const [showAlert, setShowAlert] = React.useState(false);
     const [likeList, setLikeList] = React.useState([]);
     const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
     const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
     const [userPhoto, setUserPhoto] = React.useState('');
-    const [isLikeLoader, setIsLikeLoader] = React.useState(true);
-    const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         ...defaultAlertSetting,
     });
 
     React.useEffect(() => {
+        // not login alert
         if (props.currentUser.email === 'noUser') {
             setAlertSetting({
                 buttonNumber: 1,
@@ -82,25 +41,37 @@ const UserPage = (props) => {
             setIsLoaded(false);
             setShowAlert(true);
         }
+        // set current page tag
+        props.currentUser.email === props.match.params.userId
+            ? props.setCurrentPage('user')
+            : props.setCurrentPage('explore');
+        // get user data
+        firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
+            if (dataFromFirebase) {
+                setUserDataFromFirebase(dataFromFirebase);
+                setUserPhoto(dataFromFirebase.photo);
+                setIsLoaded(false);
+            }
+        });
+        // get like list
+        if (props.currentUser) {
+            firebase.getLikeList(props.match.params.userId, (result) => {
+                setLikeList(result);
+                setIsLikeLoader(false);
+            });
+        }
     }, [props.currentUser]);
 
-    const history = useHistory();
-    const handleCreateNew = (e) => {
-        const selection = canvasSizeOptions.find((item) => item.name === e.currentTarget.id);
-        const id = nanoid();
-        const canvasSetting = {
-            id: id,
-            userEmail: props.match.params.userId,
-            title: '',
-            width: selection.width,
-            height: selection.height,
-            type: selection.type,
-        };
-        firebase.createNewCanvas(canvasSetting, props.match.params.userId);
-    };
+    React.useEffect(() => {
+        firebase.getOwnFilesData(userDataFromFirebase, (canvasDataWithImg) => {
+            setCanvasDataWithDataURL(canvasDataWithImg);
+        });
+    }, [userDataFromFirebase.canvas]);
+
     const handleUploadImage = (e) => {
         setIsSmallLoaded(true);
-        if (e.target.files[0].size > 2097152) {
+        const fileSizeLimit = 2097152;
+        if (e.target.files[0].size > fileSizeLimit) {
             setAlertSetting({
                 buttonNumber: 1,
                 buttonOneFunction: () => {
@@ -123,14 +94,15 @@ const UserPage = (props) => {
     };
     const deleteHandler = (e, fileId) => {
         e.stopPropagation();
+        const alertCallback = () => {
+            setShowAlert(false);
+            firebase.deleteCanvas(props.currentUser.email, fileId);
+            const newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
+            setCanvasDataWithDataURL(newFilesData);
+        };
         setAlertSetting({
             buttonNumber: 2,
-            buttonOneFunction: () => {
-                setShowAlert(false);
-                firebase.deleteCanvas(props.currentUser.email, fileId);
-                const newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
-                setCanvasDataWithDataURL(newFilesData);
-            },
+            buttonOneFunction: alertCallback,
             buttonTwoFunction: () => {
                 setShowAlert(false);
                 return;
@@ -142,49 +114,6 @@ const UserPage = (props) => {
         });
         setShowAlert(true);
     };
-
-    React.useEffect(() => {
-        // set current page tag
-        props.currentUser.email === props.match.params.userId
-            ? props.setCurrentPage('user')
-            : props.setCurrentPage('explore');
-        // get user data
-        firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
-            if (dataFromFirebase) {
-                setUserDataFromFirebase(dataFromFirebase);
-                setUserPhoto(dataFromFirebase.photo);
-                setIsLoaded(false);
-            }
-        });
-        // get like list
-        if (props.currentUser) {
-            firebase.getLikeList(props.match.params.userId, (result) => {
-                setLikeList(result);
-                setIsLikeLoader(false);
-            });
-        }
-    }, [props.currentUser]);
-    React.useEffect(() => {
-        firebase.getAllCanvasData((result) => {
-            if (userDataFromFirebase.canvas[0] !== '') {
-                const canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
-                    const fileData = result.find((data) => data.basicSetting.id === item);
-                    return {
-                        comments: fileData.comments,
-                        like: fileData.like,
-                        fileId: item,
-                        snapshot: fileData.snapshot,
-                        title:
-                            fileData.basicSetting.title === ''
-                                ? '未命名畫布'
-                                : fileData.basicSetting.title,
-                    };
-                });
-                setCanvasDataWithDataURL(canvasDataWithImg);
-            }
-        });
-    }, [userDataFromFirebase.canvas]);
-
     const likeHandler = (e, item, type) => {
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
         const newData = likeList.filter((file) => file.fileId !== item.fileId);
@@ -215,7 +144,6 @@ const UserPage = (props) => {
                 );
             })
         );
-
     const canvasFilesJsx =
         canvasDataWithDataURL.length !== 0 &&
         canvasDataWithDataURL.map((item, index) => {
@@ -265,36 +193,6 @@ const UserPage = (props) => {
                 </div>
             );
         });
-    const sizeSelectionJsx = canvasSizeOptions.map((item, index) => {
-        if (item.name !== '自訂尺寸') {
-            return (
-                <div
-                    key={index}
-                    id={item.name}
-                    className={styles.sizeOption}
-                    onClick={(e) => handleCreateNew(e)}
-                >
-                    {item.name}
-                    <div className={styles.sizeDetails}>
-                        {item.mmW
-                            ? `${item.mmW}×${item.mmH} mm`
-                            : `${item.width}×${item.height} px`}
-                    </div>
-                </div>
-            );
-        } else {
-            return (
-                <div
-                    key={index}
-                    id={item.name}
-                    className={styles.sizeOption}
-                    // onClick={handleCreateNew}
-                >
-                    {item.name}
-                </div>
-            );
-        }
-    });
 
     // render
     return (

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import DrawingArea from './DrawingArea';
 import Sidebar from './Sidebar';
 import ComponentsSelection from './ComponentsSelection/index';
+import * as utils from '../../../utils/utils';
 
 const MainBoard = (props) => {
     const allSettings = props.allSettings;
@@ -18,7 +19,7 @@ const MainBoard = (props) => {
         allSettings.setRatioSelectValue(e.target.value);
         const container = document.querySelector('.canvas-container');
         if (e.target.value === 'auto') {
-            allSettings.handleResponsiveSize(container, allSettings.canvasSetting);
+            utils.handleResponsiveSize(container, allSettings.canvasSetting);
         } else {
             container.style.width = `${
                 (parseInt(e.target.value) / 100) * allSettings.canvasSetting.width

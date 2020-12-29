@@ -3,11 +3,50 @@ import PropTypes from 'prop-types';
 import styles from '../../css/canvas.scss';
 import MainBoard from './MainBoard';
 import Banner from './Banner';
-import initAligningGuidelines from '../../aligning_guidelines.js';
 import * as backImg from '../../img/background';
 import * as firebase from '../../utils/firebase.js';
+import * as utils from '../../utils/utils';
+import * as config from '../../utils/config';
 import Loader from '../Loader';
 import { useHistory } from 'react-router-dom';
+
+const setMovingItemType = (movingItem) => {
+    const sidebarNode = movingItem.parentNode;
+    const sidebarNodeForImg = sidebarNode.parentNode.parentNode;
+    const movingItemType =
+        sidebarNodeForImg.classList.contains('sidebarUnfoldImg') ||
+        sidebarNode.classList.contains('unfoldItemImgWrapper')
+            ? 'img'
+            : sidebarNode.classList.contains('sidebarUnfoldText')
+            ? 'text'
+            : sidebarNode.classList.contains('sidebarUnfoldShape')
+            ? 'shape'
+            : sidebarNode.classList.contains('sidebarUnfoldLine')
+            ? 'line'
+            : sidebarNodeForImg.classList.contains('sidebarUnfoldSticker')
+            ? 'sticker'
+            : '';
+    const shapeItemType = movingItem.classList.contains('rectShape')
+        ? 'rect'
+        : movingItem.classList.contains('radiusRectShape')
+        ? 'radiusRect'
+        : movingItem.classList.contains('circleShape')
+        ? 'circle'
+        : movingItem.classList.contains('triangleShape')
+        ? 'triangle'
+        : '';
+    return { movingItemType, shapeItemType };
+};
+const showSaveStatus = () => {
+    if (document.querySelector('.status')) {
+        document.querySelector('.status').classList.add('showStatus');
+        setTimeout(() => {
+            if (document.querySelector('.status') !== null) {
+                document.querySelector('.status').classList.remove('showStatus');
+            }
+        }, 3000);
+    }
+};
 
 // export default App;
 const Canvas = (props) => {
@@ -21,89 +60,10 @@ const Canvas = (props) => {
     const [saveDragItem, setSaveDragItem] = React.useState({});
     const [uploadedFiles, setUploadedFiles] = React.useState([]);
     const [isFocusInput, setIsFocusInput] = React.useState(false);
-    const textSetting = [
-        { title: '雙擊以編輯標題', size: 36, fontWeight: 'bold' },
-        { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
-        { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
-    ];
+
     // handleSaveFile
     const handleSaveFile = (canvas, canvasSetting) => {
         firebase.saveCanvasData(canvas, canvasSetting, props.match.params.id);
-    };
-    // show save status
-    const showSaveStatus = () => {
-        if (document.querySelector('.status')) {
-            document.querySelector('.status').classList.add('showStatus');
-            setTimeout(() => {
-                if (document.querySelector('.status') !== null) {
-                    document.querySelector('.status').classList.remove('showStatus');
-                }
-            }, 3000);
-        }
-    };
-
-    // handle responsive size
-    const handleResponsiveSize = (container, canvasSetting) => {
-        if (container) {
-            const fixRatio = Math.min(
-                (window.innerWidth * 0.72) / canvasSetting.width,
-                (window.innerHeight * 0.72) / canvasSetting.height
-            );
-            container.style.width = `${fixRatio * canvasSetting.width}px`;
-            container.style.height = `${fixRatio * canvasSetting.height}px`;
-        }
-    };
-
-    // preset backgroundImg function
-    const presetBackgroundImg = (
-        backImg,
-        canvas,
-        canvasSetting,
-        scaleWay,
-        scaleToWidth,
-        scaleToHeight
-    ) => {
-        backImg.setControlsVisibility({
-            mb: false,
-            mt: false,
-            ml: false,
-            mr: false,
-            mtr: false,
-        });
-        backImg.set({
-            scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
-            scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
-            left: 0,
-        });
-        if (scaleWay === 'toWidth') {
-            backImg.lockMovementX = true;
-        } else {
-            backImg.lockMovementY = true;
-        }
-        backImg.toObject = (function (toObject) {
-            return function (propertiesToInclude) {
-                return fabric.util.object.extend(toObject.call(this, propertiesToInclude), {
-                    specialType: 'background', //my custom property
-                });
-            };
-        })(backImg.toObject);
-        canvas.add(backImg);
-        backImg.sendToBack();
-        // bounding can't be inside canvas
-        backImg.on('modified', () => {
-            const currentSizeRatio =
-                parseInt(document.querySelector('.canvas-container').style.width) /
-                canvasSetting.width;
-            backImg.setCoords();
-            const { top, left, width, height } = backImg.getBoundingRect();
-            if (left > 0) {
-                backImg.left = 0;
-            }
-            if (left + width < canvas.getWidth()) {
-                backImg.left = canvas.getWidth() - width;
-            }
-            canvas.requestRenderAll();
-        });
     };
 
     React.useEffect(() => {
@@ -169,7 +129,7 @@ const Canvas = (props) => {
                         const scaleToWidth = canvasSettingInit.width / backgroundObject.width;
                         const scaleToHeight = canvasSettingInit.height / backgroundObject.height;
                         const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
-                        presetBackgroundImg(
+                        utils.presetBackgroundImg(
                             backgroundObject,
                             canvasInit,
                             canvasSettingInit,
@@ -218,7 +178,6 @@ const Canvas = (props) => {
                         console.log('編輯完畢');
                         handleSaveFile(canvasInit, canvasSettingInit);
                     });
-                    // TODO:處理複製剪下貼上會更新兩次的問題
                     canvasInit.on('object:added', (e) => {
                         if (e.target) {
                             if (
@@ -262,15 +221,7 @@ const Canvas = (props) => {
                 if (!snapshotInit) {
                     firebase.firstSavaDataURL(canvasInit, props.match.params.id);
                 }
-                // preset fabric custom styles
-                // -- init align guide lines extensions
-                initAligningGuidelines(canvasInit);
-                // -- customize selection style
-                canvasInit.selectionColor = 'rgba(0,0,0,0.03)';
-                canvasInit.selectionBorderColor = 'rgba(0,0,0,0.25)';
-                canvasInit.selectionLineWidth = 1;
-                // -- set layers in canvas
-                canvasInit.preserveObjectStacking = true;
+                utils.presetFabricStyles(canvasInit);
                 // set canvas
                 setCanvas(canvasInit);
                 // responsive canvas size
@@ -315,190 +266,67 @@ const Canvas = (props) => {
                 };
                 setSaveDragItem({ func: saveDragItemFunc });
                 // --- listener to drop then add the dragging one
-                const dropItem = (e, canvas) => {
-                    console.log(Object.keys(movingItem).length);
+                const dropItem = (e) => {
                     if (Object.keys(movingItem).length !== 0) {
-                        const currentSizeRatio =
-                            parseInt(document.querySelector('.canvas-container').style.width) /
-                            canvasSettingInit.width;
+                        // set position
                         const { offsetX, offsetY } = e.e;
-                        const src = movingItem.src;
-                        const scaleRatio = Math.max(
-                            canvasSettingInit.width / 4 / movingItem.naturalWidth,
-                            canvasSettingInit.height / 4 / movingItem.naturalHeight
+                        const viewWidth = parseInt(
+                            document.querySelector('.canvas-container').style.width
                         );
-                        if (
-                            movingItem.parentNode.parentNode.parentNode.classList.contains(
-                                'sidebarUnfoldImg'
-                            ) ||
-                            movingItem.parentNode.classList.contains('unfoldItemImgWrapper')
-                        ) {
-                            const layoutZoomRation =
-                                parseInt(movingItem.parentNode.style.width) / 100;
-                            fabric.Image.fromURL(
-                                src,
-                                (img) => {
-                                    const imgItem = img.set({
-                                        scaleX: scaleRatio,
-                                        scaleY: scaleRatio,
-                                        top:
-                                            (offsetY - itemDragOffset.offsetY * layoutZoomRation) /
-                                            currentSizeRatio,
-                                        left:
-                                            (offsetX - itemDragOffset.offsetX * layoutZoomRation) /
-                                            currentSizeRatio,
-                                    });
-                                    canvasInit.add(imgItem);
-                                    imgItem.setControlsVisibility({
-                                        mb: false,
-                                        mt: false,
-                                        ml: false,
-                                        mr: false,
-                                    });
-                                },
-                                {
-                                    crossOrigin: 'anonymous',
-                                }
-                            );
-                            canvasInit.requestRenderAll();
-                        } else if (movingItem.parentNode.classList.contains('sidebarUnfoldText')) {
-                            let currentTextSetting = {};
-                            movingItem.classList.contains('addTextBig')
-                                ? (currentTextSetting = textSetting[0])
-                                : movingItem.classList.contains('addTextMiddle')
-                                ? (currentTextSetting = textSetting[1])
-                                : movingItem.classList.contains('addTextSmall')
-                                ? (currentTextSetting = textSetting[2])
-                                : null;
-                            const textRatio = canvasSettingInit.width / 600;
-                            const textItem = new fabric.IText(currentTextSetting.title, {
-                                top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                fill: '#555555',
-                                fontSize: currentTextSetting.size * textRatio,
-                                fontWeight: currentTextSetting.fontWeight,
-                            });
-                            canvasInit.add(textItem);
-                            canvasInit.requestRenderAll();
-                        } else if (movingItem.parentNode.classList.contains('sidebarUnfoldShape')) {
-                            const shapeRatio = canvasSettingInit.width / 600;
-                            if (movingItem.classList.contains('rectShape')) {
-                                const rectItem = new fabric.Rect({
-                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                    height: 100 * shapeRatio,
-                                    width: 100 * shapeRatio,
-                                    fill: '#e89a4f',
-                                });
-                                canvasInit.add(rectItem);
-                                canvasInit.requestRenderAll();
-                            } else if (movingItem.classList.contains('radiusRectShape')) {
-                                const rectItem = new fabric.Rect({
-                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                    height: 100 * shapeRatio,
-                                    width: 100 * shapeRatio,
-                                    rx: 15,
-                                    ry: 15,
-                                    fill: '#e89a4f',
-                                });
-                                canvasInit.add(rectItem);
-                                canvasInit.requestRenderAll();
-                            } else if (movingItem.classList.contains('circleShape')) {
-                                const circleItem = new fabric.Circle({
-                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                    radius: 50 * shapeRatio,
-                                    fill: '#e89a4f',
-                                });
-                                canvasInit.add(circleItem);
-                                canvasInit.requestRenderAll();
-                            } else if (movingItem.classList.contains('triangleShape')) {
-                                const triangleItem = new fabric.Triangle({
-                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                    width: 100 * shapeRatio,
-                                    height: 100 * shapeRatio,
-                                    fill: '#e89a4f',
-                                });
-                                canvasInit.add(triangleItem);
-                                canvasInit.requestRenderAll();
-                            } else if (movingItem.classList.contains('abnormalShape')) {
-                                fabric.loadSVGFromURL(src, (objects, options) => {
-                                    const abnormalShapeItem = fabric.util.groupSVGElements(
-                                        objects,
-                                        options
-                                    );
-                                    abnormalShapeItem.set({
-                                        top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                        left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                        scaleX: 2.2 * shapeRatio,
-                                        scaleY: 2.2 * shapeRatio,
-                                        // specialType: 'shape',
-                                    });
-                                    canvasInit.add(abnormalShapeItem);
-                                    canvasInit.requestRenderAll();
-                                });
-                            }
-                        } else if (movingItem.parentNode.classList.contains('sidebarUnfoldLine')) {
-                            const lineRatio = canvasSettingInit.width / 600;
-                            fabric.loadSVGFromURL(src, (objects, options) => {
-                                const svgItem = fabric.util.groupSVGElements(objects, options);
-                                svgItem.set({
-                                    top: (offsetY - itemDragOffset.offsetY) / currentSizeRatio,
-                                    left: (offsetX - itemDragOffset.offsetX) / currentSizeRatio,
-                                    scaleX: 2.2 * lineRatio,
-                                    scaleY: 2.2 * lineRatio,
-                                    // specialType: 'shape',
-                                });
-                                canvasInit.add(svgItem);
-                                canvasInit.requestRenderAll();
-                            });
-                        } else if (
-                            movingItem.parentNode.parentNode.parentNode.classList.contains(
-                                'sidebarUnfoldSticker'
-                            )
-                        ) {
-                            const layoutZoomRation =
-                                parseInt(movingItem.parentNode.style.width) / 100;
-                            fabric.Image.fromURL(
-                                src,
-                                (img) => {
-                                    const stickerItem = img.set({
-                                        scaleX: scaleRatio,
-                                        scaleY: scaleRatio,
-                                        top:
-                                            (offsetY - itemDragOffset.offsetY * layoutZoomRation) /
-                                            currentSizeRatio,
-                                        left:
-                                            (offsetX - itemDragOffset.offsetX * layoutZoomRation) /
-                                            currentSizeRatio,
-                                        specialType: 'sticker',
-                                    });
-                                    stickerItem.toObject = (function (toObject) {
-                                        return function (propertiesToInclude) {
-                                            return fabric.util.object.extend(
-                                                toObject.call(this, propertiesToInclude),
-                                                {
-                                                    specialType: 'sticker', //my custom property
-                                                }
-                                            );
-                                        };
-                                    })(stickerItem.toObject);
-                                    canvasInit.add(stickerItem);
-                                    stickerItem.setControlsVisibility({
-                                        mb: false,
-                                        mt: false,
-                                        ml: false,
-                                        mr: false,
-                                    });
-                                },
-                                {
-                                    crossOrigin: 'anonymous',
-                                }
-                            );
-                            canvasInit.requestRenderAll();
-                        }
+                        const settingWidth = canvasSettingInit.width;
+                        const currentSizeRatio = viewWidth / settingWidth;
+                        const targetOriginWidth = parseInt(movingItem.parentNode.style.width);
+                        const layoutZoomRatio = Number.isNaN(targetOriginWidth)
+                            ? 1
+                            : targetOriginWidth / 100;
+                        const position = {
+                            top:
+                                (offsetY - itemDragOffset.offsetY * layoutZoomRatio) /
+                                currentSizeRatio,
+                            left:
+                                (offsetX - itemDragOffset.offsetX * layoutZoomRatio) /
+                                currentSizeRatio,
+                        };
+                        const getMovingItemType = setMovingItemType(movingItem);
+                        const movingItemType = getMovingItemType.movingItemType;
+                        const shapeItemType = getMovingItemType.shapeItemType;
+                        // add item
+                        movingItemType === 'img'
+                            ? utils.addImage(movingItem, position, canvasInit, canvasSettingInit)
+                            : movingItemType === 'text'
+                            ? utils.addIText(
+                                  position,
+                                  canvasInit,
+                                  canvasSettingInit,
+                                  config.textSetting.findIndex(
+                                      (item) => item.content === movingItem.textContent
+                                  )
+                              )
+                            : movingItemType === 'shape'
+                            ? shapeItemType === 'rect'
+                                ? utils.addRect(position, canvasInit, canvasSettingInit)
+                                : shapeItemType === 'radiusRect'
+                                ? utils.addRadiusRect(position, canvasInit, canvasSettingInit)
+                                : shapeItemType === 'circle'
+                                ? utils.addCircle(position, canvasInit, canvasSettingInit)
+                                : shapeItemType === 'triangle'
+                                ? utils.addTriangle(position, canvasInit, canvasSettingInit)
+                                : utils.addShape(
+                                      movingItem.src,
+                                      position,
+                                      canvasInit,
+                                      canvasSettingInit
+                                  )
+                            : movingItemType === 'line'
+                            ? utils.addShape(
+                                  movingItem.src,
+                                  position,
+                                  canvasInit,
+                                  canvasSettingInit
+                              )
+                            : movingItemType === 'sticker'
+                            ? utils.addSticker(movingItem, position, canvasInit, canvasSettingInit)
+                            : null;
                         movingItem = {};
                     }
                 };
@@ -506,7 +334,6 @@ const Canvas = (props) => {
                     parseInt(document.querySelector('.canvas-container').style.width) /
                     canvasSettingInit.width;
                 canvasInit.setZoom(currentSizeRatio);
-                // console.log(canvasInit.getZoom());
                 canvasInit.setWidth(canvasSettingInit.width * canvasInit.getZoom());
                 canvasInit.setHeight(canvasSettingInit.height * canvasInit.getZoom());
                 document.querySelectorAll('.drawingArea').forEach((item) => {
@@ -536,12 +363,8 @@ const Canvas = (props) => {
         activeObj,
         setActiveObj,
         saveDragItem,
-        handleResponsiveSize,
-        textSetting,
         uploadedFiles,
-        // hasBackColor,
-        // setHasBackColor,
-        presetBackgroundImg,
+        // presetBackgroundImg,
     };
 
     const Background = () => {
@@ -565,7 +388,6 @@ const Canvas = (props) => {
     return (
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
-            {/* <div className='sidebarCover'>cover</div> */}
             <Background />
             <Banner
                 allSettings={allSettings}

@@ -17,13 +17,15 @@ const firebaseConfig = {
     measurementId: 'G-R544SCV03H',
 };
 firebase.initializeApp(firebaseConfig);
-export const db = firebase.firestore();
+const db = firebase.firestore();
+const userDb = db.collection('userData');
+const filesDb = db.collection('canvasFiles');
 
 // canvas
-// -- listen
+// -- listen canvas update
 let initState = true;
 export const listenCanvas = (fileId, callback, setUploadedFiles) => {
-    const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
+    const ref = filesDb.doc(fileId);
     let oldData = [];
     ref.onSnapshot((doc) => {
         if (doc.data()) {
@@ -40,7 +42,6 @@ export const listenCanvas = (fileId, callback, setUploadedFiles) => {
         }
     });
 };
-
 // -- save data URL
 export const savaDataURL = (canvas, fileId, successCallback) => {
     let exportCanvas;
@@ -61,15 +62,14 @@ export const firstSavaDataURL = (canvas, fileId) => {
         exportCanvas = canvas;
     }
     const dataURL = exportCanvas.toDataURL('image/png', 1);
-    const ref = db.collection('canvasFiles').doc(fileId);
+    const ref = filesDb.doc(fileId);
     ref.update({
         snapshot: dataURL,
     });
 };
-
 // -- firestore
 export const loadUserData = (userId, callback) => {
-    const ref = firebase.firestore().collection('userData').doc(userId);
+    const ref = userDb.doc(userId);
     ref.get().then((doc) => {
         const dataFromFirebase = doc.data();
         callback(dataFromFirebase);
@@ -77,7 +77,7 @@ export const loadUserData = (userId, callback) => {
 };
 export const createNewCanvas = (canvasSetting, userId) => {
     // add data to canvasFiles
-    const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+    const ref = filesDb.doc(canvasSetting.id);
     ref.set({
         data: JSON.stringify({
             version: '4.2.0',
@@ -91,15 +91,15 @@ export const createNewCanvas = (canvasSetting, userId) => {
         isSample: false,
     }).then(() => {
         // add data to userData
-        const userRef = db.collection('userData').doc(userId);
+        const userRef = userDb.doc(userId);
         userRef.update({ canvas: firebase.firestore.FieldValue.arrayUnion(canvasSetting.id) });
         document.location.href = `/file/${canvasSetting.id}`;
     });
 };
 export const createSampleCanvas = (canvasSetting, sampleFileId) => {
     // add data to canvasFiles
-    const refSample = db.collection('canvasFiles').doc(sampleFileId);
-    const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+    const refSample = filesDb.doc(sampleFileId);
+    const ref = filesDb.doc(canvasSetting.id);
     refSample.get().then((doc) => {
         const sampleData = doc.data();
         const newCanvasSetting = {
@@ -124,7 +124,7 @@ export const createSampleCanvas = (canvasSetting, sampleFileId) => {
     });
 };
 export const loadCanvas = (canvas, callback, fileId) => {
-    const ref = firebase.firestore().collection('canvasFiles').doc(fileId);
+    const ref = filesDb.doc(fileId);
     ref.get().then((doc) => {
         const dataFromFirebase = doc.data();
         const canvasSettingInit = dataFromFirebase.basicSetting;
@@ -138,7 +138,7 @@ export const saveCanvasData = (canvas, canvasSetting, fileId) => {
     savaDataURL(canvas, fileId, (dataURL) => {
         // update file data
         const canvasData = JSON.stringify(canvas.toJSON());
-        const ref = db.collection('canvasFiles').doc(canvasSetting.id);
+        const ref = filesDb.doc(canvasSetting.id);
         ref.update({
             data: canvasData,
             basicSetting: canvasSetting,
@@ -146,33 +146,17 @@ export const saveCanvasData = (canvas, canvasSetting, fileId) => {
         }).then(() => {});
     });
 };
-export const getCanvasData = (id, callback) => {
-    const ref = db.collection('canvasFiles').doc(id);
-    ref.get().then((doc) => {
-        return doc.data();
-    });
-};
-export const getAllCanvasData = (callback) => {
-    const ref = db.collection('canvasFiles');
-    const result = [];
-    ref.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            result.push(doc.data());
-        });
-        callback(result);
-    });
-};
 export const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     let result = {};
-    const ref = db.collection('canvasFiles').doc(fileId);
+    const ref = filesDb.doc(fileId);
     ref.get().then((doc) => {
         result = { ...doc.data().basicSetting, width: newWidth, height: newHeight, type: newType };
         saveCanvasData(canvas, result, fileId);
     });
 };
 export const deleteCanvas = (userId, fileId) => {
-    const refUser = db.collection('userData').doc(userId);
-    const refFiles = db.collection('canvasFiles').doc(fileId);
+    const refUser = userDb.doc(userId);
+    const refFiles = filesDb.doc(fileId);
     refFiles.delete().then(() => {});
     refUser.update({
         canvas: firebase.firestore.FieldValue.arrayRemove(fileId),
@@ -190,9 +174,7 @@ export const getAllFiles = (currentUserId, callback) => {
     const a4 = [];
     const nameCard = [];
     const custom = [];
-    const refUser = db.collection('userData');
-    const refFiles = db.collection('canvasFiles');
-    refUser
+    userDb
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -200,7 +182,7 @@ export const getAllFiles = (currentUserId, callback) => {
             });
         })
         .then(() => {
-            refFiles
+            filesDb
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
@@ -247,10 +229,9 @@ export const getAllFiles = (currentUserId, callback) => {
         });
 };
 export const getShot = (fileId, currentUserEmail, callback) => {
-    const refUser = db.collection('userData');
-    const refFile = db.collection('canvasFiles').doc(fileId);
+    const refFile = filesDb.doc(fileId);
     const allUsers = [];
-    refUser
+    userDb
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -287,7 +268,7 @@ export const getShot = (fileId, currentUserEmail, callback) => {
         });
 };
 export const postComment = (textInput, currentUserId, fileId) => {
-    const refFiles = db.collection('canvasFiles').doc(fileId);
+    const refFiles = filesDb.doc(fileId);
     refFiles.get().then((doc) => {
         const newComment = {
             content: textInput,
@@ -302,7 +283,7 @@ export const postComment = (textInput, currentUserId, fileId) => {
 let setTime = 0;
 let initCommentState = true;
 export const listenToComment = (fileId, callback) => {
-    const refFiles = db.collection('canvasFiles').doc(fileId);
+    const refFiles = filesDb.doc(fileId);
     let oldData = [];
     // 不重複設置監聽
     if (setTime < 1) {
@@ -319,7 +300,7 @@ export const listenToComment = (fileId, callback) => {
     }
 };
 export const deleteComment = (index, fileId) => {
-    const ref = db.collection('canvasFiles').doc(fileId);
+    const ref = filesDb.doc(fileId);
     ref.get().then((doc) => {
         const newData = doc.data();
         newData.comments.splice(index, 1);
@@ -327,8 +308,8 @@ export const deleteComment = (index, fileId) => {
     });
 };
 export const postLike = (currentUserId, fileId, oldIsLike) => {
-    const refFile = db.collection('canvasFiles').doc(fileId);
-    const refUser = db.collection('userData').doc(currentUserId);
+    const refFile = filesDb.doc(fileId);
+    const refUser = userDb.doc(currentUserId);
     if (oldIsLike) {
         refFile.update({
             like: firebase.firestore.FieldValue.arrayRemove(currentUserId),
@@ -346,12 +327,10 @@ export const postLike = (currentUserId, fileId, oldIsLike) => {
     }
 };
 export const getLikeList = (userId, callback, isNoLikeCallback) => {
-    let allUsers;
-    let result;
-    let currentUserLike;
-    const refUser = db.collection('userData');
-    const refFiles = db.collection('canvasFiles');
-    refUser
+    const allUsers = [];
+    const result = [];
+    let currentUserLike = [];
+    userDb
         .get()
         .then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
@@ -362,7 +341,7 @@ export const getLikeList = (userId, callback, isNoLikeCallback) => {
             });
         })
         .then(() => {
-            refFiles
+            filesDb
                 .get()
                 .then((querySnapshot) => {
                     querySnapshot.forEach((doc) => {
@@ -392,8 +371,7 @@ export const getLikeList = (userId, callback, isNoLikeCallback) => {
 };
 export const getSampleList = (type, callback) => {
     const result = [];
-    const refFiles = db.collection('canvasFiles');
-    refFiles
+    filesDb
         .where('isSample', '==', true)
         .get()
         .then((querySnapshot) => {
@@ -406,13 +384,42 @@ export const getSampleList = (type, callback) => {
         });
 };
 export const getSingleSample = (fileId, callback) => {
-    const refFile = db.collection('canvasFiles').doc(fileId);
+    const refFile = filesDb.doc(fileId);
     refFile.get().then((doc) => {
         callback(doc.data().data);
     });
 };
+const getAllCanvasData = (callback) => {
+    const result = [];
+    filesDb.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            result.push(doc.data());
+        });
+        callback(result);
+    });
+};
+export const getOwnFilesData = (userDataFromFirebase, callback) => {
+    getAllCanvasData((result) => {
+        if (userDataFromFirebase.canvas[0] !== '') {
+            const canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
+                const fileData = result.find((data) => data.basicSetting.id === item);
+                return {
+                    comments: fileData.comments,
+                    like: fileData.like,
+                    fileId: item,
+                    snapshot: fileData.snapshot,
+                    title:
+                        fileData.basicSetting.title === ''
+                            ? '未命名畫布'
+                            : fileData.basicSetting.title,
+                };
+            });
+            callback(canvasDataWithImg);
+        }
+    });
+};
 export const changeTitle = (fileId, newTitle) => {
-    const refFile = db.collection('canvasFiles').doc(fileId);
+    const refFile = filesDb.doc(fileId);
     refFile.get().then((doc) => {
         const allSetting = doc.data().basicSetting;
         allSetting.title = newTitle;
@@ -422,8 +429,7 @@ export const changeTitle = (fileId, newTitle) => {
     });
 };
 export const getUserPhoto = (userId, callback) => {
-    const refUser = db.collection('userData').doc(userId);
-
+    const refUser = userDb.doc(userId);
     refUser.get().then((doc) => {
         if (doc.data()) {
             callback(doc.data().photo);
@@ -436,23 +442,13 @@ export const getUserPhoto = (userId, callback) => {
 };
 
 // auth
-export const checkCurrentUser = (successCallback, failCallback) => {
-    // successCallback;
-    const user = firebase.auth().currentUser;
-    if (user) {
-        // successCallback();
-        return user;
-    } else {
-        // failCallback();
-    }
-};
 export const fbSignUp = () => {
     const provider = new firebase.auth.FacebookAuthProvider();
     firebase
         .auth()
         .signInWithPopup(provider)
         .then(function (result) {
-            const ref = db.collection('userData').doc(result.user.email);
+            const ref = userDb.doc(result.user.email);
             if (result.additionalUserInfo.isNewUser) {
                 ref.set({
                     photo:
@@ -472,7 +468,7 @@ export const googleSignUp = () => {
         .auth()
         .signInWithPopup(provider)
         .then(function (result) {
-            const ref = db.collection('userData').doc(result.user.email);
+            const ref = userDb.doc(result.user.email);
             if (result.additionalUserInfo.isNewUser) {
                 ref.set({
                     photo:
@@ -493,7 +489,7 @@ export const nativeSignUp = (name, email, pwd, failCallback) => {
         .createUserWithEmailAndPassword(email, pwd)
         .then((user) => {
             // add data to userData
-            const ref = db.collection('userData').doc(email);
+            const ref = userDb.doc(email);
             ref.set({
                 photo:
                     'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
@@ -563,7 +559,7 @@ export const uploadToStorage = (filesList, fileId, callback, successCallback, fa
             successCallback();
             // get upload URL and set into firestore data
             storageRef.getDownloadURL().then((url) => {
-                const ref = db.collection('canvasFiles').doc(fileId);
+                const ref = filesDb.doc(fileId);
                 ref.update({
                     uploaded: firebase.firestore.FieldValue.arrayUnion({
                         src: url,
@@ -589,7 +585,7 @@ export const uploadUserPhoto = (e, email, successCallback) => {
         function error(err) {},
         function complete() {
             storageRef.getDownloadURL().then((url) => {
-                const ref = db.collection('userData').doc(email);
+                const ref = userDb.doc(email);
                 successCallback(url);
                 ref.update({
                     photo: url,
@@ -604,7 +600,7 @@ export const removeUploadImg = (e, fileId) => {
         .delete()
         .then(() => {
             // get upload URL and set into firestore data
-            const ref = db.collection('canvasFiles').doc(fileId);
+            const ref = filesDb.doc(fileId);
             ref.get().then((doc) => {
                 const newUploaded = doc.data().uploaded.filter((item) => item.path !== e.target.id);
                 ref.update({

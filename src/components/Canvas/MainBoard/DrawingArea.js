@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
+import * as utils from '../../../utils/utils';
 
 const DrawingArea = (props) => {
     const allSettings = props.allSettings;
@@ -12,7 +13,7 @@ const DrawingArea = (props) => {
             const handleResize = () => {
                 const container = document.querySelector('.canvas-container');
                 if (allSettings.ratioSelectValue === 'auto') {
-                    allSettings.handleResponsiveSize(container, allSettings.canvasSetting);
+                    utils.handleResponsiveSize(container, allSettings.canvasSetting);
                 }
             };
             window.addEventListener('resize', handleResize);

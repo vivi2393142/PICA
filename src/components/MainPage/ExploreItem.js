@@ -10,40 +10,34 @@ import { Alert, defaultAlertSetting } from '../Alert';
 // export default App;
 const ExploreItem = (props) => {
     const history = useHistory();
-    // const [likeListImageLoad, setLikeListImageLoad] = React.useState(0);
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         ...defaultAlertSetting,
     });
     const addNewSampleHandler = (e, sampleFileId) => {
         e.stopPropagation();
-        notLoginAlert(() => {
-            const id = nanoid();
-            const canvasSetting = {
-                id: id,
-                userEmail: props.currentUser.email,
-                title: '',
-            };
-            firebase.createSampleCanvas(canvasSetting, sampleFileId);
-        }, '請先註冊或登入會員，以建立範本畫布');
-    };
-    const notLoginAlert = (successCallback, text) => {
         if (props.currentUser.email === 'noUser') {
+            const buttonCallback = () => {
+                e.stopPropagation();
+                setShowAlert(false);
+            };
             setAlertSetting({
                 buttonNumber: 1,
-                buttonOneFunction: (e) => {
-                    e.stopPropagation();
-                    setShowAlert(false);
-                },
+                buttonOneFunction: buttonCallback,
                 buttonTwoFunction: () => {},
                 buttonOneTitle: '關閉',
                 buttonTwoTitle: '',
                 title: '未登入會員',
-                content: text,
+                content: '請先註冊或登入會員，以建立範本畫布',
             });
             setShowAlert(true);
         } else {
-            successCallback();
+            const canvasSetting = {
+                id: nanoid(),
+                userEmail: props.currentUser.email,
+                title: '',
+            };
+            firebase.createSampleCanvas(canvasSetting, sampleFileId);
         }
     };
 
@@ -74,19 +68,7 @@ const ExploreItem = (props) => {
                 />
             )}
             <div className={styles.cover}>
-                <img
-                    className={styles.innerImg}
-                    src={props.item.snapshot}
-                    // onLoad={() => {
-                    //     if (props.parentNodeForClass !== 'explore') {
-                    //         setLikeListImageLoad(likeListImageLoad + 1);
-                    //         if (props.length === likeListImageLoad) {
-                    //             // props.setIsLikeLoader(false);
-                    //             setLikeListImageLoad(0);
-                    //         }
-                    //     }
-                    // }}
-                ></img>
+                <img className={styles.innerImg} src={props.item.snapshot}></img>
                 {props.item.isSample && <div className={styles.isSample}>範本</div>}
                 {props.isNotSameAsCurrentUser ? null : (
                     <div className={styles.buttons}>

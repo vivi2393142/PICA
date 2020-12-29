@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
 import * as firebase from '../../utils/firebase.js';
 import { useHistory } from 'react-router-dom';
-import AddNew from './addNew';
+import AddNew from './AddNew';
 import Login from '../Login';
 import Loader from '../Loader';
 

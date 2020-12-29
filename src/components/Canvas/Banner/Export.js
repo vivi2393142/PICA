@@ -38,7 +38,6 @@ const Export = (props) => {
             setIsChoosingExport(false);
             return;
         } else if (way === 'jpg') {
-            console.log('下載jpg');
             dataURL = allSettings.canvas.toDataURL({
                 format: 'jpeg',
                 quality: 1,
