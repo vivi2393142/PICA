@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as icons from '../../../../img/icons';
 import NavLeftColor from './NavLeftColor';
 import 'fontfaceobserver';
+import { trackOutSideClick } from '../../../../utils/utils.js';
 
 const NavLeftText = (props) => {
     // unfold nav
@@ -13,7 +14,7 @@ const NavLeftText = (props) => {
         if (document.querySelector('.scrollContainer')) {
             document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
         }
-        props.trackOutSideClick(e.currentTarget, () => {
+        trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingSpace(false);
             if (document.querySelector('.scrollContainer')) {
                 document
@@ -28,7 +29,7 @@ const NavLeftText = (props) => {
         if (document.querySelector('.scrollContainer')) {
             document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
         }
-        props.trackOutSideClick(e.currentTarget, () => {
+        trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingSize(false);
             if (document.querySelector('.scrollContainer')) {
                 document
@@ -143,7 +144,6 @@ const NavLeftText = (props) => {
             <NavLeftColor
                 canvas={props.canvas}
                 activeObj={props.activeObj}
-                trackOutSideClick={props.trackOutSideClick}
                 setIsFocusInput={props.setIsFocusInput}
             />
             <select className='specificButton' value={textFont} onChange={handleTextFont}>
@@ -244,7 +244,6 @@ NavLeftText.propTypes = {
     setTextIsEditing: PropTypes.func.isRequired,
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
-    trackOutSideClick: PropTypes.func.isRequired,
     setIsFocusInput: PropTypes.func,
 };
 

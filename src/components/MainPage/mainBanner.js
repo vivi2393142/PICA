@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import { useHistory, Link } from 'react-router-dom';
 import AddNew from './addNew';
 import Login from '../Login';
@@ -10,7 +10,7 @@ import Loader from '../Loader';
 
 // export default App;
 const MainBanner = (props) => {
-    let history = useHistory();
+    const history = useHistory();
     const [showSignOut, setShowSignOut] = React.useState(false);
     const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
     const [chooseLogin, setChooseLogin] = React.useState(true);

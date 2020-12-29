@@ -3,7 +3,7 @@ import styles from '../css/alert.module.scss';
 import PropTypes from 'prop-types';
 import alertOuter from '../img/src/alert-outer.svg';
 import alertInner from '../img/src/alert-inner.svg';
-import * as firebase from '../firebase';
+import * as firebase from '../utils/firebase';
 // export default App;
 const Alert = (props) => {
     return (

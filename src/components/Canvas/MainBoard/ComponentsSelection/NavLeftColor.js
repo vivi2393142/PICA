@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
 import toggleRight from '../../../../img/src/arrowRight.svg';
+import { trackOutSideClick } from '../../../../utils/utils.js';
 
 const NavLeftColor = (props) => {
     const [widthSetting, setWidthSetting] = React.useState('14rem');
@@ -30,7 +31,7 @@ const NavLeftColor = (props) => {
         setIsChoosingColor(true);
         props.setIsFocusInput(true);
         document.querySelector('.componentsNavLeft').style.zIndex = '2';
-        props.trackOutSideClick(e.currentTarget, () => {
+        trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingColor(false);
             props.setIsFocusInput(false);
             document.querySelector('.componentsNavLeft').style.zIndex = '1';
@@ -101,7 +102,6 @@ const NavLeftColor = (props) => {
 NavLeftColor.propTypes = {
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
-    trackOutSideClick: PropTypes.func.isRequired,
     setIsFocusInput: PropTypes.func,
 };
 

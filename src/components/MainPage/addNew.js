@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../css/addNew.module.scss';
 import PropTypes from 'prop-types';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import * as mainIcon from '../../img/mainPage';
 import { nanoid } from 'nanoid';
 import Alert from '../Alert';

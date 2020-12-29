@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
 import * as login from '../../img/landingPage.js';
 import Login from '../Login';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import { useHistory } from 'react-router-dom';
 
 // export default App;

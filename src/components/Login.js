@@ -2,13 +2,13 @@ import React from 'react';
 import styles from '../css/landingPage.module.scss';
 import PropTypes from 'prop-types';
 import * as login from '../img/landingPage.js';
-import * as firebase from '../firebase';
+import * as firebase from '../utils/firebase.js';
 import { useHistory } from 'react-router-dom';
 import Alert from './Alert';
 
 // export default App;
 const Login = (props) => {
-    let history = useHistory();
+    const history = useHistory();
     const [inputId, setInputId] = React.useState('');
     const [inputPwd, setInputPwd] = React.useState('');
     const [inputName, setInputName] = React.useState('');
@@ -22,11 +22,53 @@ const Login = (props) => {
         title: '',
         content: '',
     });
-    const toggleClose = (e) => {
+    const toggleClose = () => {
         props.setIsLoginOrSignup(false);
     };
     const toggleSign = () => {
         props.setChooseLogin(!props.chooseLogin);
+    };
+    const loginHandler = (way) => {
+        if (way === 'native') {
+            setAlertSetting({
+                buttonNumber: 1,
+                buttonOneFunction: () => setShowAlert(false),
+                buttonTwoFunction: () => {},
+                buttonOneTitle: '關閉',
+                buttonTwoTitle: '',
+                title: '註冊錯誤',
+                content: '請輸入正確帳號密碼',
+            });
+            firebase.nativeSignIn(inputId, inputPwd, () => {
+                setShowAlert(true);
+            });
+        } else if (way === 'fb') {
+            firebase.fbSignUp();
+        } else if (way === 'google') {
+            firebase.googleSignUp();
+        }
+        // user ? props.setCurrentUser(user) : props.setCurrentUser({ email: 'noUser' });
+    };
+    const handleSignUp = (way) => {
+        if (way === 'native') {
+            setAlertSetting({
+                buttonNumber: 1,
+                buttonOneFunction: () => setShowAlert(false),
+                buttonTwoFunction: () => {},
+                buttonOneTitle: '關閉',
+                buttonTwoTitle: '',
+                title: '註冊錯誤',
+                content: '請輸入有效之email地址及6位以上密碼',
+            });
+            const inputToLowerCase = inputName.toLowerCase();
+            firebase.nativeSignUp(inputToLowerCase, inputId, inputPwd, () => {
+                setShowAlert(true);
+            });
+        } else if (way === 'fb') {
+            firebase.fbSignUp();
+        } else if (way === 'google') {
+            firebase.googleSignUp();
+        }
     };
 
     return (
@@ -94,51 +136,16 @@ const Login = (props) => {
                         onChange={(e) => setInputPwd(e.target.value)}
                         placeholder='密碼'
                     ></input>
-                    <div
-                        className={styles.submit}
-                        onClick={() => {
-                            setAlertSetting({
-                                buttonNumber: 1,
-                                buttonOneFunction: () => setShowAlert(false),
-                                buttonTwoFunction: () => {},
-                                buttonOneTitle: '關閉',
-                                buttonTwoTitle: '',
-                                title: '註冊錯誤',
-                                content: '請輸入正確帳號密碼',
-                            });
-                            const user = firebase.nativeSignIn(inputId, inputPwd, () => {
-                                setShowAlert(true);
-                            });
-                            user
-                                ? props.setCurrentUser(user)
-                                : props.setCurrentUser({ email: 'noUser' });
-                        }}
-                    >
+                    <div className={styles.submit} onClick={() => loginHandler('native')}>
                         登入
                     </div>
                     <div className={styles.otherSign}>
                         <div className={styles.or}></div>
-                        <div
-                            className={styles.loginWayF}
-                            onClick={() => {
-                                const user = firebase.fbSignUp();
-                                user
-                                    ? props.setCurrentUser(user)
-                                    : props.setCurrentUser({ email: 'noUser' });
-                            }}
-                        >
+                        <div className={styles.loginWayF} onClick={() => loginHandler('fb')}>
                             <login.Facebook className={styles.loginIcon} />
                             <span>Facebook</span>
                         </div>
-                        <div
-                            className={styles.loginWayG}
-                            onClick={() => {
-                                const user = firebase.googleSignUp();
-                                user
-                                    ? props.setCurrentUser(user)
-                                    : props.setCurrentUser({ email: 'noUser' });
-                            }}
-                        >
+                        <div className={styles.loginWayG} onClick={() => loginHandler('google')}>
                             <login.Google className={styles.loginIcon} />
                             <span>Google</span>
                         </div>
@@ -166,47 +173,16 @@ const Login = (props) => {
                         onChange={(e) => setInputPwd(e.target.value)}
                         placeholder='密碼(6位以上)'
                     ></input>
-                    <div
-                        className={styles.submit}
-                        onClick={() => {
-                            setAlertSetting({
-                                buttonNumber: 1,
-                                buttonOneFunction: () => setShowAlert(false),
-                                buttonTwoFunction: () => {},
-                                buttonOneTitle: '關閉',
-                                buttonTwoTitle: '',
-                                title: '註冊錯誤',
-                                content: '請輸入有效之email地址及6位以上密碼',
-                            });
-                            firebase.nativeSignUp(
-                                inputName.toLowerCase(),
-                                inputId,
-                                inputPwd,
-                                () => {
-                                    setShowAlert(true);
-                                }
-                            );
-                        }}
-                    >
+                    <div className={styles.submit} onClick={() => handleSignUp('native')}>
                         註冊
                     </div>
                     <div className={styles.otherSign}>
                         <div className={styles.or}></div>
-                        <div
-                            className={styles.loginWayF}
-                            onClick={() => {
-                                firebase.fbSignUp();
-                            }}
-                        >
+                        <div className={styles.loginWayF} onClick={() => handleSignUp('fb')}>
                             <login.Facebook className={styles.loginIcon} />
                             <span>Facebook</span>
                         </div>
-                        <div
-                            className={styles.loginWayG}
-                            onClick={() => {
-                                firebase.googleSignUp();
-                            }}
-                        >
+                        <div className={styles.loginWayG} onClick={() => handleSignUp('google')}>
                             <login.Google className={styles.loginIcon} />
                             <span>Google</span>
                         </div>

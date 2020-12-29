@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import Loader from '../Loader';
 import ExploreItem from './exploreItem';
 import * as mainIcons from '../../img/mainPage';

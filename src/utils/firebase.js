@@ -52,7 +52,7 @@ const savaDataURL = (canvas, fileId, successCallback) => {
     } else {
         exportCanvas = canvas;
     }
-    let dataURL = exportCanvas.toDataURL('image/png', 1);
+    const dataURL = exportCanvas.toDataURL('image/png', 1);
     successCallback(dataURL);
     console.log(exportCanvas, dataURL);
 };
@@ -65,7 +65,7 @@ const firstSavaDataURL = (canvas, fileId) => {
     } else {
         exportCanvas = canvas;
     }
-    let dataURL = exportCanvas.toDataURL('image/png', 1);
+    const dataURL = exportCanvas.toDataURL('image/png', 1);
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.update({
         snapshot: dataURL,
@@ -160,7 +160,7 @@ const getCanvasData = (id, callback) => {
 };
 const getAllCanvasData = (callback) => {
     const ref = db.collection('canvasFiles');
-    let result = [];
+    const result = [];
     ref.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
             result.push(doc.data());
@@ -173,7 +173,6 @@ const setBasicSetting = (fileId, newWidth, newHeight, newType, canvas) => {
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
         result = { ...doc.data().basicSetting, width: newWidth, height: newHeight, type: newType };
-        // console.log(result);
         saveCanvasData(canvas, result, fileId);
     });
 };
@@ -191,14 +190,14 @@ const deleteCanvas = (userId, fileId) => {
 // main page
 // -- firestore
 const getAllFiles = (currentUserId, callback) => {
-    let allUsers = [];
-    let instagram = [];
-    let poster = [];
-    let postCard = [];
-    let web = [];
-    let a4 = [];
-    let nameCard = [];
-    let custom = [];
+    const allUsers = [];
+    const instagram = [];
+    const poster = [];
+    const postCard = [];
+    const web = [];
+    const a4 = [];
+    const nameCard = [];
+    const custom = [];
     const refUser = db.collection('userData');
     const refFiles = db.collection('canvasFiles');
     refUser
@@ -258,7 +257,7 @@ const getAllFiles = (currentUserId, callback) => {
 const getShot = (fileId, currentUserEmail, callback) => {
     const refUser = db.collection('userData');
     const refFile = db.collection('canvasFiles').doc(fileId);
-    let allUsers = [];
+    let allUsers;
     refUser
         .get()
         .then((querySnapshot) => {
@@ -319,7 +318,7 @@ let setTime = 0;
 let initCommentState = true;
 const listenToComment = (fileId, callback) => {
     const refFiles = db.collection('canvasFiles').doc(fileId);
-    let oldData = [];
+    const oldData = [];
     // 不重複設置監聽
     if (setTime < 1) {
         setTime += 1;
@@ -337,7 +336,7 @@ const listenToComment = (fileId, callback) => {
 const deleteComment = (index, fileId) => {
     const ref = db.collection('canvasFiles').doc(fileId);
     ref.get().then((doc) => {
-        let newData = doc.data();
+        const newData = doc.data();
         newData.comments.splice(index, 1);
         ref.update(newData);
     });
@@ -362,9 +361,9 @@ const postLike = (currentUserId, fileId, oldIsLike) => {
     }
 };
 const getLikeList = (userId, callback, isNoLikeCallback) => {
-    let allUsers = [];
-    let result = [];
-    let currentUserLike = [];
+    let allUsers;
+    let result;
+    let currentUserLike;
     const refUser = db.collection('userData');
     const refFiles = db.collection('canvasFiles');
     refUser
@@ -407,7 +406,7 @@ const getLikeList = (userId, callback, isNoLikeCallback) => {
         });
 };
 const getSampleList = (type, callback) => {
-    let result = [];
+    const result = [];
     const refFiles = db.collection('canvasFiles');
     refFiles
         .where('isSample', '==', true)
@@ -430,7 +429,7 @@ const getSingleSample = (fileId, callback) => {
 const changeTitle = (fileId, newTitle) => {
     const refFile = db.collection('canvasFiles').doc(fileId);
     refFile.get().then((doc) => {
-        let allSetting = doc.data().basicSetting;
+        const allSetting = doc.data().basicSetting;
         allSetting.title = newTitle;
         refFile.update({
             basicSetting: allSetting,
@@ -531,6 +530,11 @@ const nativeSignUp = (name, email, pwd, failCallback) => {
             // return user;
         })
         .catch((error) => {
+            // if (error.code === 'auth/email-already-in-use') {
+            //     failCallback(errorMessage);
+            // } else {
+            //     failCallback(errorMessage);
+            // }
             failCallback();
             console.log(error);
         });
@@ -581,7 +585,7 @@ const uploadToStorage = (filesList, fileId, callback, successCallback, failCallb
     task.on(
         'state_changed',
         (snapshot) => {
-            let uploadValue = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            const uploadValue = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             callback(uploadValue.toFixed(0));
         },
         function error(err) {

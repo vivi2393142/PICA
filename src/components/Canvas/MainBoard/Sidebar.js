@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 import * as icons from '../../../img/icons';
-import * as firebase from '../../../firebase';
+import * as firebase from '../../../utils/firebase.js';
 import * as sidebarItems from '../../../img/sidebarItems';
 import Alert from '../../Alert';
 import deleteLoading from '../../../img/src/deleteLoading.svg';
+import { trackOutSideClick } from '../../../utils/utils.js';
 
 const Sidebar = (props) => {
     const allSettings = props.allSettings;
@@ -143,7 +144,7 @@ const Sidebar = (props) => {
     };
     const addIText = (title, size, weight) => {
         const textRatio = allSettings.canvasSetting.width / 600;
-        let text = new fabric.IText(title, {});
+        const text = new fabric.IText(title, {});
         text.set({
             top: nextAddPosition.top,
             left: nextAddPosition.left,
@@ -350,7 +351,6 @@ const Sidebar = (props) => {
     onmouseout = (e) => {
         const from = e.relatedTarget || e.toElement;
         if (!from || from.nodeName == 'HTML') {
-            // console.log('left window');
             setShowUploadCover(false);
         }
     };
@@ -366,15 +366,11 @@ const Sidebar = (props) => {
         },
     });
     const toggleBackColorSelection = (e) => {
-        const clickedOrNot = (e) => {
-            if (!document.querySelector('.backgroundPicker').contains(e.target)) {
-                setIsChoosingBackColor(false);
-                props.setIsFocusInput(false);
-                allSettings.canvas.fire('object:modified');
-                document.removeEventListener('click', clickedOrNot, true);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        trackOutSideClick(document.querySelector('.backgroundPicker'), () => {
+            setIsChoosingBackColor(false);
+            props.setIsFocusInput(false);
+            allSettings.canvas.fire('object:modified');
+        });
         setIsChoosingBackColor(true);
         props.setIsFocusInput(true);
     };
@@ -430,7 +426,7 @@ const Sidebar = (props) => {
     // get current image styles
     React.useEffect(() => {
         if (allSettings.activeObj.type === 'image') {
-            let filtersActive = {
+            const filtersActive = {
                 brightness: 0,
                 contrast: 0,
                 saturation: 0,
@@ -439,7 +435,7 @@ const Sidebar = (props) => {
                 noise: 0,
             };
             allSettings.activeObj.filters.forEach((item) => {
-                let type = item.type.toLowerCase();
+                const type = item.type.toLowerCase();
                 if (type === 'huerotation') {
                     filtersActive.rotation = parseFloat(item.rotation);
                 } else {
@@ -528,7 +524,7 @@ const Sidebar = (props) => {
     };
     // TODO: 測試用資料，待刪除
     const logCurrentCanvas = () => {
-        var json = allSettings.canvas.toJSON();
+        const json = allSettings.canvas.toJSON();
         console.log(JSON.stringify(json));
     };
 
@@ -1202,11 +1198,11 @@ const Sidebar = (props) => {
                         max={item.max}
                         value={currentFilters[item.attr]}
                         onInput={(e) => {
-                            let f = fabric.Image.filters;
-                            let newFilters = { ...currentFilters };
+                            const filters = fabric.Image.filters;
+                            const newFilters = { ...currentFilters };
                             newFilters[item.attr] = parseFloat(e.target.value);
                             setCurrentFilters(newFilters);
-                            const newFilter = new f[item.way]({
+                            const newFilter = new filters[item.way]({
                                 [item.attr]: parseFloat(e.target.value),
                             });
                             allSettings.activeObj.filters[index] = newFilter;
@@ -1287,7 +1283,6 @@ const Sidebar = (props) => {
 Sidebar.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    trackOutSideClick: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,

@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
-import * as firebase from '../../../firebase';
+import * as firebase from '../../../utils/firebase.js';
 import Alert from '../../Alert';
+import { trackOutSideClick } from '../../../utils/utils.js';
 
 const Resize = (props) => {
     const allSettings = props.drawingAreaSettings;
@@ -28,16 +29,9 @@ const Resize = (props) => {
         { name: '名片', type: 'nameCard', width: 255, height: 153, mmW: 90, mmH: 54 },
     ];
     const toggleSizeChoosing = (e, way) => {
-        const targetContainer = e.currentTarget.parentNode;
         setIsChoosingCanvasSize(true);
-        // if click outside, close selection
-        const clickedOrNot = (e) => {
-            if (!targetContainer.contains(e.target)) {
-                document.removeEventListener('click', clickedOrNot, true);
-                setIsChoosingCanvasSize(false);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        const targetContainer = e.currentTarget.parentNode;
+        trackOutSideClick(targetContainer, () => setIsChoosingCanvasSize(false));
     };
     const handleCanvasSize = (target, way) => {
         // reset size on canvas and react state
@@ -61,7 +55,7 @@ const Resize = (props) => {
         const container = document.querySelector('.canvas-container');
         allSettings.setCanvasSetting(newCanvasSetting);
         // resize to fix window
-        let fixRatio = Math.min(
+        const fixRatio = Math.min(
             (window.innerWidth * 0.72) / newCanvasSetting.width,
             (window.innerHeight * 0.72) / newCanvasSetting.height
         );
@@ -77,7 +71,7 @@ const Resize = (props) => {
         // reset to auto fix
         allSettings.setRatioSelectValue('auto');
         // preset background image object style
-        let backgroundObject = allSettings.canvas
+        const backgroundObject = allSettings.canvas
             .getObjects('image')
             .find((x) => x.specialType === 'background');
         if (backgroundObject) {
@@ -118,14 +112,8 @@ const Resize = (props) => {
     const toggleCustomSizeInput = (e) => {
         setIsTypingSize(true);
         setIsChoosingCanvasSize(false);
-        const clickedOrNot = (e) => {
-            const targetContainer = document.querySelector('.customSizeWrapper');
-            if (!targetContainer.contains(e.target)) {
-                document.removeEventListener('click', clickedOrNot, true);
-                setIsTypingSize(false);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        const targetContainer = document.querySelector('.customSizeWrapper');
+        trackOutSideClick(targetContainer, () => setIsTypingSize(false));
     };
 
     // jsx: size choosing
@@ -213,7 +201,6 @@ const Resize = (props) => {
                             }}
                             onBlur={() => {
                                 props.setIsFocusInput(false);
-                                console.log('nofocus');
                             }}
                         ></input>
                         <div className='customSizeInputCross'>×</div>

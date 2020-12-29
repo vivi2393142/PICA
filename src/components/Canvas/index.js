@@ -5,7 +5,7 @@ import MainBoard from './MainBoard';
 import Banner from './Banner';
 import initAligningGuidelines from '../../aligning_guidelines.js';
 import * as backImg from '../../img/background';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import Loader from '../Loader';
 import { useHistory } from 'react-router-dom';
 const canvasSizeOptions = [
@@ -20,7 +20,7 @@ const canvasSizeOptions = [
 
 // export default App;
 const Canvas = (props) => {
-    let history = useHistory();
+    const history = useHistory();
     const [isLoaded, setIsLoaded] = React.useState(true);
     const [canvas, setCanvas] = React.useState({});
     const [canvasSetting, setCanvasSetting] = React.useState({});
@@ -54,7 +54,7 @@ const Canvas = (props) => {
     // handle responsive size
     const handleResponsiveSize = (container, canvasSetting) => {
         if (container) {
-            let fixRatio = Math.min(
+            const fixRatio = Math.min(
                 (window.innerWidth * 0.72) / canvasSetting.width,
                 (window.innerHeight * 0.72) / canvasSetting.height
             );
@@ -151,8 +151,8 @@ const Canvas = (props) => {
                     // ---- remove loader after finishing render canvas
                     setIsLoaded(false);
                     // preset image & iText objects style
-                    let imgObjects = canvasInit.getObjects('image');
-                    let texObjects = canvasInit.getObjects('i-text');
+                    const imgObjects = canvasInit.getObjects('image');
+                    const texObjects = canvasInit.getObjects('i-text');
                     imgObjects.forEach((object) => {
                         object.setControlsVisibility({
                             mb: false,
@@ -170,7 +170,7 @@ const Canvas = (props) => {
                         });
                     });
                     // preset background image object style
-                    let backgroundObject = canvasInit
+                    const backgroundObject = canvasInit
                         .getObjects('image')
                         .find((x) => x.specialType === 'background');
                     if (backgroundObject) {
@@ -188,7 +188,7 @@ const Canvas = (props) => {
                         );
                     }
                     // preset shape and sticker special type
-                    let stickerObjects = canvasInit
+                    const stickerObjects = canvasInit
                         .getObjects('image')
                         .filter((x) => x.specialType === 'sticker');
                     if (stickerObjects.length !== 0) {
@@ -290,7 +290,7 @@ const Canvas = (props) => {
                 document.querySelector('.upper-canvas').style.width = '100%';
                 document.querySelector('.upper-canvas').style.height = '100%';
                 // -- default view ratio: auto
-                let fixRatio = Math.min(
+                const fixRatio = Math.min(
                     (window.innerWidth * 0.72) / canvasSettingInit.width,
                     (window.innerHeight * 0.72) / canvasSettingInit.height
                 );
@@ -311,7 +311,7 @@ const Canvas = (props) => {
 
                 // dnd components event
                 // --- save the dragging target
-                let itemDragOffset = { offsetX: 0, offsetY: 0 };
+                const itemDragOffset = { offsetX: 0, offsetY: 0 };
                 let movingItem = {};
                 const saveDragItemFunc = (e) => {
                     if (e.target.draggable) {

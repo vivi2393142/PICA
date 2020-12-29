@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
+import { trackOutSideClick } from '../../../../utils/utils.js';
 
 const NavLeftShape = (props) => {
     // color setting function
@@ -9,7 +10,7 @@ const NavLeftShape = (props) => {
     const toggleBorderColorSelection = (e) => {
         setIsChoosingBorderColor(true);
         props.setIsFocusInput(true);
-        props.trackOutSideClick(e.currentTarget, () => {
+        trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingBorderColor(false);
             props.setIsFocusInput(false);
             props.canvas.fire('object:modified');
@@ -84,7 +85,6 @@ const NavLeftShape = (props) => {
 };
 
 NavLeftShape.propTypes = {
-    trackOutSideClick: PropTypes.func.isRequired,
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
     setIsFocusInput: PropTypes.func,

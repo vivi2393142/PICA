@@ -77,7 +77,6 @@ const ComponentsSelection = (props) => {
                             <NavLeftColor
                                 canvas={allSettings.canvas}
                                 activeObj={allSettings.activeObj}
-                                trackOutSideClick={props.trackOutSideClick}
                                 setIsFocusInput={props.setIsFocusInput}
                             />
                         )}
@@ -86,7 +85,6 @@ const ComponentsSelection = (props) => {
                             <NavLeftImg
                                 currentSidebar={props.currentSidebar}
                                 setCurrentSidebar={props.setCurrentSidebar}
-                                trackOutSideClick={props.trackOutSideClick}
                                 croppingObj={croppingObj}
                                 setCroppingObj={setCroppingObj}
                                 allSettings={allSettings}
@@ -97,7 +95,6 @@ const ComponentsSelection = (props) => {
                             setTextIsEditing={setTextIsEditing}
                             canvas={allSettings.canvas}
                             activeObj={allSettings.activeObj}
-                            trackOutSideClick={props.trackOutSideClick}
                             setIsFocusInput={props.setIsFocusInput}
                         />
                     )}
@@ -106,7 +103,6 @@ const ComponentsSelection = (props) => {
                         allSettings.activeObj.type === 'triangle') &&
                         allSettings.activeObj.specialType !== 'cropbox' && (
                             <NavLeftShape
-                                trackOutSideClick={props.trackOutSideClick}
                                 canvas={allSettings.canvas}
                                 activeObj={allSettings.activeObj}
                                 setIsFocusInput={props.setIsFocusInput}
@@ -120,7 +116,6 @@ const ComponentsSelection = (props) => {
                     canvasSetting={allSettings.canvasSetting}
                     activeObj={allSettings.activeObj}
                     setActiveObj={allSettings.setActiveObj}
-                    trackOutSideClick={props.trackOutSideClick}
                     isFocusInput={props.isFocusInput}
                 />
             </div>
@@ -131,7 +126,6 @@ const ComponentsSelection = (props) => {
 ComponentsSelection.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    trackOutSideClick: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,
     isFocusInput: PropTypes.bool.isRequired,
     setIsFocusInput: PropTypes.func.isRequired,

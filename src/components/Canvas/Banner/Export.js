@@ -2,21 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import jsPDF from 'jspdf';
+import { trackOutSideClick } from '../../../utils/utils.js';
 
 const Export = (props) => {
     // check if is choosing export
     const [isChoosingExport, setIsChoosingExport] = React.useState(false);
     const toggleExport = (e) => {
-        const targetContainer = e.currentTarget.parentNode;
         setIsChoosingExport(true);
-        // if click outside, close selection
-        const clickedOrNot = (e) => {
-            if (!targetContainer.contains(e.target)) {
-                document.removeEventListener('click', clickedOrNot, true);
-                setIsChoosingExport(false);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        const targetContainer = e.currentTarget.parentNode;
+        trackOutSideClick(targetContainer, () => setIsChoosingExport(false));
     };
 
     // set export function

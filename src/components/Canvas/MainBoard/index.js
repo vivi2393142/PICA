@@ -13,16 +13,6 @@ const MainBoard = (props) => {
         { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
     ];
 
-    // -- track outside click event
-    const trackOutSideClick = (childElement, callback) => {
-        const clickedOrNot = (e) => {
-            if (!childElement.parentNode.contains(e.target)) {
-                callback();
-                document.removeEventListener('click', clickedOrNot, true);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
-    };
     // responsive view handling
     const handleRatioSelect = (e) => {
         allSettings.setRatioSelectValue(e.target.value);
@@ -104,7 +94,6 @@ const MainBoard = (props) => {
                 allSettings={allSettings}
                 currentSidebar={currentSidebar}
                 setCurrentSidebar={setCurrentSidebar}
-                trackOutSideClick={trackOutSideClick}
                 currentUser={props.currentUser}
                 fileId={props.fileId}
                 setIsFocusInput={props.setIsFocusInput}
@@ -115,7 +104,6 @@ const MainBoard = (props) => {
                     allSettings={allSettings}
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
-                    trackOutSideClick={trackOutSideClick}
                     isFocusInput={props.isFocusInput}
                     setIsFocusInput={props.setIsFocusInput}
                 />

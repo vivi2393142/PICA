@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
+import { trackOutSideClick } from '../../../utils/utils.js';
 
 const Share = (props) => {
     const inputRef = React.useRef(null);
@@ -14,19 +15,14 @@ const Share = (props) => {
     };
 
     const toggleShare = (e) => {
-        const targetContainer = e.currentTarget.parentNode;
         setIsChoosingShare(true);
-        // if click outside, close selection
-        const clickedOrNot = (e) => {
-            if (!targetContainer.contains(e.target)) {
-                document.removeEventListener('click', clickedOrNot, true);
-                setIsChoosingShare(false);
-                if (e.target.classList.contains('copyComplete')) {
-                    e.target.classList.remove('copyComplete');
-                }
+        const targetContainer = e.currentTarget.parentNode;
+        trackOutSideClick(targetContainer, () => {
+            setIsChoosingShare(false);
+            if (e.target.classList.contains('copyComplete')) {
+                e.target.classList.remove('copyComplete');
             }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        });
     };
 
     return (

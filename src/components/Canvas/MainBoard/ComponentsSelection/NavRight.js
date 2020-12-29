@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import * as icons from '../../../../img/icons';
+import { trackOutSideClick } from '../../../../utils/utils.js';
 
 let ctrlDown = false;
 let shiftDown = false;
@@ -15,7 +16,7 @@ const NavRight = (props) => {
         if (document.querySelector('.scrollContainer')) {
             document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
         }
-        props.trackOutSideClick(e.currentTarget, () => {
+        trackOutSideClick(e.currentTarget.parentNode, () => {
             if (document.querySelector('.scrollContainer')) {
                 document
                     .querySelector('.scrollContainer')
@@ -30,7 +31,7 @@ const NavRight = (props) => {
         if (document.querySelector('.scrollContainer')) {
             document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
         }
-        props.trackOutSideClick(e.currentTarget, () => {
+        trackOutSideClick(e.currentTarget.parentNode, () => {
             if (document.querySelector('.scrollContainer')) {
                 document
                     .querySelector('.scrollContainer')
@@ -77,7 +78,7 @@ const NavRight = (props) => {
             } else {
                 props.canvas.add(clonedObj);
             }
-            let newClipBoard = clipboard;
+            const newClipBoard = clipboard;
             newClipBoard.top += 10;
             newClipBoard.left += 10;
             setClipboard(newClipBoard);
@@ -93,7 +94,7 @@ const NavRight = (props) => {
     // -- methods for component: select all
     const selectAllHandler = () => {
         props.canvas.discardActiveObject();
-        var sel = new fabric.ActiveSelection(props.canvas.getObjects(), {
+        const sel = new fabric.ActiveSelection(props.canvas.getObjects(), {
             canvas: props.canvas,
         });
         props.canvas.setActiveObject(sel);
@@ -455,7 +456,6 @@ NavRight.propTypes = {
     canvas: PropTypes.object.isRequired,
     canvasData: PropTypes.object.isRequired,
     canvasSetting: PropTypes.object.isRequired,
-    trackOutSideClick: PropTypes.func.isRequired,
     textIsEditing: PropTypes.bool.isRequired,
     isFocusInput: PropTypes.bool.isRequired,
 };

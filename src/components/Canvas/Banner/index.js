@@ -4,7 +4,7 @@ import * as bannerIcons from '../../../img/banner';
 import Resize from './Resize';
 import Export from './Export';
 import Share from './Share';
-import * as firebase from '../../../firebase';
+import * as firebase from '../../../utils/firebase.js';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 

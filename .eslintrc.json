@@ -15,5 +15,9 @@
         "react"
     ],
     "rules": {
+        "prefer-const": ["error", {
+            "destructuring": "any",
+            "ignoreReadBeforeAssign": false
+        }]
     }
 }

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
+import { trackOutSideClick } from '../../../../utils/utils.js';
 
 let croppingObjIndex = 0;
 
@@ -10,15 +11,11 @@ const NavLeftImg = (props) => {
     // toggle adjustment nav
     const toggleImageAdjustmentNav = () => {
         props.setCurrentSidebar('imageAdjustment');
-        const clickedOrNot = (e) => {
-            const targetDiv = document.querySelector('.sidebarUnfold');
-            if (!targetDiv.contains(e.target)) {
-                props.setCurrentSidebar('');
-                allSettings.canvas.fire('object:modified');
-                document.removeEventListener('click', clickedOrNot, true);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        const targetDiv = document.querySelector('.sidebarUnfold');
+        trackOutSideClick(targetDiv, () => {
+            props.setCurrentSidebar('');
+            allSettings.canvas.fire('object:modified');
+        });
     };
     // crop image
     // -- preset dark background, cropping target index
@@ -47,7 +44,7 @@ const NavLeftImg = (props) => {
         croppingObjIndex = allSettings.canvas.getObjects().indexOf(allSettings.activeObj);
         allSettings.activeObj.bringToFront();
         // --- preset clippath
-        let currentObj = allSettings.activeObj;
+        const currentObj = allSettings.activeObj;
         currentObj.clipPath = null;
         // --- clone cropping target to create crop box
         const clipPathView = new fabric.Rect({
@@ -172,7 +169,6 @@ const NavLeftImg = (props) => {
 NavLeftImg.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    trackOutSideClick: PropTypes.func.isRequired,
     croppingObj: PropTypes.object.isRequired,
     setCroppingObj: PropTypes.func.isRequired,
     allSettings: PropTypes.object.isRequired,

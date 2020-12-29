@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import { nanoid } from 'nanoid';
 import Loader from '../Loader';
 import ExploreItem from './exploreItem';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
 import Alert from '../Alert';
+import { trackOutSideClick } from '../../utils/utils.js';
 
 const TitleInput = (props) => {
     const [titleInput, setTitleInput] = React.useState(props.initialValue);
@@ -16,14 +17,10 @@ const TitleInput = (props) => {
         setIsShowInput(true);
         e.currentTarget.firstChild.focus();
         const currentNode = e.currentTarget;
-        const clickedOrNot = (e) => {
-            if (!currentNode.contains(e.target)) {
-                setIsShowInput(false);
-                firebase.changeTitle(props.fileId, currentNode.firstElementChild.value);
-                document.removeEventListener('click', clickedOrNot, true);
-            }
-        };
-        document.addEventListener('click', clickedOrNot, true);
+        trackOutSideClick(currentNode, () => {
+            setIsShowInput(false);
+            firebase.changeTitle(props.fileId, currentNode.firstElementChild.value);
+        });
     };
     return (
         <div className={styles.titleWrapper} onClick={(e) => handleEdit(e)}>
@@ -101,7 +98,7 @@ const UserPage = (props) => {
         }
     }, [props.currentUser]);
 
-    let history = useHistory();
+    const history = useHistory();
     const handleCreateNew = (e) => {
         const selection = canvasSizeOptions.find((item) => item.name === e.currentTarget.id);
         const id = nanoid();
@@ -145,7 +142,7 @@ const UserPage = (props) => {
             buttonOneFunction: () => {
                 setShowAlert(false);
                 firebase.deleteCanvas(props.currentUser.email, fileId);
-                let newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
+                const newFilesData = canvasDataWithDataURL.filter((item) => item.fileId !== fileId);
                 setCanvasDataWithDataURL(newFilesData);
             },
             buttonTwoFunction: () => {
@@ -184,7 +181,7 @@ const UserPage = (props) => {
     React.useEffect(() => {
         firebase.getAllCanvasData((result) => {
             if (userDataFromFirebase.canvas[0] !== '') {
-                let canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
+                const canvasDataWithImg = userDataFromFirebase.canvas.map((item) => {
                     const fileData = result.find((data) => data.basicSetting.id === item);
                     return {
                         comments: fileData.comments,
@@ -204,7 +201,7 @@ const UserPage = (props) => {
 
     const likeHandler = (e, item, type) => {
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
-        let newData = likeList.filter((file) => file.fileId !== item.fileId);
+        const newData = likeList.filter((file) => file.fileId !== item.fileId);
         setLikeList(newData);
     };
 

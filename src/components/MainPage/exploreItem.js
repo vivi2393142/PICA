@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
 import { nanoid } from 'nanoid';
-import * as firebase from '../../firebase';
+import * as firebase from '../../utils/firebase.js';
 import Alert from '../Alert';
 
 // export default App;
