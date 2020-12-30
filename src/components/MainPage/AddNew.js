@@ -8,11 +8,11 @@ import { Alert, defaultAlertSetting } from '../Alert';
 import { canvasSizeOptions } from '../../utils/globalConfig.js';
 
 const sizeAdjustForMediaQuery = { superSmall: 8, small: 6, normal: 5 };
-const handleCreateNew = (e) => {
+const handleCreateNew = (e, currentUser, titleInput, choices) => {
     const id = nanoid();
     const canvasSetting = {
         id: id,
-        userEmail: props.currentUser.email,
+        userEmail: currentUser.email,
         title: titleInput,
         width: choices.width,
         height: choices.height,
@@ -21,11 +21,11 @@ const handleCreateNew = (e) => {
     if (choices.type === 'custom') {
         canvasSetting.width = customSize.width;
         canvasSetting.height = customSize.height;
-        firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+        firebase.createNewCanvas(canvasSetting, currentUser.email);
     } else if (choices.way === 'sample') {
         firebase.createSampleCanvas(canvasSetting, choices.sampleFileId);
     } else {
-        firebase.createNewCanvas(canvasSetting, props.currentUser.email);
+        firebase.createNewCanvas(canvasSetting, currentUser.email);
     }
 };
 
@@ -368,7 +368,12 @@ const AddNew = (props) => {
                             </div>
                         ) : currentStep === 3 ? (
                             <div className={styles.nextStepWrapper}>
-                                <div className={styles.nextStep} onClick={handleCreateNew}>
+                                <div
+                                    className={styles.nextStep}
+                                    onClick={(e) =>
+                                        handleCreateNew(e, props.currentUser, titleInput, choices)
+                                    }
+                                >
                                     完成
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DrawingArea from './DrawingArea';
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar/index';
 import ComponentsSelection from './ComponentsSelection/index';
 import * as utils from '../../../utils/globalUtils';
 import * as config from '../../../utils/globalConfig';
@@ -30,22 +30,26 @@ const MainBoard = (props) => {
         }, 1000);
     };
 
-    const givenOptionsJsx = config.ratioOptions.map((item, index) => {
-        return (
-            <option key={index} value={item}>
-                {item}%
-            </option>
-        );
-    });
+    const givenOptionsJsx = (
+        <select className='ratioSelect' value={props.ratioSelectValue} onChange={handleRatioSelect}>
+            {config.ratioOptions.map((item, index) => (
+                <option key={index} value={item}>
+                    {item}%
+                </option>
+            ))}
+            <option value='auto'>符合畫面大小</option>
+        </select>
+    );
+    const mobileSidebarAddJsx = (
+        <div className='mobileSidebarAdd' onClick={openMobileSidebar}>
+            +
+        </div>
+    );
+
     return (
         <div className='mainBoard'>
-            <select className='ratioSelect' value={props.ratioSelectValue} onChange={handleRatioSelect}>
-                {givenOptionsJsx}
-                <option value='auto'>符合畫面大小</option>
-            </select>
-            <div className='mobileSidebarAdd' onClick={openMobileSidebar}>
-                +
-            </div>
+            {givenOptionsJsx}
+            {mobileSidebarAddJsx}
             {isShowMobileSidebar && <div className='mobileCover' onClick={closeMobileSidebar}></div>}
             <Sidebar
                 isShowMobileSidebar={isShowMobileSidebar}

@@ -42,7 +42,7 @@ export const initViewZoomIn = (canvas, canvasSetting) => {
     });
 };
 // -- preset canvas functions
-const presetBackgroundImg = (backImg, canvas, scaleWay, scaleToWidth, scaleToHeight) => {
+export const presetBackgroundImg = (backImg, canvas, scaleWay, scaleToWidth, scaleToHeight) => {
     backImg.setControlsVisibility({
         mb: false,
         mt: false,
@@ -239,31 +239,4 @@ export const addSticker = (target, position, canvas, canvasSetting) => {
         }
     );
     canvas.requestRenderAll();
-};
-export const backgroundImageHandler = (target, canvas, canvasSetting) => {
-    canvas.offHistory();
-    // remove exist background
-    if (canvas.getObjects().length) {
-        if (canvas.getObjects()[0].specialType === 'background') {
-            canvas.remove(canvas.getObjects()[0]);
-        }
-    }
-    const scaleToWidth = canvasSetting.width / target.naturalWidth;
-    const scaleToHeight = canvasSetting.height / target.naturalHeight;
-    const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
-    canvas.onHistory();
-    fabric.Image.fromURL(
-        target.src,
-        (img) => {
-            const backImg = img.set({
-                // fit canvas
-                scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
-                scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
-            });
-            presetBackgroundImg(backImg, canvas, scaleWay, scaleToWidth, scaleToHeight);
-        },
-        {
-            crossOrigin: 'anonymous',
-        }
-    );
 };
