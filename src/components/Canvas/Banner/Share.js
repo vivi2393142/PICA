@@ -1,19 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
-import { trackOutSideClick } from '../../../utils/utils.js';
+import { trackOutSideClick } from '../../../utils/globalUtils.js';
 
 const Share = (props) => {
     const inputRef = React.useRef(null);
     const [isChoosingShare, setIsChoosingShare] = React.useState(false);
-    // check if is choosing export
     const copyLinkHandler = (e) => {
         inputRef.current.select();
         document.execCommand('copy');
         document.getSelection().removeAllRanges();
         e.target.classList.add('copyComplete');
     };
-
     const toggleShare = (e) => {
         setIsChoosingShare(true);
         const targetContainer = e.currentTarget.parentNode;
@@ -46,4 +44,4 @@ const Share = (props) => {
 
 Share.propTypes = { fileId: PropTypes.string.isRequired };
 
-export default Share;
+export default React.memo(Share);

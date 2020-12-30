@@ -3,7 +3,6 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { nanoid } from 'nanoid';
-import { isValidElement } from 'react';
 
 // init firebase
 const firebaseConfig = {
@@ -24,10 +23,10 @@ const filesDb = db.collection('canvasFiles');
 // canvas
 // -- listen canvas update
 let initState = true;
-export const listenCanvas = (fileId, callback, setUploadedFiles) => {
+export const listenCanvas = (fileId, setUploadedFiles, callback) => {
     const ref = filesDb.doc(fileId);
     let oldData = [];
-    ref.onSnapshot((doc) => {
+    const unsubscribe = ref.onSnapshot((doc) => {
         if (doc.data()) {
             if (doc.data().uploaded !== oldData.uploaded) {
                 setUploadedFiles(doc.data().uploaded);
@@ -41,6 +40,7 @@ export const listenCanvas = (fileId, callback, setUploadedFiles) => {
             }
         }
     });
+    return unsubscribe;
 };
 // -- save data URL
 export const savaDataURL = (canvas, fileId, successCallback) => {
@@ -408,10 +408,7 @@ export const getOwnFilesData = (userDataFromFirebase, callback) => {
                     like: fileData.like,
                     fileId: item,
                     snapshot: fileData.snapshot,
-                    title:
-                        fileData.basicSetting.title === ''
-                            ? '未命名畫布'
-                            : fileData.basicSetting.title,
+                    title: fileData.basicSetting.title === '' ? '未命名畫布' : fileData.basicSetting.title,
                 };
             });
             callback(canvasDataWithImg);

@@ -12,7 +12,6 @@ import NavLeftShape from './NavLeftShape';
 import NavLeftColor from './NavLeftColor';
 
 const ComponentsSelection = (props) => {
-    const allSettings = props.allSettings;
     const [croppingObj, setCroppingObj] = React.useState({});
     const [textIsEditing, setTextIsEditing] = React.useState(false);
     const [showScroll, setShowScroll] = React.useState(false);
@@ -44,7 +43,7 @@ const ComponentsSelection = (props) => {
         } else {
             setShowScroll(false);
         }
-    }, [allSettings.activeObj]);
+    }, [props.activeObj]);
 
     // render
     return (
@@ -60,62 +59,61 @@ const ComponentsSelection = (props) => {
                     </div>
                 )}
                 {showScroll && (arrowState === 'right' || arrowState === 'both') && (
-                    <div
-                        className='directionButton right'
-                        onClick={(e) => swipeHandler(e, 'right')}
-                    >
+                    <div className='directionButton right' onClick={(e) => swipeHandler(e, 'right')}>
                         <img src={arrowLeft}></img>
                     </div>
                 )}
                 <div className='componentsNavLeft'>
-                    {(allSettings.activeObj.type === 'rect' ||
-                        allSettings.activeObj.type === 'circle' ||
-                        allSettings.activeObj.type === 'triangle' ||
-                        allSettings.activeObj.type === 'path' ||
-                        allSettings.activeObj.type === 'polygon') &&
-                        allSettings.activeObj.specialType !== 'cropbox' && (
+                    {(props.activeObj.type === 'rect' ||
+                        props.activeObj.type === 'circle' ||
+                        props.activeObj.type === 'triangle' ||
+                        props.activeObj.type === 'path' ||
+                        props.activeObj.type === 'polygon') &&
+                        props.activeObj.specialType !== 'cropbox' && (
                             <NavLeftColor
-                                canvas={allSettings.canvas}
-                                activeObj={allSettings.activeObj}
+                                canvas={props.canvas}
+                                activeObj={props.activeObj}
                                 setIsFocusInput={props.setIsFocusInput}
                             />
                         )}
-                    {(allSettings.activeObj.type === 'image' || croppingObj !== {}) &&
-                        allSettings.activeObj.specialType !== 'background' && (
+                    {(props.activeObj.type === 'image' || croppingObj !== {}) &&
+                        props.activeObj.specialType !== 'background' && (
                             <NavLeftImg
                                 currentSidebar={props.currentSidebar}
                                 setCurrentSidebar={props.setCurrentSidebar}
                                 croppingObj={croppingObj}
                                 setCroppingObj={setCroppingObj}
-                                allSettings={allSettings}
+                                canvas={props.canvas}
+                                canvasSetting={props.canvasSetting}
+                                activeObj={props.activeObj}
                             />
                         )}
-                    {allSettings.activeObj.type === 'i-text' && (
+                    {props.activeObj.type === 'i-text' && (
                         <NavLeftText
                             setTextIsEditing={setTextIsEditing}
-                            canvas={allSettings.canvas}
-                            activeObj={allSettings.activeObj}
+                            canvas={props.canvas}
+                            activeObj={props.activeObj}
                             setIsFocusInput={props.setIsFocusInput}
                         />
                     )}
-                    {(allSettings.activeObj.type === 'rect' ||
-                        allSettings.activeObj.type === 'circle' ||
-                        allSettings.activeObj.type === 'triangle') &&
-                        allSettings.activeObj.specialType !== 'cropbox' && (
+                    {(props.activeObj.type === 'rect' ||
+                        props.activeObj.type === 'circle' ||
+                        props.activeObj.type === 'triangle') &&
+                        props.activeObj.specialType !== 'cropbox' && (
                             <NavLeftShape
-                                canvas={allSettings.canvas}
-                                activeObj={allSettings.activeObj}
+                                canvas={props.canvas}
+                                activeObj={props.activeObj}
                                 setIsFocusInput={props.setIsFocusInput}
                             />
                         )}
                 </div>
                 <NavRight
                     textIsEditing={textIsEditing}
-                    canvas={allSettings.canvas}
-                    canvasData={allSettings.canvasData}
-                    canvasSetting={allSettings.canvasSetting}
-                    activeObj={allSettings.activeObj}
-                    setActiveObj={allSettings.setActiveObj}
+                    canvas={props.canvas}
+                    canvasData={props.canvasData}
+                    canvasSetting={props.canvasSetting}
+                    activeObj={props.activeObj}
+                    setActiveObj={props.setActiveObj}
                     isFocusInput={props.isFocusInput}
                 />
             </div>
@@ -126,9 +124,13 @@ const ComponentsSelection = (props) => {
 ComponentsSelection.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    allSettings: PropTypes.object.isRequired,
     isFocusInput: PropTypes.bool.isRequired,
     setIsFocusInput: PropTypes.func.isRequired,
+    activeObj: PropTypes.object.isRequired,
+    setActiveObj: PropTypes.func.isRequired,
+    canvas: PropTypes.object.isRequired,
+    canvasData: PropTypes.object.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
 };
 
-export default ComponentsSelection;
+export default React.memo(ComponentsSelection);

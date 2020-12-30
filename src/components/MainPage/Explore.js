@@ -6,7 +6,7 @@ import Loader from '../Loader';
 import ExploreItem from './ExploreItem';
 import * as mainIcons from '../../img/mainPage';
 import * as bannerIcons from '../../img/banner';
-import { mediaQuerySize } from '../../utils/config.js';
+import { mediaQuerySize } from '../../utils/globalConfig.js';
 
 const allType = ['Instagram', 'Poster', 'PostCard', 'Web', 'A4', 'NameCard', 'Custom'];
 const filters = [
@@ -39,7 +39,6 @@ const getArrowShowingState = (hasArrow, dataArray, filter, currentWidth) => {
     return oldState;
 };
 
-// export default App;
 const Explore = (props) => {
     const scrollRef = React.useRef([]);
     const [isLoaded, setIsLoaded] = React.useState(true);
@@ -77,7 +76,7 @@ const Explore = (props) => {
         window.addEventListener('resize', setRowItemsWidth);
     }, []);
     React.useEffect(() => {
-        if (dataArray.length !== 0) {
+        if (dataArray.length) {
             const newArrowState = getArrowShowingState(hasArrow, dataArray, filter, currentWidth);
             setHasArrow(newArrowState);
         }
@@ -116,7 +115,7 @@ const Explore = (props) => {
     };
 
     const allRowsJsx =
-        dataArray.length !== 0 &&
+        dataArray.length &&
         allType.map((type, index) => {
             const sampleInner = dataArray[type].map((item, index) => {
                 if (item.isSample) {
@@ -213,4 +212,4 @@ Explore.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
 };
 
-export default Explore;
+export default React.memo(Explore);

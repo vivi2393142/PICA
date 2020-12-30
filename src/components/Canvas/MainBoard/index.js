@@ -3,124 +3,97 @@ import PropTypes from 'prop-types';
 import DrawingArea from './DrawingArea';
 import Sidebar from './Sidebar';
 import ComponentsSelection from './ComponentsSelection/index';
-import * as utils from '../../../utils/utils';
+import * as utils from '../../../utils/globalUtils';
+import * as config from '../../../utils/globalConfig';
 
 const MainBoard = (props) => {
-    const allSettings = props.allSettings;
     const [currentSidebar, setCurrentSidebar] = React.useState('');
-    const textSetting = [
-        { title: '雙擊以編輯標題', size: 36, fontWeight: 'bold' },
-        { title: '雙擊以編輯副標', size: 28, fontWeight: 'normal' },
-        { title: '雙擊以編輯內文', size: 18, fontWeight: 'normal' },
-    ];
+    const [isShowMobileSidebar, setIsShowMobileSidebar] = React.useState(false);
 
     // responsive view handling
     const handleRatioSelect = (e) => {
-        allSettings.setRatioSelectValue(e.target.value);
-        const container = document.querySelector('.canvas-container');
-        if (e.target.value === 'auto') {
-            utils.handleResponsiveSize(container, allSettings.canvasSetting);
-        } else {
-            container.style.width = `${
-                (parseInt(e.target.value) / 100) * allSettings.canvasSetting.width
-            }px`;
-            container.style.height = `${
-                (parseInt(e.target.value) / 100) * allSettings.canvasSetting.height
-            }px`;
-        }
-        // -- zoom canvas without quality lose
-        zoomCanvas(allSettings.canvas);
+        const selectedRatio = e.target.value;
+        props.setRatioSelectValue(selectedRatio);
+        selectedRatio === 'auto'
+            ? utils.setViewToFitWindow(props.canvasSetting)
+            : utils.setViewToSelectedRatio(selectedRatio, props.canvasSetting);
+        utils.initViewZoomIn(props.canvas, props.canvasSetting);
     };
-    const zoomCanvas = (canvas) => {
-        const currentSizeRatio =
-            parseInt(document.querySelector('.canvas-container').style.width) /
-            allSettings.canvasSetting.width;
-        allSettings.canvas.setZoom(currentSizeRatio);
-        allSettings.canvas.setWidth(allSettings.canvasSetting.width * allSettings.canvas.getZoom());
-        allSettings.canvas.setHeight(
-            allSettings.canvasSetting.height * allSettings.canvas.getZoom()
-        );
-        document.querySelectorAll('.drawingArea').forEach((item) => {
-            item.style.width = '100%';
-            item.style.height = '100%';
-        });
+    // mobile sidebar toggle - show sidebar
+    const openMobileSidebar = () => {
+        setIsShowMobileSidebar(true);
     };
-    const ratioOptions = [25, 50, 75, 100, 125, 200, 300];
-    const givenOptions = ratioOptions.map((item, index) => {
+    const closeMobileSidebar = () => {
+        setIsShowMobileSidebar(false);
+        setTimeout(() => {
+            setCurrentSidebar('');
+        }, 1000);
+    };
+
+    const givenOptionsJsx = config.ratioOptions.map((item, index) => {
         return (
             <option key={index} value={item}>
                 {item}%
             </option>
         );
     });
-
-    // mobile sidebar toggle - show sidebar
-    const toggleMobileSidebar = (e) => {
-        document.querySelector('.sidebar').classList.add('mobileSidebarToggle');
-        document.querySelector('.mobileCover').style.display = 'flex';
-    };
-    const closeMobileSidebar = (e) => {
-        document.querySelector('.sidebar').classList.add('mobileSidebarToggleOut');
-        document.querySelector('.sidebar').classList.remove('mobileSidebarToggle');
-
-        setTimeout(() => {
-            if (document.querySelector('.sidebar')) {
-                document.querySelector('.sidebar').classList.remove('mobileSidebarToggleOut');
-                if (document.querySelector('.sidebar').classList.contains('mobileSidebarUnfold')) {
-                    document.querySelector('.sidebar').classList.remove('mobileSidebarUnfold');
-                }
-                if (currentSidebar !== '') {
-                    setCurrentSidebar('');
-                }
-            }
-        }, 1000);
-        document.querySelector('.mobileCover').style.display = 'none';
-    };
-
     return (
         <div className='mainBoard'>
-            <select
-                className='ratioSelect'
-                value={allSettings.ratioSelectValue}
-                onChange={handleRatioSelect}
-            >
-                {givenOptions}
+            <select className='ratioSelect' value={props.ratioSelectValue} onChange={handleRatioSelect}>
+                {givenOptionsJsx}
                 <option value='auto'>符合畫面大小</option>
             </select>
-            <div className='mobileSidebarAdd' onClick={toggleMobileSidebar}>
+            <div className='mobileSidebarAdd' onClick={openMobileSidebar}>
                 +
             </div>
-            <div className='mobileCover' onClick={closeMobileSidebar}></div>
+            {isShowMobileSidebar && <div className='mobileCover' onClick={closeMobileSidebar}></div>}
             <Sidebar
-                allSettings={allSettings}
+                isShowMobileSidebar={isShowMobileSidebar}
+                setIsShowMobileSidebar={setIsShowMobileSidebar}
                 currentSidebar={currentSidebar}
                 setCurrentSidebar={setCurrentSidebar}
                 currentUser={props.currentUser}
                 fileId={props.fileId}
                 setIsFocusInput={props.setIsFocusInput}
-                closeMobileSidebar={closeMobileSidebar}
+                canvasSetting={props.canvasSetting}
+                canvas={props.canvas}
+                activeObj={props.activeObj}
+                saveDragItem={props.saveDragItem}
+                uploadedFiles={props.uploadedFiles}
             />
             <div className='drawingAreaBox'>
                 <ComponentsSelection
-                    allSettings={allSettings}
                     currentSidebar={currentSidebar}
                     setCurrentSidebar={setCurrentSidebar}
                     isFocusInput={props.isFocusInput}
                     setIsFocusInput={props.setIsFocusInput}
+                    activeObj={props.activeObj}
+                    setActiveObj={props.setActiveObj}
+                    canvas={props.canvas}
+                    canvasData={props.canvasData}
+                    canvasSetting={props.canvasSetting}
                 />
-                <DrawingArea allSettings={allSettings} zoomCanvas={zoomCanvas} />
+                <DrawingArea canvasSetting={props.canvasSetting} ratioSelectValue={props.ratioSelectValue} />
             </div>
         </div>
     );
 };
 
 MainBoard.propTypes = {
-    // TODO: 待資料確定後，明確定義 array 內容
-    allSettings: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
     isFocusInput: PropTypes.bool.isRequired,
     setIsFocusInput: PropTypes.func.isRequired,
+    ratioSelectValue: PropTypes.string.isRequired,
+    setRatioSelectValue: PropTypes.func.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
+    setCanvasSetting: PropTypes.func.isRequired,
+    canvas: PropTypes.object.isRequired,
+    activeObj: PropTypes.object.isRequired,
+    setActiveObj: PropTypes.func.isRequired,
+    saveDragItem: PropTypes.object.isRequired,
+    uploadedFiles: PropTypes.array.isRequired,
+    canvasData: PropTypes.object.isRequired,
 };
 
-export default MainBoard;
+export default React.memo(MainBoard);

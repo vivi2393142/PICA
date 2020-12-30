@@ -5,9 +5,8 @@ import UserPage from './UserPage';
 import Explore from './Explore';
 import Shots from './Shots';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
-import { mediaQuerySize } from '../../utils/config.js';
+import { mediaQuerySize } from '../../utils/globalConfig.js';
 
-// export default App;
 const MainPage = (props) => {
     const [currentPage, setCurrentPage] = React.useState('explore');
     const [isAddingNew, setIsAddingNew] = React.useState(false);
@@ -69,4 +68,4 @@ const MainPage = (props) => {
 
 MainPage.propTypes = { setCurrentUser: PropTypes.func.isRequired, currentUser: PropTypes.object };
 
-export default MainPage;
+export default React.memo(MainPage);

@@ -3,18 +3,49 @@ import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import * as firebase from '../../../utils/firebase.js';
 import { Alert, defaultAlertSetting } from '../../Alert';
-import { trackOutSideClick } from '../../../utils/utils.js';
-import { canvasSizeOptions } from '../../../utils/config.js';
+import { trackOutSideClick } from '../../../utils/globalUtils.js';
+import { canvasSizeOptions } from '../../../utils/globalConfig.js';
+import * as utils from '../../../utils/globalUtils';
+
+// all alert data
+const resizeAlertSetting = {
+    即將重設尺寸: {
+        buttonNumber: 2,
+        buttonOneTitle: '確認重設',
+        buttonTwoTitle: '取消重設',
+        title: '即將重設尺寸',
+        content: '若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切',
+    },
+    設置錯誤: {
+        buttonNumber: 1,
+
+        buttonOneTitle: '關閉',
+        buttonTwoTitle: '',
+        title: '設置錯誤',
+        content: '寬度或高度須介於 150 ~ 2000 之間',
+    },
+};
+const limitSetting = (currentSize) => {
+    return (
+        currentSize.width < 150 ||
+        currentSize.width > 2000 ||
+        currentSize.height < 150 ||
+        currentSize.height > 2000
+    );
+};
 
 const Resize = (props) => {
-    const allSettings = props.drawingAreaSettings;
+    const customSizeRef = React.useRef(null);
+    const [isTypingSize, setIsTypingSize] = React.useState(false);
+    const [isChoosingCanvasSize, setIsChoosingCanvasSize] = React.useState(false);
+    const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         ...defaultAlertSetting,
     });
+    const isOverLimit = limitSetting(customSize);
     // size setting
-    const [isChoosingCanvasSize, setIsChoosingCanvasSize] = React.useState(false);
-    const toggleSizeChoosing = (e, way) => {
+    const toggleSizeChoosing = (e) => {
         setIsChoosingCanvasSize(true);
         const targetContainer = e.currentTarget.parentNode;
         trackOutSideClick(targetContainer, () => setIsChoosingCanvasSize(false));
@@ -25,66 +56,35 @@ const Resize = (props) => {
         if (way === 'default') {
             const settings = canvasSizeOptions.find((option) => option.name === target.id);
             newCanvasSetting = {
-                ...allSettings.canvasSetting,
+                ...props.canvasSetting,
                 width: parseInt(settings.width),
                 height: parseInt(settings.height),
                 type: settings.type,
             };
         } else {
             newCanvasSetting = {
-                ...allSettings.canvasSetting,
+                ...props.canvasSetting,
                 width: parseInt(customSize.width),
                 height: parseInt(customSize.height),
                 type: 'custom',
             };
         }
-        const container = document.querySelector('.canvas-container');
-        allSettings.setCanvasSetting(newCanvasSetting);
-        // resize to fix window
-        const fixRatio = Math.min(
-            (window.innerWidth * 0.72) / newCanvasSetting.width,
-            (window.innerHeight * 0.72) / newCanvasSetting.height
-        );
-        container.style.width = `${fixRatio * newCanvasSetting.width}px`;
-        container.style.height = `${fixRatio * newCanvasSetting.height}px`;
-        allSettings.canvas.setZoom(fixRatio);
-        allSettings.canvas.setWidth(newCanvasSetting.width * allSettings.canvas.getZoom());
-        allSettings.canvas.setHeight(newCanvasSetting.height * allSettings.canvas.getZoom());
-        document.querySelectorAll('.drawingArea').forEach((item) => {
-            item.style.width = '100%';
-            item.style.height = '100%';
-        });
+
+        props.setCanvasSetting(newCanvasSetting);
+        utils.setViewToFitWindow(newCanvasSetting);
+        utils.initViewZoomIn(props.canvas, newCanvasSetting);
         // reset to auto fix
-        allSettings.setRatioSelectValue('auto');
-        // preset background image object style
-        const backgroundObject = allSettings.canvas
-            .getObjects('image')
-            .find((x) => x.specialType === 'background');
-        if (backgroundObject) {
-            allSettings.canvas.remove(backgroundObject);
-            const scaleToWidth = newCanvasSetting.width / backgroundObject.width;
-            const scaleToHeight = newCanvasSetting.height / backgroundObject.height;
-            const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
-            allSettings.presetBackgroundImg(
-                backgroundObject,
-                allSettings.canvas,
-                newCanvasSetting,
-                scaleWay,
-                scaleToWidth,
-                scaleToHeight
-            );
-        }
+        props.setRatioSelectValue('auto');
+        utils.presetBackgroundElements(props.canvas, newCanvasSetting);
         firebase.setBasicSetting(
             props.fileId,
             newCanvasSetting.width,
             newCanvasSetting.height,
             newCanvasSetting.type,
-            allSettings.canvas
+            props.canvas
         );
     };
     // custom size
-    const [isTypingSize, setIsTypingSize] = React.useState(false);
-    const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
     const handleCustomWidth = (e) => {
         if (/^\d*$/.test(e.target.value)) {
             setCustomSize({ ...customSize, width: e.target.value });
@@ -95,65 +95,50 @@ const Resize = (props) => {
             setCustomSize({ ...customSize, height: e.target.value });
         }
     };
-    const toggleCustomSizeInput = (e) => {
-        setIsTypingSize(true);
+    const toggleCustomSizeInput = async (e) => {
         setIsChoosingCanvasSize(false);
-        const targetContainer = document.querySelector('.customSizeWrapper');
+        await setIsTypingSize(true);
+        const targetContainer = customSizeRef.current;
         trackOutSideClick(targetContainer, () => setIsTypingSize(false));
     };
 
     // jsx: size choosing
-    const sizeSelectionJsx = canvasSizeOptions.map((item, index) => {
-        if (item.name !== '自訂尺寸') {
-            return (
-                <div
-                    key={index}
-                    id={item.name}
-                    className='sizeOption'
-                    onClick={(e) => {
-                        const target = e.currentTarget;
-                        setAlertSetting({
-                            buttonNumber: 2,
-                            buttonOneFunction: () => {
-                                setShowAlert(false);
-                                handleCanvasSize(target, 'default');
-                            },
-                            buttonTwoFunction: () => {
-                                setShowAlert(false);
-                                return;
-                            },
-                            buttonOneTitle: '確認重設',
-                            buttonTwoTitle: '取消重設',
-                            title: '即將重設尺寸',
-                            content: '若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切',
-                        });
-                        // close toggle
-                        setIsChoosingCanvasSize(false);
-                        setIsTypingSize(false);
-                        setShowAlert(true);
-                    }}
-                >
-                    {item.name}
-                    <div className='sizeDetails'>
-                        {item.mmW
-                            ? `${item.mmW}×${item.mmH} mm`
-                            : `${item.width}×${item.height} px`}
-                    </div>
+    const sizeSelectionJsx = canvasSizeOptions.map((item, index) =>
+        item.name !== '自訂尺寸' ? (
+            <div
+                key={index}
+                id={item.name}
+                className='sizeOption'
+                onClick={(e) => {
+                    const target = e.currentTarget;
+                    setAlertSetting({
+                        ...resizeAlertSetting['即將重設尺寸'],
+                        buttonOneFunction: () => {
+                            setShowAlert(false);
+                            handleCanvasSize(target, 'default');
+                        },
+                        buttonTwoFunction: () => {
+                            setShowAlert(false);
+                            return;
+                        },
+                    });
+                    // close toggle
+                    setIsChoosingCanvasSize(false);
+                    setIsTypingSize(false);
+                    setShowAlert(true);
+                }}
+            >
+                {item.name}
+                <div className='sizeDetails'>
+                    {item.mmW ? `${item.mmW}×${item.mmH} mm` : `${item.width}×${item.height} px`}
                 </div>
-            );
-        } else {
-            return (
-                <div
-                    key={index}
-                    id={item.name}
-                    className='sizeOption'
-                    onClick={toggleCustomSizeInput}
-                >
-                    {item.name}
-                </div>
-            );
-        }
-    });
+            </div>
+        ) : (
+            <div key={index} id={item.name} className='sizeOption' onClick={toggleCustomSizeInput}>
+                {item.name}
+            </div>
+        )
+    );
 
     return (
         <div className='resizeIconWrapper'>
@@ -171,10 +156,7 @@ const Resize = (props) => {
             <bannerIcons.Resize className='bannerIcons' onClick={toggleSizeChoosing} />
             {isChoosingCanvasSize && <div className='sizeSelection'>{sizeSelectionJsx}</div>}
             {isTypingSize && (
-                <div
-                    className='customSizeWrapper'
-                    // onMouseLeave={() => setIsTypingSize(false)}
-                >
+                <div className='customSizeWrapper' ref={customSizeRef}>
                     <div className='customSizeInputOuter'>
                         <input
                             maxLength='4'
@@ -183,7 +165,6 @@ const Resize = (props) => {
                             onChange={handleCustomWidth}
                             onFocus={() => {
                                 props.setIsFocusInput(true);
-                                console.log('focus');
                             }}
                             onBlur={() => {
                                 props.setIsFocusInput(false);
@@ -204,33 +185,22 @@ const Resize = (props) => {
                         ></input>
                         <div className='customSizeInputPx'>像素</div>
                     </div>
-
                     <div
                         className='customSizeButton'
                         onClick={(e) => {
-                            if (
-                                customSize.width < 150 ||
-                                customSize.width > 2000 ||
-                                customSize.height < 150 ||
-                                customSize.height > 2000
-                            ) {
+                            if (isOverLimit) {
                                 setAlertSetting({
-                                    buttonNumber: 1,
+                                    ...resizeAlertSetting['設置錯誤'],
                                     buttonOneFunction: () => {
                                         setShowAlert(false);
                                     },
                                     buttonTwoFunction: () => {},
-                                    buttonOneTitle: '關閉',
-                                    buttonTwoTitle: '',
-                                    title: '設置錯誤',
-                                    content: '寬度或高度須介於 150 ~ 2000 之間',
                                 });
-                                // close toggle
                                 setShowAlert(true);
-                            } else if (customSize.width > 0 && customSize.height > 0) {
+                            } else {
                                 const target = e.currentTarget;
                                 setAlertSetting({
-                                    buttonNumber: 2,
+                                    ...resizeAlertSetting['即將重設尺寸'],
                                     buttonOneFunction: () => {
                                         setShowAlert(false);
                                         handleCanvasSize(target, 'custom');
@@ -239,12 +209,7 @@ const Resize = (props) => {
                                         setShowAlert(false);
                                         return;
                                     },
-                                    buttonOneTitle: '確認重設',
-                                    buttonTwoTitle: '取消重設',
-                                    title: '即將重設尺寸',
-                                    content: '若您修改為較小的畫布尺寸，超出範圍的元素將自動被裁切',
                                 });
-                                // close toggle
                                 setIsChoosingCanvasSize(false);
                                 setIsTypingSize(false);
                                 setShowAlert(true);
@@ -260,10 +225,12 @@ const Resize = (props) => {
 };
 
 Resize.propTypes = {
-    // TODO: 待資料確定後，明確定義 array 內容
-    drawingAreaSettings: PropTypes.object.isRequired,
     fileId: PropTypes.string.isRequired,
     setIsFocusInput: PropTypes.func.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
+    setCanvasSetting: PropTypes.func.isRequired,
+    canvas: PropTypes.object.isRequired,
+    setRatioSelectValue: PropTypes.func.isRequired,
 };
 
-export default Resize;
+export default React.memo(Resize);

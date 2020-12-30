@@ -77,9 +77,7 @@ const Login = (props) => {
                 />
             )}
             <div
-                className={`${styles.loginRect} ${
-                    props.chooseLogin ? styles.rectGreen : styles.rectYellow
-                }`}
+                className={`${styles.loginRect} ${props.chooseLogin ? styles.rectGreen : styles.rectYellow}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.textBox}>
@@ -193,4 +191,4 @@ Login.propTypes = {
     setIsLoginOrSignup: PropTypes.func.isRequired,
 };
 
-export default Login;
+export default React.memo(Login);

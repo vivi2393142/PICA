@@ -40,11 +40,7 @@ function initAligningGuidelines(canvas) {
     function isInRange(value1, value2) {
         value1 = Math.round(value1);
         value2 = Math.round(value2);
-        for (
-            var i = value1 - aligningLineMargin, len = value1 + aligningLineMargin;
-            i <= len;
-            i++
-        ) {
+        for (var i = value1 - aligningLineMargin, len = value1 + aligningLineMargin; i <= len; i++) {
             if (i === value2) {
                 return true;
             }
@@ -124,10 +120,7 @@ function initAligningGuidelines(canvas) {
                             : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset,
                 });
                 activeObject.setPositionByOrigin(
-                    new fabric.Point(
-                        objectLeft - objectWidth / 2 + activeObjectWidth / 2,
-                        activeObjectTop
-                    ),
+                    new fabric.Point(objectLeft - objectWidth / 2 + activeObjectWidth / 2, activeObjectTop),
                     'center',
                     'center'
                 );
@@ -148,10 +141,7 @@ function initAligningGuidelines(canvas) {
                             : activeObjectTop - activeObjectHeight / 2 - aligningLineOffset,
                 });
                 activeObject.setPositionByOrigin(
-                    new fabric.Point(
-                        objectLeft + objectWidth / 2 - activeObjectWidth / 2,
-                        activeObjectTop
-                    ),
+                    new fabric.Point(objectLeft + objectWidth / 2 - activeObjectWidth / 2, activeObjectTop),
                     'center',
                     'center'
                 );
@@ -193,10 +183,7 @@ function initAligningGuidelines(canvas) {
                             : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset,
                 });
                 activeObject.setPositionByOrigin(
-                    new fabric.Point(
-                        activeObjectLeft,
-                        objectTop - objectHeight / 2 + activeObjectHeight / 2
-                    ),
+                    new fabric.Point(activeObjectLeft, objectTop - objectHeight / 2 + activeObjectHeight / 2),
                     'center',
                     'center'
                 );
@@ -217,10 +204,7 @@ function initAligningGuidelines(canvas) {
                             : activeObjectLeft - activeObjectWidth / 2 - aligningLineOffset,
                 });
                 activeObject.setPositionByOrigin(
-                    new fabric.Point(
-                        activeObjectLeft,
-                        objectTop + objectHeight / 2 - activeObjectHeight / 2
-                    ),
+                    new fabric.Point(activeObjectLeft, objectTop + objectHeight / 2 - activeObjectHeight / 2),
                     'center',
                     'center'
                 );

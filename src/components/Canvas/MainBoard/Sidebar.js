@@ -6,40 +6,41 @@ import * as sidebarItems from '../../../img/sidebarItems';
 import { Alert, defaultAlertSetting } from '../../Alert';
 import deleteLoading from '../../../img/src/deleteLoading.svg';
 import * as firebase from '../../../utils/firebase.js';
-import * as utils from '../../../utils/utils.js';
-import * as config from '../../../utils/config';
+import * as utils from '../../../utils/globalUtils.js';
+import * as config from '../../../utils/globalConfig';
+import Sample from './Sidebar/Sample';
 
 const Sidebar = (props) => {
-    const allSettings = props.allSettings;
     const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
     const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
-    const [sampleList, setSampleList] = React.useState([]);
     const [showUploadCover, setShowUploadCover] = React.useState(false);
-    const [showAlert, setShowAlert] = React.useState(false);
     const [isAtMobile, setIsAtMobile] = React.useState(false);
+    const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         ...defaultAlertSetting,
     });
 
     // if on mobile size, disable draggable
     React.useEffect(() => {
-        const setSizeState =
-            window.innerWidth <= config.mediaQuerySize.big
-                ? setIsAtMobile(true)
-                : setIsAtMobile(false);
+        const setSizeState = () => {
+            config.mediaQuerySize.big >= window.innerWidth ? setIsAtMobile(true) : setIsAtMobile(false);
+        };
+        setSizeState();
         window.addEventListener('resize', setSizeState);
+        return () => {
+            window.removeEventListener('resize', setSizeState);
+        };
     }, []);
 
     // preset background
     React.useEffect(() => {
-        allSettings.canvas.backgroundColor &&
-            setBackColorChosen({ background: allSettings.canvas.backgroundColor });
-    }, [allSettings.canvas.backgroundColor]);
+        props.canvas.backgroundColor && setBackColorChosen({ background: props.canvas.backgroundColor });
+    }, [props.canvas.backgroundColor]);
 
     // set next add in component position
     const adjSetNextPosition = () => {
-        nextAddPosition.left + 80 > allSettings.canvasSetting.width / 2 ||
-        nextAddPosition.top + 80 > allSettings.canvasSetting.height / 2
+        nextAddPosition.left + 80 > props.canvasSetting.width / 2 ||
+        nextAddPosition.top + 80 > props.canvasSetting.height / 2
             ? setNextAddPosition({ top: 10, left: 10 })
             : setNextAddPosition({
                   top: nextAddPosition.top + 10,
@@ -83,7 +84,7 @@ const Sidebar = (props) => {
             title: '上傳錯誤',
         };
         // prevent canvas drop event
-        if (files.length > 0) {
+        if (files.length) {
             if (files.length > 1) {
                 setAlertSetting({
                     ...basicAlertForUpload,
@@ -139,14 +140,14 @@ const Sidebar = (props) => {
         utils.trackOutSideClick(document.querySelector('.backgroundPicker'), () => {
             setIsChoosingBackColor(false);
             props.setIsFocusInput(false);
-            allSettings.canvas.fire('object:modified');
+            props.canvas.fire('object:modified');
         });
         setIsChoosingBackColor(true);
         props.setIsFocusInput(true);
     };
     const backgroundColorHandler = (color) => {
-        allSettings.canvas.backgroundImage = 0;
-        allSettings.canvas.backgroundColor = color;
+        props.canvas.backgroundImage = 0;
+        props.canvas.backgroundColor = color;
     };
     const handleBackColorChange = (color) => {
         const colorRgba = `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
@@ -166,30 +167,8 @@ const Sidebar = (props) => {
         }
         setBackColorChosen({ background: color });
         backgroundColorHandler(color);
-        allSettings.canvas.fire('object:modified');
-        allSettings.canvas.requestRenderAll();
-    };
-    // handlers: use template
-    const handleTemplateUse = (e) => {
-        const targetId = e.target.id;
-        setAlertSetting({
-            buttonNumber: 2,
-            buttonOneFunction: () => {
-                setShowAlert(false);
-                firebase.getSingleSample(targetId, (data) => {
-                    allSettings.canvas.loadFromJSON(data);
-                });
-            },
-            buttonTwoFunction: () => {
-                setShowAlert(false);
-                return;
-            },
-            buttonOneTitle: '確認套用',
-            buttonTwoTitle: '取消套用',
-            title: '即將重設所有物件',
-            content: '套用範本將自動刪除現存在在畫布上的所有物件',
-        });
-        setShowAlert(true);
+        props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
 
     // get current image styles
@@ -197,8 +176,8 @@ const Sidebar = (props) => {
         ...config.imageFiltersInit,
     });
     React.useEffect(() => {
-        if (allSettings.activeObj.type === 'image') {
-            allSettings.activeObj.filters.forEach((item) => {
+        if (props.activeObj.type === 'image') {
+            props.activeObj.filters.forEach((item) => {
                 const type = item.type.toLowerCase();
                 type === 'huerotation'
                     ? (config.imageFiltersInit.rotation = parseFloat(item.rotation))
@@ -206,14 +185,14 @@ const Sidebar = (props) => {
             });
             setCurrentFilters(config.imageFiltersInit);
         }
-    }, [allSettings.activeObj]);
+    }, [props.activeObj]);
     const resetFilters = () => {
         setCurrentFilters({
             ...config.imageFiltersInit,
         });
-        allSettings.activeObj.filters = [];
-        allSettings.activeObj.applyFilters();
-        allSettings.canvas.requestRenderAll();
+        props.activeObj.filters = [];
+        props.activeObj.applyFilters();
+        props.canvas.requestRenderAll();
     };
 
     // jsx : sidebar
@@ -236,60 +215,15 @@ const Sidebar = (props) => {
             }}
         >
             {props.currentSidebar === item.EN ? item.icon : item.iconB}
-            <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : ''}`}>
-                {item.CH}
-            </div>
+            <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : ''}`}>{item.CH}</div>
         </div>
     ));
-    // jsx: sidebar - sample
-    React.useEffect(() => {
-        if (props.allSettings.canvasSetting.type) {
-            firebase.getSampleList(props.allSettings.canvasSetting.type, (result) => {
-                setSampleList(result);
-            });
-        }
-    }, [props.allSettings.canvasSetting]);
-    const sampleJsx = (
-        <div
-            className='sidebarUnfoldInner sidebarUnfoldSample'
-            style={{ display: props.currentSidebar === 'template' ? 'flex' : 'none' }}
-        >
-            {sampleList.map((item, index) => {
-                return (
-                    <div
-                        key={index}
-                        className='unfoldItemGalleryWrapper'
-                        style={{
-                            width: isAtMobile ? '30%' : '45%',
-                            overflow: 'visible',
-                            height: 'auto',
-                        }}
-                    >
-                        <img
-                            key={index}
-                            draggable='false'
-                            onClick={handleTemplateUse}
-                            className='unfoldItem unfoldItemGallery'
-                            src={item.snapshot}
-                            id={item.basicSetting.id}
-                            style={{
-                                position: 'relative',
-                                top: 0,
-                                left: 0,
-                                transform: 'translate(0, 0)',
-                            }}
-                        ></img>
-                    </div>
-                );
-            })}
-        </div>
-    );
     // jsx: sidebar - text
     const textJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldText'
             style={{ display: props.currentSidebar === 'text' ? 'flex' : 'none' }}
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            onMouseDown={(e) => props.saveDragItem.func(e)}
         >
             {config.textSetting.map((option, index) => (
                 <div
@@ -299,8 +233,8 @@ const Sidebar = (props) => {
                     onClick={() => {
                         utils.addIText(
                             nextAddPosition,
-                            allSettings.canvas,
-                            allSettings.canvasSetting,
+                            props.canvas,
+                            props.canvasSetting,
                             adjSetNextPosition,
                             index
                         );
@@ -319,11 +253,7 @@ const Sidebar = (props) => {
             className={`unfoldItem ${option.className}`}
             draggable={!isAtMobile}
             onClick={() => {
-                utils[option.callbackName](
-                    nextAddPosition,
-                    allSettings.canvas,
-                    allSettings.canvasSetting
-                );
+                utils[option.callbackName](nextAddPosition, props.canvas, props.canvasSetting);
                 adjSetNextPosition();
             }}
         ></img>
@@ -331,7 +261,7 @@ const Sidebar = (props) => {
     const shapeJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldShape'
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'shape' ? 'flex' : 'none' }}
         >
             <div className='sidebarUnfoldSubtitle'>常用形狀</div>
@@ -345,12 +275,7 @@ const Sidebar = (props) => {
                         draggable={!isAtMobile}
                         className='unfoldItem abnormalShape'
                         onClick={(e) => {
-                            utils.addShape(
-                                e.target.src,
-                                nextAddPosition,
-                                allSettings.canvas,
-                                allSettings.canvasSetting
-                            );
+                            utils.addShape(e.target.src, nextAddPosition, props.canvas, props.canvasSetting);
                             adjSetNextPosition();
                         }}
                     ></img>
@@ -362,7 +287,7 @@ const Sidebar = (props) => {
     const lineJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldLine'
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'line' ? 'flex' : 'none' }}
         >
             {config.lineArray.map((item, index) => {
@@ -372,12 +297,7 @@ const Sidebar = (props) => {
                         src={item}
                         className='unfoldItem itemLine'
                         onClick={(e) => {
-                            utils.addShape(
-                                e.target.src,
-                                nextAddPosition,
-                                allSettings.canvas,
-                                allSettings.canvasSetting
-                            );
+                            utils.addShape(e.target.src, nextAddPosition, props.canvas, props.canvasSetting);
                             adjSetNextPosition();
                         }}
                         draggable={!isAtMobile}
@@ -390,7 +310,7 @@ const Sidebar = (props) => {
     const imageJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldImg'
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'image' ? 'flex' : 'none' }}
         >
             {config.imageArray.map((category, index) => {
@@ -400,9 +320,7 @@ const Sidebar = (props) => {
                             {category.title}
                             <div
                                 onClick={(e) => {
-                                    e.target.parentNode.parentNode.classList.toggle(
-                                        'unfoldImgWrapperToggle'
-                                    );
+                                    e.target.parentNode.parentNode.classList.toggle('unfoldImgWrapperToggle');
                                     e.target.textContent === '+'
                                         ? (e.target.textContent = '-')
                                         : (e.target.textContent = '+');
@@ -420,8 +338,8 @@ const Sidebar = (props) => {
                                             utils.addImage(
                                                 e.target,
                                                 nextAddPosition,
-                                                allSettings.canvas,
-                                                allSettings.canvasSetting
+                                                props.canvas,
+                                                props.canvasSetting
                                             );
                                             adjSetNextPosition();
                                         }}
@@ -446,7 +364,7 @@ const Sidebar = (props) => {
     const stickerJsx = (
         <div
             className='sidebarUnfoldInner sidebarUnfoldSticker'
-            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+            onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'sticker' ? 'flex' : 'none' }}
         >
             {config.stickerTestArray.map((category, index) => {
@@ -460,9 +378,7 @@ const Sidebar = (props) => {
                             {category.title}
                             <div
                                 onClick={(e) => {
-                                    e.target.parentNode.parentNode.classList.toggle(
-                                        'unfoldImgWrapperToggle'
-                                    );
+                                    e.target.parentNode.parentNode.classList.toggle('unfoldImgWrapperToggle');
                                     e.target.textContent === '+'
                                         ? (e.target.textContent = '-')
                                         : (e.target.textContent = '+');
@@ -480,8 +396,8 @@ const Sidebar = (props) => {
                                             utils.addSticker(
                                                 e.target,
                                                 nextAddPosition,
-                                                allSettings.canvas,
-                                                allSettings.canvasSetting,
+                                                props.canvas,
+                                                props.canvasSetting,
                                                 adjSetNextPosition
                                             );
                                         }}
@@ -522,13 +438,7 @@ const Sidebar = (props) => {
                 <img
                     key={index}
                     draggable='false'
-                    onClick={(e) =>
-                        utils.backgroundImageHandler(
-                            e.target,
-                            allSettings.canvas,
-                            allSettings.canvasSetting
-                        )
-                    }
+                    onClick={(e) => utils.backgroundImageHandler(e.target, props.canvas, props.canvasSetting)}
                     className='unfoldItem unfoldItemGallery'
                     style={{ position: 'relative', height: isAtMobile ? '100%' : '10rem' }}
                     src={item}
@@ -552,7 +462,7 @@ const Sidebar = (props) => {
                     color={backColorChosen.background}
                     onChange={(color) => {
                         handleBackColorChange(color);
-                        allSettings.canvas.requestRenderAll();
+                        props.canvas.requestRenderAll();
                     }}
                 />
             )}
@@ -577,10 +487,7 @@ const Sidebar = (props) => {
                     ></div>
                 </div>
                 <div className='backgroundColorChart'>
-                    <div
-                        className='backgroundColorCube nonColor'
-                        onClick={handleBackColorChangeCube}
-                    ></div>
+                    <div className='backgroundColorCube nonColor' onClick={handleBackColorChangeCube}></div>
                     {backgroundColorJsx}
                 </div>
             </div>
@@ -608,22 +515,18 @@ const Sidebar = (props) => {
                 </label>
             ) : (
                 <div className='progressWrapper'>
-                    <progress
-                        className='uploadProgress'
-                        value={uploadProgressValue}
-                        max='100'
-                    ></progress>
+                    <progress className='uploadProgress' value={uploadProgressValue} max='100'></progress>
                     <div>LOADING</div>
                     <div>{uploadProgressValue}%</div>
                 </div>
             )}
-            {allSettings.uploadedFiles &&
-                allSettings.uploadedFiles.map((item, index) => {
+            {props.uploadedFiles &&
+                props.uploadedFiles.map((item, index) => {
                     return (
                         <div
                             key={index}
                             className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
-                            onMouseDown={(e) => allSettings.saveDragItem.func(e)}
+                            onMouseDown={(e) => props.saveDragItem.func(e)}
                         >
                             <img
                                 className='unfoldItemImg unfoldItemGallery'
@@ -631,8 +534,8 @@ const Sidebar = (props) => {
                                     utils.addImage(
                                         e.target,
                                         nextAddPosition,
-                                        allSettings.canvas,
-                                        allSettings.canvasSetting,
+                                        props.canvas,
+                                        props.canvasSetting,
                                         adjSetNextPosition
                                     );
                                 }}
@@ -676,9 +579,9 @@ const Sidebar = (props) => {
         const newFilter = new filters[item.way]({
             [item.attr]: parseFloat(e.target.value),
         });
-        allSettings.activeObj.filters[index] = newFilter;
-        allSettings.activeObj.applyFilters();
-        allSettings.canvas.requestRenderAll();
+        props.activeObj.filters[index] = newFilter;
+        props.activeObj.applyFilters();
+        props.canvas.requestRenderAll();
     };
     const imageFiltersJsx = (
         <div
@@ -721,11 +624,11 @@ const Sidebar = (props) => {
 
     return (
         <div
-            className={`sidebar ${
-                props.currentSidebar === '' ? '' : 'mobileSidebarToggle mobileSidebarUnfold'
+            className={`sidebar ${props.isShowMobileSidebar ? 'mobileSidebarShow' : 'mobileSidebarHide'} ${
+                props.currentSidebar !== '' ? 'showMobileUnfoldSidebar' : ''
             }`}
         >
-            <div className='mobileToggle' onClick={props.closeMobileSidebar}></div>
+            <div className='mobileToggle' onClick={() => setIsShowMobileSidebar(false)}></div>
             {showAlert && (
                 <Alert
                     buttonNumber={alertSetting.buttonNumber}
@@ -749,7 +652,7 @@ const Sidebar = (props) => {
             {props.currentSidebar !== '' && (
                 <div
                     className={`sidebarUnfold sidebarUnfoldUpload ${
-                        props.currentSidebar === 'text' && 'firstUnfold'
+                        props.currentSidebar === 'text' ? 'firstUnfold' : ''
                     }`}
                 >
                     {textJsx}
@@ -759,7 +662,13 @@ const Sidebar = (props) => {
                     {backgroundJsxAll}
                     {uploadedImgJsx}
                     {stickerJsx}
-                    {sampleJsx}
+                    <Sample
+                        canvas={props.canvas}
+                        canvasSetting={props.canvasSetting}
+                        currentSidebar={props.currentSidebar}
+                        isAtMobile={isAtMobile}
+                    />
+                    {/* {sampleJsx} */}
                     {imageFiltersJsx}
                     {props.currentSidebar !== 'imageAdjustment' && toggleButtonJsx}
                 </div>
@@ -771,11 +680,16 @@ const Sidebar = (props) => {
 Sidebar.propTypes = {
     currentSidebar: PropTypes.string.isRequired,
     setCurrentSidebar: PropTypes.func.isRequired,
-    allSettings: PropTypes.object.isRequired,
     currentUser: PropTypes.object,
     fileId: PropTypes.string.isRequired,
     setIsFocusInput: PropTypes.func.isRequired,
-    closeMobileSidebar: PropTypes.func.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
+    canvas: PropTypes.object.isRequired,
+    activeObj: PropTypes.object.isRequired,
+    saveDragItem: PropTypes.object.isRequired,
+    uploadedFiles: PropTypes.array.isRequired,
+    isShowMobileSidebar: PropTypes.bool.isRequired,
+    setIsShowMobileSidebar: PropTypes.func.isRequired,
 };
 
-export default Sidebar;
+export default React.memo(Sidebar);

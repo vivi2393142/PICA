@@ -2,43 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import * as icons from '../../../../img/icons';
-import { trackOutSideClick } from '../../../../utils/utils.js';
+import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
 let ctrlDown = false;
 let shiftDown = false;
+const toggleSelectionHandler = (e, setSelectedState) => {
+    setSelectedState(true);
+    const scrollContainerNode = document.querySelector('.scrollContainer');
+    scrollContainerNode && scrollContainerNode.classList.add('unfoldScrollContainer');
+    trackOutSideClick(e.currentTarget.parentNode, () => {
+        scrollContainerNode && scrollContainerNode.classList.remove('unfoldScrollContainer');
+        setSelectedState(false);
+    });
+};
 
 const NavRight = (props) => {
     // unfold nav
     const [clipboard, setClipboard] = React.useState(false);
     const [isLayerChoosing, setIsLayerChoosing] = React.useState(false);
-    const toggleLayerSelection = (e) => {
-        setIsLayerChoosing(true);
-        if (document.querySelector('.scrollContainer')) {
-            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
-        }
-        trackOutSideClick(e.currentTarget.parentNode, () => {
-            if (document.querySelector('.scrollContainer')) {
-                document
-                    .querySelector('.scrollContainer')
-                    .classList.remove('unfoldScrollContainer');
-            }
-            setIsLayerChoosing(false);
-        });
-    };
     const [isAlignChoosing, setIsAlignChoosing] = React.useState(false);
+
+    const toggleLayerSelection = (e) => {
+        toggleSelectionHandler(e, setIsLayerChoosing);
+    };
     const toggleAlignSelection = (e) => {
-        setIsAlignChoosing(true);
-        if (document.querySelector('.scrollContainer')) {
-            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
-        }
-        trackOutSideClick(e.currentTarget.parentNode, () => {
-            if (document.querySelector('.scrollContainer')) {
-                document
-                    .querySelector('.scrollContainer')
-                    .classList.remove('unfoldScrollContainer');
-            }
-            setIsAlignChoosing(false);
-        });
+        toggleSelectionHandler(e, setIsAlignChoosing);
     };
 
     // methods for component:
@@ -136,10 +124,7 @@ const NavRight = (props) => {
                 cutHandler();
             }
             if (e.keyCode === codes.delKey && !props.isFocusInput) {
-                if (
-                    (props.activeObj.type === 'i-text' && props.activeObj.isEditing) ||
-                    props.textIsEditing
-                ) {
+                if ((props.activeObj.type === 'i-text' && props.activeObj.isEditing) || props.textIsEditing) {
                     return;
                 } else {
                     delHandler();
@@ -246,9 +231,7 @@ const NavRight = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        left:
-                            props.canvasSetting.width -
-                            props.activeObj.width * props.activeObj.scaleX,
+                        left: props.canvasSetting.width - props.activeObj.width * props.activeObj.scaleX,
                         originX: 'left',
                     });
                 }
@@ -279,9 +262,7 @@ const NavRight = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        top:
-                            props.canvasSetting.height -
-                            props.activeObj.height * props.activeObj.scaleY,
+                        top: props.canvasSetting.height - props.activeObj.height * props.activeObj.scaleY,
                         originY: 'top',
                     });
                 }
@@ -319,12 +300,10 @@ const NavRight = (props) => {
         }
         // trigger 'object:modified' event
         props.canvas.fire('object:modified', { target: props.activeObj });
-        // props.canvas.fire('object:modified');
         props.canvas.requestRenderAll();
         setIsAlignChoosing(false);
     };
 
-    // props.activeObj.specialType !== 'cropbox'
     return (
         <div className='componentsNavRight'>
             {props.activeObj.type === 'activeSelection' && (
@@ -343,22 +322,10 @@ const NavRight = (props) => {
                     <icons.Layer onClick={toggleLayerSelection} className='insideButton' />
                     {isLayerChoosing && (
                         <div className='layerChoosingBox'>
-                            <icons.ToBottom
-                                className='activeButton insideButton'
-                                onClick={toBottomHandler}
-                            />
-                            <icons.ToTop
-                                className='activeButton insideButton'
-                                onClick={toTopHandler}
-                            />
-                            <icons.Upper
-                                className='activeButton insideButton'
-                                onClick={upperHandler}
-                            />
-                            <icons.Downer
-                                className='activeButton insideButton'
-                                onClick={downerHandler}
-                            />
+                            <icons.ToBottom className='activeButton insideButton' onClick={toBottomHandler} />
+                            <icons.ToTop className='activeButton insideButton' onClick={toTopHandler} />
+                            <icons.Upper className='activeButton insideButton' onClick={upperHandler} />
+                            <icons.Downer className='activeButton insideButton' onClick={downerHandler} />
                         </div>
                     )}
                 </div>
@@ -460,4 +427,4 @@ NavRight.propTypes = {
     isFocusInput: PropTypes.bool.isRequired,
 };
 
-export default NavRight;
+export default React.memo(NavRight);

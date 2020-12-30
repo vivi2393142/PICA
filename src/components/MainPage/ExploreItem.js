@@ -7,7 +7,6 @@ import { nanoid } from 'nanoid';
 import * as firebase from '../../utils/firebase.js';
 import { Alert, defaultAlertSetting } from '../Alert';
 
-// export default App;
 const ExploreItem = (props) => {
     const history = useHistory();
     const [showAlert, setShowAlert] = React.useState(false);
@@ -44,16 +43,12 @@ const ExploreItem = (props) => {
     return (
         <div
             className={`${
-                props.parentNodeForClass === 'explore'
-                    ? styles.exploreFileWrapper
-                    : styles.userFileWrapper
+                props.parentNodeForClass === 'explore' ? styles.exploreFileWrapper : styles.userFileWrapper
             }`}
             onClick={() => history.push(`/main/shots/${props.item.fileId}`)}
             style={{
                 animationDelay:
-                    !props.isLikeLoader &&
-                    props.parentNodeForClass !== 'explore' &&
-                    `${props.index * 0.05}s`,
+                    !props.isLikeLoader && props.parentNodeForClass !== 'explore' && `${props.index * 0.05}s`,
             }}
         >
             {showAlert && (
@@ -101,9 +96,7 @@ const ExploreItem = (props) => {
             <div className={styles.info}>
                 <img className={styles.userPhoto} src={props.item.userPhoto}></img>
                 <div className={styles.author}>{props.item.userName}</div>
-                <mainIcons.Like
-                    className={`${styles.infoIcon} ${props.item.isLike ? styles.isLike : ''}`}
-                />
+                <mainIcons.Like className={`${styles.infoIcon} ${props.item.isLike ? styles.isLike : ''}`} />
                 <div className={styles.like}>{props.item.like}</div>
                 <mainIcons.Comment className={styles.infoIcon} />
                 <div className={styles.messages}>{props.item.comment}</div>
@@ -125,4 +118,4 @@ ExploreItem.propTypes = {
     isNotSameAsCurrentUser: PropTypes.bool,
 };
 
-export default ExploreItem;
+export default React.memo(ExploreItem);

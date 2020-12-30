@@ -39,6 +39,7 @@ export const textSetting = [
 import React from 'react';
 import * as icons from '../img/icons';
 import * as sidebarItems from '../img/sidebarItems';
+export const ratioOptions = [25, 50, 75, 100, 125, 200, 300];
 export const normalShapeSetting = [
     { type: 'square', className: 'rectShape', callbackName: 'addRect' },
     { type: 'radiusSquare', className: 'radiusRectShape', callbackName: 'addRadiusRect' },
@@ -148,13 +149,7 @@ export const imageArray = [
     },
     {
         title: '其他',
-        src: [
-            sidebarItems.IO01,
-            sidebarItems.IO02,
-            sidebarItems.IO03,
-            sidebarItems.IO04,
-            sidebarItems.IO05,
-        ],
+        src: [sidebarItems.IO01, sidebarItems.IO02, sidebarItems.IO03, sidebarItems.IO04, sidebarItems.IO05],
     },
 ];
 export const stickerTestArray = [

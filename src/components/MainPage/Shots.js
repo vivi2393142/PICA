@@ -45,13 +45,9 @@ const Shots = (props) => {
         // track comment
         if (props.currentUser.email && props.currentUser.email !== 'noUser') {
             firebase.listenToComment(props.match.params.fileId, () => {
-                firebase.getShot(
-                    props.match.params.fileId,
-                    props.currentUser.email,
-                    (dataArray) => {
-                        setCommentData(dataArray);
-                    }
-                );
+                firebase.getShot(props.match.params.fileId, props.currentUser.email, (dataArray) => {
+                    setCommentData(dataArray);
+                });
             });
         }
         // data initialize
@@ -90,18 +86,14 @@ const Shots = (props) => {
                             {comment.userId === props.currentUser.email && (
                                 <mainIcons.Delete
                                     className={styles.delete}
-                                    onClick={(e) =>
-                                        firebase.deleteComment(index, props.match.params.fileId)
-                                    }
+                                    onClick={(e) => firebase.deleteComment(index, props.match.params.fileId)}
                                 />
                             )}
                             <div
                                 className={styles.commentUser}
                                 onClick={() => history.push(`/main/user/${comment.userId}`)}
                             >
-                                {comment.userId === props.currentUser.email
-                                    ? '我自己'
-                                    : comment.userName}
+                                {comment.userId === props.currentUser.email ? '我自己' : comment.userName}
                                 <span>{countDateDiff(comment.timestamp)}</span>
                             </div>
                             <div className={styles.commentContent}>{comment.content}</div>
@@ -164,9 +156,7 @@ const Shots = (props) => {
                         >
                             <img src={commentData.file.userPhoto} className={styles.authorImg} />
                             <div className={styles.userName}>{commentData.file.userName}</div>
-                            <div className={styles.fileNumber}>
-                                {commentData.file.fileNumber} files
-                            </div>
+                            <div className={styles.fileNumber}>{commentData.file.fileNumber} files</div>
                         </div>
                         <div className={styles.subTitle}>留言區</div>
                         <div className={styles.commentWrapper}>{commentsJsx}</div>
@@ -203,4 +193,4 @@ Shots.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
 };
 
-export default Shots;
+export default React.memo(Shots);

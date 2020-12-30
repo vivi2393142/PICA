@@ -961,6 +961,7 @@ input[type='range'].imgAdjustRange {
     height: 100%;
     height: 2rem;
     width: 2rem;
+    cursor: pointer;
 }
 .logoWrapper {
     height: 2rem;
@@ -1386,7 +1387,7 @@ input[type='range'].imgAdjustRange {
             left: 0;
             z-index: 200;
             position: fixed;
-            display: none;
+            // display: none;
         }
         .sidebar {
             width: 100%;
@@ -1430,7 +1431,7 @@ input[type='range'].imgAdjustRange {
                 }
             }
         }
-        .mobileSidebarToggle {
+        .mobileSidebarShow {
             display: flex;
             padding: 1.5rem 0 1rem 0;
             opacity: 1;
@@ -1447,7 +1448,7 @@ input[type='range'].imgAdjustRange {
                 opacity: 1;
             }
         }
-        .mobileSidebarToggleOut {
+        .mobileSidebarHide {
             display: flex;
             padding: 1.5rem 0 1rem 0;
             opacity: 1;
@@ -1466,13 +1467,10 @@ input[type='range'].imgAdjustRange {
                 transform: translateY(100%);
             }
         }
-        .mobileSidebarUnfold {
+        .showMobileUnfoldSidebar {
             flex-direction: column;
             max-height: 80%;
             padding: 0;
-            & * {
-                // border: 1px solid red;
-            }
             .sidebarFold {
                 flex-wrap: nowrap;
                 overflow-x: scroll;
@@ -1532,7 +1530,6 @@ input[type='range'].imgAdjustRange {
                     }
                 }
             }
-
             .sidebarUnfold {
                 width: 100%;
                 padding: 0;

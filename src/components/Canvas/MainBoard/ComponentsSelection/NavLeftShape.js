@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
-import { trackOutSideClick } from '../../../../utils/utils.js';
+import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
 const NavLeftShape = (props) => {
     // color setting function
@@ -56,9 +56,7 @@ const NavLeftShape = (props) => {
         props.canvas.requestRenderAll();
     };
     const stokeWidthArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const stokeWidthOptions = stokeWidthArray.map((width, index) => (
-        <option key={index}>{width}</option>
-    ));
+    const stokeWidthOptions = stokeWidthArray.map((width, index) => <option key={index}>{width}</option>);
     // render
     return (
         <div className='specificNav'>
@@ -69,10 +67,7 @@ const NavLeftShape = (props) => {
                     onClick={toggleBorderColorSelection}
                 ></div>
                 {isChoosingBorderColor && (
-                    <ChromePicker
-                        color={borderColorChosen.background}
-                        onChange={handleBorderColorChange}
-                    />
+                    <ChromePicker color={borderColorChosen.background} onChange={handleBorderColorChange} />
                 )}
             </div>
             <div className='specificButton textSizeOuter borderWidth'>
@@ -90,4 +85,4 @@ NavLeftShape.propTypes = {
     setIsFocusInput: PropTypes.func,
 };
 
-export default NavLeftShape;
+export default React.memo(NavLeftShape);

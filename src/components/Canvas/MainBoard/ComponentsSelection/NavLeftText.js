@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as icons from '../../../../img/icons';
 import NavLeftColor from './NavLeftColor';
 import 'fontfaceobserver';
-import { trackOutSideClick } from '../../../../utils/utils.js';
+import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
 const NavLeftText = (props) => {
     // unfold nav
@@ -17,9 +17,7 @@ const NavLeftText = (props) => {
         trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingSpace(false);
             if (document.querySelector('.scrollContainer')) {
-                document
-                    .querySelector('.scrollContainer')
-                    .classList.remove('unfoldScrollContainer');
+                document.querySelector('.scrollContainer').classList.remove('unfoldScrollContainer');
             }
             props.canvas.fire('object:modified');
         });
@@ -32,9 +30,7 @@ const NavLeftText = (props) => {
         trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingSize(false);
             if (document.querySelector('.scrollContainer')) {
-                document
-                    .querySelector('.scrollContainer')
-                    .classList.remove('unfoldScrollContainer');
+                document.querySelector('.scrollContainer').classList.remove('unfoldScrollContainer');
             }
             props.canvas.fire('object:modified');
         });
@@ -170,15 +166,11 @@ const NavLeftText = (props) => {
                 )}
             </div>
             <icons.TextBold
-                className={`specificButton textIcon ${
-                    textWeight === 'bold' ? 'textButtonActive' : ''
-                }`}
+                className={`specificButton textIcon ${textWeight === 'bold' ? 'textButtonActive' : ''}`}
                 onClick={handleTextWeight}
             />
             <icons.TextItalic
-                className={`specificButton textIcon ${
-                    textStyle === 'italic' ? 'textButtonActive' : ''
-                }`}
+                className={`specificButton textIcon ${textStyle === 'italic' ? 'textButtonActive' : ''}`}
                 onClick={handleTextStyle}
             />
             <icons.TextUnderline
@@ -186,21 +178,15 @@ const NavLeftText = (props) => {
                 onClick={handleTextUnderline}
             />
             <icons.TextAlignLeft
-                className={`specificButton textIcon ${
-                    textAlign === 'left' ? 'textButtonActive' : ''
-                }`}
+                className={`specificButton textIcon ${textAlign === 'left' ? 'textButtonActive' : ''}`}
                 onClick={() => handleTextAlgin('left')}
             />
             <icons.TextAlignCenter
-                className={`specificButton textIcon ${
-                    textAlign === 'center' ? 'textButtonActive' : ''
-                }`}
+                className={`specificButton textIcon ${textAlign === 'center' ? 'textButtonActive' : ''}`}
                 onClick={() => handleTextAlgin('center')}
             />
             <icons.TextAlignRight
-                className={`specificButton textIcon ${
-                    textAlign === 'right' ? 'textButtonActive' : ''
-                }`}
+                className={`specificButton textIcon ${textAlign === 'right' ? 'textButtonActive' : ''}`}
                 onClick={() => handleTextAlgin('right')}
             />
             <div className='spaceBoxOuter'>
@@ -247,4 +233,4 @@ NavLeftText.propTypes = {
     setIsFocusInput: PropTypes.func,
 };
 
-export default NavLeftText;
+export default React.memo(NavLeftText);

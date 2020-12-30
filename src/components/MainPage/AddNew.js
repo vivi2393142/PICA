@@ -5,7 +5,7 @@ import * as firebase from '../../utils/firebase.js';
 import * as mainIcon from '../../img/mainPage';
 import { nanoid } from 'nanoid';
 import { Alert, defaultAlertSetting } from '../Alert';
-import { canvasSizeOptions } from '../../utils/config.js';
+import { canvasSizeOptions } from '../../utils/globalConfig.js';
 
 const sizeAdjustForMediaQuery = { superSmall: 8, small: 6, normal: 5 };
 const handleCreateNew = (e) => {
@@ -29,7 +29,6 @@ const handleCreateNew = (e) => {
     }
 };
 
-// export default App;
 const AddNew = (props) => {
     const [currentStep, setCurrentStep] = React.useState(1);
     const [chosenRec, setChosenRec] = React.useState(null);
@@ -111,11 +110,7 @@ const AddNew = (props) => {
                         src={item.snapshot}
                         className={`${styles.sampleImg} ${
                             choices.sampleFileId ? styles.notChosenSampleImg : ''
-                        }${
-                            choices.sampleFileId === item.basicSetting.id
-                                ? styles.chosenSampleImg
-                                : ''
-                        }`}
+                        }${choices.sampleFileId === item.basicSetting.id ? styles.chosenSampleImg : ''}`}
                         onClick={() => {
                             setChoices({ ...choices, sampleFileId: item.basicSetting.id });
                         }}
@@ -126,9 +121,7 @@ const AddNew = (props) => {
     const sizeImgJsx = canvasSizeOptions.map((item, index) => {
         return (
             <div
-                className={`${styles.rec} ${styles[item.type]} ${
-                    chosenRec ? styles.recTransparent : ''
-                }
+                className={`${styles.rec} ${styles[item.type]} ${chosenRec ? styles.recTransparent : ''}
                 ${chosenRec === item.type ? styles.chosenRex : ''}`}
                 key={index}
                 style={{
@@ -148,9 +141,7 @@ const AddNew = (props) => {
                         width: item.height / imgSizeRatio + 'px',
                     }}
                 >
-                    <div className={styles.arrowText}>
-                        {item.mmW ? item.mmW + 'mm' : item.width + 'px'}
-                    </div>
+                    <div className={styles.arrowText}>{item.mmW ? item.mmW + 'mm' : item.width + 'px'}</div>
                 </div>
                 <div
                     className={`${styles.arrowH} ${
@@ -160,9 +151,7 @@ const AddNew = (props) => {
                         width: item.width / imgSizeRatio + 'px',
                     }}
                 >
-                    <div className={styles.arrowText}>
-                        {item.mmH ? item.mmH + 'mm' : item.height + 'px'}
-                    </div>
+                    <div className={styles.arrowText}>{item.mmH ? item.mmH + 'mm' : item.height + 'px'}</div>
                 </div>
             </div>
         );
@@ -171,9 +160,7 @@ const AddNew = (props) => {
         return (
             <div
                 key={index}
-                className={`${styles.option} ${
-                    chosenRec === item.type ? styles.chosenOptions : ''
-                }`}
+                className={`${styles.option} ${chosenRec === item.type ? styles.chosenOptions : ''}`}
                 onClick={() => sizeChoosingHandler(item.type)}
             >
                 <div className={styles.title}> {item.name}</div>
@@ -232,41 +219,29 @@ const AddNew = (props) => {
                     <div className={styles.box}>
                         <div className={styles.steps}>
                             <div
-                                className={`${styles.step} ${
-                                    currentStep === 1 ? styles.current : ''
-                                } ${currentStep > 1 ? styles.chosen : ''}`}
+                                className={`${styles.step} ${currentStep === 1 ? styles.current : ''} ${
+                                    currentStep > 1 ? styles.chosen : ''
+                                }`}
                             >
-                                <div
-                                    className={`${styles.text} ${
-                                        currentStep >= 1 ? styles.textShow : ''
-                                    }`}
-                                >
+                                <div className={`${styles.text} ${currentStep >= 1 ? styles.textShow : ''}`}>
                                     step.1
                                 </div>
                             </div>
                             <div
-                                className={`${styles.step} ${
-                                    currentStep === 2 ? styles.current : ''
-                                }  ${currentStep > 2 ? styles.chosen : ''}`}
+                                className={`${styles.step} ${currentStep === 2 ? styles.current : ''}  ${
+                                    currentStep > 2 ? styles.chosen : ''
+                                }`}
                             >
-                                <div
-                                    className={`${styles.text} ${
-                                        currentStep >= 2 ? styles.textShow : ''
-                                    }`}
-                                >
+                                <div className={`${styles.text} ${currentStep >= 2 ? styles.textShow : ''}`}>
                                     step.2
                                 </div>
                             </div>
                             <div
-                                className={`${styles.step}  ${
-                                    currentStep === 3 ? styles.current : ''
-                                }  ${currentStep > 3 ? styles.chosen : ''}`}
+                                className={`${styles.step}  ${currentStep === 3 ? styles.current : ''}  ${
+                                    currentStep > 3 ? styles.chosen : ''
+                                }`}
                             >
-                                <div
-                                    className={`${styles.text} ${
-                                        currentStep >= 3 ? styles.textShow : ''
-                                    }`}
-                                >
+                                <div className={`${styles.text} ${currentStep >= 3 ? styles.textShow : ''}`}>
                                     step.3
                                 </div>
                             </div>
@@ -309,9 +284,7 @@ const AddNew = (props) => {
                                     ></input>
                                     <span className={styles.unit}>px</span>
                                 </label>
-                                {showHint && (
-                                    <div className={styles.hint}>※ 須介於150px ~ 2000px</div>
-                                )}
+                                {showHint && <div className={styles.hint}>※ 須介於150px ~ 2000px</div>}
                             </div>
                         ) : currentStep === 2 && chosenRec !== 'custom' ? (
                             <div className={styles.stepContentWrapper}>
@@ -391,9 +364,7 @@ const AddNew = (props) => {
                             </div>
                         ) : currentStep < 3 ? (
                             <div className={styles.nextStepWrapper}>
-                                <div className={`${styles.nextStep} ${styles.disableStep}`}>
-                                    下一步
-                                </div>
+                                <div className={`${styles.nextStep} ${styles.disableStep}`}>下一步</div>
                             </div>
                         ) : currentStep === 3 ? (
                             <div className={styles.nextStepWrapper}>
@@ -420,4 +391,4 @@ AddNew.propTypes = {
     isAtMobile: PropTypes.string.isRequired,
 };
 
-export default AddNew;
+export default React.memo(AddNew);

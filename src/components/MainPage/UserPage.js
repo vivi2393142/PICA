@@ -120,32 +120,29 @@ const UserPage = (props) => {
         setLikeList(newData);
     };
 
-    const likeListJsx =
-        likeList.length === 0 ? (
-            <div className={styles.noLike}>尚無收藏畫布</div>
-        ) : (
-            likeList.map((item, index) => {
-                return (
-                    <ExploreItem
-                        isLikeLoader={isLikeLoader}
-                        setIsLikeLoader={setIsLikeLoader}
-                        key={index}
-                        index={index}
-                        length={length}
-                        item={item}
-                        likeHandler={likeHandler}
-                        className={styles.likeItem}
-                        currentUser={props.currentUser}
-                        isNotSameAsCurrentUser={
-                            props.currentUser.email !== props.match.params.userId
-                        }
-                        parentNodeForClass={'user'}
-                    />
-                );
-            })
-        );
+    const likeListJsx = !likeList.length ? (
+        <div className={styles.noLike}>尚無收藏畫布</div>
+    ) : (
+        likeList.map((item, index) => {
+            return (
+                <ExploreItem
+                    isLikeLoader={isLikeLoader}
+                    setIsLikeLoader={setIsLikeLoader}
+                    key={index}
+                    index={index}
+                    length={length}
+                    item={item}
+                    likeHandler={likeHandler}
+                    className={styles.likeItem}
+                    currentUser={props.currentUser}
+                    isNotSameAsCurrentUser={props.currentUser.email !== props.match.params.userId}
+                    parentNodeForClass={'user'}
+                />
+            );
+        })
+    );
     const canvasFilesJsx =
-        canvasDataWithDataURL.length !== 0 &&
+        canvasDataWithDataURL.length &&
         canvasDataWithDataURL.map((item, index) => {
             return (
                 <div
@@ -163,9 +160,7 @@ const UserPage = (props) => {
                                 : history.push(`/main/shots/${item.fileId}`);
                         }}
                         style={
-                            props.currentUser.email !== props.match.params.userId
-                                ? { cursor: 'pointer' }
-                                : {}
+                            props.currentUser.email !== props.match.params.userId ? { cursor: 'pointer' } : {}
                         }
                     >
                         <img src={item.snapshot} className={styles.fileImg}></img>
@@ -236,9 +231,7 @@ const UserPage = (props) => {
                         </div>
                         <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
                         <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
-                        <div className={styles.otherDetails}>
-                            {canvasDataWithDataURL.length} files
-                        </div>
+                        <div className={styles.otherDetails}>{canvasDataWithDataURL.length} files</div>
                     </div>
                     <div className={styles.navTags}>
                         <div
@@ -248,9 +241,7 @@ const UserPage = (props) => {
                                 // setIsLikeLoader(true);
                             }}
                         >
-                            {props.currentUser.email === props.match.params.userId
-                                ? '我的畫布'
-                                : '他的畫布'}
+                            {props.currentUser.email === props.match.params.userId ? '我的畫布' : '他的畫布'}
                         </div>
                         <div
                             className={`${styles.tag} ${isAtMyCanvas ? '' : styles.currentTag}`}
@@ -258,9 +249,7 @@ const UserPage = (props) => {
                                 setIsAtMyCanvas(false);
                             }}
                         >
-                            {props.currentUser.email === props.match.params.userId
-                                ? '我的收藏'
-                                : '他的收藏'}
+                            {props.currentUser.email === props.match.params.userId ? '我的收藏' : '他的收藏'}
                         </div>
                     </div>
                     {!isAtMyCanvas && (
@@ -315,4 +304,4 @@ UserPage.propTypes = {
     setIsAddingNew: PropTypes.func.isRequired,
 };
 
-export default UserPage;
+export default React.memo(UserPage);

@@ -10,15 +10,39 @@ export const trackOutSideClick = (trackTargetNode, callback) => {
 };
 
 // for canvas pages
+// -- init view - responsive size
+const canvasSizeToDrawingArea = 0.72;
+// const container = document.querySelector('.canvas-container');
+export const setViewToFitWindow = (canvasSetting) => {
+    const container = document.querySelector('.canvas-container');
+    if (container) {
+        const fixRatio = Math.min(
+            (window.innerWidth * canvasSizeToDrawingArea) / canvasSetting.width,
+            (window.innerHeight * canvasSizeToDrawingArea) / canvasSetting.height
+        );
+        container.style.width = `${fixRatio * canvasSetting.width}px`;
+        container.style.height = `${fixRatio * canvasSetting.height}px`;
+    }
+};
+export const setViewToSelectedRatio = (selectedRatio, canvasSetting) => {
+    const container = document.querySelector('.canvas-container');
+    container.style.width = `${(parseInt(selectedRatio) / 100) * canvasSetting.width}px`;
+    container.style.height = `${(parseInt(selectedRatio) / 100) * canvasSetting.height}px`;
+};
+// -- init view - fabric zoom in function to fix image view quality
+export const initViewZoomIn = (canvas, canvasSetting) => {
+    const currentSizeRatio =
+        parseInt(document.querySelector('.canvas-container').style.width) / canvasSetting.width;
+    canvas.setZoom(currentSizeRatio);
+    canvas.setWidth(canvasSetting.width * canvas.getZoom());
+    canvas.setHeight(canvasSetting.height * canvas.getZoom());
+    document.querySelectorAll('.drawingArea').forEach((item) => {
+        item.style.width = '100%';
+        item.style.height = '100%';
+    });
+};
 // -- preset canvas functions
-export const presetBackgroundImg = (
-    backImg,
-    canvas,
-    canvasSetting,
-    scaleWay,
-    scaleToWidth,
-    scaleToHeight
-) => {
+const presetBackgroundImg = (backImg, canvas, scaleWay, scaleToWidth, scaleToHeight) => {
     backImg.setControlsVisibility({
         mb: false,
         mt: false,
@@ -54,23 +78,15 @@ export const presetBackgroundImg = (
         canvas.requestRenderAll();
     });
 };
-export const handleResponsiveSize = (container, canvasSetting) => {
-    if (container) {
-        const fixRatio = Math.min(
-            (window.innerWidth * 0.72) / canvasSetting.width,
-            (window.innerHeight * 0.72) / canvasSetting.height
-        );
-        container.style.width = `${fixRatio * canvasSetting.width}px`;
-        container.style.height = `${fixRatio * canvasSetting.height}px`;
+export const presetBackgroundElements = (canvas, canvasSetting) => {
+    const backgroundObject = canvas.getObjects('image').find((x) => x.specialType === 'background');
+    if (backgroundObject) {
+        canvas.remove(backgroundObject);
+        const scaleToWidth = canvasSetting.width / backgroundObject.width;
+        const scaleToHeight = canvasSetting.height / backgroundObject.height;
+        const scaleWay = scaleToWidth > scaleToHeight ? 'toWidth' : 'toHeight';
+        presetBackgroundImg(backgroundObject, canvas, scaleWay, scaleToWidth, scaleToHeight);
     }
-};
-import initAligningGuidelines from '../aligning_guidelines';
-export const presetFabricStyles = (canvas) => {
-    initAligningGuidelines(canvas);
-    canvas.selectionColor = 'rgba(0,0,0,0.03)';
-    canvas.selectionBorderColor = 'rgba(0,0,0,0.25)';
-    canvas.selectionLineWidth = 1;
-    canvas.preserveObjectStacking = true;
 };
 // -- add new components: rectangle, circle, triangle, text, image, background
 const shapeRatioDivider = 600;
@@ -140,7 +156,7 @@ export const addShape = (src, position, canvas, canvasSetting) => {
         canvas.requestRenderAll();
     });
 };
-import { textSetting } from './config';
+import { textSetting } from './globalConfig';
 export const addIText = (position, canvas, canvasSetting, chosenIndex) => {
     const textRatio = canvasSetting.width / shapeRatioDivider;
     const text = new fabric.IText(textSetting[chosenIndex].title, {});
@@ -227,7 +243,7 @@ export const addSticker = (target, position, canvas, canvasSetting) => {
 export const backgroundImageHandler = (target, canvas, canvasSetting) => {
     canvas.offHistory();
     // remove exist background
-    if (canvas.getObjects().length > 0) {
+    if (canvas.getObjects().length) {
         if (canvas.getObjects()[0].specialType === 'background') {
             canvas.remove(canvas.getObjects()[0]);
         }
@@ -244,14 +260,7 @@ export const backgroundImageHandler = (target, canvas, canvasSetting) => {
                 scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
                 scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
             });
-            presetBackgroundImg(
-                backImg,
-                canvas,
-                canvasSetting,
-                scaleWay,
-                scaleToWidth,
-                scaleToHeight
-            );
+            presetBackgroundImg(backImg, canvas, scaleWay, scaleToWidth, scaleToHeight);
         },
         {
             crossOrigin: 'anonymous',

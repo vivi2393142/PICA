@@ -2,26 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
-import * as utils from '../../../utils/utils';
+import * as utils from '../../../utils/globalUtils';
 
 const DrawingArea = (props) => {
-    const allSettings = props.allSettings;
-
-    // -- handle auto resizing option
+    // -- listen to resize then set
     React.useEffect(() => {
-        if (Object.keys(allSettings.canvasSetting).length !== 0) {
-            const handleResize = () => {
-                const container = document.querySelector('.canvas-container');
-                if (allSettings.ratioSelectValue === 'auto') {
-                    utils.handleResponsiveSize(container, allSettings.canvasSetting);
-                }
+        if (Object.keys(props.canvasSetting).length && props.ratioSelectValue === 'auto') {
+            const resetViewToFitWindow = () => {
+                utils.setViewToFitWindow(props.canvasSetting);
             };
-            window.addEventListener('resize', handleResize);
+            window.addEventListener('resize', resetViewToFitWindow);
             return () => {
-                window.removeEventListener('resize', handleResize);
+                window.removeEventListener('resize', resetViewToFitWindow);
             };
         }
-    }, [allSettings.ratioSelectValue, allSettings.canvasSetting]);
+    }, [props.ratioSelectValue, props.canvasSetting]);
 
     //render
     return (
@@ -32,9 +27,8 @@ const DrawingArea = (props) => {
 };
 
 DrawingArea.propTypes = {
-    // TODO: 待資料確定後，明確定義 array 內容
-    allSettings: PropTypes.object.isRequired,
-    zoomCanvas: PropTypes.func.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
+    ratioSelectValue: PropTypes.string.isRequired,
 };
 
-export default DrawingArea;
+export default React.memo(DrawingArea);

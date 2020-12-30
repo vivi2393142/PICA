@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
-import jsPDF from 'jspdf';
-import { trackOutSideClick } from '../../../utils/utils.js';
+import * as exportUtils from '../../../utils/export';
+import { trackOutSideClick } from '../../../utils/globalUtils.js';
 
 const Export = (props) => {
-    // check if is choosing export
     const [isChoosingExport, setIsChoosingExport] = React.useState(false);
     const toggleExport = (e) => {
         setIsChoosingExport(true);
@@ -14,41 +13,24 @@ const Export = (props) => {
     };
 
     // set export function
-    const allSettings = props.drawingAreaSettings;
     const exportCanvas = document.getElementById('fabric-canvas');
     const handleExport = (way) => {
         let dataURL = '';
-        const fileName = allSettings.canvasSetting.title
-            ? allSettings.canvasSetting.title
-            : '未命名畫布';
-        const zoomRatio = allSettings.canvasSetting.width / allSettings.canvas.width;
-        if (way === 'pdf') {
-            let width = allSettings.canvas.width;
-            let height = allSettings.canvas.height;
-            let pdf;
-            if (width > height) {
-                pdf = new jsPDF('l', 'px', [width, height]);
-            } else {
-                pdf = new jsPDF('p', 'px', [height, width]);
-            }
-            width = pdf.internal.pageSize.getWidth();
-            height = pdf.internal.pageSize.getHeight();
-            pdf.addImage(exportCanvas, 'PNG', 0, 0, width, height);
-            pdf.save(`${fileName}.pdf`);
-            setIsChoosingExport(false);
-            return;
-        } else if (way === 'jpg') {
-            dataURL = allSettings.canvas.toDataURL({
-                format: 'jpeg',
-                quality: 1,
-                multiplier: zoomRatio,
-            });
-            // console.log(dataURL);
-        } else if (way === 'png') {
-            dataURL = allSettings.canvas.toDataURL({
-                format: 'png',
-                multiplier: zoomRatio,
-            });
+        const fileName = props.canvasSetting.title ? props.canvasSetting.title : '未命名畫布';
+        const width = props.canvas.width;
+        const height = props.canvas.height;
+        const zoomRatio = width / height;
+        switch (way) {
+            case 'pdf':
+                exportUtils.downloadPdf(width, height, exportCanvas, fileName);
+                setIsChoosingExport(false);
+                return;
+            case 'jpg':
+                dataURL = exportUtils.downloadJpg(props.canvas, zoomRatio);
+                break;
+            case 'png':
+                dataURL = exportUtils.downloadPng(props.canvas, zoomRatio);
+                break;
         }
         const dlLink = document.createElement('a');
         dlLink.download = fileName;
@@ -72,8 +54,8 @@ const Export = (props) => {
 };
 
 Export.propTypes = {
-    // TODO: 待資料確定後，明確定義 array 內容
-    drawingAreaSettings: PropTypes.object.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
+    canvas: PropTypes.object.isRequired,
 };
 
-export default Export;
+export default React.memo(Export);

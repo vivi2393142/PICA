@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
 import toggleRight from '../../../../img/src/arrowRight.svg';
-import { trackOutSideClick } from '../../../../utils/utils.js';
+import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
 const NavLeftColor = (props) => {
     const [widthSetting, setWidthSetting] = React.useState('14rem');
@@ -105,4 +105,4 @@ NavLeftColor.propTypes = {
     setIsFocusInput: PropTypes.func,
 };
 
-export default NavLeftColor;
+export default React.memo(NavLeftColor);

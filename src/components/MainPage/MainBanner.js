@@ -8,7 +8,6 @@ import AddNew from './AddNew';
 import Login from '../Login';
 import Loader from '../Loader';
 
-// export default App;
 const MainBanner = (props) => {
     const history = useHistory();
     const [showSignOut, setShowSignOut] = React.useState(false);

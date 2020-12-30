@@ -5,30 +5,32 @@ import Resize from './Resize';
 import Export from './Export';
 import Share from './Share';
 import * as firebase from '../../../utils/firebase.js';
-import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
-import { canvasSizeOptions } from '../../../utils/config.js';
+import { canvasSizeOptions } from '../../../utils/globalConfig.js';
 
 const Banner = (props) => {
-    const allSettings = props.allSettings;
     const history = useHistory();
-
-    // title setting
     const handleTitle = (e) => {
-        const newCanvasSetting = { ...allSettings.canvasSetting, title: e.target.value };
-        allSettings.setCanvasSetting(newCanvasSetting);
+        const newCanvasSetting = { ...props.canvasSetting, title: e.target.value };
+        props.setCanvasSetting(newCanvasSetting);
     };
-    const handleSaveFileTemporary = () => {
-        allSettings.canvas.discardActiveObject().renderAll();
-        firebase.saveCanvasData(allSettings.canvas, allSettings.canvasSetting, props.fileId);
+    const handleSaveFile = () => {
+        props.canvas.discardActiveObject().renderAll();
+        firebase.saveCanvasData(props.canvas, props.canvasSetting, props.fileId);
     };
-
-    const defaultSetting = canvasSizeOptions.find(
-        (item) => item.type === allSettings.canvasSetting.type
-    );
+    // handler save status showing
+    let saveStatusClassName = 'status';
+    if (props.triggerSaveStatus) {
+        saveStatusClassName = 'status showStatus';
+        setTimeout(() => {
+            props.setTriggerSaveStatus(false);
+            saveStatusClassName = 'status';
+        }, 3000);
+    }
+    const defaultSetting = canvasSizeOptions.find((item) => item.type === props.canvasSetting.type);
     const typeJsx =
-        allSettings.canvasSetting.type === 'custom' ? (
-            <div className='statusSize'>{`自訂尺寸 ${allSettings.canvasSetting.width}×${allSettings.canvasSetting.height}像素`}</div>
+        props.canvasSetting.type === 'custom' ? (
+            <div className='statusSize'>{`自訂尺寸 ${props.canvasSetting.width}×${props.canvasSetting.height}像素`}</div>
         ) : defaultSetting && defaultSetting.mmW ? (
             <div className='statusSize'>{`${defaultSetting.name} ${defaultSetting.mmW}×${defaultSetting.mmH}毫米`}</div>
         ) : defaultSetting ? (
@@ -38,78 +40,53 @@ const Banner = (props) => {
     return (
         <div className='banner'>
             <div className='logoWrapper'>
-                <Link to='/main/user'>
-                    <bannerIcons.Logo className='bannerLogo' />
-                </Link>
+                <bannerIcons.Logo
+                    className='bannerLogo'
+                    onClick={() => history.push(`../main/user/${props.currentUser.email}`)}
+                />
             </div>
             <div className='bannerLeft'>
                 <input
                     placeholder='未命名畫布'
-                    defaultValue={allSettings.canvasSetting.title}
+                    defaultValue={props.canvasSetting.title}
                     onFocus={() => {
                         props.setIsFocusInput(true);
-                        console.log('focus');
                     }}
                     onChange={handleTitle}
                     onBlur={() => {
-                        handleSaveFileTemporary();
+                        handleSaveFile();
                         props.setIsFocusInput(false);
-                        console.log('nofocus');
                     }}
                 ></input>
-                {/* <div
-                    onClick={handleSaveFileTemporary}
-                    style={{
-                        cursor: 'pointer',
-                        border: '1px solid #555555',
-                        padding: ' 0 0.5rem',
-                        fontSize: ' 0.9rem',
-                        color: '#555555',
-                        letterSpacing: '1px',
-                        marginLeft: '1rem',
-                    }}
-                >
-                    {'點我儲存(暫時)'}
-                </div> */}
-                <div className='status'>已儲存</div>
+                <div className={saveStatusClassName}>已儲存</div>
             </div>
             <div className='bannerRight'>
-                {/* <div
-                    onClick={() => {
-                        allSettings.canvas.renderAll();
-                        console.log('click');
-                    }}
-                >
-                    測試
-                </div> */}
                 {typeJsx}
                 <Resize
-                    drawingAreaSettings={allSettings}
+                    canvasSetting={props.canvasSetting}
+                    setCanvasSetting={props.setCanvasSetting}
+                    canvas={props.canvas}
+                    setRatioSelectValue={props.setRatioSelectValue}
                     fileId={props.fileId}
                     setIsFocusInput={props.setIsFocusInput}
                 />
-                {/* <div className='shareIconWrapper'>
-                    <bannerIcons.Share className='bannerIcons' />
-                </div> */}
                 <Share fileId={props.fileId} />
-                <Export drawingAreaSettings={allSettings} />
-                <div
-                    className='memberIconWrapper'
-                    onClick={() => history.push(`../main/user/${props.currentUser.email}`)}
-                >
-                    <bannerIcons.Member className='bannerIcons' />
-                </div>
+                <Export canvasSetting={props.canvasSetting} canvas={props.canvas} />
             </div>
         </div>
     );
 };
 
 Banner.propTypes = {
-    // TODO: 待資料確定後，明確定義 array 內容
-    allSettings: PropTypes.object.isRequired,
     fileId: PropTypes.string.isRequired,
     currentUser: PropTypes.object,
     setIsFocusInput: PropTypes.func.isRequired,
+    canvasSetting: PropTypes.object.isRequired,
+    setCanvasSetting: PropTypes.func.isRequired,
+    canvas: PropTypes.object.isRequired,
+    setRatioSelectValue: PropTypes.func.isRequired,
+    triggerSaveStatus: PropTypes.bool.isRequired,
+    setTriggerSaveStatus: PropTypes.func.isRequired,
 };
 
-export default Banner;
+export default React.memo(Banner);

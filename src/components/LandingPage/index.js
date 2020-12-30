@@ -6,7 +6,6 @@ import * as login from '../../img/landingPage.js';
 import Login from '../Login';
 import { useHistory } from 'react-router-dom';
 
-// export default App;
 const LandingPage = (props) => {
     const history = useHistory();
     const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
@@ -93,4 +92,4 @@ LandingPage.propTypes = {
     currentUser: PropTypes.object.isRequired,
 };
 
-export default LandingPage;
+export default React.memo(LandingPage);

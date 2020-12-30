@@ -15,4 +15,4 @@ Loader.propTypes = {
     loaderText: PropTypes.string,
 };
 
-export default Loader;
+export default React.memo(Loader);

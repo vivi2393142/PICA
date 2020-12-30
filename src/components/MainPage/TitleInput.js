@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
-import { trackOutSideClick } from '../../utils/utils.js';
+import { trackOutSideClick } from '../../utils/globalUtils.js';
 import * as firebase from '../../utils/firebase.js';
 
 const TitleInput = (props) => {
@@ -45,4 +45,4 @@ TitleInput.propTypes = {
     fileId: PropTypes.string.isRequired,
 };
 
-export default TitleInput;
+export default React.memo(TitleInput);
