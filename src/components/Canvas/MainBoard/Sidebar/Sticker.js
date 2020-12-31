@@ -48,11 +48,10 @@ const Sticker = (props) => {
                                         draggable={!props.isAtMobile}
                                         src={item}
                                         onLoad={(e) => {
-                                            if (e.target.naturalHeight > e.target.naturalWidth) {
-                                                e.target.parentNode.style.width = '20%';
-                                            } else {
-                                                e.target.parentNode.style.width = '40%';
-                                            }
+                                            e.target.parentNode.style.width =
+                                                e.target.naturalHeight > e.target.naturalWidth
+                                                    ? config.stickerWidthForWaterfall.narrow
+                                                    : config.stickerWidthForWaterfall.wide;
                                         }}
                                     ></img>
                                 </div>

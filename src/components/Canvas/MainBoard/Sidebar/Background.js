@@ -4,34 +4,37 @@ import { ChromePicker } from 'react-color';
 import * as utils from '../../../../utils/globalUtils.js';
 import * as config from '../../../../utils/globalConfig';
 
+const defaultBackgroundInString = 'rgba(255, 255, 255, 1)';
+const backImgHeightForWaterfall = { normal: '10rem', mobile: '100%' };
 const defaultBackground = {
     r: '255',
     g: '255',
     b: '255',
     a: '1',
 };
-const defaultBackgroundInString = 'rgba(255, 255, 255, 1)';
 
 const Background = (props) => {
+    const chromePickerRef = React.useRef(null);
     const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
     const [backColorChosen, setBackColorChosen] = React.useState({
         background: {
             ...defaultBackground,
         },
     });
+
     // preset background
     React.useEffect(() => {
         props.canvas.backgroundColor && setBackColorChosen({ background: props.canvas.backgroundColor });
     }, [props.canvas.backgroundColor]);
 
-    const toggleBackColorSelection = (e) => {
-        utils.trackOutSideClick(document.querySelector('.backgroundPicker'), () => {
+    const toggleBackColorSelection = async (e) => {
+        await setIsChoosingBackColor(true);
+        props.setIsFocusInput(true);
+        utils.trackOutSideClick(chromePickerRef.current, () => {
             setIsChoosingBackColor(false);
             props.setIsFocusInput(false);
             props.canvas.fire('object:modified');
         });
-        setIsChoosingBackColor(true);
-        props.setIsFocusInput(true);
     };
     const backgroundColorHandler = (color) => {
         props.canvas.backgroundImage = 0;
@@ -43,16 +46,9 @@ const Background = (props) => {
         backgroundColorHandler(colorRgba);
     };
     const handleBackColorChangeCube = (e) => {
-        let color;
-        if (e.target.classList.contains('nonColor')) {
-            color = defaultBackgroundInString;
-            document.querySelector('.currentColorCube').classList.add('nonColor');
-        } else {
-            if (document.querySelector('.currentColorCube')) {
-                document.querySelector('.currentColorCube').classList.remove('nonColor');
-            }
-            color = e.target.style.backgroundColor;
-        }
+        const color = e.target.style.backgroundColor
+            ? e.target.style.backgroundColor
+            : defaultBackgroundInString;
         setBackColorChosen({ background: color });
         backgroundColorHandler(color);
         props.canvas.fire('object:modified');
@@ -99,12 +95,18 @@ const Background = (props) => {
                 draggable='false'
                 onClick={backgroundImageHandler}
                 className='unfoldItem unfoldItemGallery'
-                style={{ position: 'relative', height: props.isAtMobile ? '100%' : '10rem' }}
+                style={{
+                    position: 'relative',
+                    height: props.isAtMobile
+                        ? backImgHeightForWaterfall.mobile
+                        : backImgHeightForWaterfall.normal,
+                }}
                 src={item}
                 onLoad={(e) => {
-                    e.target.naturalHeight > e.target.naturalWidth
-                        ? (e.target.parentNode.style.width = '29%')
-                        : (e.target.parentNode.style.width = '58%');
+                    e.target.parentNode.style.width =
+                        e.target.naturalHeight > e.target.naturalWidth
+                            ? config.imageWidthForWaterfall.narrow
+                            : config.imageWidthForWaterfall.wide;
                 }}
             ></img>
         </div>
@@ -116,14 +118,16 @@ const Background = (props) => {
             style={{ display: props.currentSidebar === 'background' ? 'flex' : 'none' }}
         >
             {isChoosingBackColor && (
-                <ChromePicker
-                    className='backgroundPicker'
-                    color={backColorChosen.background}
-                    onChange={(color) => {
-                        handleBackColorChange(color);
-                        props.canvas.requestRenderAll();
-                    }}
-                />
+                <div ref={chromePickerRef}>
+                    <ChromePicker
+                        className='backgroundPicker'
+                        color={backColorChosen.background}
+                        onChange={(color) => {
+                            handleBackColorChange(color);
+                            props.canvas.requestRenderAll();
+                        }}
+                    />
+                </div>
             )}
             <div className='unfoldImgWrapper '>
                 <div className='toggleSubtitle'>背景色彩</div>

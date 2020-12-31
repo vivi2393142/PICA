@@ -5,6 +5,16 @@ import { Alert, defaultAlertSetting } from '../../../Alert';
 import deleteLoading from '../../../../img/src/deleteLoading.svg';
 import * as firebase from '../../../../utils/firebase.js';
 import * as utils from '../../../../utils/globalUtils.js';
+import * as config from '../../../../utils/globalConfig.js';
+
+const basicAlertForUpload = {
+    buttonNumber: 1,
+    buttonOneFunction: () => setShowAlert(false),
+    buttonTwoFunction: () => {},
+    buttonOneTitle: '關閉',
+    buttonTwoTitle: '',
+    title: '上傳錯誤',
+};
 
 const Upload = (props) => {
     const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
@@ -14,16 +24,10 @@ const Upload = (props) => {
         ...defaultAlertSetting,
     });
     // handlers: uploaded function
-    const fileSizeLimit = 3145680;
     const handleUploadImage = (e) => {
-        if (e.target.files[0].size > fileSizeLimit) {
+        if (e.target.files[0].size > config.fileSizeLimit) {
             setAlertSetting({
-                buttonNumber: 1,
-                buttonOneFunction: () => setShowAlert(false),
-                buttonTwoFunction: () => {},
-                buttonOneTitle: '關閉',
-                buttonTwoTitle: '',
-                title: '上傳錯誤',
+                ...basicAlertForUpload,
                 content: '請勿上傳超過3mb之圖片',
             });
             setShowAlert(true);
@@ -40,41 +44,45 @@ const Upload = (props) => {
         e.preventDefault();
         setShowUploadCover(false);
         const files = e.dataTransfer.files;
-        const basicAlertForUpload = {
-            buttonNumber: 1,
-            buttonOneFunction: () => setShowAlert(false),
-            buttonTwoFunction: () => {},
-            buttonOneTitle: '關閉',
-            buttonTwoTitle: '',
-            title: '上傳錯誤',
-        };
-        // prevent canvas drop event
         if (files.length) {
-            if (files.length > 1) {
-                setAlertSetting({
-                    ...basicAlertForUpload,
-                    content: '一次限上傳一張圖片',
-                });
-                setShowAlert(true);
-            } else if (files[0].size > fileSizeLimit) {
-                setAlertSetting({
-                    ...basicAlertForUpload,
-                    content: '請勿上傳超過3mb之圖片',
-                });
-                setShowAlert(true);
-            } else if (files[0].type !== 'image/png' && files[0].type !== 'image/jpeg') {
-                setAlertSetting({
-                    ...basicAlertForUpload,
-                    content: '請上傳jpeg或png格式檔案',
-                });
-                setShowAlert(true);
-            } else {
-                firebase.uploadToStorage(
-                    files,
-                    props.fileId,
-                    (uploadValue) => setUploadProgressValue(uploadValue),
-                    () => setUploadProgressValue(0)
-                );
+            const status =
+                files.length > 1
+                    ? 'overAmount'
+                    : files[0].size > config.fileSizeLimit
+                    ? 'overSize'
+                    : files[0].type !== 'image/png' && files[0].type !== 'image/jpeg'
+                    ? 'typeWrong'
+                    : 'success';
+            switch (status) {
+                case 'overAmount':
+                    setAlertSetting({
+                        ...basicAlertForUpload,
+                        content: '一次限上傳一張圖片',
+                    });
+                    setShowAlert(true);
+                    break;
+                case 'overSize':
+                    setAlertSetting({
+                        ...basicAlertForUpload,
+                        content: '請勿上傳超過3mb之圖片',
+                    });
+                    setShowAlert(true);
+                    break;
+                case 'typeWrong':
+                    setAlertSetting({
+                        ...basicAlertForUpload,
+                        content: '請上傳jpeg或png格式檔案',
+                    });
+                    setShowAlert(true);
+                    break;
+                case 'success':
+                    firebase.uploadToStorage(
+                        files,
+                        props.fileId,
+                        (uploadValue) => setUploadProgressValue(uploadValue),
+                        () => setUploadProgressValue(0)
+                    );
+                    break;
             }
         }
     };
@@ -146,9 +154,10 @@ const Upload = (props) => {
                                 draggable={!props.isAtMobile}
                                 src={item.src}
                                 onLoad={(e) => {
-                                    e.target.naturalHeight > e.target.naturalWidth
-                                        ? (e.target.parentNode.style.width = '29%')
-                                        : (e.target.parentNode.style.width = '58%');
+                                    e.target.parentNode.style.width =
+                                        e.target.naturalHeight > e.target.naturalWidth
+                                            ? config.imageWidthForWaterfall.narrow
+                                            : config.imageWidthForWaterfall.wide;
                                 }}
                             ></img>
                             <div

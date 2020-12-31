@@ -25,7 +25,6 @@ const Sidebar = (props) => {
             window.removeEventListener('resize', setSizeState);
         };
     }, []);
-
     const adjSetNextPosition = () => {
         nextAddPosition.left + 80 > props.canvasSetting.width / 2 ||
         nextAddPosition.top + 80 > props.canvasSetting.height / 2
@@ -70,7 +69,6 @@ const Sidebar = (props) => {
             <div className='ghostDiv'></div>
         </div>
     );
-
     const toggleButtonJsx = (
         <div
             className='sidebarCloseButton'

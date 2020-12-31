@@ -1,3 +1,4 @@
+import * as config from './globalConfig';
 // for all pages
 export const trackOutSideClick = (trackTargetNode, callback) => {
     const clickedOrNot = (e) => {
@@ -90,7 +91,6 @@ export const presetBackgroundElements = (canvas, canvasSetting) => {
 };
 // -- add new components: rectangle, circle, triangle, text, image, background
 const shapeRatioDivider = 600;
-const mainColor = '#e89a4f';
 export const addRect = (position, canvas, canvasSetting) => {
     const shapeRatio = canvasSetting.width / shapeRatioDivider;
     const rect = new fabric.Rect({
@@ -98,7 +98,7 @@ export const addRect = (position, canvas, canvasSetting) => {
         left: position.left,
         height: 100 * shapeRatio,
         width: 100 * shapeRatio,
-        fill: mainColor,
+        fill: config.mainColor,
         objectCaching: false,
     });
     canvas.add(rect);
@@ -111,7 +111,7 @@ export const addRadiusRect = (position, canvas, canvasSetting) => {
         left: position.left,
         height: 100 * shapeRatio,
         width: 100 * shapeRatio,
-        fill: mainColor,
+        fill: config.mainColor,
         objectCaching: false,
         rx: 15,
         ry: 15,
@@ -156,17 +156,17 @@ export const addShape = (src, position, canvas, canvasSetting) => {
         canvas.requestRenderAll();
     });
 };
-import { textSetting } from './globalConfig';
+
 export const addIText = (position, canvas, canvasSetting, chosenIndex) => {
     const textRatio = canvasSetting.width / shapeRatioDivider;
-    const text = new fabric.IText(textSetting[chosenIndex].title, {});
+    const text = new fabric.IText(config.textSetting[chosenIndex].title, {});
     text.set({
         top: position.top,
         left: position.left,
         fill: '#555555',
-        fontSize: textSetting[chosenIndex].size * textRatio,
+        fontSize: config.textSetting[chosenIndex].size * textRatio,
         fontFamily: 'Sans-serif',
-        fontWeight: textSetting[chosenIndex].fontWeight,
+        fontWeight: config.textSetting[chosenIndex].fontWeight,
     });
     canvas.add(text);
     text.setControlsVisibility({

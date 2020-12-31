@@ -4,6 +4,8 @@ import 'fabric-history';
 import { ChromePicker } from 'react-color';
 import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
+const stokeWidthArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 const NavLeftShape = (props) => {
     // color setting function
     const [isChoosingBorderColor, setIsChoosingBorderColor] = React.useState(false);
@@ -55,9 +57,9 @@ const NavLeftShape = (props) => {
         props.canvas.fire('object:modified');
         props.canvas.requestRenderAll();
     };
-    const stokeWidthArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const stokeWidthOptions = stokeWidthArray.map((width, index) => <option key={index}>{width}</option>);
-    // render
+
+    const stokeWidthOptionsJsx = stokeWidthArray.map((width, index) => <option key={index}>{width}</option>);
+
     return (
         <div className='specificNav'>
             <div className='colorChoosingBox borderChoosing'>
@@ -72,7 +74,7 @@ const NavLeftShape = (props) => {
             </div>
             <div className='specificButton textSizeOuter borderWidth'>
                 <select className='textSizeSelect' value={rectStroke} onChange={handleRectStoke}>
-                    {stokeWidthOptions}
+                    {stokeWidthOptionsJsx}
                 </select>
             </div>
         </div>

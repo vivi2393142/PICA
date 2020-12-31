@@ -5,33 +5,27 @@ import NavLeftColor from './NavLeftColor';
 import 'fontfaceobserver';
 import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
+const textSizeArray = [6, 8, 10, 12, 14, 16, 18, 20, 24, 36, 48, 72];
+
 const NavLeftText = (props) => {
     // unfold nav
     const [isChoosingSpace, setIsChoosingSpace] = React.useState(false);
     const [isChoosingSize, setIsChoosingSize] = React.useState(false);
     const toggleSpaceSelection = (e) => {
         setIsChoosingSpace(true);
-        if (document.querySelector('.scrollContainer')) {
-            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
-        }
+        props.setShowMobileScrollContainer(true);
         trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingSpace(false);
-            if (document.querySelector('.scrollContainer')) {
-                document.querySelector('.scrollContainer').classList.remove('unfoldScrollContainer');
-            }
+            props.setShowMobileScrollContainer(false);
             props.canvas.fire('object:modified');
         });
     };
     const toggleSizeSelection = (e) => {
         setIsChoosingSize(true);
-        if (document.querySelector('.scrollContainer')) {
-            document.querySelector('.scrollContainer').classList.add('unfoldScrollContainer');
-        }
+        props.setShowMobileScrollContainer(true);
         trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingSize(false);
-            if (document.querySelector('.scrollContainer')) {
-                document.querySelector('.scrollContainer').classList.remove('unfoldScrollContainer');
-            }
+            props.setShowMobileScrollContainer(false);
             props.canvas.fire('object:modified');
         });
     };
@@ -131,7 +125,6 @@ const NavLeftText = (props) => {
     }, [props.activeObj]);
 
     // jsx
-    const textSizeArray = [6, 8, 10, 12, 14, 16, 18, 20, 24, 36, 48, 72];
     const textSizeOptions = textSizeArray.map((size, index) => <option key={index}>{size}</option>);
 
     // render
@@ -231,6 +224,7 @@ NavLeftText.propTypes = {
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
     setIsFocusInput: PropTypes.func,
+    setShowMobileScrollContainer: PropTypes.func.isRequired,
 };
 
 export default React.memo(NavLeftText);

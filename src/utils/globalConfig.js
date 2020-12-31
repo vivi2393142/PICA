@@ -1,4 +1,5 @@
 // for all pages
+export const mainColor = '#e89a4f';
 export const canvasSizeOptions = [
     { name: '自訂尺寸', type: 'custom', width: 1800, height: 1600 },
     { name: '橫式海報', type: 'poster', width: 1728, height: 1296, mmW: 609, mmH: 457 },
@@ -8,7 +9,6 @@ export const canvasSizeOptions = [
     { name: '明信片', type: 'postCard', width: 560, height: 288, mmW: 198, mmH: 102 },
     { name: '名片', type: 'nameCard', width: 255, height: 153, mmW: 90, mmH: 54 },
 ];
-
 export const mediaQuerySize = { small: 450, medium: 600, big: 900 };
 
 // for canvas pages
@@ -35,6 +35,10 @@ export const textSetting = [
         content: '新增內文',
     },
 ];
+// -- setting
+export const fileSizeLimit = 3145680;
+export const imageWidthForWaterfall = { wide: '58%', narrow: '29%' };
+export const stickerWidthForWaterfall = { wide: '40%', narrow: '20%' };
 // -- sidebar items
 import React from 'react';
 import * as icons from '../img/icons';

@@ -57,9 +57,7 @@ const Explore = (props) => {
     const [arrowState, setArrowState] = React.useState(arrowStateInit);
 
     React.useEffect(() => {
-        // presetTag
         props.setCurrentPage('explore');
-        // get all files data
         firebase.getAllFiles(props.currentUser.email, (dataArray) => {
             setDataArray(dataArray);
             setIsLoaded(false);
@@ -115,7 +113,7 @@ const Explore = (props) => {
     };
 
     const allRowsJsx =
-        dataArray.length &&
+        dataArray.length !== 0 &&
         allType.map((type, index) => {
             const sampleInner = dataArray[type].map((item, index) => {
                 if (item.isSample) {

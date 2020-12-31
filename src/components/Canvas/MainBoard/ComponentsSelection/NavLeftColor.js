@@ -4,20 +4,20 @@ import 'fabric-history';
 import { ChromePicker } from 'react-color';
 import toggleRight from '../../../../img/src/arrowRight.svg';
 import { trackOutSideClick } from '../../../../utils/globalUtils.js';
+import * as config from '../../../../utils/globalConfig.js';
 
 const NavLeftColor = (props) => {
+    const componentsNavLeftRef = React.useRef(null);
     const [widthSetting, setWidthSetting] = React.useState('14rem');
 
     React.useEffect(() => {
-        window.innerWidth > 600 ? setWidthSetting('14rem') : setWidthSetting('100%');
+        window.innerWidth > config.mediaQuerySize.medium ? setWidthSetting('14rem') : setWidthSetting('100%');
     }, []);
     React.useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth > 600) {
-                setWidthSetting('14rem');
-            } else {
-                setWidthSetting('100%');
-            }
+            window.innerWidth > config.mediaQuerySize.medium
+                ? setWidthSetting('14rem')
+                : setWidthSetting('100%');
         };
         window.addEventListener('resize', handleResize);
         return () => {
@@ -30,11 +30,11 @@ const NavLeftColor = (props) => {
     const toggleColorSelection = (e) => {
         setIsChoosingColor(true);
         props.setIsFocusInput(true);
-        document.querySelector('.componentsNavLeft').style.zIndex = '2';
+        componentsNavLeftRef.current.style.zIndex = '2';
         trackOutSideClick(e.currentTarget.parentNode, () => {
             setIsChoosingColor(false);
             props.setIsFocusInput(false);
-            document.querySelector('.componentsNavLeft').style.zIndex = '1';
+            componentsNavLeftRef.current.style.zIndex = '1';
             props.canvas.fire('object:modified');
         });
     };
@@ -55,13 +55,14 @@ const NavLeftColor = (props) => {
     };
 
     React.useEffect(() => {
+        const currentType = props.activeObj.type;
         if (
-            props.activeObj.type === 'rect' ||
-            props.activeObj.type === 'circle' ||
-            props.activeObj.type === 'triangle' ||
-            props.activeObj.type === 'i-text' ||
-            props.activeObj.type === 'path' ||
-            props.activeObj.type === 'polygon'
+            currentType === 'rect' ||
+            currentType === 'circle' ||
+            currentType === 'triangle' ||
+            currentType === 'i-text' ||
+            currentType === 'path' ||
+            currentType === 'polygon'
         ) {
             setColorChosen({ background: props.activeObj.fill });
         }
@@ -70,6 +71,7 @@ const NavLeftColor = (props) => {
     return (
         <div className='colorChoosingBox'>
             <div
+                ref={componentsNavLeftRef}
                 className='currentColor'
                 style={{ backgroundColor: colorChosen.background }}
                 onClick={toggleColorSelection}
@@ -87,7 +89,7 @@ const NavLeftColor = (props) => {
                     className='mobileSubmit'
                     onClick={() => {
                         setIsChoosingColor(false);
-                        document.querySelector('.componentsNavLeft').style.zIndex = '1';
+                        componentsNavLeftRef.current.style.zIndex = '1';
                         props.setIsFocusInput(false);
                         props.canvas.fire('object:modified');
                     }}

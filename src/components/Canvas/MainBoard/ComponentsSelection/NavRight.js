@@ -6,14 +6,16 @@ import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
 let ctrlDown = false;
 let shiftDown = false;
-const toggleSelectionHandler = (e, setSelectedState) => {
-    setSelectedState(true);
-    const scrollContainerNode = document.querySelector('.scrollContainer');
-    scrollContainerNode && scrollContainerNode.classList.add('unfoldScrollContainer');
-    trackOutSideClick(e.currentTarget.parentNode, () => {
-        scrollContainerNode && scrollContainerNode.classList.remove('unfoldScrollContainer');
-        setSelectedState(false);
-    });
+const codes = {
+    ctrlKey: 17,
+    cmdKey: 91,
+    delKey: 8,
+    shiftKey: 16,
+    vKey: 86,
+    xKey: 88,
+    cKey: 67,
+    aKey: 65,
+    zKey: 90,
 };
 
 const NavRight = (props) => {
@@ -21,7 +23,14 @@ const NavRight = (props) => {
     const [clipboard, setClipboard] = React.useState(false);
     const [isLayerChoosing, setIsLayerChoosing] = React.useState(false);
     const [isAlignChoosing, setIsAlignChoosing] = React.useState(false);
-
+    const toggleSelectionHandler = (e, setSelectedState) => {
+        setSelectedState(true);
+        props.setShowMobileScrollContainer(true);
+        trackOutSideClick(e.currentTarget.parentNode, () => {
+            setSelectedState(false);
+            props.setShowMobileScrollContainer(false);
+        });
+    };
     const toggleLayerSelection = (e) => {
         toggleSelectionHandler(e, setIsLayerChoosing);
     };
@@ -95,17 +104,6 @@ const NavRight = (props) => {
 
     // keyboard functions
     // -- methods for component: onkeydown setting
-    const codes = {
-        ctrlKey: 17,
-        cmdKey: 91,
-        delKey: 8,
-        shiftKey: 16,
-        vKey: 86,
-        xKey: 88,
-        cKey: 67,
-        aKey: 65,
-        zKey: 90,
-    };
     onkeydown = (e) => {
         if (e.keyCode === codes.ctrlKey || e.keyCode === codes.cmdKey) {
             ctrlDown = true;
@@ -117,12 +115,8 @@ const NavRight = (props) => {
             pasteHandler();
         }
         if (props.activeObj.type) {
-            if (ctrlDown && e.keyCode === codes.cKey && !props.isFocusInput) {
-                copyHandler();
-            }
-            if (ctrlDown && e.keyCode === codes.xKey && !props.isFocusInput) {
-                cutHandler();
-            }
+            ctrlDown && e.keyCode === codes.cKey && !props.isFocusInput && copyHandler();
+            ctrlDown && e.keyCode === codes.xKey && !props.isFocusInput && cutHandler();
             if (e.keyCode === codes.delKey && !props.isFocusInput) {
                 if ((props.activeObj.type === 'i-text' && props.activeObj.isEditing) || props.textIsEditing) {
                     return;
@@ -425,6 +419,7 @@ NavRight.propTypes = {
     canvasSetting: PropTypes.object.isRequired,
     textIsEditing: PropTypes.bool.isRequired,
     isFocusInput: PropTypes.bool.isRequired,
+    setShowMobileScrollContainer: PropTypes.func.isRequired,
 };
 
 export default React.memo(NavRight);

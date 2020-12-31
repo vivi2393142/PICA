@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { fabric } from 'fabric';
 import 'fabric-history';
-import * as icons from '../../../../img/icons';
 import arrowLeft from '../../../../img/src/arrowLeft.svg';
 import arrowRight from '../../../../img/src/arrowRight.svg';
 import NavRight from './NavRight';
@@ -12,37 +10,33 @@ import NavLeftShape from './NavLeftShape';
 import NavLeftColor from './NavLeftColor';
 
 const ComponentsSelection = (props) => {
+    const scrollContainerRef = React.useRef(null);
     const [croppingObj, setCroppingObj] = React.useState({});
     const [textIsEditing, setTextIsEditing] = React.useState(false);
     const [showScroll, setShowScroll] = React.useState(false);
     const [arrowState, setArrowState] = React.useState('right');
+    const [showMobileScrollContainer, setShowMobileScrollContainer] = React.useState(false);
     const listenScroll = (e) => {
         const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
-        if (e.target.scrollLeft !== 0 && scrollRight > 1) {
-            setArrowState('both');
-        } else if (scrollRight <= 1) {
-            setArrowState('left');
-        } else if (e.target.scrollLeft === 0) {
-            setArrowState('right');
-        }
+        e.target.scrollLeft !== 0 && scrollRight > 1
+            ? setArrowState('both')
+            : scrollRight <= 1
+            ? setArrowState('left')
+            : e.target.scrollLeft === 0
+            ? setArrowState('right')
+            : null;
     };
     const swipeHandler = (e, direction) => {
-        if (direction === 'left') {
-            e.currentTarget.parentNode.scrollLeft -= e.currentTarget.parentNode.clientWidth / 3;
-        } else {
-            e.currentTarget.parentNode.scrollLeft += e.currentTarget.parentNode.clientWidth / 3;
-        }
+        const swipeContainer = e.currentTarget.parentNode;
+        direction === 'left'
+            ? (swipeContainer.scrollLeft -= swipeContainer.clientWidth / 3)
+            : (swipeContainer.scrollLeft += swipeContainer.clientWidth / 3);
     };
 
     React.useEffect(() => {
-        if (
-            document.querySelector('.scrollContainer').scrollWidth >
-            document.querySelector('.scrollContainer').clientWidth
-        ) {
-            setShowScroll(true);
-        } else {
-            setShowScroll(false);
-        }
+        scrollContainerRef.current.scrollWidth > scrollContainerRef.current.clientWidth
+            ? setShowScroll(true)
+            : setShowScroll(false);
     }, [props.activeObj]);
 
     // render
@@ -52,7 +46,11 @@ const ComponentsSelection = (props) => {
                 props.currentSidebar !== '' ? 'componentsSelectionUnfold' : ''
             }`}
         >
-            <div className='scrollContainer' onScroll={listenScroll}>
+            <div
+                ref={scrollContainerRef}
+                className={`scrollContainer ${showMobileScrollContainer ? 'unfoldScrollContainer' : ''}`}
+                onScroll={listenScroll}
+            >
                 {showScroll && (arrowState === 'left' || arrowState === 'both') && (
                     <div className='directionButton left' onClick={(e) => swipeHandler(e, 'left')}>
                         <img src={arrowRight}></img>
@@ -94,6 +92,7 @@ const ComponentsSelection = (props) => {
                             canvas={props.canvas}
                             activeObj={props.activeObj}
                             setIsFocusInput={props.setIsFocusInput}
+                            setShowMobileScrollContainer={setShowMobileScrollContainer}
                         />
                     )}
                     {(props.activeObj.type === 'rect' ||
@@ -115,6 +114,7 @@ const ComponentsSelection = (props) => {
                     activeObj={props.activeObj}
                     setActiveObj={props.setActiveObj}
                     isFocusInput={props.isFocusInput}
+                    setShowMobileScrollContainer={setShowMobileScrollContainer}
                 />
             </div>
         </div>

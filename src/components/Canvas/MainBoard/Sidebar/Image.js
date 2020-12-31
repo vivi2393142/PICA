@@ -44,9 +44,10 @@ const Image = (props) => {
                                         draggable={!props.isAtMobile}
                                         src={item}
                                         onLoad={(e) => {
-                                            e.target.naturalHeight > e.target.naturalWidth
-                                                ? (e.target.parentNode.style.width = '29%')
-                                                : (e.target.parentNode.style.width = '58%');
+                                            e.target.parentNode.style.width =
+                                                e.target.naturalHeight > e.target.naturalWidth
+                                                    ? config.imageWidthForWaterfall.narrow
+                                                    : config.imageWidthForWaterfall.wide;
                                         }}
                                     ></img>
                                 </div>

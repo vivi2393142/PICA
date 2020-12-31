@@ -2,22 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as config from '../../../../utils/globalConfig';
 
+const getCurrentFilters = (imageObj) => {
+    const newFilters = { ...config.imageFiltersInit };
+    imageObj.filters.forEach((filter) => {
+        const type = filter.type.toLowerCase();
+        type === 'huerotation'
+            ? (newFilters.rotation = parseFloat(filter.rotation))
+            : (newFilters[type] = parseFloat(filter[type]));
+    });
+    return newFilters;
+};
+
 const ImageFilters = (props) => {
-    // get current image styles
     const [currentFilters, setCurrentFilters] = React.useState({
         ...config.imageFiltersInit,
     });
+
     React.useEffect(() => {
-        if (props.activeObj.type === 'image') {
-            props.activeObj.filters.forEach((item) => {
-                const type = item.type.toLowerCase();
-                type === 'huerotation'
-                    ? (config.imageFiltersInit.rotation = parseFloat(item.rotation))
-                    : (config.imageFiltersInit[type] = parseFloat(item[type]));
-            });
-            setCurrentFilters(config.imageFiltersInit);
-        }
+        props.activeObj.type === 'image' && setCurrentFilters(getCurrentFilters(props.activeObj));
     }, [props.activeObj]);
+
     const resetFilters = () => {
         setCurrentFilters({
             ...config.imageFiltersInit,
@@ -26,19 +30,23 @@ const ImageFilters = (props) => {
         props.activeObj.applyFilters();
         props.canvas.requestRenderAll();
     };
-
-    // jsx: image adjustment
-    const imageFiltersHandler = (e, item, index) => {
-        const filters = fabric.Image.filters;
+    const setImageFiltersRangeInput = (newValue, filter) => {
         const newFilters = { ...currentFilters };
-        newFilters[item.attr] = parseFloat(e.target.value);
+        newFilters[filter.attr] = parseFloat(newValue);
         setCurrentFilters(newFilters);
-        const newFilter = new filters[item.way]({
-            [item.attr]: parseFloat(e.target.value),
+    };
+    const renderNewImageFilters = (newValue, filter, index) => {
+        const filters = fabric.Image.filters;
+        const newFilter = new filters[filter.way]({
+            [filter.attr]: parseFloat(newValue),
         });
         props.activeObj.filters[index] = newFilter;
         props.activeObj.applyFilters();
         props.canvas.requestRenderAll();
+    };
+    const imageFiltersHandler = (newValue, filter, index) => {
+        setImageFiltersRangeInput(newValue, filter);
+        renderNewImageFilters(newValue, filter, index);
     };
 
     return (
@@ -48,19 +56,19 @@ const ImageFilters = (props) => {
                 display: props.currentSidebar === 'imageAdjustment' ? 'flex' : 'none',
             }}
         >
-            {config.imageFiltersSetting.map((item, index) => (
+            {config.imageFiltersSetting.map((filter, index) => (
                 <div key={index} className='imgAdjustBox'>
-                    <div className='imgAdjustText'>{item.text}</div>
+                    <div className='imgAdjustText'>{filter.text}</div>
                     <input
                         className='imgAdjustRange'
                         type='range'
-                        min={item.min}
-                        max={item.max}
-                        value={currentFilters[item.attr]}
-                        onInput={(e) => imageFiltersHandler(e, item, index)}
-                        step={item.step}
+                        min={filter.min}
+                        max={filter.max}
+                        value={currentFilters[filter.attr]}
+                        onInput={(e) => imageFiltersHandler(e.target.value, filter, index)}
+                        step={filter.step}
                     ></input>
-                    <div className='imgAdjustValue'>{currentFilters[item.attr]}</div>
+                    <div className='imgAdjustValue'>{currentFilters[filter.attr]}</div>
                 </div>
             ))}
             <div className='resetFilterButton' onClick={resetFilters}>
