@@ -84,6 +84,7 @@ const ComponentsSelection = (props) => {
                                 canvas={props.canvas}
                                 canvasSetting={props.canvasSetting}
                                 activeObj={props.activeObj}
+                                setIsShowMobileSidebar={props.setIsShowMobileSidebar}
                             />
                         )}
                     {props.activeObj.type === 'i-text' && (
@@ -131,6 +132,7 @@ ComponentsSelection.propTypes = {
     canvas: PropTypes.object.isRequired,
     canvasData: PropTypes.object.isRequired,
     canvasSetting: PropTypes.object.isRequired,
+    setIsShowMobileSidebar: PropTypes.func.isRequired,
 };
 
 export default React.memo(ComponentsSelection);

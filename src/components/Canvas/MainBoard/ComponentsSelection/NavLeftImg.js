@@ -10,13 +10,9 @@ const NavLeftImg = (props) => {
     // toggle adjustment nav
     const toggleImageAdjustmentNav = () => {
         props.setCurrentSidebar('imageAdjustment');
-        const targetDiv = document.querySelector('.sidebar');
-
-        trackOutSideClick(targetDiv, () => {
-            props.setCurrentSidebar('');
-            props.canvas.fire('object:modified');
-        });
+        props.setIsShowMobileSidebar(true);
     };
+
     const startCropping = () => {
         props.setCroppingObj(props.activeObj);
         croppingObjIndex = props.canvas.getObjects().indexOf(props.activeObj);
@@ -66,6 +62,7 @@ NavLeftImg.propTypes = {
     canvas: PropTypes.object.isRequired,
     canvasSetting: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
+    setIsShowMobileSidebar: PropTypes.func.isRequired,
 };
 
 export default React.memo(NavLeftImg);

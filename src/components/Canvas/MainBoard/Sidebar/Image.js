@@ -4,58 +4,60 @@ import * as utils from '../../../../utils/globalUtils.js';
 import * as config from '../../../../utils/globalConfig';
 
 const Image = (props) => {
+    const singleImage = (imageSrc, index) => {
+        return (
+            <div className='unfoldItemGalleryWrapper' key={index}>
+                <img
+                    onClick={(e) => {
+                        utils.addImage(e.target, props.nextAddPosition, props.canvas, props.canvasSetting);
+                        props.adjSetNextPosition();
+                    }}
+                    className='unfoldItem unfoldItemGallery'
+                    draggable={!props.isAtMobile}
+                    src={imageSrc}
+                    onLoad={(e) => {
+                        e.target.parentNode.style.width =
+                            e.target.naturalHeight > e.target.naturalWidth
+                                ? config.imageWidthForWaterfall.narrow
+                                : config.imageWidthForWaterfall.wide;
+                    }}
+                ></img>
+            </div>
+        );
+    };
+    const imagesInCategory = (category) =>
+        category.src.map((imageSrc, index) => singleImage(imageSrc, index));
+
+    const singleCategory = (category, index) => {
+        return (
+            <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={index}>
+                <div className='toggleSubtitle'>
+                    {category.title}
+                    <div
+                        onClick={(e) => {
+                            e.target.parentNode.parentNode.classList.toggle('unfoldImgWrapperToggle');
+                            e.target.textContent === '+'
+                                ? (e.target.textContent = '-')
+                                : (e.target.textContent = '+');
+                        }}
+                        className='toggleButton'
+                    >
+                        +
+                    </div>
+                </div>
+                {imagesInCategory(category)}
+            </div>
+        );
+    };
+    const allCategoryJsx = config.imageArray.map((category, index) => singleCategory(category, index));
+
     return (
         <div
             className='sidebarUnfoldInner sidebarUnfoldImg'
             onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'image' ? 'flex' : 'none' }}
         >
-            {config.imageArray.map((category, index) => {
-                return (
-                    <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={index}>
-                        <div className='toggleSubtitle'>
-                            {category.title}
-                            <div
-                                onClick={(e) => {
-                                    e.target.parentNode.parentNode.classList.toggle('unfoldImgWrapperToggle');
-                                    e.target.textContent === '+'
-                                        ? (e.target.textContent = '-')
-                                        : (e.target.textContent = '+');
-                                }}
-                                className='toggleButton'
-                            >
-                                +
-                            </div>
-                        </div>
-                        {category.src.map((item, index) => {
-                            return (
-                                <div key={index} className='unfoldItemGalleryWrapper'>
-                                    <img
-                                        onClick={(e) => {
-                                            utils.addImage(
-                                                e.target,
-                                                props.nextAddPosition,
-                                                props.canvas,
-                                                props.canvasSetting
-                                            );
-                                            props.adjSetNextPosition();
-                                        }}
-                                        className='unfoldItem unfoldItemGallery'
-                                        draggable={!props.isAtMobile}
-                                        src={item}
-                                        onLoad={(e) => {
-                                            e.target.parentNode.style.width =
-                                                e.target.naturalHeight > e.target.naturalWidth
-                                                    ? config.imageWidthForWaterfall.narrow
-                                                    : config.imageWidthForWaterfall.wide;
-                                        }}
-                                    ></img>
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
-            })}
+            {allCategoryJsx}
         </div>
     );
 };

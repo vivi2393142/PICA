@@ -76,6 +76,7 @@ const MainBoard = (props) => {
                     canvas={props.canvas}
                     canvasData={props.canvasData}
                     canvasSetting={props.canvasSetting}
+                    setIsShowMobileSidebar={setIsShowMobileSidebar}
                 />
                 <DrawingArea canvasSetting={props.canvasSetting} ratioSelectValue={props.ratioSelectValue} />
             </div>

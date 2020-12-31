@@ -477,26 +477,7 @@ input[type='range']::-webkit-slider-thumb:hover {
 input[type='range']::-webkit-slider-thumb:active {
     box-shadow: 0px 0px 1px white;
 }
-// specific nav - img
-.unfoldImgAdjustment {
-    flex-direction: column;
-}
-.imgAdjustBox {
-    display: flex;
-    justify-content: space-around;
-    padding: 1rem 0;
-}
-.imgAdjustText,
-.imgAdjustValue {
-    width: 3rem;
-    font-size: $small-font;
-    color: white;
-    font-weight: 500;
-}
-input[type='range'].imgAdjustRange {
-    height: 6px;
-    background-color: white;
-}
+
 // sidebar
 .mobileSidebarAdd {
     display: none;
@@ -506,7 +487,6 @@ input[type='range'].imgAdjustRange {
     display: flex;
     z-index: 100;
     overflow: hidden;
-
     .mobileToggle {
         display: none;
     }
@@ -621,6 +601,28 @@ input[type='range'].imgAdjustRange {
                 background: $middle-grey;
             }
         }
+        // specific nav - img
+        .unfoldImgAdjustment {
+            flex-direction: column;
+            align-items: center;
+            align-content: center;
+        }
+        .imgAdjustBox {
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem 0;
+        }
+        .imgAdjustText,
+        .imgAdjustValue {
+            width: 3rem;
+            font-size: $small-font;
+            color: white;
+            font-weight: 500;
+        }
+        input[type='range'].imgAdjustRange {
+            height: 6px;
+            background-color: white;
+        }
     }
     .firstUnfold {
         border-radius: 0 2rem 0 0;
@@ -649,6 +651,7 @@ input[type='range'].imgAdjustRange {
 .unfoldItem:hover {
     opacity: 0.6;
 }
+
 .unfoldItemImgWrapper {
     cursor: pointer;
     .close {
@@ -1428,6 +1431,15 @@ input[type='range'].imgAdjustRange {
                 .ghostDiv {
                     display: flex;
                     height: 0;
+                }
+            }
+            .imgAdjustBox,
+            .resetFilterButton {
+                width: 80%;
+                .imgAdjustRange {
+                    width: auto;
+                    flex-grow: 1;
+                    margin: auto 3%;
                 }
             }
         }

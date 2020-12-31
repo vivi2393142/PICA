@@ -168,6 +168,7 @@ const Sidebar = (props) => {
                         canvas={props.canvas}
                         activeObj={props.activeObj}
                         currentSidebar={props.currentSidebar}
+                        setCurrentSidebar={props.setCurrentSidebar}
                     />
                     {props.currentSidebar !== 'imageAdjustment' && toggleButtonJsx}
                 </div>

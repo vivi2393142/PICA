@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as config from '../../../../utils/globalConfig';
+import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 
 const getCurrentFilters = (imageObj) => {
     const newFilters = { ...config.imageFiltersInit };
@@ -14,13 +15,21 @@ const getCurrentFilters = (imageObj) => {
 };
 
 const ImageFilters = (props) => {
+    const sidebarRef = React.useRef(null);
     const [currentFilters, setCurrentFilters] = React.useState({
         ...config.imageFiltersInit,
     });
-
     React.useEffect(() => {
         props.activeObj.type === 'image' && setCurrentFilters(getCurrentFilters(props.activeObj));
     }, [props.activeObj]);
+    React.useEffect(() => {
+        trackOutSideClick(sidebarRef.current, () => {
+            if (props.currentSidebar === 'imageAdjustment') {
+                props.setCurrentSidebar('');
+                props.canvas.fire('object:modified');
+            }
+        });
+    }, []);
 
     const resetFilters = () => {
         setCurrentFilters({
@@ -51,6 +60,7 @@ const ImageFilters = (props) => {
 
     return (
         <div
+            ref={sidebarRef}
             className='sidebarUnfoldInner unfoldImgAdjustment'
             style={{
                 display: props.currentSidebar === 'imageAdjustment' ? 'flex' : 'none',
@@ -82,6 +92,7 @@ ImageFilters.propTypes = {
     canvas: PropTypes.object.isRequired,
     activeObj: PropTypes.object.isRequired,
     currentSidebar: PropTypes.string.isRequired,
+    setCurrentSidebar: PropTypes.func.isRequired,
 };
 
 export default React.memo(ImageFilters);
