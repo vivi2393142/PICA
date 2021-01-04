@@ -40,10 +40,14 @@ const Upload = (props) => {
             );
         }
     };
+    ondragover = (e) => {
+        e.preventDefault();
+    };
     ondrop = (e) => {
         e.preventDefault();
         setShowUploadCover(false);
         const files = e.dataTransfer.files;
+        console.log(files);
         if (files.length) {
             const status =
                 files.length > 1
