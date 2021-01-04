@@ -39,6 +39,7 @@ const Canvas = (props) => {
     const [uploadedFiles, setUploadedFiles] = React.useState([]);
     const [isFocusInput, setIsFocusInput] = React.useState(false);
     const [triggerSaveStatus, setTriggerSaveStatus] = React.useState(false);
+    const [isMobileZoomIn, setIsMobileZoomIn] = React.useState(false);
 
     React.useEffect(() => {
         // redirect if isn't author
@@ -126,7 +127,6 @@ const Canvas = (props) => {
         );
     }, []);
 
-    // render
     return (
         <div className='Canvas'>
             {isLoaded ? <Loader></Loader> : null}
@@ -157,6 +157,8 @@ const Canvas = (props) => {
                 saveDragItem={saveDragItem}
                 uploadedFiles={uploadedFiles}
                 canvasData={canvasData}
+                isMobileZoomIn={isMobileZoomIn}
+                setIsMobileZoomIn={setIsMobileZoomIn}
             />
         </div>
     );

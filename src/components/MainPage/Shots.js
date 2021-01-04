@@ -103,7 +103,6 @@ const Shots = (props) => {
             })
         ) : null;
 
-    // render
     return (
         <div className={styles.shotsWrapper}>
             {isLoaded && <Loader></Loader>}

@@ -67,7 +67,7 @@ const NavLeftColor = (props) => {
             setColorChosen({ background: props.activeObj.fill });
         }
     }, [props.activeObj]);
-    // render
+
     return (
         <div className='colorChoosingBox'>
             <div

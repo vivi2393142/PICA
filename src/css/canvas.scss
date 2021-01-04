@@ -201,6 +201,9 @@ body {
     cursor: pointer;
     background-color: rgba(235, 235, 235, 0.8);
 }
+.mobileRoomInButton {
+    display: none;
+}
 // canvas
 .drawingArea {
     // border: 1px solid $custom-black;
@@ -1575,6 +1578,7 @@ input[type='range']::-webkit-slider-thumb:active {
                     flex-wrap: nowrap;
                     overflow-x: scroll;
                     scroll-behavior: smooth;
+                    width: auto;
                     &::-webkit-scrollbar {
                         width: 0px;
                         height: 0px;
@@ -1652,6 +1656,27 @@ input[type='range']::-webkit-slider-thumb:active {
             }
         }
         .ratioSelect {
+            display: none;
+        }
+        .mobileRoomInButton {
+            display: flex;
+            bottom: 4.6rem;
+            left: 1rem;
+            width: 3rem;
+            height: 3rem;
+            box-shadow: 0 0 2px 0 #555555;
+            border-radius: 100%;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            color: $custom-black;
+            z-index: 2;
+            background-color: white;
+            cursor: pointer;
+            .innerIcon {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
         }
 
         .componentsSelectionUnfold {
@@ -1667,6 +1692,9 @@ input[type='range']::-webkit-slider-thumb:active {
             .specificNav {
                 .navTypeWord {
                     white-space: nowrap;
+                }
+                .textSizeSelect {
+                    margin: 0;
                 }
             }
             .scrollContainer {
@@ -1810,9 +1838,22 @@ input[type='range']::-webkit-slider-thumb:active {
             border-radius: 0;
             box-shadow: none;
             border: 1px solid rgb(218, 218, 218);
+            padding: 2rem 0 4rem 0;
+
             .canvasWrapper {
+                max-width: none;
+                max-height: none;
+                width: fit-content;
+                padding: 1rem;
+                position: relative;
                 top: 47%;
-                margin: 0;
+                .canvas-container {
+                    margin: 0 auto;
+                }
+            }
+            .mobileZoomIn {
+                left: 0;
+                transform: translate(0, -50%);
             }
         }
     }

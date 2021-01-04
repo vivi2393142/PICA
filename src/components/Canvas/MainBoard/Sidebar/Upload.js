@@ -40,6 +40,7 @@ const Upload = (props) => {
             );
         }
     };
+
     ondragover = (e) => {
         e.preventDefault();
     };
@@ -47,8 +48,7 @@ const Upload = (props) => {
         e.preventDefault();
         setShowUploadCover(false);
         const files = e.dataTransfer.files;
-        console.log(files);
-        if (files.length) {
+        if (files.length > 0) {
             const status =
                 files.length > 1
                     ? 'overAmount'

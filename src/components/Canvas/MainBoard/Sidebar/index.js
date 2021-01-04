@@ -88,91 +88,92 @@ const Sidebar = (props) => {
         >
             <div className='mobileToggle' onClick={() => setIsShowMobileSidebar(false)}></div>
             {sidebarFoldJsx}
-            {props.currentSidebar !== '' && (
-                <div
-                    className={`sidebarUnfold sidebarUnfoldUpload ${
-                        props.currentSidebar === 'text' ? 'firstUnfold' : ''
-                    }`}
-                >
-                    <Text
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        saveDragItem={props.saveDragItem}
-                        isAtMobile={isAtMobile}
-                        nextAddPosition={nextAddPosition}
-                        adjSetNextPosition={adjSetNextPosition}
-                    />
-                    <Shape
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        saveDragItem={props.saveDragItem}
-                        isAtMobile={isAtMobile}
-                        nextAddPosition={nextAddPosition}
-                        adjSetNextPosition={adjSetNextPosition}
-                    />
-                    <Line
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        saveDragItem={props.saveDragItem}
-                        isAtMobile={isAtMobile}
-                        nextAddPosition={nextAddPosition}
-                        adjSetNextPosition={adjSetNextPosition}
-                    />
-                    <Image
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        saveDragItem={props.saveDragItem}
-                        isAtMobile={isAtMobile}
-                        nextAddPosition={nextAddPosition}
-                        adjSetNextPosition={adjSetNextPosition}
-                    />
-                    <Background
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        setIsFocusInput={props.setIsFocusInput}
-                        isAtMobile={isAtMobile}
-                    />
-                    <Upload
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        setCurrentSidebar={props.setCurrentSidebar}
-                        saveDragItem={props.saveDragItem}
-                        uploadedFiles={props.uploadedFiles}
-                        fileId={props.fileId}
-                        isAtMobile={isAtMobile}
-                        nextAddPosition={nextAddPosition}
-                        adjSetNextPosition={adjSetNextPosition}
-                    />
-                    <Sticker
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        saveDragItem={props.saveDragItem}
-                        isAtMobile={isAtMobile}
-                        nextAddPosition={nextAddPosition}
-                        adjSetNextPosition={adjSetNextPosition}
-                    />
-                    <Sample
-                        canvas={props.canvas}
-                        canvasSetting={props.canvasSetting}
-                        currentSidebar={props.currentSidebar}
-                        isAtMobile={isAtMobile}
-                    />
-                    <ImageFilters
-                        canvas={props.canvas}
-                        activeObj={props.activeObj}
-                        currentSidebar={props.currentSidebar}
-                        setCurrentSidebar={props.setCurrentSidebar}
-                    />
-                    {props.currentSidebar !== 'imageAdjustment' && toggleButtonJsx}
-                </div>
-            )}
+            {/* {props.currentSidebar !== '' && ( */}
+            <div
+                className={`sidebarUnfold sidebarUnfoldUpload ${
+                    props.currentSidebar === 'text' ? 'firstUnfold' : ''
+                }`}
+                style={{ display: props.currentSidebar !== '' ? 'flex' : 'none' }}
+            >
+                <Text
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    saveDragItem={props.saveDragItem}
+                    isAtMobile={isAtMobile}
+                    nextAddPosition={nextAddPosition}
+                    adjSetNextPosition={adjSetNextPosition}
+                />
+                <Shape
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    saveDragItem={props.saveDragItem}
+                    isAtMobile={isAtMobile}
+                    nextAddPosition={nextAddPosition}
+                    adjSetNextPosition={adjSetNextPosition}
+                />
+                <Line
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    saveDragItem={props.saveDragItem}
+                    isAtMobile={isAtMobile}
+                    nextAddPosition={nextAddPosition}
+                    adjSetNextPosition={adjSetNextPosition}
+                />
+                <Image
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    saveDragItem={props.saveDragItem}
+                    isAtMobile={isAtMobile}
+                    nextAddPosition={nextAddPosition}
+                    adjSetNextPosition={adjSetNextPosition}
+                />
+                <Background
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    setIsFocusInput={props.setIsFocusInput}
+                    isAtMobile={isAtMobile}
+                />
+                <Upload
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    setCurrentSidebar={props.setCurrentSidebar}
+                    saveDragItem={props.saveDragItem}
+                    uploadedFiles={props.uploadedFiles}
+                    fileId={props.fileId}
+                    isAtMobile={isAtMobile}
+                    nextAddPosition={nextAddPosition}
+                    adjSetNextPosition={adjSetNextPosition}
+                />
+                <Sticker
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    saveDragItem={props.saveDragItem}
+                    isAtMobile={isAtMobile}
+                    nextAddPosition={nextAddPosition}
+                    adjSetNextPosition={adjSetNextPosition}
+                />
+                <Sample
+                    canvas={props.canvas}
+                    canvasSetting={props.canvasSetting}
+                    currentSidebar={props.currentSidebar}
+                    isAtMobile={isAtMobile}
+                />
+                <ImageFilters
+                    canvas={props.canvas}
+                    activeObj={props.activeObj}
+                    currentSidebar={props.currentSidebar}
+                    setCurrentSidebar={props.setCurrentSidebar}
+                />
+                {props.currentSidebar !== 'imageAdjustment' && toggleButtonJsx}
+            </div>
+            {/* )} */}
         </div>
     );
 };

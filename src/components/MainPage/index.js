@@ -23,7 +23,6 @@ const MainPage = (props) => {
         window.addEventListener('resize', setSizeState);
     }, []);
 
-    // render
     return (
         <div>
             <MainBanner

@@ -27,7 +27,6 @@ const NavLeftImg = (props) => {
         cropImageUtils.cancelCropping(props.canvas, props.activeObj, props.croppingObj, croppingObjIndex);
     };
 
-    // render
     return (
         <div className='specificNav'>
             {props.activeObj.type === 'image' && !props.croppingObj.type && (

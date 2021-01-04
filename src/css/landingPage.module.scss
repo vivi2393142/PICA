@@ -68,7 +68,8 @@ $symbol-font: 0.6rem;
     justify-content: center;
     align-items: center;
     .main {
-        height: 50%;
+        // height: 50%;
+        margin-bottom: 10%;
         width: 90%;
         max-width: 1000px;
         display: flex;
@@ -83,6 +84,7 @@ $symbol-font: 0.6rem;
                 font-style: italic;
                 line-height: 1.4;
                 margin: 0;
+                margin-top: auto;
             }
             span {
                 color: $sub-color;
@@ -114,8 +116,8 @@ $symbol-font: 0.6rem;
             }
         }
         .mainImg {
-            // width: 50%;
-            height: 100%;
+            width: 50%;
+            // height: 100%;
             position: relative;
             animation-name: floating;
             animation-duration: 1.5s;
@@ -143,7 +145,6 @@ $symbol-font: 0.6rem;
     height: 100vh;
     top: 0;
     left: 0;
-    //TODO: 待處理z-index問題
     z-index: 999;
     display: flex;
     justify-content: center;
@@ -446,6 +447,51 @@ $symbol-font: 0.6rem;
         border: 1px solid #eb4537;
         .loginIcon path {
             fill: #eb4537;
+        }
+    }
+}
+@media (max-width: 1000px) {
+    .mainWrapper .main {
+        .mainText {
+            width: 60%;
+        }
+        .mainImg {
+            width: 40%;
+        }
+    }
+}
+@media (max-width: 700px) {
+    .mainWrapper {
+        .main {
+            height: auto;
+            padding: 2rem 0;
+            .mainText {
+                width: 90%;
+                br {
+                    display: none;
+                }
+                h1 {
+                    font-size: 1.9rem;
+                }
+                p {
+                    font-size: $middle-font;
+                }
+                .startButtonWrapper {
+                    font-size: $middle-font;
+                    margin-top: 5%;
+                    flex-wrap: wrap;
+                    .startButton {
+                        width: 100%;
+                        text-align: center;
+                        opacity: 0.9;
+                        padding: 0.3rem 1rem;
+                        margin-top: 1rem;
+                    }
+                }
+            }
+            .mainImg {
+                display: none;
+            }
         }
     }
 }

@@ -189,7 +189,6 @@ const UserPage = (props) => {
             );
         });
 
-    // render
     return (
         <div className={styles.mainPage}>
             {isLoaded && <Loader></Loader>}
@@ -204,95 +203,100 @@ const UserPage = (props) => {
                     content={alertSetting.content}
                 />
             )}
-            <div className={styles.mainWrapper}>
-                <div className={styles.main}>
-                    <div className={styles.memberDetails}>
-                        <div className={styles.memberPhotoWrapper}>
-                            {isSmallLoaded && (
-                                <div className={styles.loaderWrapper}>
-                                    <div className={styles.smallLoader}>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
-                                        <div></div>
+            {props.currentUser.email !== 'noUser' && props.currentUser.email !== null && (
+                <div className={styles.mainWrapper}>
+                    <div className={styles.main}>
+                        <div className={styles.memberDetails}>
+                            <div className={styles.memberPhotoWrapper}>
+                                {isSmallLoaded && (
+                                    <div className={styles.loaderWrapper}>
+                                        <div className={styles.smallLoader}>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                            <img src={userPhoto} className={styles.memberPhoto}></img>
-                            {props.currentUser.email === props.match.params.userId && (
-                                <label>
-                                    <input
-                                        type='file'
-                                        accept='image/png, image/jpeg'
-                                        onChange={handleUploadImage}
-                                    ></input>
-                                </label>
-                            )}
+                                )}
+                                <img src={userPhoto} className={styles.memberPhoto}></img>
+                                {props.currentUser.email === props.match.params.userId && (
+                                    <label>
+                                        <input
+                                            type='file'
+                                            accept='image/png, image/jpeg'
+                                            onChange={handleUploadImage}
+                                        ></input>
+                                    </label>
+                                )}
+                            </div>
+                            <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
+                            <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
+                            <div className={styles.otherDetails}>{canvasDataWithDataURL.length} files</div>
                         </div>
-                        <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
-                        <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
-                        <div className={styles.otherDetails}>{canvasDataWithDataURL.length} files</div>
-                    </div>
-                    <div className={styles.navTags}>
-                        <div
-                            className={`${styles.tag} ${isAtMyCanvas ? styles.currentTag : ''}`}
-                            onClick={() => {
-                                setIsAtMyCanvas(true);
-                                // setIsLikeLoader(true);
-                            }}
-                        >
-                            {props.currentUser.email === props.match.params.userId ? '我的畫布' : '他的畫布'}
+                        <div className={styles.navTags}>
+                            <div
+                                className={`${styles.tag} ${isAtMyCanvas ? styles.currentTag : ''}`}
+                                onClick={() => {
+                                    setIsAtMyCanvas(true);
+                                }}
+                            >
+                                {props.currentUser.email === props.match.params.userId
+                                    ? '我的畫布'
+                                    : '他的畫布'}
+                            </div>
+                            <div
+                                className={`${styles.tag} ${isAtMyCanvas ? '' : styles.currentTag}`}
+                                onClick={() => {
+                                    setIsAtMyCanvas(false);
+                                }}
+                            >
+                                {props.currentUser.email === props.match.params.userId
+                                    ? '我的收藏'
+                                    : '他的收藏'}
+                            </div>
                         </div>
-                        <div
-                            className={`${styles.tag} ${isAtMyCanvas ? '' : styles.currentTag}`}
-                            onClick={() => {
-                                setIsAtMyCanvas(false);
-                            }}
-                        >
-                            {props.currentUser.email === props.match.params.userId ? '我的收藏' : '他的收藏'}
-                        </div>
-                    </div>
-                    {!isAtMyCanvas && (
-                        <div
-                            className={styles.canvasLikesFiles}
-                            style={{ display: isLikeLoader ? 'none' : 'block' }}
-                        >
-                            {likeListJsx}
-                        </div>
-                    )}
-                    {!isAtMyCanvas && isLikeLoader && (
-                        <div className={styles.smallLoaderLike}>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </div>
-                    )}
+                        {!isAtMyCanvas && (
+                            <div
+                                className={styles.canvasLikesFiles}
+                                style={{ display: isLikeLoader ? 'none' : 'block' }}
+                            >
+                                {likeListJsx}
+                            </div>
+                        )}
+                        {!isAtMyCanvas && isLikeLoader && (
+                            <div className={styles.smallLoaderLike}>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        )}
 
-                    {canvasFilesJsx && isAtMyCanvas ? (
-                        <div className={styles.canvasFiles}>
-                            {canvasFilesJsx}
-                            {props.currentUser.email === props.match.params.userId && (
-                                <div
-                                    className={styles.fileWrapperNew}
-                                    style={{
-                                        animationDelay: `${canvasDataWithDataURL.length * 0.05}s`,
-                                    }}
-                                >
+                        {canvasFilesJsx && isAtMyCanvas ? (
+                            <div className={styles.canvasFiles}>
+                                {canvasFilesJsx}
+                                {props.currentUser.email === props.match.params.userId && (
                                     <div
-                                        className={styles.addNew}
-                                        onClick={() => {
-                                            props.setIsAddingNew(true);
+                                        className={styles.fileWrapperNew}
+                                        style={{
+                                            animationDelay: `${canvasDataWithDataURL.length * 0.05}s`,
                                         }}
                                     >
-                                        +
+                                        <div
+                                            className={styles.addNew}
+                                            onClick={() => {
+                                                props.setIsAddingNew(true);
+                                            }}
+                                        >
+                                            +
+                                        </div>
                                     </div>
-                                </div>
-                            )}
-                        </div>
-                    ) : null}
+                                )}
+                            </div>
+                        ) : null}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

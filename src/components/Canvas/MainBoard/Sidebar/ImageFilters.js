@@ -29,7 +29,7 @@ const ImageFilters = (props) => {
                 props.canvas.fire('object:modified');
             }
         });
-    }, []);
+    }, [props.currentSidebar]);
 
     const resetFilters = () => {
         setCurrentFilters({

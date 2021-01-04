@@ -5,6 +5,7 @@ import Sidebar from './Sidebar/index';
 import ComponentsSelection from './ComponentsSelection/index';
 import * as utils from '../../../utils/globalUtils';
 import * as config from '../../../utils/globalConfig';
+import * as icons from '../../../img/mainPage';
 
 const MainBoard = (props) => {
     const [currentSidebar, setCurrentSidebar] = React.useState('');
@@ -19,6 +20,20 @@ const MainBoard = (props) => {
             : utils.setViewToSelectedRatio(selectedRatio, props.canvasSetting);
         utils.initViewZoomIn(props.canvas, props.canvasSetting);
     };
+    const handleMobileRatioButton = (e) => {
+        const container = document.querySelector('.canvas-container');
+        const currentRatio = parseInt(container.style.width) / props.canvasSetting.width;
+        if (props.isMobileZoomIn) {
+            utils.setViewToFitWindow(props.canvasSetting);
+            props.setRatioSelectValue('auto');
+            props.setIsMobileZoomIn(false);
+        } else {
+            utils.setViewToSelectedRatio(currentRatio * 2 * 100, props.canvasSetting);
+            props.setRatioSelectValue(`${currentRatio * 2 * 100}%`);
+            props.setIsMobileZoomIn(true);
+        }
+        utils.initViewZoomIn(props.canvas, props.canvasSetting);
+    };
     // mobile sidebar toggle - show sidebar
     const openMobileSidebar = () => {
         setIsShowMobileSidebar(true);
@@ -30,7 +45,7 @@ const MainBoard = (props) => {
         }, 1000);
     };
 
-    const givenOptionsJsx = (
+    const zoomInSelection = (
         <select className='ratioSelect' value={props.ratioSelectValue} onChange={handleRatioSelect}>
             {config.ratioOptions.map((item, index) => (
                 <option key={index} value={item}>
@@ -40,6 +55,15 @@ const MainBoard = (props) => {
             <option value='auto'>符合畫面大小</option>
         </select>
     );
+    const mobileRoomInButton = (
+        <div className='mobileRoomInButton' onClick={handleMobileRatioButton}>
+            {props.isMobileZoomIn ? (
+                <icons.ZoomOut className='innerIcon' />
+            ) : (
+                <icons.ZoomIn className='innerIcon' />
+            )}
+        </div>
+    );
     const mobileSidebarAddJsx = (
         <div className='mobileSidebarAdd' onClick={openMobileSidebar}>
             +
@@ -48,7 +72,8 @@ const MainBoard = (props) => {
 
     return (
         <div className='mainBoard'>
-            {givenOptionsJsx}
+            {zoomInSelection}
+            {mobileRoomInButton}
             {mobileSidebarAddJsx}
             {isShowMobileSidebar && <div className='mobileCover' onClick={closeMobileSidebar}></div>}
             <Sidebar
@@ -78,7 +103,11 @@ const MainBoard = (props) => {
                     canvasSetting={props.canvasSetting}
                     setIsShowMobileSidebar={setIsShowMobileSidebar}
                 />
-                <DrawingArea canvasSetting={props.canvasSetting} ratioSelectValue={props.ratioSelectValue} />
+                <DrawingArea
+                    canvasSetting={props.canvasSetting}
+                    ratioSelectValue={props.ratioSelectValue}
+                    isMobileZoomIn={props.isMobileZoomIn}
+                />
             </div>
         </div>
     );
@@ -99,6 +128,8 @@ MainBoard.propTypes = {
     saveDragItem: PropTypes.object.isRequired,
     uploadedFiles: PropTypes.array.isRequired,
     canvasData: PropTypes.object.isRequired,
+    isMobileZoomIn: PropTypes.bool.isRequired,
+    setIsMobileZoomIn: PropTypes.func.isRequired,
 };
 
 export default React.memo(MainBoard);

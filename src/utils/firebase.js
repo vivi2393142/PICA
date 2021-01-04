@@ -215,7 +215,7 @@ export const getAllFiles = (currentUserId, callback) => {
                     });
                 })
                 .then(() => {
-                    const dataArray = {
+                    const dataObject = {
                         Instagram: instagram,
                         Poster: poster,
                         PostCard: postCard,
@@ -224,7 +224,7 @@ export const getAllFiles = (currentUserId, callback) => {
                         NameCard: nameCard,
                         Custom: custom,
                     };
-                    callback(dataArray);
+                    callback(dataObject);
                 });
         });
 };
@@ -456,6 +456,7 @@ export const fbSignUp = () => {
                     like: [],
                 });
             }
+            history.go(0);
         })
         .catch(function (error) {});
 };
@@ -476,7 +477,7 @@ export const googleSignUp = () => {
                     like: [],
                 });
             }
-            // history.go(0);
+            history.go(0);
         })
         .catch(function (error) {});
 };
@@ -507,13 +508,10 @@ export const nativeSignUp = (name, email, pwd, failCallback) => {
             }
         });
 };
-export const nativeSignIn = (email, pwd, failCallback) => {
+export const nativeSignIn = (email, pwd, successCallback, failCallback) => {
     firebase
         .auth()
         .signInWithEmailAndPassword(email, pwd)
-        .then((user) => {
-            // return user;
-        })
         .then(() => {
             history.go(0);
         })

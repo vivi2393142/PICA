@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../../css/landingPage.module.scss';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
-import * as login from '../../img/landingPage.js';
+import * as landingIcon from '../../img/landingPage.js';
 import Login from '../Login';
 import { useHistory } from 'react-router-dom';
 
@@ -17,7 +17,6 @@ const LandingPage = (props) => {
         }
     }, [props.currentUser]);
 
-    // render
     return (
         <div className={styles.landingPage}>
             <div className={styles.bannerWrapper}>
@@ -71,7 +70,7 @@ const LandingPage = (props) => {
                             </div>
                         </div>
                     </div>
-                    <login.LandingMain className={styles.mainImg} />
+                    <landingIcon.LandingMain className={styles.mainImg} />
                 </div>
             </div>
             {isLoginOrSignup && (

@@ -23,10 +23,10 @@ const arrowStateInit = {
     NameCard: 'left',
     Custom: 'left',
 };
-const getArrowShowingState = (hasArrow, dataArray, filter, currentWidth) => {
+const getArrowShowingState = (hasArrow, dataObject, filter, currentWidth) => {
     const oldState = { ...hasArrow };
     allType.forEach((type) => {
-        const filterAll = dataArray[type];
+        const filterAll = dataObject[type];
         const filterSample = filterAll.filter((item) => item.isSample);
         const filterNonSample = filterAll.filter((item) => !item.isSample);
         oldState[type] =
@@ -42,7 +42,7 @@ const getArrowShowingState = (hasArrow, dataArray, filter, currentWidth) => {
 const Explore = (props) => {
     const scrollRef = React.useRef([]);
     const [isLoaded, setIsLoaded] = React.useState(true);
-    const [dataArray, setDataArray] = React.useState([]);
+    const [dataObject, setDataObject] = React.useState({});
     const [filter, setFilter] = React.useState('all');
     const [currentWidth, setCurrentWidth] = React.useState(4);
     const [hasArrow, setHasArrow] = React.useState({
@@ -58,8 +58,8 @@ const Explore = (props) => {
 
     React.useEffect(() => {
         props.setCurrentPage('explore');
-        firebase.getAllFiles(props.currentUser.email, (dataArray) => {
-            setDataArray(dataArray);
+        firebase.getAllFiles(props.currentUser.email, (dataObject) => {
+            setDataObject(dataObject);
             setIsLoaded(false);
         });
         // reset scroll button while resize
@@ -74,11 +74,11 @@ const Explore = (props) => {
         window.addEventListener('resize', setRowItemsWidth);
     }, []);
     React.useEffect(() => {
-        if (dataArray.length) {
-            const newArrowState = getArrowShowingState(hasArrow, dataArray, filter, currentWidth);
+        if (Object.keys(dataObject).length > 0) {
+            const newArrowState = getArrowShowingState(hasArrow, dataObject, filter, currentWidth);
             setHasArrow(newArrowState);
         }
-    }, [dataArray, currentWidth, filter]);
+    }, [dataObject, currentWidth, filter]);
 
     const swipeHandler = (direction, index) => {
         const currentRef = scrollRef.current[index];
@@ -100,11 +100,11 @@ const Explore = (props) => {
     };
     const likeHandler = (e, item, type) => {
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
-        const oldData = { ...dataArray };
-        const index = dataArray[type].findIndex((x) => x.fileId === item.fileId);
+        const oldData = { ...dataObject };
+        const index = dataObject[type].findIndex((x) => x.fileId === item.fileId);
         item.isLike ? (oldData[type][index].like -= 1) : (oldData[type][index].like += 1);
         oldData[type][index].isLike = !item.isLike;
-        setDataArray(oldData);
+        setDataObject(oldData);
     };
     const scrollButtonHandler = (filterName) => {
         setFilter(filterName);
@@ -113,9 +113,9 @@ const Explore = (props) => {
     };
 
     const allRowsJsx =
-        dataArray.length !== 0 &&
+        Object.keys(dataObject).length !== 0 &&
         allType.map((type, index) => {
-            const sampleInner = dataArray[type].map((item, index) => {
+            const sampleInner = dataObject[type].map((item, index) => {
                 if (item.isSample) {
                     return (
                         <ExploreItem
@@ -129,7 +129,7 @@ const Explore = (props) => {
                     );
                 }
             });
-            const nonSampleInner = dataArray[type].map((item, index) => {
+            const nonSampleInner = dataObject[type].map((item, index) => {
                 if (!item.isSample) {
                     return (
                         <ExploreItem
@@ -185,7 +185,6 @@ const Explore = (props) => {
         </div>
     ));
 
-    // render
     return (
         <div className={styles.explore}>
             <div className={styles.exploreBanner}>

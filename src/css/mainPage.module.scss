@@ -90,6 +90,7 @@ body {
             width: 1.2rem;
         }
         .signOut {
+            right: calc((100% - 1000px) / 2);
             display: flex;
             flex-direction: column;
             position: absolute;
@@ -99,7 +100,6 @@ body {
             border-radius: 0.5rem;
             padding: 0.2rem 0.5rem;
             justify-content: center;
-            right: 15%;
             font-size: $middle-font;
             font-weight: 400;
             color: $custom-black;
@@ -246,8 +246,7 @@ body {
                             position: absolute;
                             top: 0;
                             left: 0;
-                            background: url('../img/src/banner/edit.svg') no-repeat center/ 2rem
-                                2rem;
+                            background: url('../img/src/banner/edit.svg') no-repeat center/ 2rem 2rem;
                         }
                     }
                     input {
@@ -931,6 +930,15 @@ body {
 }
 
 // media query
+@media (max-width: 1000px) {
+    .bannerWrapper {
+        .banner {
+            .signOut {
+                right: 5%;
+            }
+        }
+    }
+}
 @media (max-width: 900px) {
     .shotsWrapper {
         .shots {
@@ -1003,7 +1011,8 @@ body {
         .main {
             .rowWrapper {
                 .rowTitle {
-                    font-size: 1.3rem;
+                    font-size: 1.1rem;
+                    padding-left: 0;
                 }
             }
         }

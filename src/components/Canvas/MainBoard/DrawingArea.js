@@ -18,9 +18,8 @@ const DrawingArea = (props) => {
         }
     }, [props.ratioSelectValue, props.canvasSetting]);
 
-    //render
     return (
-        <div className='canvasWrapper'>
+        <div className={`canvasWrapper ${props.isMobileZoomIn ? 'mobileZoomIn' : ''}`}>
             <canvas className='drawingArea' id='fabric-canvas' />
         </div>
     );
@@ -29,6 +28,7 @@ const DrawingArea = (props) => {
 DrawingArea.propTypes = {
     canvasSetting: PropTypes.object.isRequired,
     ratioSelectValue: PropTypes.string.isRequired,
+    isMobileZoomIn: PropTypes.bool.isRequired,
 };
 
 export default React.memo(DrawingArea);

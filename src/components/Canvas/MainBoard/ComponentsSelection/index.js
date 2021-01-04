@@ -39,7 +39,6 @@ const ComponentsSelection = (props) => {
             : setShowScroll(false);
     }, [props.activeObj]);
 
-    // render
     return (
         <div
             className={`componentsSelection ${

@@ -111,7 +111,7 @@ const NavRight = (props) => {
         if (e.keyCode === codes.shiftKey) {
             shiftDown = true;
         }
-        if (ctrlDown && e.keyCode === codes.vKey) {
+        if (ctrlDown && e.keyCode === codes.vKey && !props.isFocusInput) {
             pasteHandler();
         }
         if (props.activeObj.type) {

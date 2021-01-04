@@ -16,11 +16,10 @@ const MainBanner = (props) => {
     const [photoSrc, setPhotoSrc] = React.useState(null);
     const [isLoaded, setIsLoaded] = React.useState(false);
 
-    const signOutHandler = () => {
-        setIsLoaded(true);
+    const signOutHandler = async () => {
+        await setIsLoaded(true);
         firebase.nativeSignOut(() => {
             history.go(0);
-            setIsLoaded(false);
         });
     };
     const toggleMember = (e) => {
@@ -41,7 +40,6 @@ const MainBanner = (props) => {
     };
     getUserPhoto();
 
-    // render
     return (
         <div className={styles.bannerWrapper}>
             {isLoaded && <Loader></Loader>}
