@@ -280,24 +280,18 @@ export const postComment = (textInput, currentUserId, fileId) => {
         });
     });
 };
-let setTime = 0;
-let initCommentState = true;
+
 export const listenToComment = (fileId, callback) => {
     const refFiles = filesDb.doc(fileId);
     let oldData = [];
-    // 不重複設置監聽
-    if (setTime < 1) {
-        setTime += 1;
-        refFiles.onSnapshot((doc) => {
-            if (initCommentState) {
-                initCommentState = false;
-                oldData = doc.data();
-            } else if (doc.data().comments.length !== oldData.comments.length) {
-                callback();
-                oldData = doc.data();
-            }
-        });
-    }
+    refFiles.onSnapshot((doc) => {
+        if (oldData.length === 0) {
+            oldData = doc.data();
+        } else if (doc.data().comments.length !== oldData.comments.length) {
+            callback();
+            oldData = doc.data();
+        }
+    });
 };
 export const deleteComment = (index, fileId) => {
     const ref = filesDb.doc(fileId);
