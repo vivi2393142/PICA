@@ -1,14 +1,14 @@
-# WOWMUSIC
+# PICA
 
-A digital music service accessing to millions of songs. With WOWMUSIC , it’s easy to find the right music for every moment – on your phone, your computer, and more.
+An online designing tool integrated with exploring and sharing systems.
 
-<!-- ![](https://i.imgur.com/mZbxjuZ.png) -->
+![](./src/img/src/readme/overview.png)
 
 ## Demo
 
-https://wowmusic.zonghan-wu.com  
-User: test@gmail.com Password: 123456
-<img src='./src/img/src/readme/componentsStructure.jpg'>
+https://pica-b4a59.web.app/
+
+<!-- User: test@gmail.com Password: 123456 -->
 
 ## Technologies
 
@@ -29,28 +29,38 @@ User: test@gmail.com Password: 123456
 
 ## Core Components Structure
 
-![](https://i.imgur.com/Fe5zDlL.png)
+![](./src/img/src/readme/componentsStructure.jpg)
 
 ## Website Demo
 
-### Play Songs by Music Player
+### Add elements to design
 
-![](https://i.imgur.com/gIPZQD9.gif)
+![](./src/img/src/readme/addElements.gif)
 
-### Add albums to favorite
+### Adjust elements in design
 
-![](https://i.imgur.com/sWdhhjV.gif)
+![](./src/img/src/readme/adjustElements.gif)
 
-### Designed different layouts for better mobile experience
+### Export my design
 
-![](https://i.imgur.com/Gv5wqt4.gif)
+![](./src/img/src/readme/exportDesign.gif)
 
-## Plan for Next Version
+### Explore designs and add to like list
 
--   Allow user to add song to favorite
--   Optimize admin page layout
--   Refactor website with Redux
+![](./src/img/src/readme/explore.gif)
+
+### Check design details and comment
+
+![](./src/img/src/readme/shot.gif)
+
+### Check my designs and like list
+
+![](./src/img/src/readme/myProfile.gif)
+
+### Add new design
+
+![](./src/img/src/readme/addNew.gif)
 
 ## Contact
 
-E-mail: a26620236@gmail.com
+E-mail: vivi2393142@gmail.com
