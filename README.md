@@ -41,37 +41,51 @@ PICA: https://pica-b4a59.web.app/
 
 ## Core Components Structure
 
-![](./src/img/src/readme/componentsStructure.jpg)
+![](./src/img/src/readme/componentsStructure.jpeg)
 
 ## Website Demo
 
 -   ### Add elements to design
 
-    ![](./src/img/src/readme/addElements.gif)
+    <kbd>
+    <img src="./src/img/src/readme/addElements.gif">
+    </kbd>
 
 -   ### Adjust elements in design
 
-    ![](./src/img/src/readme/adjustElements.gif)
+    <kbd>
+    <img src="./src/img/src/readme/adjustElements.gif">
+    </kbd>
 
 -   ### Export my design
 
-    ![](./src/img/src/readme/exportDesign.gif)
+    <kbd>
+    <img src="./src/img/src/readme/exportDesign.gif">
+    </kbd>
 
 -   ### Explore designs and add to like list
 
-    ![](./src/img/src/readme/explore.gif)
+    <kbd>
+    <img src="./src/img/src/readme/explore.gif">
+    </kbd>
 
 -   ### Check design details and comment
 
-    ![](./src/img/src/readme/shot.gif)
+    <kbd>
+    <img src="./src/img/src/readme/shot.gif">
+    </kbd>
 
 -   ### Check my designs and like list
 
-    ![](./src/img/src/readme/myProfile.gif)
+    <kbd>
+    <img src="./src/img/src/readme/myProfile.gif">
+    </kbd>
 
 -   ### Add new design
 
-    ![](./src/img/src/readme/addNew.gif)
+    <kbd>
+    <img src="./src/img/src/readme/addNew.gif">
+    </kbd>
 
 ## Contact
 
