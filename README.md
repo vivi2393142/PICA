@@ -48,37 +48,37 @@ PICA: https://pica-b4a59.web.app/
 -   ### Add elements to design
 
     <kbd>
-    <img src="./src/img/src/readme/addElements.gif">
+    <img src="./src/img/src/readme/addElements.gif" style="border-radius:5px">
     </kbd>
 
 -   ### Adjust elements in design
 
     <kbd>
-    <img src="./src/img/src/readme/adjustElements.gif">
+    <img src="./src/img/src/readme/adjustElements.gif" style="border-radius:5px">
     </kbd>
 
 -   ### Export my design
 
     <kbd>
-    <img src="./src/img/src/readme/exportDesign.gif">
+    <img src="./src/img/src/readme/exportDesign.gif" style="border-radius:5px">
     </kbd>
 
 -   ### Explore designs and add to like list
 
     <kbd>
-    <img src="./src/img/src/readme/explore.gif">
+    <img src="./src/img/src/readme/explore.gif" style="border-radius:5px">
     </kbd>
 
 -   ### Check design details and comment
 
     <kbd>
-    <img src="./src/img/src/readme/shot.gif">
+    <img src="./src/img/src/readme/shot.gif" style="border-radius:5px">
     </kbd>
 
 -   ### Check my designs and like list
 
     <kbd>
-    <img src="./src/img/src/readme/myProfile.gif">
+    <img src="./src/img/src/readme/myProfile.gif" style="border-radius:5px">
     </kbd>
 
 -   ### Add new design
