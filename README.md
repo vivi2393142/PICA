@@ -1,12 +1,24 @@
-# PICA
+<!-- # PICA -->
+<p align="center">
+  <a href="https://pica-b4a59.web.app/">
+    <img src="./src/img/src/banner/logo-wide.svg" alt="Logo" width="200">
+  </a>
 
-An online designing tool integrated with exploring and sharing systems.
+  <!-- <h3 align="center">PICA</h3> -->
 
-![](./src/img/src/readme/overview.png)
+  <p align="center">
+   An online designing tool integrated with exploring and sharing systems.
+    <br />
+    <a href="https://pica-b4a59.web.app/"><strong>View Website »</strong></a>
+    <br />
+  </p> 
+</p>
 
 ## Demo
 
-https://pica-b4a59.web.app/
+PICA: https://pica-b4a59.web.app/
+
+![](./src/img/src/readme/overview.png)
 
 <!-- User: test@gmail.com Password: 123456 -->
 
@@ -33,33 +45,33 @@ https://pica-b4a59.web.app/
 
 ## Website Demo
 
-### Add elements to design
+-   ### Add elements to design
 
-![](./src/img/src/readme/addElements.gif)
+    ![](./src/img/src/readme/addElements.gif)
 
-### Adjust elements in design
+-   ### Adjust elements in design
 
-![](./src/img/src/readme/adjustElements.gif)
+    ![](./src/img/src/readme/adjustElements.gif)
 
-### Export my design
+-   ### Export my design
 
-![](./src/img/src/readme/exportDesign.gif)
+    ![](./src/img/src/readme/exportDesign.gif)
 
-### Explore designs and add to like list
+-   ### Explore designs and add to like list
 
-![](./src/img/src/readme/explore.gif)
+    ![](./src/img/src/readme/explore.gif)
 
-### Check design details and comment
+-   ### Check design details and comment
 
-![](./src/img/src/readme/shot.gif)
+    ![](./src/img/src/readme/shot.gif)
 
-### Check my designs and like list
+-   ### Check my designs and like list
 
-![](./src/img/src/readme/myProfile.gif)
+    ![](./src/img/src/readme/myProfile.gif)
 
-### Add new design
+-   ### Add new design
 
-![](./src/img/src/readme/addNew.gif)
+    ![](./src/img/src/readme/addNew.gif)
 
 ## Contact
 
