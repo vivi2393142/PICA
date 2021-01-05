@@ -72,7 +72,7 @@ const Explore = (props) => {
         };
         setRowItemsWidth();
         window.addEventListener('resize', setRowItemsWidth);
-    }, []);
+    }, [props.currentUser]);
     React.useEffect(() => {
         if (Object.keys(dataObject).length > 0) {
             const newArrowState = getArrowShowingState(hasArrow, dataObject, filter, currentWidth);

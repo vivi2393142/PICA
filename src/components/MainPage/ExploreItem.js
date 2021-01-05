@@ -83,9 +83,22 @@ const ExploreItem = (props) => {
                             className={`${styles.like} ${props.item.isLike ? styles.isLike : ''}`}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                notLoginAlert((e) => {
+                                if (props.currentUser.email === 'noUser') {
+                                    setAlertSetting({
+                                        buttonNumber: 1,
+                                        buttonOneFunction: () => {
+                                            setShowAlert(false);
+                                        },
+                                        buttonTwoFunction: () => {},
+                                        buttonOneTitle: '關閉',
+                                        buttonTwoTitle: '',
+                                        title: '未登入會員',
+                                        content: '請先註冊或登入會員，以收藏作品',
+                                    });
+                                    setShowAlert(true);
+                                } else {
                                     props.likeHandler(e, props.item, props.type);
-                                }, '請先註冊或登入會員，以收藏作品');
+                                }
                             }}
                         >
                             <mainIcons.Like className={styles.buttonIcon} />
