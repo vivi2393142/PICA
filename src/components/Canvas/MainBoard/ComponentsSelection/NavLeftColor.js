@@ -30,13 +30,15 @@ const NavLeftColor = (props) => {
     const toggleColorSelection = (e) => {
         setIsChoosingColor(true);
         props.setIsFocusInput(true);
-        componentsNavLeftRef.current.style.zIndex = '2';
-        trackOutSideClick(e.currentTarget.parentNode, () => {
-            setIsChoosingColor(false);
-            props.setIsFocusInput(false);
-            componentsNavLeftRef.current.style.zIndex = '1';
-            props.canvas.fire('object:modified');
-        });
+        if (componentsNavLeftRef.current.style) {
+            componentsNavLeftRef.current.style.zIndex = '2';
+            trackOutSideClick(e.currentTarget.parentNode, () => {
+                setIsChoosingColor(false);
+                props.setIsFocusInput(false);
+                componentsNavLeftRef.current.style.zIndex = '1';
+                props.canvas.fire('object:modified');
+            });
+        }
     };
     // -- color state
     const [colorChosen, setColorChosen] = React.useState({

@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# WOWMUSIC
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A digital music service accessing to millions of songs. With WOWMUSIC , it’s easy to find the right music for every moment – on your phone, your computer, and more.
 
-## Available Scripts
+<!-- ![](https://i.imgur.com/mZbxjuZ.png) -->
 
-In the project directory, you can run:
+## Demo
 
-### `npm start`
+https://wowmusic.zonghan-wu.com  
+User: test@gmail.com Password: 123456
+<img src='./src/img/src/readme/componentsStructure.jpg'>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Technologies
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+-   Front-End Basic
+    -   HTML / CSS / JavaScript
+    -   SCSS
+    -   RWD
+-   Front-End Frameworks
+    -   React
+    -   React Router
+-   Firebase
+    -   Database
+    -   Storage
+    -   Hosting
+    -   Authentication
+-   Other
+    -   Version Control : Git / GitHub
 
-### `npm test`
+## Core Components Structure
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![](https://i.imgur.com/Fe5zDlL.png)
 
-### `npm run build`
+## Website Demo
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Play Songs by Music Player
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![](https://i.imgur.com/gIPZQD9.gif)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Add albums to favorite
 
-### `npm run eject`
+![](https://i.imgur.com/sWdhhjV.gif)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Designed different layouts for better mobile experience
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![](https://i.imgur.com/Gv5wqt4.gif)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Plan for Next Version
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+-   Allow user to add song to favorite
+-   Optimize admin page layout
+-   Refactor website with Redux
 
-## Learn More
+## Contact
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+E-mail: a26620236@gmail.com
