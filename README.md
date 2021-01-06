@@ -45,7 +45,7 @@
 
 ### Design Editing Page
 
--   #### Various elements to use
+-   #### Various Design Elements
 
     Provided with various elements to use, including text, shapes, lines, images, stickers, background, upload and templates to choose from.
 
@@ -53,7 +53,7 @@
     <img src="./src/img/src/readme/elements.gif" >
     </kbd>
 
--   #### Add elements to design
+-   #### Add Elements
 
     Click or Drag to add new element in own design.
 
@@ -61,21 +61,20 @@
     <img src="./src/img/src/readme/addElements.gif" >
     </kbd>
 
--   #### Adjust elements in design
+-   #### Adjust Elements
 
-    -   Basic Adjusting Functions:
-
+    -   Basic Adjusting Functions:<br>
         Copy, paste, redo, undo, align, layer move, etc.
-
-    -   Particular Adjusting Functions:
-
+    -   Particular Adjusting Functions:<br>
         For example, image elements can do crop and filter while text elements can choose color, font weight and text alignment.
 
+    <p>
     <kbd>
     <img src="./src/img/src/readme/adjustElements.gif" >
     </kbd>
+    </p>
 
--   #### Export my design
+-   #### Export Design
 
     Users can export the design to jpg, png or pdf file, or share the file details page link.
 
@@ -83,7 +82,7 @@
     <img src="./src/img/src/readme/exportDesign.gif" >
     </kbd>
 
--   #### Responsive web design
+-   #### Responsive Web Design
 
     Realigning all selection bars and adjusting mouse over events on mobile view.
 
@@ -91,9 +90,9 @@
     <img src="./src/img/src/readme/mobileView.gif" >
     </kbd>
 
-### Explore, Self & File Information Page
+### Explore, Self & Design Details Page
 
--   #### Explore designs and add to like list
+-   #### Explore Page & Like
 
     Explore all designs, including templates and others' designs.
 
@@ -101,7 +100,7 @@
     <img src="./src/img/src/readme/explore.gif" >
     </kbd>
 
--   #### Check design details and comment
+-   #### Design Details Page & Comment
 
     Check information of design like author information and comments, and can also send or edit my comment.
 
@@ -109,7 +108,7 @@
     <img src="./src/img/src/readme/shot.gif" >
     </kbd>
 
--   #### Check my designs and like list
+-   #### Self Page
 
     Check all my designs which link to the edit page, and all designs in the like list.
 
@@ -117,7 +116,7 @@
     <img src="./src/img/src/readme/myProfile.gif" >
     </kbd>
 
--   #### Add new design
+-   #### Add New Design
 
     User-friendly adding steps with clear guidances.
 
