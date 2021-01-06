@@ -14,13 +14,9 @@
   </p> 
 </p>
 
-## Demo
-
-PICA: https://pica-b4a59.web.app/
-
-![](./src/img/src/readme/overview.png)
-
-<!-- User: test@gmail.com Password: 123456 -->
+<kbd>
+    <img src="./src/img/src/readme/overview.gif" >
+</kbd>
 
 ## Technologies
 
@@ -36,6 +32,8 @@ PICA: https://pica-b4a59.web.app/
     -   Storage
     -   Hosting
     -   Authentication
+-   Library
+    -   Fabric.js
 -   Other
     -   Version Control : Git / GitHub
 
@@ -45,43 +43,83 @@ PICA: https://pica-b4a59.web.app/
 
 ## Website Demo
 
--   ### Add elements to design
+### Design Editing Page
+
+-   #### Various elements to use
+
+    Provided with various elements to use, including text, shapes, lines, images, stickers, background, upload and templates to choose from.
+
+    <kbd>
+    <img src="./src/img/src/readme/elements.gif" >
+    </kbd>
+
+-   #### Add elements to design
+
+    Click or Drag to add new element in own design.
 
     <kbd>
     <img src="./src/img/src/readme/addElements.gif" >
     </kbd>
 
--   ### Adjust elements in design
+-   #### Adjust elements in design
+
+    -   Basic Adjusting Functions:
+
+        Copy, paste, redo, undo, align, layer move, etc.
+
+    -   Particular Adjusting Functions:
+
+        For example, image elements can do crop and filter while text elements can choose color, font weight and text alignment.
 
     <kbd>
     <img src="./src/img/src/readme/adjustElements.gif" >
     </kbd>
 
--   ### Export my design
+-   #### Export my design
+
+    Users can export the design to jpg, png or pdf file, or share the file details page link.
 
     <kbd>
     <img src="./src/img/src/readme/exportDesign.gif" >
     </kbd>
 
--   ### Explore designs and add to like list
+-   #### Responsive web design
+
+    Realigning all selection bars and adjusting mouse over events on mobile view.
+
+    <kbd>
+    <img src="./src/img/src/readme/mobileView.gif" >
+    </kbd>
+
+### Explore, Self & File Information Page
+
+-   #### Explore designs and add to like list
+
+    Explore all designs, including templates and others' designs.
 
     <kbd>
     <img src="./src/img/src/readme/explore.gif" >
     </kbd>
 
--   ### Check design details and comment
+-   #### Check design details and comment
+
+    Check information of design like author information and comments, and can also send or edit my comment.
 
     <kbd>
     <img src="./src/img/src/readme/shot.gif" >
     </kbd>
 
--   ### Check my designs and like list
+-   #### Check my designs and like list
+
+    Check all my designs which link to the edit page, and all designs in the like list.
 
     <kbd>
     <img src="./src/img/src/readme/myProfile.gif" >
     </kbd>
 
--   ### Add new design
+-   #### Add new design
+
+    User-friendly adding steps with clear guidances.
 
     <kbd>
     <img src="./src/img/src/readme/addNew.gif" >
