@@ -1,10 +1,7 @@
-<!-- # PICA -->
 <p align="center">
   <a href="https://pica-b4a59.web.app/">
     <img src="./src/img/src/banner/logo-wide.svg" alt="Logo" width="200">
   </a>
-
-  <!-- <h3 align="center">PICA</h3> -->
 
   <p align="center">
    An online designing tool integrated with exploring and sharing systems.
@@ -55,7 +52,7 @@
 
 -   #### Add Elements
 
-    Click or Drag to add new element in own design.
+    Click or Drag to add a new element in the design.
 
     <kbd>
     <img src="./src/img/src/readme/addElements.gif" >

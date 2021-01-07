@@ -8,8 +8,8 @@ import { Alert, defaultAlertSetting } from './Alert';
 
 const Login = (props) => {
     const history = useHistory();
-    const [inputId, setInputId] = React.useState('');
-    const [inputPwd, setInputPwd] = React.useState('');
+    const [inputId, setInputId] = React.useState('test@gmail.com');
+    const [inputPwd, setInputPwd] = React.useState('123456');
     const [inputName, setInputName] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
