@@ -33,6 +33,7 @@ const AddNew = (props) => {
     const [currentStep, setCurrentStep] = React.useState(1);
     const [chosenRec, setChosenRec] = React.useState(null);
     const [titleInput, setTitleInput] = React.useState('');
+    const [sampleList, setSampleList] = React.useState();
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         ...defaultAlertSetting,
@@ -45,7 +46,7 @@ const AddNew = (props) => {
         name: '',
         sampleFileId: null,
     });
-    const [sampleList, setSampleList] = React.useState();
+
     const imgSizeRatio =
         props.isAtMobile === 'superSmall'
             ? sizeAdjustForMediaQuery.superSmall
@@ -55,6 +56,12 @@ const AddNew = (props) => {
     const sizeChoosingHandler = (type, width, height) => {
         setChosenRec(type);
         setChoices({ ...choices, type, width, height });
+        samplerListInit(type);
+    };
+    const samplerListInit = (type) => {
+        firebase.getSampleList(type, (result) => {
+            setSampleList(result);
+        });
     };
     const restartHandler = () => {
         setCurrentStep(1);
@@ -68,11 +75,7 @@ const AddNew = (props) => {
             sampleFileId: null,
         });
     };
-    const samplerListHandler = (type) => {
-        firebase.getSampleList(type, (result) => {
-            setSampleList(result);
-        });
-    };
+
     // custom size
     const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
     const [showHint, setShowHint] = React.useState(false);
@@ -219,8 +222,14 @@ const AddNew = (props) => {
                     <div className={styles.box}>
                         <div className={styles.steps}>
                             <div
-                                className={`${styles.step} ${currentStep === 1 ? styles.current : ''} ${
-                                    currentStep > 1 ? styles.chosen : ''
+                                className={`${styles.step} ${
+                                    currentStep === 1
+                                        ? styles.current
+                                        : currentStep === 2
+                                        ? styles.chosen
+                                        : currentStep === 3
+                                        ? styles.done
+                                        : ''
                                 }`}
                             >
                                 <div className={`${styles.text} ${currentStep >= 1 ? styles.textShow : ''}`}>
@@ -228,8 +237,8 @@ const AddNew = (props) => {
                                 </div>
                             </div>
                             <div
-                                className={`${styles.step} ${currentStep === 2 ? styles.current : ''}  ${
-                                    currentStep > 2 ? styles.chosen : ''
+                                className={`${styles.step} ${
+                                    currentStep === 2 ? styles.current : currentStep > 2 ? styles.chosen : ''
                                 }`}
                             >
                                 <div className={`${styles.text} ${currentStep >= 2 ? styles.textShow : ''}`}>
@@ -237,8 +246,8 @@ const AddNew = (props) => {
                                 </div>
                             </div>
                             <div
-                                className={`${styles.step}  ${currentStep === 3 ? styles.current : ''}  ${
-                                    currentStep > 3 ? styles.chosen : ''
+                                className={`${styles.step}  ${
+                                    currentStep === 3 ? styles.current : currentStep > 3 ? styles.chosen : ''
                                 }`}
                             >
                                 <div className={`${styles.text} ${currentStep >= 3 ? styles.textShow : ''}`}>
@@ -297,7 +306,6 @@ const AddNew = (props) => {
                                         } ${choices.way === 'sample' ? styles.optionSample : ''}`}
                                         onClick={() => {
                                             setChoices({ ...choices, way: 'sample' });
-                                            samplerListHandler(choices.type);
                                         }}
                                     >
                                         <mainIcon.StartWithTem className={styles.icon} />

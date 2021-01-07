@@ -156,7 +156,6 @@ const Explore = (props) => {
                     >
                         {(filter === 'all' || filter === 'sample') && sampleInner}
                         {(filter === 'all' || filter === 'nonSample') && nonSampleInner}
-                        <div style={{ paddingRight: '2rem' }}></div>
                     </div>
                     {arrowState[type] !== 'left' && hasArrow[type] && (
                         <mainIcons.ArrowR

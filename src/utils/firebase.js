@@ -93,6 +93,7 @@ export const createNewCanvas = (canvasSetting, userId) => {
         // add data to userData
         const userRef = userDb.doc(userId);
         userRef.update({ canvas: firebase.firestore.FieldValue.arrayUnion(canvasSetting.id) });
+        firstSavaDataURL(canvas, canvasSetting.id);
         document.location.href = `/file/${canvasSetting.id}`;
     });
 };

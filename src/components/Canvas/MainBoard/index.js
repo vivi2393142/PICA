@@ -55,8 +55,8 @@ const MainBoard = (props) => {
             <option value='auto'>符合畫面大小</option>
         </select>
     );
-    const mobileRoomInButton = (
-        <div className='mobileRoomInButton' onClick={handleMobileRatioButton}>
+    const mobileZoomInButton = (
+        <div className='mobileZoomInButton' onClick={handleMobileRatioButton}>
             {props.isMobileZoomIn ? (
                 <icons.ZoomOut className='innerIcon' />
             ) : (
@@ -73,7 +73,7 @@ const MainBoard = (props) => {
     return (
         <div className='mainBoard'>
             {zoomInSelection}
-            {mobileRoomInButton}
+            {mobileZoomInButton}
             {mobileSidebarAddJsx}
             {isShowMobileSidebar && <div className='mobileCover' onClick={closeMobileSidebar}></div>}
             <Sidebar

@@ -8,8 +8,10 @@ import { Alert, defaultAlertSetting } from './Alert';
 
 const Login = (props) => {
     const history = useHistory();
-    const [inputId, setInputId] = React.useState('test@gmail.com');
-    const [inputPwd, setInputPwd] = React.useState('123456');
+    const [signupInputId, setSignupInputId] = React.useState('');
+    const [signupInputPwd, setSignupInputPwd] = React.useState('');
+    const [loginInputId, setLoginInputId] = React.useState('test@gmail.com');
+    const [loginInputPwd, setLoginInputPwd] = React.useState('123456');
     const [inputName, setInputName] = React.useState('');
     const [showAlert, setShowAlert] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
@@ -32,7 +34,7 @@ const Login = (props) => {
                 title: '註冊錯誤',
                 content: '請輸入正確帳號密碼',
             });
-            firebase.nativeSignIn(inputId, inputPwd, () => {
+            firebase.nativeSignIn(loginInputId, loginInputPwd, () => {
                 setShowAlert(true);
             });
         } else if (way === 'fb') {
@@ -44,7 +46,7 @@ const Login = (props) => {
     const handleSignUp = (way) => {
         if (way === 'native') {
             const inputToLowerCase = inputName.toLowerCase();
-            firebase.nativeSignUp(inputToLowerCase, inputId, inputPwd, (errorMessage) => {
+            firebase.nativeSignUp(inputToLowerCase, signupInputId, signupInputPwd, (errorMessage) => {
                 setAlertSetting({
                     buttonNumber: 1,
                     buttonOneFunction: () => setShowAlert(false),
@@ -116,14 +118,14 @@ const Login = (props) => {
                 >
                     <div className={styles.inputTop}>會員登入</div>
                     <input
-                        value={inputId}
-                        onChange={(e) => setInputId(e.target.value)}
+                        value={loginInputId}
+                        onChange={(e) => setLoginInputId(e.target.value)}
                         placeholder='Email'
                     ></input>
                     <input
                         type='password'
-                        value={inputPwd}
-                        onChange={(e) => setInputPwd(e.target.value)}
+                        value={loginInputPwd}
+                        onChange={(e) => setLoginInputPwd(e.target.value)}
                         placeholder='密碼'
                     ></input>
                     <div className={styles.submit} onClick={() => loginHandler('native')}>
@@ -153,14 +155,14 @@ const Login = (props) => {
                         placeholder='姓名'
                     ></input>
                     <input
-                        value={inputId}
-                        onChange={(e) => setInputId(e.target.value)}
+                        value={signupInputId}
+                        onChange={(e) => setSignupInputId(e.target.value)}
                         placeholder='Email'
                     ></input>
                     <input
                         type='password'
-                        value={inputPwd}
-                        onChange={(e) => setInputPwd(e.target.value)}
+                        value={signupInputPwd}
+                        onChange={(e) => setSignupInputPwd(e.target.value)}
                         placeholder='密碼(6位以上)'
                     ></input>
                     <div className={styles.submit} onClick={() => handleSignUp('native')}>

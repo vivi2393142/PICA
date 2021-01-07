@@ -218,7 +218,7 @@ $symbol-font: 0.6rem;
     overflow: hidden;
 }
 .blockWrapperRight {
-    left: 10rem;
+    right: 10rem;
 }
 .blockWrapperRightAni {
     animation-name: blockToRight;
@@ -459,6 +459,29 @@ $symbol-font: 0.6rem;
             width: 40%;
         }
     }
+    .loginCover {
+        .rectGreen,
+        .rectYellow {
+            width: 75%;
+        }
+        .blockWrapper {
+            width: 28%;
+        }
+        .signupBlock,
+        .loginBlock {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+    }
+}
+@media (max-width: 850px) {
+    .loginCover {
+        .rectGreen,
+        .rectYellow {
+            width: 85%;
+        }
+    }
 }
 @media (max-width: 700px) {
     .mainWrapper {
@@ -491,6 +514,22 @@ $symbol-font: 0.6rem;
             }
             .mainImg {
                 display: none;
+            }
+        }
+    }
+    .loginCover {
+        background-color: rgba(255, 255, 255, 0.85);
+        .loginRect {
+            display: none;
+        }
+        .blockWrapper {
+            left: 0;
+            animation: none;
+            width: 50%;
+            min-width: 15rem;
+            .loginBlock,
+            .signupBlock {
+                animation: none;
             }
         }
     }

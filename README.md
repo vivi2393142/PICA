@@ -31,8 +31,6 @@
     -   Authentication
 -   Library
     -   Fabric.js
--   Other
-    -   Version Control : Git / GitHub
 
 ## Core Components Structure
 
@@ -121,6 +119,13 @@
     <img src="./src/img/src/readme/addNew.gif" >
     </kbd>
 
+## Future Features
+
+-   Add frame elements to Design Editing Page
+-   Connect with Google Photos/Facebook photos as image elements on Design Editing Page
+-   Share users own file to others as template
+
 ## Contact
 
+Feel free to contact me if you have any questions.<br>
 E-mail: vivi2393142@gmail.com

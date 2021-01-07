@@ -201,7 +201,7 @@ body {
     cursor: pointer;
     background-color: rgba(235, 235, 235, 0.8);
 }
-.mobileRoomInButton {
+.mobileZoomInButton {
     display: none;
 }
 // canvas
@@ -1658,7 +1658,7 @@ input[type='range']::-webkit-slider-thumb:active {
         .ratioSelect {
             display: none;
         }
-        .mobileRoomInButton {
+        .mobileZoomInButton {
             display: flex;
             bottom: 4.6rem;
             left: 1rem;
@@ -1670,7 +1670,7 @@ input[type='range']::-webkit-slider-thumb:active {
             align-items: center;
             position: fixed;
             color: $custom-black;
-            z-index: 2;
+            z-index: 1;
             background-color: white;
             cursor: pointer;
             .innerIcon {
