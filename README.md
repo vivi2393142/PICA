@@ -32,9 +32,9 @@
 -   Library
     -   Fabric.js
 
-## Core Components Structure
+## Structure
 
-![](./src/img/src/readme/componentsStructure.jpeg)
+![](./src/img/src/readme/sitemap.jpg)
 
 ## Website Demo
 
