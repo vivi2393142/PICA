@@ -36,7 +36,7 @@
 
 ![](./src/img/src/readme/sitemap.jpg)
 
-## Website Demo
+## Demo
 
 ### Design Editing Page
 
