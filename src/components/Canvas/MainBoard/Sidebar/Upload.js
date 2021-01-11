@@ -137,10 +137,10 @@ const Upload = (props) => {
                 </div>
             )}
             {props.uploadedFiles &&
-                props.uploadedFiles.map((item, index) => {
+                props.uploadedFiles.map((item) => {
                     return (
                         <div
-                            key={index}
+                            key={item.src}
                             className='unfoldItemImgWrapper unfoldItemGalleryWrapper'
                             onMouseDown={(e) => props.saveDragItem.func(e)}
                         >

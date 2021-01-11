@@ -58,7 +58,7 @@ const NavLeftShape = (props) => {
         props.canvas.requestRenderAll();
     };
 
-    const stokeWidthOptionsJsx = stokeWidthArray.map((width, index) => <option key={index}>{width}</option>);
+    const stokeWidthOptionsJsx = stokeWidthArray.map((width) => <option key={width}>{width}</option>);
 
     return (
         <div className='specificNav'>

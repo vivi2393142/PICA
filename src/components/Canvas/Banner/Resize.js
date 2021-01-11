@@ -103,10 +103,10 @@ const Resize = (props) => {
     };
 
     // jsx: size choosing
-    const sizeSelectionJsx = canvasSizeOptions.map((item, index) =>
+    const sizeSelectionJsx = canvasSizeOptions.map((item) =>
         item.name !== '自訂尺寸' ? (
             <div
-                key={index}
+                key={item.name}
                 id={item.name}
                 className='sizeOption'
                 onClick={(e) => {
@@ -134,7 +134,7 @@ const Resize = (props) => {
                 </div>
             </div>
         ) : (
-            <div key={index} id={item.name} className='sizeOption' onClick={toggleCustomSizeInput}>
+            <div key={item.name} id={item.name} className='sizeOption' onClick={toggleCustomSizeInput}>
                 {item.name}
             </div>
         )

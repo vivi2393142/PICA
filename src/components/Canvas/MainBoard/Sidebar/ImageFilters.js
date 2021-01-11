@@ -67,7 +67,7 @@ const ImageFilters = (props) => {
             }}
         >
             {config.imageFiltersSetting.map((filter, index) => (
-                <div key={index} className='imgAdjustBox'>
+                <div key={filter.text} className='imgAdjustBox'>
                     <div className='imgAdjustText'>{filter.text}</div>
                     <input
                         className='imgAdjustRange'

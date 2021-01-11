@@ -4,9 +4,9 @@ import * as utils from '../../../../utils/globalUtils.js';
 import * as config from '../../../../utils/globalConfig';
 
 const Image = (props) => {
-    const singleImage = (imageSrc, index) => {
+    const singleImage = (imageSrc) => {
         return (
-            <div className='unfoldItemGalleryWrapper' key={index}>
+            <div className='unfoldItemGalleryWrapper' key={imageSrc}>
                 <img
                     onClick={(e) => {
                         utils.addImage(e.target, props.nextAddPosition, props.canvas, props.canvasSetting);
@@ -28,9 +28,9 @@ const Image = (props) => {
     const imagesInCategory = (category) =>
         category.src.map((imageSrc, index) => singleImage(imageSrc, index));
 
-    const singleCategory = (category, index) => {
+    const singleCategory = (category) => {
         return (
-            <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={index}>
+            <div className='unfoldImgWrapper unfoldImgWrapperToggle' key={category.title}>
                 <div className='toggleSubtitle'>
                     {category.title}
                     <div

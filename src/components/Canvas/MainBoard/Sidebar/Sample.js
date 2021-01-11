@@ -56,10 +56,10 @@ const Sample = (props) => {
                     content={alertSetting.content}
                 />
             )}
-            {sampleList.map((item, index) => {
+            {sampleList.map((item) => {
                 return (
                     <div
-                        key={index}
+                        key={item.basicSetting.id}
                         className='unfoldItemGalleryWrapper'
                         style={{
                             width: props.isAtMobile ? '30%' : '45%',
@@ -68,7 +68,7 @@ const Sample = (props) => {
                         }}
                     >
                         <img
-                            key={index}
+                            key={item.basicSetting.id}
                             draggable='false'
                             onClick={handleTemplateUse}
                             className='unfoldItem unfoldItemGallery'

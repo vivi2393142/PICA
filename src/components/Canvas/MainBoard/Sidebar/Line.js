@@ -10,10 +10,10 @@ const Line = (props) => {
             onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'line' ? 'flex' : 'none' }}
         >
-            {config.lineArray.map((item, index) => {
+            {config.lineArray.map((item) => {
                 return (
                     <img
-                        key={index}
+                        key={item}
                         src={item}
                         className='unfoldItem itemLine'
                         onClick={(e) => {

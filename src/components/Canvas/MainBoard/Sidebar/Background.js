@@ -79,19 +79,19 @@ const Background = (props) => {
         );
     };
     // background color cube
-    const backgroundColorJsx = config.backgroundColorArray.map((item, index) => (
+    const backgroundColorJsx = config.backgroundColorArray.map((item) => (
         <div
-            key={index}
+            key={item}
             className='backgroundColorCube'
             style={{ backgroundColor: item }}
             onClick={handleBackColorChangeCube}
         ></div>
     ));
     // background image
-    const backgroundImageJsx = config.backgroundImageArray.map((item, index) => (
-        <div key={index} className='unfoldItemGalleryWrapper'>
+    const backgroundImageJsx = config.backgroundImageArray.map((item) => (
+        <div key={item} className='unfoldItemGalleryWrapper'>
             <img
-                key={index}
+                key={item}
                 draggable='false'
                 onClick={backgroundImageHandler}
                 className='unfoldItem unfoldItemGallery'

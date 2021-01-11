@@ -47,8 +47,8 @@ const MainBoard = (props) => {
 
     const zoomInSelection = (
         <select className='ratioSelect' value={props.ratioSelectValue} onChange={handleRatioSelect}>
-            {config.ratioOptions.map((item, index) => (
-                <option key={index} value={item}>
+            {config.ratioOptions.map((item) => (
+                <option key={item} value={item}>
                     {item}%
                 </option>
             ))}

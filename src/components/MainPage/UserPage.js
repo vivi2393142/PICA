@@ -128,7 +128,7 @@ const UserPage = (props) => {
                 <ExploreItem
                     isLikeLoader={isLikeLoader}
                     setIsLikeLoader={setIsLikeLoader}
-                    key={index}
+                    key={item.fileId}
                     index={index}
                     length={length}
                     item={item}
@@ -146,7 +146,7 @@ const UserPage = (props) => {
         canvasDataWithDataURL.map((item, index) => {
             return (
                 <div
-                    key={index}
+                    key={item.fileId}
                     className={styles.fileWrapper}
                     style={{
                         animationDelay: `${index * 0.05}s`,

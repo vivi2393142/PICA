@@ -36,9 +36,9 @@ const Sidebar = (props) => {
     };
 
     // jsx : sidebar
-    const sidebarFoldInnerJsx = config.sidebarArray.map((item, index) => (
+    const sidebarFoldInnerJsx = config.sidebarArray.map((item) => (
         <div
-            key={index}
+            key={item.EN}
             className={`sideButton ${
                 props.currentSidebar === 'text' && props.currentSidebar === item.EN
                     ? 'sideButtonChosen firstButton'

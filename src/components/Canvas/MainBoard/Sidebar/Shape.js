@@ -17,9 +17,9 @@ const Shape = (props) => {
             }}
         ></img>
     ));
-    const abnormalShapeJsx = config.abnormalShapeArray.map((item, index) => (
+    const abnormalShapeJsx = config.abnormalShapeArray.map((item) => (
         <img
-            key={index}
+            key={item}
             src={item}
             draggable={!props.isAtMobile}
             className='unfoldItem abnormalShape'

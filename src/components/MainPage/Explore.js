@@ -115,11 +115,11 @@ const Explore = (props) => {
     const allRowsJsx =
         Object.keys(dataObject).length !== 0 &&
         allType.map((type, index) => {
-            const sampleInner = dataObject[type].map((item, index) => {
+            const sampleInner = dataObject[type].map((item) => {
                 if (item.isSample) {
                     return (
                         <ExploreItem
-                            key={index}
+                            key={item.fileId}
                             item={item}
                             type={type}
                             likeHandler={likeHandler}
@@ -129,11 +129,11 @@ const Explore = (props) => {
                     );
                 }
             });
-            const nonSampleInner = dataObject[type].map((item, index) => {
+            const nonSampleInner = dataObject[type].map((item) => {
                 if (!item.isSample) {
                     return (
                         <ExploreItem
-                            key={index}
+                            key={item.fileId}
                             item={item}
                             type={type}
                             likeHandler={likeHandler}
@@ -144,7 +144,7 @@ const Explore = (props) => {
                 }
             });
             return (
-                <div key={index} className={styles.rowWrapper}>
+                <div key={type} className={styles.rowWrapper}>
                     <div className={styles.rowTitle}>
                         <span className={styles.titleFirst}>{type.slice(0, 1)}</span>
                         {type.substr(1)}
@@ -174,7 +174,7 @@ const Explore = (props) => {
         });
     const filtersJsx = filters.map((item, index) => (
         <div
-            key={index}
+            key={item.state}
             className={`${styles.tag} ${filter === item.state ? styles.currentTag : ''}`}
             onClick={() => {
                 scrollButtonHandler(item.state);

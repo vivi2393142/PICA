@@ -124,9 +124,6 @@ const NavLeftText = (props) => {
         }
     }, [props.activeObj]);
 
-    // jsx
-    const textSizeOptions = textSizeArray.map((size, index) => <option key={index}>{size}</option>);
-
     return (
         <div className='specificNav textNav'>
             <NavLeftColor

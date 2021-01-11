@@ -106,9 +106,9 @@ const AddNew = (props) => {
 
     const sampleListJsx =
         sampleList &&
-        sampleList.map((item, index) => {
+        sampleList.map((item) => {
             return (
-                <div key={index}>
+                <div key={item.basicSetting.id}>
                     <img
                         src={item.snapshot}
                         className={`${styles.sampleImg} ${
@@ -121,12 +121,12 @@ const AddNew = (props) => {
                 </div>
             );
         });
-    const sizeImgJsx = canvasSizeOptions.map((item, index) => {
+    const sizeImgJsx = canvasSizeOptions.map((item) => {
         return (
             <div
                 className={`${styles.rec} ${styles[item.type]} ${chosenRec ? styles.recTransparent : ''}
                 ${chosenRec === item.type ? styles.chosenRex : ''}`}
-                key={index}
+                key={item.type}
                 style={{
                     width: item.width / imgSizeRatio + 'px',
                     height: item.height / imgSizeRatio + 'px',
@@ -159,10 +159,10 @@ const AddNew = (props) => {
             </div>
         );
     });
-    const sizeOptions = canvasSizeOptions.map((item, index) => {
+    const sizeOptions = canvasSizeOptions.map((item) => {
         return (
             <div
-                key={index}
+                key={item.type}
                 className={`${styles.option} ${chosenRec === item.type ? styles.chosenOptions : ''}`}
                 onClick={() => sizeChoosingHandler(item.type)}
             >

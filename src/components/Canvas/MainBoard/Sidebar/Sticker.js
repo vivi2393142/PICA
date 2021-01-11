@@ -10,11 +10,11 @@ const Sticker = (props) => {
             onMouseDown={(e) => props.saveDragItem.func(e)}
             style={{ display: props.currentSidebar === 'sticker' ? 'flex' : 'none' }}
         >
-            {config.stickerTestArray.map((category, index) => {
+            {config.stickerTestArray.map((category) => {
                 return (
                     <div
                         className='unfoldImgWrapper unfoldImgWrapperToggle'
-                        key={index}
+                        key={category.title}
                         style={{ width: props.isAtMobile ? 'auto' : '' }}
                     >
                         <div className='toggleSubtitle'>
@@ -31,9 +31,9 @@ const Sticker = (props) => {
                                 +
                             </div>
                         </div>
-                        {category.src.map((item, index) => {
+                        {category.src.map((item) => {
                             return (
-                                <div key={index} className='unfoldItemGalleryWrapper'>
+                                <div key={item} className='unfoldItemGalleryWrapper'>
                                     <img
                                         onClick={(e) => {
                                             utils.addSticker(
