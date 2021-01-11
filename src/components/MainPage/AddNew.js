@@ -6,6 +6,7 @@ import * as mainIcon from '../../img/mainPage';
 import { nanoid } from 'nanoid';
 import { Alert, defaultAlertSetting } from '../Alert';
 import { canvasSizeOptions } from '../../utils/globalConfig.js';
+import Loader from '../Loader';
 
 const sizeAdjustForMediaQuery = { superSmall: 8, small: 6, normal: 5 };
 const handleCreateNew = (e, currentUser, titleInput, choices) => {
@@ -35,6 +36,7 @@ const AddNew = (props) => {
     const [titleInput, setTitleInput] = React.useState('');
     const [sampleList, setSampleList] = React.useState();
     const [showAlert, setShowAlert] = React.useState(false);
+    const [isLoaded, setIsLoaded] = React.useState(false);
     const [alertSetting, setAlertSetting] = React.useState({
         ...defaultAlertSetting,
     });
@@ -133,6 +135,7 @@ const AddNew = (props) => {
                 }}
                 onClick={() => sizeChoosingHandler(item.type, item.width, item.height)}
             >
+                {isLoaded && <Loader></Loader>}
                 <div className={styles.text}>{item.name}</div>
                 <div
                     className={`${styles.arrowV} ${
@@ -378,9 +381,10 @@ const AddNew = (props) => {
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}
-                                    onClick={(e) =>
-                                        handleCreateNew(e, props.currentUser, titleInput, choices)
-                                    }
+                                    onClick={(e) => {
+                                        setIsLoaded(true);
+                                        handleCreateNew(e, props.currentUser, titleInput, choices);
+                                    }}
                                 >
                                     完成
                                 </div>

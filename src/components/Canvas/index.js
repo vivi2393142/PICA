@@ -77,13 +77,13 @@ const Canvas = (props) => {
                     canvasInit.on('drop', dropItemHandler);
                     canvasInit.onHistory();
                     canvasInit.clearHistory();
+                    // save init dataURL
+                    firebase.firstSavaDataURL(canvasInit, props.match.params.id);
                 }
                 canvasInitUtils.presetFabricStyles(canvasInit);
                 utils.setViewToFitWindow(canvasSettingInit);
                 canvasInitUtils.presetCustomBorder();
                 setCanvas(canvasInit);
-                // save dataURL if non
-                !snapshotInit && firebase.firstSavaDataURL(canvasInit, props.match.params.id);
                 // dnd components event
                 // -- save drag item
                 const itemDragOffset = { offsetX: 0, offsetY: 0 };

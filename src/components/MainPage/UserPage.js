@@ -272,9 +272,9 @@ const UserPage = (props) => {
                             </div>
                         )}
 
-                        {canvasFilesJsx && isAtMyCanvas ? (
+                        {isAtMyCanvas ? (
                             <div className={styles.canvasFiles}>
-                                {canvasFilesJsx}
+                                {canvasFilesJsx ? canvasFilesJsx : null}
                                 {props.currentUser.email === props.match.params.userId && (
                                     <div
                                         className={styles.fileWrapperNew}
