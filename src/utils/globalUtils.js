@@ -125,7 +125,7 @@ export const addCircle = (position, canvas, canvasSetting) => {
         top: position.top,
         left: position.left,
         radius: 50 * shapeRatio,
-        fill: mainColor,
+        fill: config.mainColor,
     });
     canvas.add(circle);
     canvas.requestRenderAll();
@@ -137,7 +137,7 @@ export const addTriangle = (position, canvas, canvasSetting) => {
         left: position.left,
         width: 100 * shapeRatio,
         height: 100 * shapeRatio,
-        fill: mainColor,
+        fill: config.mainColor,
     });
     canvas.add(triangle);
     canvas.requestRenderAll();
