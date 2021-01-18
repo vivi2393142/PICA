@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import arrowLeft from '../../../../img/src/arrowLeft.svg';
@@ -10,12 +10,12 @@ import NavLeftShape from './NavLeftShape';
 import NavLeftColor from './NavLeftColor';
 
 const ComponentsSelection = (props) => {
-    const scrollContainerRef = React.useRef(null);
-    const [croppingObj, setCroppingObj] = React.useState({});
-    const [textIsEditing, setTextIsEditing] = React.useState(false);
-    const [showScroll, setShowScroll] = React.useState(false);
-    const [arrowState, setArrowState] = React.useState('right');
-    const [showMobileScrollContainer, setShowMobileScrollContainer] = React.useState(false);
+    const scrollContainerRef = useRef(null);
+    const [croppingObj, setCroppingObj] = useState({});
+    const [textIsEditing, setTextIsEditing] = useState(false);
+    const [showScroll, setShowScroll] = useState(false);
+    const [arrowState, setArrowState] = useState('right');
+    const [showMobileScrollContainer, setShowMobileScrollContainer] = useState(false);
     const listenScroll = (e) => {
         const scrollRight = e.target.scrollWidth - e.target.clientWidth - e.target.scrollLeft;
         e.target.scrollLeft !== 0 && scrollRight > 1
@@ -33,7 +33,7 @@ const ComponentsSelection = (props) => {
             : (swipeContainer.scrollLeft += swipeContainer.clientWidth / 3);
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         scrollContainerRef.current.scrollWidth > scrollContainerRef.current.clientWidth
             ? setShowScroll(true)
             : setShowScroll(false);
@@ -134,4 +134,4 @@ ComponentsSelection.propTypes = {
     setIsShowMobileSidebar: PropTypes.func.isRequired,
 };
 
-export default React.memo(ComponentsSelection);
+export default memo(ComponentsSelection);

@@ -40,7 +40,6 @@ export const fileSizeLimit = 3145680;
 export const imageWidthForWaterfall = { wide: '58%', narrow: '29%' };
 export const stickerWidthForWaterfall = { wide: '40%', narrow: '20%' };
 // -- sidebar items
-import React from 'react';
 import * as icons from '../img/icons';
 import * as sidebarItems from '../img/sidebarItems';
 export const ratioOptions = [25, 50, 75, 100, 125, 200, 300];

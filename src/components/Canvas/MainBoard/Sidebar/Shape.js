@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as sidebarItems from '../../../../img/sidebarItems';
 import * as utils from '../../../../utils/globalUtils.js';
@@ -54,4 +54,4 @@ Shape.propTypes = {
     adjSetNextPosition: PropTypes.func.isRequired,
 };
 
-export default React.memo(Shape);
+export default memo(Shape);

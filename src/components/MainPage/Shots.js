@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../utils/firebase.js';
@@ -33,15 +33,15 @@ const countDateDiff = (timeStamp) => {
 
 const Shots = (props) => {
     const history = useHistory();
-    const [isLoaded, setIsLoaded] = React.useState(true);
-    const [commentData, setCommentData] = React.useState(null);
-    const [textInput, setTextInput] = React.useState('');
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [commentData, setCommentData] = useState(null);
+    const [textInput, setTextInput] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         // track comment
         if (props.currentUser.email && props.currentUser.email !== 'noUser') {
             firebase.listenToComment(props.match.params.fileId, () => {
@@ -192,4 +192,4 @@ Shots.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
 };
 
-export default React.memo(Shots);
+export default memo(Shots);

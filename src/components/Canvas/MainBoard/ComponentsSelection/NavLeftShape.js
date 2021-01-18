@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
@@ -8,7 +8,7 @@ const stokeWidthArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const NavLeftShape = (props) => {
     // color setting function
-    const [isChoosingBorderColor, setIsChoosingBorderColor] = React.useState(false);
+    const [isChoosingBorderColor, setIsChoosingBorderColor] = useState(false);
     const toggleBorderColorSelection = (e) => {
         setIsChoosingBorderColor(true);
         props.setIsFocusInput(true);
@@ -19,7 +19,7 @@ const NavLeftShape = (props) => {
         });
     };
     // -- color state
-    const [borderColorChosen, setBorderColorChosen] = React.useState({
+    const [borderColorChosen, setBorderColorChosen] = useState({
         background: {
             r: '0',
             g: '0',
@@ -34,7 +34,7 @@ const NavLeftShape = (props) => {
         props.canvas.requestRenderAll();
     };
     // -- preset active object value on specific selection
-    React.useEffect(() => {
+    useEffect(() => {
         if (
             props.activeObj.type === 'rect' ||
             props.activeObj.type === 'circle' ||
@@ -46,7 +46,7 @@ const NavLeftShape = (props) => {
         }
     }, [props.activeObj]);
     // set stroke width
-    const [rectStroke, setRectStroke] = React.useState(
+    const [rectStroke, setRectStroke] = useState(
         props.activeObj.strokeWidth ? props.activeObj.strokeWidth : 0
     );
     const handleRectStoke = (e) => {
@@ -87,4 +87,4 @@ NavLeftShape.propTypes = {
     setIsFocusInput: PropTypes.func,
 };
 
-export default React.memo(NavLeftShape);
+export default memo(NavLeftShape);

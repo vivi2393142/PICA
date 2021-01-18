@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import styles from '../css/landingPage.module.scss';
 import PropTypes from 'prop-types';
 import * as login from '../img/landingPage.js';
@@ -8,13 +8,13 @@ import { Alert, defaultAlertSetting } from './Alert';
 
 const Login = (props) => {
     const history = useHistory();
-    const [signupInputId, setSignupInputId] = React.useState('');
-    const [signupInputPwd, setSignupInputPwd] = React.useState('');
-    const [loginInputId, setLoginInputId] = React.useState('test@gmail.com');
-    const [loginInputPwd, setLoginInputPwd] = React.useState('123456');
-    const [inputName, setInputName] = React.useState('');
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [signupInputId, setSignupInputId] = useState('');
+    const [signupInputPwd, setSignupInputPwd] = useState('');
+    const [loginInputId, setLoginInputId] = useState('test@gmail.com');
+    const [loginInputPwd, setLoginInputPwd] = useState('123456');
+    const [inputName, setInputName] = useState('');
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
     const toggleClose = () => {
@@ -193,4 +193,4 @@ Login.propTypes = {
     setIsLoginOrSignup: PropTypes.func.isRequired,
 };
 
-export default React.memo(Login);
+export default memo(Login);

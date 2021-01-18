@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import { ChromePicker } from 'react-color';
 import * as utils from '../../../../utils/globalUtils.js';
@@ -14,16 +14,16 @@ const defaultBackground = {
 };
 
 const Background = (props) => {
-    const chromePickerRef = React.useRef(null);
-    const [isChoosingBackColor, setIsChoosingBackColor] = React.useState(false);
-    const [backColorChosen, setBackColorChosen] = React.useState({
+    const chromePickerRef = useRef(null);
+    const [isChoosingBackColor, setIsChoosingBackColor] = useState(false);
+    const [backColorChosen, setBackColorChosen] = useState({
         background: {
             ...defaultBackground,
         },
     });
 
     // preset background
-    React.useEffect(() => {
+    useEffect(() => {
         props.canvas.backgroundColor && setBackColorChosen({ background: props.canvas.backgroundColor });
     }, [props.canvas.backgroundColor]);
 
@@ -164,4 +164,4 @@ Background.propTypes = {
     isAtMobile: PropTypes.bool.isRequired,
 };
 
-export default React.memo(Background);
+export default memo(Background);

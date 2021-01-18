@@ -1,15 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import Canvas from './components/Canvas/index';
 import LandingPage from './components/LandingPage/index';
 import MainPage from './components/MainPage/index';
-import { useHistory } from 'react-router-dom';
 
 export default function App() {
-    const [currentUser, setCurrentUser] = React.useState({ email: null });
-    const [currentUserTimes, setCurrentUserTimes] = React.useState(0);
+    const [currentUser, setCurrentUser] = useState({ email: null });
+    const [currentUserTimes, setCurrentUserTimes] = useState(0);
     if (currentUserTimes === 0) {
         firebase.auth().onAuthStateChanged((user) => {
             user ? setCurrentUser(user) : setCurrentUser({ email: 'noUser' });
@@ -20,10 +19,10 @@ export default function App() {
     return (
         <Router>
             <div className='App'>
-                <Route path='/main'>
-                    <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-                </Route>
                 <Switch>
+                    <Route path='/main'>
+                        <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
+                    </Route>
                     <Route
                         path='/file/:id'
                         render={(props) => <Canvas currentUser={currentUser} {...props} />}
@@ -31,9 +30,9 @@ export default function App() {
                     <Route path='/' exact>
                         <LandingPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
                     </Route>
-                    {/* <Route path='/'>
-                        <Redirect to='/main/explore' />
-                    </Route> */}
+                    <Route path='*'>
+                        <Redirect to='/' />
+                    </Route>
                 </Switch>
             </div>
         </Router>

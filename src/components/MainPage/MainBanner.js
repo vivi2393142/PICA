@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
@@ -10,11 +10,11 @@ import Loader from '../Loader';
 
 const MainBanner = (props) => {
     const history = useHistory();
-    const [showSignOut, setShowSignOut] = React.useState(false);
-    const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
-    const [chooseLogin, setChooseLogin] = React.useState(true);
-    const [photoSrc, setPhotoSrc] = React.useState(null);
-    const [isLoaded, setIsLoaded] = React.useState(false);
+    const [showSignOut, setShowSignOut] = useState(false);
+    const [isLoginOrSignup, setIsLoginOrSignup] = useState(false);
+    const [chooseLogin, setChooseLogin] = useState(true);
+    const [photoSrc, setPhotoSrc] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const signOutHandler = async () => {
         await setIsLoaded(true);
@@ -144,4 +144,4 @@ MainBanner.propTypes = {
     isAtMobile: PropTypes.string.isRequired,
 };
 
-export default MainBanner;
+export default memo(MainBanner);

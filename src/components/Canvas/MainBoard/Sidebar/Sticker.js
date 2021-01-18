@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from '../../../../utils/globalUtils.js';
 import * as config from '../../../../utils/globalConfig';
@@ -74,4 +74,4 @@ Sticker.propTypes = {
     adjSetNextPosition: PropTypes.func.isRequired,
 };
 
-export default React.memo(Sticker);
+export default memo(Sticker);

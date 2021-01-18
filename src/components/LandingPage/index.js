@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import styles from '../../css/landingPage.module.scss';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../img/banner';
@@ -8,10 +8,10 @@ import { useHistory } from 'react-router-dom';
 
 const LandingPage = (props) => {
     const history = useHistory();
-    const [isLoginOrSignup, setIsLoginOrSignup] = React.useState(false);
-    const [chooseLogin, setChooseLogin] = React.useState(true);
+    const [isLoginOrSignup, setIsLoginOrSignup] = useState(false);
+    const [chooseLogin, setChooseLogin] = useState(true);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (props.currentUser.email && props.currentUser.email !== 'noUser') {
             history.push('/main/explore');
         }
@@ -91,4 +91,4 @@ LandingPage.propTypes = {
     currentUser: PropTypes.object.isRequired,
 };
 
-export default React.memo(LandingPage);
+export default memo(LandingPage);

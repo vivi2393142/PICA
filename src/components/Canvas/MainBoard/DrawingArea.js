@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { fabric } from 'fabric';
 import 'fabric-history';
@@ -6,7 +6,7 @@ import * as utils from '../../../utils/globalUtils';
 
 const DrawingArea = (props) => {
     // -- listen to resize then set
-    React.useEffect(() => {
+    useEffect(() => {
         if (Object.keys(props.canvasSetting).length && props.ratioSelectValue === 'auto') {
             const resetViewToFitWindow = () => {
                 utils.setViewToFitWindow(props.canvasSetting);
@@ -31,4 +31,4 @@ DrawingArea.propTypes = {
     isMobileZoomIn: PropTypes.bool.isRequired,
 };
 
-export default React.memo(DrawingArea);
+export default memo(DrawingArea);

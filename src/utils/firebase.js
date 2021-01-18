@@ -493,7 +493,7 @@ export const nativeSignUp = (name, email, pwd, failCallback) => {
             }
         });
 };
-export const nativeSignIn = (email, pwd, successCallback, failCallback) => {
+export const nativeSignIn = (email, pwd, failCallback) => {
     firebase
         .auth()
         .signInWithEmailAndPassword(email, pwd)

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import * as icons from '../../../../img/icons';
@@ -20,9 +20,9 @@ const codes = {
 
 const NavRight = (props) => {
     // unfold nav
-    const [clipboard, setClipboard] = React.useState(false);
-    const [isLayerChoosing, setIsLayerChoosing] = React.useState(false);
-    const [isAlignChoosing, setIsAlignChoosing] = React.useState(false);
+    const [clipboard, setClipboard] = useState(false);
+    const [isLayerChoosing, setIsLayerChoosing] = useState(false);
+    const [isAlignChoosing, setIsAlignChoosing] = useState(false);
     const toggleSelectionHandler = (e, setSelectedState) => {
         setSelectedState(true);
         props.setShowMobileScrollContainer(true);
@@ -422,4 +422,4 @@ NavRight.propTypes = {
     setShowMobileScrollContainer: PropTypes.func.isRequired,
 };
 
-export default React.memo(NavRight);
+export default memo(NavRight);

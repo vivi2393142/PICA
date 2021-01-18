@@ -1,7 +1,6 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
-import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 import * as cropImageUtils from '../../../../utils/cropImage';
 
 let croppingObjIndex = 0;
@@ -64,4 +63,4 @@ NavLeftImg.propTypes = {
     setIsShowMobileSidebar: PropTypes.func.isRequired,
 };
 
-export default React.memo(NavLeftImg);
+export default memo(NavLeftImg);

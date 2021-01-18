@@ -1,11 +1,11 @@
-import React from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import { trackOutSideClick } from '../../../utils/globalUtils.js';
 
 const Share = (props) => {
-    const inputRef = React.useRef(null);
-    const [isChoosingShare, setIsChoosingShare] = React.useState(false);
+    const inputRef = useRef(null);
+    const [isChoosingShare, setIsChoosingShare] = useState(false);
     const copyLinkHandler = (e) => {
         inputRef.current.select();
         document.execCommand('copy');
@@ -44,4 +44,4 @@ const Share = (props) => {
 
 Share.propTypes = { fileId: PropTypes.string.isRequired };
 
-export default React.memo(Share);
+export default memo(Share);

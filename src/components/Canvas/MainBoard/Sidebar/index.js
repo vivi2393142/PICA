@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as config from '../../../../utils/globalConfig';
 import Sample from './Sample';
@@ -12,10 +12,10 @@ import Upload from './Upload';
 import ImageFilters from './ImageFilters';
 
 const Sidebar = (props) => {
-    const [nextAddPosition, setNextAddPosition] = React.useState({ top: 10, left: 10 });
-    const [isAtMobile, setIsAtMobile] = React.useState(false);
+    const [nextAddPosition, setNextAddPosition] = useState({ top: 10, left: 10 });
+    const [isAtMobile, setIsAtMobile] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const setSizeState = () => {
             config.mediaQuerySize.big >= window.innerWidth ? setIsAtMobile(true) : setIsAtMobile(false);
         };
@@ -193,4 +193,4 @@ Sidebar.propTypes = {
     setIsShowMobileSidebar: PropTypes.func.isRequired,
 };
 
-export default React.memo(Sidebar);
+export default memo(Sidebar);

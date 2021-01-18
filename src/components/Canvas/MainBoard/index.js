@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import DrawingArea from './DrawingArea';
 import Sidebar from './Sidebar/index';
@@ -8,8 +8,8 @@ import * as config from '../../../utils/globalConfig';
 import * as icons from '../../../img/mainPage';
 
 const MainBoard = (props) => {
-    const [currentSidebar, setCurrentSidebar] = React.useState('');
-    const [isShowMobileSidebar, setIsShowMobileSidebar] = React.useState(false);
+    const [currentSidebar, setCurrentSidebar] = useState('');
+    const [isShowMobileSidebar, setIsShowMobileSidebar] = useState(false);
 
     // responsive view handling
     const handleRatioSelect = (e) => {
@@ -132,4 +132,4 @@ MainBoard.propTypes = {
     setIsMobileZoomIn: PropTypes.func.isRequired,
 };
 
-export default React.memo(MainBoard);
+export default memo(MainBoard);

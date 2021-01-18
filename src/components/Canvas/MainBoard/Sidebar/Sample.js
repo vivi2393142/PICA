@@ -1,16 +1,16 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as firebase from '../../../../utils/firebase';
 import { Alert, defaultAlertSetting } from '../../../Alert';
 
 const Sample = (props) => {
-    const [sampleList, setSampleList] = React.useState([]);
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [sampleList, setSampleList] = useState([]);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (props.canvasSetting.type) {
             firebase.getSampleList(props.canvasSetting.type, (result) => {
                 setSampleList(result);
@@ -95,4 +95,4 @@ Sample.propTypes = {
     isAtMobile: PropTypes.bool.isRequired,
 };
 
-export default React.memo(Sample);
+export default memo(Sample);

@@ -1,11 +1,11 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import * as exportUtils from '../../../utils/export';
 import { trackOutSideClick } from '../../../utils/globalUtils.js';
 
 const Export = (props) => {
-    const [isChoosingExport, setIsChoosingExport] = React.useState(false);
+    const [isChoosingExport, setIsChoosingExport] = useState(false);
     const toggleExport = (e) => {
         setIsChoosingExport(true);
         const targetContainer = e.currentTarget.parentNode;
@@ -58,4 +58,4 @@ Export.propTypes = {
     canvas: PropTypes.object.isRequired,
 };
 
-export default React.memo(Export);
+export default memo(Export);

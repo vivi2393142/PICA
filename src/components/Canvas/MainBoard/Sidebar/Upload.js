@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as icons from '../../../../img/icons';
 import { Alert, defaultAlertSetting } from '../../../Alert';
@@ -17,10 +17,10 @@ const basicAlertForUpload = {
 };
 
 const Upload = (props) => {
-    const [uploadProgressValue, setUploadProgressValue] = React.useState(0);
-    const [showUploadCover, setShowUploadCover] = React.useState(false);
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [uploadProgressValue, setUploadProgressValue] = useState(0);
+    const [showUploadCover, setShowUploadCover] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
     // handlers: uploaded function
@@ -202,4 +202,4 @@ Upload.propTypes = {
     fileId: PropTypes.string.isRequired,
 };
 
-export default React.memo(Upload);
+export default memo(Upload);

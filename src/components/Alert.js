@@ -1,4 +1,3 @@
-import React from 'react';
 import styles from '../css/alert.module.scss';
 import PropTypes from 'prop-types';
 import alertOuter from '../img/src/alert-outer.svg';

@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import Resize from './Resize';
@@ -89,4 +89,4 @@ Banner.propTypes = {
     setTriggerSaveStatus: PropTypes.func.isRequired,
 };
 
-export default React.memo(Banner);
+export default memo(Banner);

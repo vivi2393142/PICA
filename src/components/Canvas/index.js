@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import styles from '../../css/canvas.scss';
 import MainBoard from './MainBoard';
@@ -29,19 +29,19 @@ const Background = () => {
 
 const Canvas = (props) => {
     const history = useHistory();
-    const [isLoaded, setIsLoaded] = React.useState(true);
-    const [canvas, setCanvas] = React.useState({});
-    const [canvasSetting, setCanvasSetting] = React.useState({});
-    const [canvasData, setCanvasData] = React.useState({});
-    const [ratioSelectValue, setRatioSelectValue] = React.useState('auto');
-    const [activeObj, setActiveObj] = React.useState({});
-    const [saveDragItem, setSaveDragItem] = React.useState({});
-    const [uploadedFiles, setUploadedFiles] = React.useState([]);
-    const [isFocusInput, setIsFocusInput] = React.useState(false);
-    const [triggerSaveStatus, setTriggerSaveStatus] = React.useState(false);
-    const [isMobileZoomIn, setIsMobileZoomIn] = React.useState(false);
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [canvas, setCanvas] = useState({});
+    const [canvasSetting, setCanvasSetting] = useState({});
+    const [canvasData, setCanvasData] = useState({});
+    const [ratioSelectValue, setRatioSelectValue] = useState('auto');
+    const [activeObj, setActiveObj] = useState({});
+    const [saveDragItem, setSaveDragItem] = useState({});
+    const [uploadedFiles, setUploadedFiles] = useState([]);
+    const [isFocusInput, setIsFocusInput] = useState(false);
+    const [triggerSaveStatus, setTriggerSaveStatus] = useState(false);
+    const [isMobileZoomIn, setIsMobileZoomIn] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // redirect if isn't author
         if (
             canvasSetting.userEmail &&
@@ -52,7 +52,7 @@ const Canvas = (props) => {
         }
     }, [props.currentUser, canvasSetting]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         // get firebase data according to URL params
         canvasInitUtils.preloadFontFace();
         firebase.loadCanvas(
@@ -169,4 +169,4 @@ Canvas.propTypes = {
     currentUser: PropTypes.object,
 };
 
-export default React.memo(Canvas);
+export default memo(Canvas);

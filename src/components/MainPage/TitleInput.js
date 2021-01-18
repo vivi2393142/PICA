@@ -1,12 +1,12 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import { trackOutSideClick } from '../../utils/globalUtils.js';
 import * as firebase from '../../utils/firebase.js';
 
 const TitleInput = (props) => {
-    const [titleInput, setTitleInput] = React.useState(props.initialValue);
-    const [isShowInput, setIsShowInput] = React.useState(false);
+    const [titleInput, setTitleInput] = useState(props.initialValue);
+    const [isShowInput, setIsShowInput] = useState(false);
     const handleEdit = (e) => {
         setIsShowInput(true);
         const currentNode = e.currentTarget;
@@ -45,4 +45,4 @@ TitleInput.propTypes = {
     fileId: PropTypes.string.isRequired,
 };
 
-export default React.memo(TitleInput);
+export default memo(TitleInput);

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import styles from '../../css/addNew.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../utils/firebase.js';
@@ -31,16 +31,16 @@ const handleCreateNew = (e, currentUser, titleInput, choices) => {
 };
 
 const AddNew = (props) => {
-    const [currentStep, setCurrentStep] = React.useState(1);
-    const [chosenRec, setChosenRec] = React.useState(null);
-    const [titleInput, setTitleInput] = React.useState('');
-    const [sampleList, setSampleList] = React.useState();
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [isLoaded, setIsLoaded] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [currentStep, setCurrentStep] = useState(1);
+    const [chosenRec, setChosenRec] = useState(null);
+    const [titleInput, setTitleInput] = useState('');
+    const [sampleList, setSampleList] = useState();
+    const [showAlert, setShowAlert] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
-    const [choices, setChoices] = React.useState({
+    const [choices, setChoices] = useState({
         type: null,
         way: null,
         width: null,
@@ -79,8 +79,8 @@ const AddNew = (props) => {
     };
 
     // custom size
-    const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
-    const [showHint, setShowHint] = React.useState(false);
+    const [customSize, setCustomSize] = useState({ width: '', height: '' });
+    const [showHint, setShowHint] = useState(false);
     const handleCustomWidth = (e) => {
         if (/^\d*$/.test(e.target.value)) {
             if (e.target.value < 150 || e.target.value > 2000) {
@@ -408,4 +408,4 @@ AddNew.propTypes = {
     isAtMobile: PropTypes.string.isRequired,
 };
 
-export default React.memo(AddNew);
+export default memo(AddNew);

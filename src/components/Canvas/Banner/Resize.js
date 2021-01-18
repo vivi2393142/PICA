@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as bannerIcons from '../../../img/banner';
 import * as firebase from '../../../utils/firebase.js';
@@ -35,12 +35,12 @@ const limitSetting = (currentSize) => {
 };
 
 const Resize = (props) => {
-    const customSizeRef = React.useRef(null);
-    const [isTypingSize, setIsTypingSize] = React.useState(false);
-    const [isChoosingCanvasSize, setIsChoosingCanvasSize] = React.useState(false);
-    const [customSize, setCustomSize] = React.useState({ width: '', height: '' });
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const customSizeRef = useRef(null);
+    const [isTypingSize, setIsTypingSize] = useState(false);
+    const [isChoosingCanvasSize, setIsChoosingCanvasSize] = useState(false);
+    const [customSize, setCustomSize] = useState({ width: '', height: '' });
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
     const isOverLimit = limitSetting(customSize);
@@ -233,4 +233,4 @@ Resize.propTypes = {
     setRatioSelectValue: PropTypes.func.isRequired,
 };
 
-export default React.memo(Resize);
+export default memo(Resize);

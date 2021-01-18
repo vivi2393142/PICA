@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../utils/firebase.js';
@@ -40,12 +40,12 @@ const getArrowShowingState = (hasArrow, dataObject, filter, currentWidth) => {
 };
 
 const Explore = (props) => {
-    const scrollRef = React.useRef([]);
-    const [isLoaded, setIsLoaded] = React.useState(true);
-    const [dataObject, setDataObject] = React.useState({});
-    const [filter, setFilter] = React.useState('all');
-    const [currentWidth, setCurrentWidth] = React.useState(4);
-    const [hasArrow, setHasArrow] = React.useState({
+    const scrollRef = useRef([]);
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [dataObject, setDataObject] = useState({});
+    const [filter, setFilter] = useState('all');
+    const [currentWidth, setCurrentWidth] = useState(4);
+    const [hasArrow, setHasArrow] = useState({
         Instagram: false,
         Poster: false,
         PostCard: false,
@@ -54,9 +54,9 @@ const Explore = (props) => {
         NameCard: false,
         Custom: false,
     });
-    const [arrowState, setArrowState] = React.useState(arrowStateInit);
+    const [arrowState, setArrowState] = useState(arrowStateInit);
 
-    React.useEffect(() => {
+    useEffect(() => {
         props.setCurrentPage('explore');
         firebase.getAllFiles(props.currentUser.email, (dataObject) => {
             setDataObject(dataObject);
@@ -73,7 +73,7 @@ const Explore = (props) => {
         setRowItemsWidth();
         window.addEventListener('resize', setRowItemsWidth);
     }, [props.currentUser]);
-    React.useEffect(() => {
+    useEffect(() => {
         if (Object.keys(dataObject).length > 0) {
             const newArrowState = getArrowShowingState(hasArrow, dataObject, filter, currentWidth);
             setHasArrow(newArrowState);
@@ -208,4 +208,4 @@ Explore.propTypes = {
     setCurrentPage: PropTypes.func.isRequired,
 };
 
-export default React.memo(Explore);
+export default memo(Explore);

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as config from '../../../../utils/globalConfig';
 import { trackOutSideClick } from '../../../../utils/globalUtils.js';
@@ -15,14 +15,14 @@ const getCurrentFilters = (imageObj) => {
 };
 
 const ImageFilters = (props) => {
-    const sidebarRef = React.useRef(null);
-    const [currentFilters, setCurrentFilters] = React.useState({
+    const sidebarRef = useRef(null);
+    const [currentFilters, setCurrentFilters] = useState({
         ...config.imageFiltersInit,
     });
-    React.useEffect(() => {
+    useEffect(() => {
         props.activeObj.type === 'image' && setCurrentFilters(getCurrentFilters(props.activeObj));
     }, [props.activeObj]);
-    React.useEffect(() => {
+    useEffect(() => {
         trackOutSideClick(sidebarRef.current, () => {
             if (props.currentSidebar === 'imageAdjustment') {
                 props.setCurrentSidebar('');
@@ -95,4 +95,4 @@ ImageFilters.propTypes = {
     setCurrentSidebar: PropTypes.func.isRequired,
 };
 
-export default React.memo(ImageFilters);
+export default memo(ImageFilters);

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, memo } from 'react';
 import styles from '../../css/exploreItem.module.scss';
 import PropTypes from 'prop-types';
 import * as mainIcons from '../../img/mainPage';
@@ -9,8 +9,8 @@ import { Alert, defaultAlertSetting } from '../Alert';
 
 const ExploreItem = (props) => {
     const history = useHistory();
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [showAlert, setShowAlert] = useState(false);
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
     const addNewSampleHandler = (e, sampleFileId) => {
@@ -131,4 +131,4 @@ ExploreItem.propTypes = {
     isNotSameAsCurrentUser: PropTypes.bool,
 };
 
-export default React.memo(ExploreItem);
+export default memo(ExploreItem);

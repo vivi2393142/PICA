@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import styles from '../css/loader.module.scss';
 import PropTypes from 'prop-types';
 
@@ -15,4 +15,4 @@ Loader.propTypes = {
     loaderText: PropTypes.string,
 };
 
-export default React.memo(Loader);
+export default memo(Loader);

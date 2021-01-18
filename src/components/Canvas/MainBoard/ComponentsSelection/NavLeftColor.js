@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import 'fabric-history';
 import { ChromePicker } from 'react-color';
@@ -7,13 +7,13 @@ import { trackOutSideClick } from '../../../../utils/globalUtils.js';
 import * as config from '../../../../utils/globalConfig.js';
 
 const NavLeftColor = (props) => {
-    const componentsNavLeftRef = React.useRef(null);
-    const [widthSetting, setWidthSetting] = React.useState('14rem');
+    const componentsNavLeftRef = useRef(null);
+    const [widthSetting, setWidthSetting] = useState('14rem');
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.innerWidth > config.mediaQuerySize.medium ? setWidthSetting('14rem') : setWidthSetting('100%');
     }, []);
-    React.useEffect(() => {
+    useEffect(() => {
         const handleResize = () => {
             window.innerWidth > config.mediaQuerySize.medium
                 ? setWidthSetting('14rem')
@@ -26,7 +26,7 @@ const NavLeftColor = (props) => {
     }, []);
 
     // unfold nav
-    const [isChoosingColor, setIsChoosingColor] = React.useState(false);
+    const [isChoosingColor, setIsChoosingColor] = useState(false);
     const toggleColorSelection = (e) => {
         setIsChoosingColor(true);
         props.setIsFocusInput(true);
@@ -41,7 +41,7 @@ const NavLeftColor = (props) => {
         }
     };
     // -- color state
-    const [colorChosen, setColorChosen] = React.useState({
+    const [colorChosen, setColorChosen] = useState({
         background: {
             r: '0',
             g: '0',
@@ -56,7 +56,7 @@ const NavLeftColor = (props) => {
         props.canvas.requestRenderAll();
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         const currentType = props.activeObj.type;
         if (
             currentType === 'rect' ||
@@ -109,4 +109,4 @@ NavLeftColor.propTypes = {
     setIsFocusInput: PropTypes.func,
 };
 
-export default React.memo(NavLeftColor);
+export default memo(NavLeftColor);

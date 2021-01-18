@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import * as icons from '../../../../img/icons';
 import NavLeftColor from './NavLeftColor';
@@ -9,8 +9,8 @@ const textSizeArray = [6, 8, 10, 12, 14, 16, 18, 20, 24, 36, 48, 72];
 
 const NavLeftText = (props) => {
     // unfold nav
-    const [isChoosingSpace, setIsChoosingSpace] = React.useState(false);
-    const [isChoosingSize, setIsChoosingSize] = React.useState(false);
+    const [isChoosingSpace, setIsChoosingSpace] = useState(false);
+    const [isChoosingSize, setIsChoosingSize] = useState(false);
     const toggleSpaceSelection = (e) => {
         setIsChoosingSpace(true);
         props.setShowMobileScrollContainer(true);
@@ -30,7 +30,7 @@ const NavLeftText = (props) => {
         });
     };
     // -- text state
-    const [textFont, setTextFont] = React.useState('Sans-serif');
+    const [textFont, setTextFont] = useState('Sans-serif');
     const handleTextFont = (e) => {
         setTextFont(e.target.value);
         if (e.target.value === 'Sans-serif') {
@@ -47,7 +47,7 @@ const NavLeftText = (props) => {
             props.canvas.requestRenderAll();
         }
     };
-    const [textSize, setTextSize] = React.useState(12);
+    const [textSize, setTextSize] = useState(12);
     const handleTextSize = (e) => {
         setTextSize(e.target.value);
         props.activeObj.set({
@@ -55,7 +55,7 @@ const NavLeftText = (props) => {
         });
         props.canvas.requestRenderAll();
     };
-    const [textWeight, setTextWeight] = React.useState('normal');
+    const [textWeight, setTextWeight] = useState('normal');
     const handleTextWeight = (e) => {
         const newWeight = textWeight === 'normal' ? 'bold' : 'normal';
         setTextWeight(newWeight);
@@ -65,7 +65,7 @@ const NavLeftText = (props) => {
         props.canvas.fire('object:modified');
         props.canvas.requestRenderAll();
     };
-    const [textStyle, setTextStyle] = React.useState('normal');
+    const [textStyle, setTextStyle] = useState('normal');
     const handleTextStyle = () => {
         const newStyle = textStyle === 'normal' ? 'italic' : 'normal';
         setTextStyle(newStyle);
@@ -75,7 +75,7 @@ const NavLeftText = (props) => {
         props.canvas.fire('object:modified');
         props.canvas.requestRenderAll();
     };
-    const [textUnderline, setTextUnderline] = React.useState(false);
+    const [textUnderline, setTextUnderline] = useState(false);
     const handleTextUnderline = () => {
         setTextUnderline(!textUnderline);
         props.activeObj.set({
@@ -84,7 +84,7 @@ const NavLeftText = (props) => {
         props.canvas.fire('object:modified');
         props.canvas.requestRenderAll();
     };
-    const [textAlign, setTextAlign] = React.useState('');
+    const [textAlign, setTextAlign] = useState('');
     const handleTextAlgin = (align) => {
         setTextAlign(align);
         props.activeObj.set({
@@ -93,7 +93,7 @@ const NavLeftText = (props) => {
         props.canvas.fire('object:modified');
         props.canvas.requestRenderAll();
     };
-    const [textLineHeight, setTextLineHeight] = React.useState(0);
+    const [textLineHeight, setTextLineHeight] = useState(0);
     const handleTextLineHeight = (e) => {
         setTextLineHeight(e.target.value);
         props.activeObj.set({
@@ -101,7 +101,7 @@ const NavLeftText = (props) => {
         });
         props.canvas.requestRenderAll();
     };
-    const [textSpacing, setTextSpacing] = React.useState(0);
+    const [textSpacing, setTextSpacing] = useState(0);
     const handleTextSpacing = (e) => {
         setTextSpacing(e.target.value);
         props.activeObj.set({
@@ -111,7 +111,7 @@ const NavLeftText = (props) => {
     };
 
     // get current text styles
-    React.useEffect(() => {
+    useEffect(() => {
         if (props.activeObj.type === 'i-text') {
             setTextFont(props.activeObj.fontFamily);
             setTextSize(props.activeObj.fontSize);
@@ -223,4 +223,4 @@ NavLeftText.propTypes = {
     setShowMobileScrollContainer: PropTypes.func.isRequired,
 };
 
-export default React.memo(NavLeftText);
+export default memo(NavLeftText);

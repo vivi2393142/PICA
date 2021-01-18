@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import MainBanner from './MainBanner';
 import UserPage from './UserPage';
@@ -8,10 +8,10 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import { mediaQuerySize } from '../../utils/globalConfig.js';
 
 const MainPage = (props) => {
-    const [currentPage, setCurrentPage] = React.useState('explore');
-    const [isAddingNew, setIsAddingNew] = React.useState(false);
-    const [isAtMobile, setIsAtMobile] = React.useState('normal');
-    React.useEffect(() => {
+    const [currentPage, setCurrentPage] = useState('explore');
+    const [isAddingNew, setIsAddingNew] = useState(false);
+    const [isAtMobile, setIsAtMobile] = useState('normal');
+    useEffect(() => {
         const setSizeState = () => {
             window.innerWidth <= mediaQuerySize.big && window.innerWidth > mediaQuerySize.big
                 ? setIsAtMobile('small')
@@ -67,4 +67,4 @@ const MainPage = (props) => {
 
 MainPage.propTypes = { setCurrentUser: PropTypes.func.isRequired, currentUser: PropTypes.object };
 
-export default React.memo(MainPage);
+export default memo(MainPage);

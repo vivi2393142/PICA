@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useEffect, memo } from 'react';
 import styles from '../../css/mainPage.module.scss';
 import PropTypes from 'prop-types';
 import * as firebase from '../../utils/firebase.js';
@@ -11,20 +11,20 @@ import { Alert, defaultAlertSetting } from '../Alert';
 
 const UserPage = (props) => {
     const history = useHistory();
-    const [isLoaded, setIsLoaded] = React.useState(true);
-    const [isSmallLoaded, setIsSmallLoaded] = React.useState(false);
-    const [isAtMyCanvas, setIsAtMyCanvas] = React.useState(true);
-    const [isLikeLoader, setIsLikeLoader] = React.useState(true);
-    const [showAlert, setShowAlert] = React.useState(false);
-    const [likeList, setLikeList] = React.useState([]);
-    const [userDataFromFirebase, setUserDataFromFirebase] = React.useState({ canvas: [] });
-    const [canvasDataWithDataURL, setCanvasDataWithDataURL] = React.useState([]);
-    const [userPhoto, setUserPhoto] = React.useState('');
-    const [alertSetting, setAlertSetting] = React.useState({
+    const [isLoaded, setIsLoaded] = useState(true);
+    const [isSmallLoaded, setIsSmallLoaded] = useState(false);
+    const [isAtMyCanvas, setIsAtMyCanvas] = useState(true);
+    const [isLikeLoader, setIsLikeLoader] = useState(true);
+    const [showAlert, setShowAlert] = useState(false);
+    const [likeList, setLikeList] = useState([]);
+    const [userDataFromFirebase, setUserDataFromFirebase] = useState({ canvas: [] });
+    const [canvasDataWithDataURL, setCanvasDataWithDataURL] = useState([]);
+    const [userPhoto, setUserPhoto] = useState('');
+    const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
 
-    React.useEffect(() => {
+    useEffect(() => {
         // not login alert
         if (props.currentUser.email === 'noUser') {
             setAlertSetting({
@@ -62,7 +62,7 @@ const UserPage = (props) => {
         }
     }, [props.currentUser]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         firebase.getOwnFilesData(userDataFromFirebase, (canvasDataWithImg) => {
             setCanvasDataWithDataURL(canvasDataWithImg);
         });
@@ -308,4 +308,4 @@ UserPage.propTypes = {
     setIsAddingNew: PropTypes.func.isRequired,
 };
 
-export default React.memo(UserPage);
+export default memo(UserPage);

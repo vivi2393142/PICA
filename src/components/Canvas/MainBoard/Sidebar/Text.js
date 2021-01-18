@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import PropTypes from 'prop-types';
 import * as utils from '../../../../utils/globalUtils.js';
 import * as config from '../../../../utils/globalConfig';
@@ -37,4 +37,4 @@ Text.propTypes = {
     adjSetNextPosition: PropTypes.func.isRequired,
 };
 
-export default React.memo(Text);
+export default memo(Text);
