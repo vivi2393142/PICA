@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { nanoid } from 'nanoid';
-import { firebaseConfig } from './firbaseConfig';
+import { firebaseConfig } from './firebaseConfig';
 
 // init firebase
 firebase.initializeApp(firebaseConfig);
