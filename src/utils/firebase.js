@@ -179,7 +179,6 @@ export const getAllFiles = (currentUserId, callback) => {
                     querySnapshot.forEach((doc) => {
                         const userId = doc.data().basicSetting.userEmail;
                         const userData = allUsers.find((x) => x.email === userId);
-                        // console.log(userData.name, doc.data().basicSetting.userEmail);
                         const fileData = {
                             userId: userId,
                             userName: userData ? userData.name : '',
@@ -394,7 +393,10 @@ export const getOwnFilesData = (userDataFromFirebase, callback) => {
                     like: fileData.like,
                     fileId: item,
                     snapshot: fileData.snapshot,
-                    title: fileData.basicSetting.title === '' ? '未命名畫布' : fileData.basicSetting.title,
+                    title:
+                        fileData.basicSetting.title === ''
+                            ? '未命名畫布'
+                            : fileData.basicSetting.title,
                 };
             });
             callback(canvasDataWithImg);
@@ -432,18 +434,20 @@ export const fbSignUp = () => {
         .signInWithPopup(provider)
         .then(function (result) {
             const ref = userDb.doc(result.user.email);
-            if (result.additionalUserInfo.isNewUser) {
-                ref.set({
-                    photo:
-                        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
-                    name: result.user.displayName,
-                    email: result.user.email,
-                    canvas: [],
-                    like: [],
-                });
-            }
-            history.go(0);
+            ref.get().then((doc) => {
+                if (!doc.data()) {
+                    ref.set({
+                        photo:
+                            'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
+                        name: result.user.displayName,
+                        email: result.user.email,
+                        canvas: [],
+                        like: [],
+                    });
+                }
+            });
         })
+        // .then(() => history.go(0))
         .catch(function (error) {});
 };
 export const googleSignUp = () => {
@@ -453,18 +457,20 @@ export const googleSignUp = () => {
         .signInWithPopup(provider)
         .then(function (result) {
             const ref = userDb.doc(result.user.email);
-            if (result.additionalUserInfo.isNewUser) {
-                ref.set({
-                    photo:
-                        'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
-                    name: result.user.displayName,
-                    email: result.user.email,
-                    canvas: [],
-                    like: [],
-                });
-            }
-            history.go(0);
+            ref.get().then((doc) => {
+                if (!doc.data()) {
+                    ref.set({
+                        photo:
+                            'https://firebasestorage.googleapis.com/v0/b/pica-b4a59.appspot.com/o/userPhoto%2Fboy.svg?alt=media&token=fd4f1dc8-2ad2-4135-aaee-5b59265bc6ea',
+                        name: result.user.displayName,
+                        email: result.user.email,
+                        canvas: [],
+                        like: [],
+                    });
+                }
+            });
         })
+        // .then(() => history.go(0))
         .catch(function (error) {});
 };
 export const nativeSignUp = (name, email, pwd, failCallback) => {
@@ -484,7 +490,6 @@ export const nativeSignUp = (name, email, pwd, failCallback) => {
             }).then(() => {
                 history.go(0);
             });
-            // return user;
         })
         .catch((error) => {
             if (error.code === 'auth/email-already-in-use') {
