@@ -179,10 +179,11 @@ export const getAllFiles = (currentUserId, callback) => {
                     querySnapshot.forEach((doc) => {
                         const userId = doc.data().basicSetting.userEmail;
                         const userData = allUsers.find((x) => x.email === userId);
+                        // console.log(userData.name, doc.data().basicSetting.userEmail);
                         const fileData = {
                             userId: userId,
-                            userName: userData.name,
-                            userPhoto: userData.photo,
+                            userName: userData ? userData.name : '',
+                            userPhoto: userData ? userData.photo : '',
                             like: doc.data().like.length,
                             comment: doc.data().comments.length,
                             fileId: doc.data().basicSetting.id,
