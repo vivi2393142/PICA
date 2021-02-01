@@ -8,13 +8,17 @@ const TitleInput = (props) => {
     const [titleInput, setTitleInput] = useState(props.initialValue);
     const [isShowInput, setIsShowInput] = useState(false);
     const handleEdit = (e) => {
-        setIsShowInput(true);
-        const currentNode = e.currentTarget;
-        currentNode.firstChild.focus();
-        trackOutSideClick(currentNode, () => {
-            setIsShowInput(false);
-            firebase.changeTitle(props.fileId, currentNode.firstElementChild.value);
-        });
+        if (props.isAuthor) {
+            setIsShowInput(true);
+            const currentNode = e.currentTarget;
+            currentNode.firstChild.focus();
+            trackOutSideClick(currentNode, () => {
+                setIsShowInput(false);
+                firebase.changeTitle(props.fileId, currentNode.firstElementChild.value);
+            });
+        } else {
+            return;
+        }
     };
     return (
         <div className={styles.titleWrapper} onClick={(e) => handleEdit(e)}>
@@ -29,7 +33,7 @@ const TitleInput = (props) => {
                 }}
             ></input>
             <div
-                className={styles.fileTitle}
+                className={`${styles.fileTitle} ${props.isAuthor ? styles.fileTitleAuthor : ''}`}
                 style={{
                     opacity: isShowInput ? 0 : 1,
                 }}
@@ -43,6 +47,7 @@ const TitleInput = (props) => {
 TitleInput.propTypes = {
     initialValue: PropTypes.string.isRequired,
     fileId: PropTypes.string.isRequired,
+    isAuthor: PropTypes.bool.isRequired,
 };
 
 export default memo(TitleInput);

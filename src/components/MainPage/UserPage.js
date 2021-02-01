@@ -160,7 +160,9 @@ const UserPage = (props) => {
                                 : history.push(`/main/shots/${item.fileId}`);
                         }}
                         style={
-                            props.currentUser.email !== props.match.params.userId ? { cursor: 'pointer' } : {}
+                            props.currentUser.email !== props.match.params.userId
+                                ? { cursor: 'pointer' }
+                                : {}
                         }
                     >
                         <img src={item.snapshot} className={styles.fileImg}></img>
@@ -184,7 +186,11 @@ const UserPage = (props) => {
                             )}
                         </div>
                     </div>
-                    <TitleInput initialValue={item.title} fileId={item.fileId} />
+                    <TitleInput
+                        isAuthor={props.currentUser.email === props.match.params.userId}
+                        initialValue={item.title}
+                        fileId={item.fileId}
+                    />
                 </div>
             );
         });
@@ -229,9 +235,13 @@ const UserPage = (props) => {
                                     </label>
                                 )}
                             </div>
-                            <div className={styles.otherDetailsName}>{userDataFromFirebase.name}</div>
+                            <div className={styles.otherDetailsName}>
+                                {userDataFromFirebase.name}
+                            </div>
                             <div className={styles.otherDetails}>{userDataFromFirebase.email}</div>
-                            <div className={styles.otherDetails}>{canvasDataWithDataURL.length} files</div>
+                            <div className={styles.otherDetails}>
+                                {canvasDataWithDataURL.length} files
+                            </div>
                         </div>
                         <div className={styles.navTags}>
                             <div
@@ -279,7 +289,9 @@ const UserPage = (props) => {
                                     <div
                                         className={styles.fileWrapperNew}
                                         style={{
-                                            animationDelay: `${canvasDataWithDataURL.length * 0.05}s`,
+                                            animationDelay: `${
+                                                canvasDataWithDataURL.length * 0.05
+                                            }s`,
                                         }}
                                     >
                                         <div
