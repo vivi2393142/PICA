@@ -24,7 +24,8 @@ const Background = (props) => {
 
     // preset background
     useEffect(() => {
-        props.canvas.backgroundColor && setBackColorChosen({ background: props.canvas.backgroundColor });
+        props.canvas.backgroundColor &&
+            setBackColorChosen({ background: props.canvas.backgroundColor });
     }, [props.canvas.backgroundColor]);
 
     const toggleBackColorSelection = async (e) => {
@@ -57,7 +58,7 @@ const Background = (props) => {
     const backgroundImageHandler = (e) => {
         props.canvas.offHistory();
         const allObjects = props.canvas.getObjects();
-        if (allObjects.length) {
+        if (allObjects.length > 0) {
             allObjects[0].specialType === 'background' && props.canvas.remove(allObjects[0]);
         }
         const scaleToWidth = props.canvasSetting.width / e.target.naturalWidth;
@@ -70,8 +71,15 @@ const Background = (props) => {
                 const backImg = img.set({
                     scaleX: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
                     scaleY: scaleWay === 'toWidth' ? scaleToWidth : scaleToHeight,
+                    specialType: 'background',
                 });
-                utils.presetBackgroundImg(backImg, props.canvas, scaleWay, scaleToWidth, scaleToHeight);
+                utils.presetBackgroundImg(
+                    backImg,
+                    props.canvas,
+                    scaleWay,
+                    scaleToWidth,
+                    scaleToHeight
+                );
             },
             {
                 crossOrigin: 'anonymous',
@@ -135,7 +143,8 @@ const Background = (props) => {
                     <div
                         className={`backgroundColorCube currentColorCube ${
                             backColorChosen.background === defaultBackgroundInString ||
-                            JSON.stringify(backColorChosen.background) === JSON.stringify(defaultBackground)
+                            JSON.stringify(backColorChosen.background) ===
+                                JSON.stringify(defaultBackground)
                                 ? 'nonColor'
                                 : ''
                         }`}
@@ -144,7 +153,10 @@ const Background = (props) => {
                     ></div>
                 </div>
                 <div className='backgroundColorChart'>
-                    <div className='backgroundColorCube nonColor' onClick={handleBackColorChangeCube}></div>
+                    <div
+                        className='backgroundColorCube nonColor'
+                        onClick={handleBackColorChangeCube}
+                    ></div>
                     {backgroundColorJsx}
                 </div>
             </div>
