@@ -29,6 +29,30 @@ const handleCreateNew = (e, currentUser, titleInput, choices) => {
         firebase.createNewCanvas(canvasSetting, currentUser.email);
     }
 };
+const isNextStep = (option, currentStep, choices) => {
+    switch (option) {
+        case 'lase':
+            return currentStep > 1;
+        case 'visibleNext':
+            return (
+                (currentStep === 1 && choices.type) ||
+                (currentStep === 2 &&
+                    (choices.way === 'blank' ||
+                        (choices.way === 'sample' && choices.sampleFileId) ||
+                        (choices.type === 'custom' &&
+                            customSize.width > 149 &&
+                            customSize.width < 2001 &&
+                            customSize.height > 149 &&
+                            customSize.height < 2001)))
+            );
+        case 'unvisibleNext':
+            return currentStep < 3;
+        case 'done':
+            return currentStep === 3;
+        default:
+            break;
+    }
+};
 
 const AddNew = (props) => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -115,7 +139,11 @@ const AddNew = (props) => {
                         src={item.snapshot}
                         className={`${styles.sampleImg} ${
                             choices.sampleFileId ? styles.notChosenSampleImg : ''
-                        }${choices.sampleFileId === item.basicSetting.id ? styles.chosenSampleImg : ''}`}
+                        }${
+                            choices.sampleFileId === item.basicSetting.id
+                                ? styles.chosenSampleImg
+                                : ''
+                        }`}
                         onClick={() => {
                             setChoices({ ...choices, sampleFileId: item.basicSetting.id });
                         }}
@@ -126,7 +154,9 @@ const AddNew = (props) => {
     const sizeImgJsx = canvasSizeOptions.map((item) => {
         return (
             <div
-                className={`${styles.rec} ${styles[item.type]} ${chosenRec ? styles.recTransparent : ''}
+                className={`${styles.rec} ${styles[item.type]} ${
+                    chosenRec ? styles.recTransparent : ''
+                }
                 ${chosenRec === item.type ? styles.chosenRex : ''}`}
                 key={item.type}
                 style={{
@@ -147,7 +177,9 @@ const AddNew = (props) => {
                         width: item.height / imgSizeRatio + 'px',
                     }}
                 >
-                    <div className={styles.arrowText}>{item.mmW ? item.mmW + 'mm' : item.width + 'px'}</div>
+                    <div className={styles.arrowText}>
+                        {item.mmW ? item.mmW + 'mm' : item.width + 'px'}
+                    </div>
                 </div>
                 <div
                     className={`${styles.arrowH} ${
@@ -157,7 +189,9 @@ const AddNew = (props) => {
                         width: item.width / imgSizeRatio + 'px',
                     }}
                 >
-                    <div className={styles.arrowText}>{item.mmH ? item.mmH + 'mm' : item.height + 'px'}</div>
+                    <div className={styles.arrowText}>
+                        {item.mmH ? item.mmH + 'mm' : item.height + 'px'}
+                    </div>
                 </div>
             </div>
         );
@@ -166,7 +200,9 @@ const AddNew = (props) => {
         return (
             <div
                 key={item.type}
-                className={`${styles.option} ${chosenRec === item.type ? styles.chosenOptions : ''}`}
+                className={`${styles.option} ${
+                    chosenRec === item.type ? styles.chosenOptions : ''
+                }`}
                 onClick={() => sizeChoosingHandler(item.type)}
             >
                 <div className={styles.title}> {item.name}</div>
@@ -235,25 +271,45 @@ const AddNew = (props) => {
                                         : ''
                                 }`}
                             >
-                                <div className={`${styles.text} ${currentStep >= 1 ? styles.textShow : ''}`}>
+                                <div
+                                    className={`${styles.text} ${
+                                        currentStep >= 1 ? styles.textShow : ''
+                                    }`}
+                                >
                                     step.1
                                 </div>
                             </div>
                             <div
                                 className={`${styles.step} ${
-                                    currentStep === 2 ? styles.current : currentStep > 2 ? styles.chosen : ''
+                                    currentStep === 2
+                                        ? styles.current
+                                        : currentStep > 2
+                                        ? styles.chosen
+                                        : ''
                                 }`}
                             >
-                                <div className={`${styles.text} ${currentStep >= 2 ? styles.textShow : ''}`}>
+                                <div
+                                    className={`${styles.text} ${
+                                        currentStep >= 2 ? styles.textShow : ''
+                                    }`}
+                                >
                                     step.2
                                 </div>
                             </div>
                             <div
                                 className={`${styles.step}  ${
-                                    currentStep === 3 ? styles.current : currentStep > 3 ? styles.chosen : ''
+                                    currentStep === 3
+                                        ? styles.current
+                                        : currentStep > 3
+                                        ? styles.chosen
+                                        : ''
                                 }`}
                             >
-                                <div className={`${styles.text} ${currentStep >= 3 ? styles.textShow : ''}`}>
+                                <div
+                                    className={`${styles.text} ${
+                                        currentStep >= 3 ? styles.textShow : ''
+                                    }`}
+                                >
                                     step.3
                                 </div>
                             </div>
@@ -296,7 +352,9 @@ const AddNew = (props) => {
                                     ></input>
                                     <span className={styles.unit}>px</span>
                                 </label>
-                                {showHint && <div className={styles.hint}>※ 須介於150px ~ 2000px</div>}
+                                {showHint && (
+                                    <div className={styles.hint}>※ 須介於150px ~ 2000px</div>
+                                )}
                             </div>
                         ) : currentStep === 2 && chosenRec !== 'custom' ? (
                             <div className={styles.stepContentWrapper}>
@@ -343,7 +401,7 @@ const AddNew = (props) => {
                                 </label>
                             </div>
                         ) : null}
-                        {currentStep > 1 && (
+                        {isNextStep('last', currentStep) && (
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}
@@ -356,15 +414,7 @@ const AddNew = (props) => {
                                 </div>
                             </div>
                         )}
-                        {(currentStep === 1 && choices.type) ||
-                        (currentStep === 2 &&
-                            (choices.way === 'blank' ||
-                                (choices.way === 'sample' && choices.sampleFileId) ||
-                                (choices.type === 'custom' &&
-                                    customSize.width > 149 &&
-                                    customSize.width < 2001 &&
-                                    customSize.height > 149 &&
-                                    customSize.height < 2001))) ? (
+                        {isNextStep('visibleNext', currentStep, choices, customSize) ? (
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}
@@ -373,11 +423,13 @@ const AddNew = (props) => {
                                     下一步
                                 </div>
                             </div>
-                        ) : currentStep < 3 ? (
+                        ) : isNextStep('unvisibleNext', currentStep) ? (
                             <div className={styles.nextStepWrapper}>
-                                <div className={`${styles.nextStep} ${styles.disableStep}`}>下一步</div>
+                                <div className={`${styles.nextStep} ${styles.disableStep}`}>
+                                    下一步
+                                </div>
                             </div>
-                        ) : currentStep === 3 ? (
+                        ) : isNextStep('done', currentStep) ? (
                             <div className={styles.nextStepWrapper}>
                                 <div
                                     className={styles.nextStep}

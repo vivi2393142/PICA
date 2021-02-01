@@ -17,6 +17,40 @@ const codes = {
     aKey: 65,
     zKey: 90,
 };
+const isNeedOption = (option, activeObj, canvas, canvasData) => {
+    switch (option) {
+        case 'group':
+            return activeObj.type === 'activeSelection';
+        case 'ungroup':
+            return activeObj.type === 'group';
+        case 'trashcan':
+            return activeObj.type;
+        case 'layer':
+        case 'align':
+        case 'copy':
+        case 'cut':
+            return activeObj.specialType !== 'background' && activeObj.type;
+        case 'undo':
+            return canvas.historyUndo && canvas.historyUndo.length !== 0;
+        case 'redo':
+            return canvas.historyRedo && canvas.historyRedo.length !== 0;
+        case 'selectAll':
+            return (
+                activeObj.specialType !== 'background' &&
+                canvasData.objects &&
+                canvasData.objects.length !== 0
+            );
+        case 'discard':
+            return (
+                activeObj.specialType !== 'background' &&
+                canvasData.objects &&
+                canvasData.objects.length !== 0 &&
+                Object.keys(activeObj).length !== 0
+            );
+        default:
+            break;
+    }
+};
 
 const NavRight = (props) => {
     // unfold nav
@@ -118,7 +152,10 @@ const NavRight = (props) => {
             ctrlDown && e.keyCode === codes.cKey && !props.isFocusInput && copyHandler();
             ctrlDown && e.keyCode === codes.xKey && !props.isFocusInput && cutHandler();
             if (e.keyCode === codes.delKey && !props.isFocusInput) {
-                if ((props.activeObj.type === 'i-text' && props.activeObj.isEditing) || props.textIsEditing) {
+                if (
+                    (props.activeObj.type === 'i-text' && props.activeObj.isEditing) ||
+                    props.textIsEditing
+                ) {
                     return;
                 } else {
                     delHandler();
@@ -225,7 +262,9 @@ const NavRight = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        left: props.canvasSetting.width - props.activeObj.width * props.activeObj.scaleX,
+                        left:
+                            props.canvasSetting.width -
+                            props.activeObj.width * props.activeObj.scaleX,
                         originX: 'left',
                     });
                 }
@@ -256,7 +295,9 @@ const NavRight = (props) => {
                     });
                 } else {
                     props.activeObj.set({
-                        top: props.canvasSetting.height - props.activeObj.height * props.activeObj.scaleY,
+                        top:
+                            props.canvasSetting.height -
+                            props.activeObj.height * props.activeObj.scaleY,
                         originY: 'top',
                     });
                 }
@@ -300,31 +341,43 @@ const NavRight = (props) => {
 
     return (
         <div className='componentsNavRight'>
-            {props.activeObj.type === 'activeSelection' && (
+            {isNeedOption('group', props.activeObj) && (
                 <icons.Group className='activeButton' onClick={groupHandler} />
             )}
-            {props.activeObj.type === 'group' && (
+            {isNeedOption('ungroup', props.activeObj) && (
                 <icons.Ungroup className='activeButton' onClick={ungroupHandler} />
             )}
-            {props.activeObj.type && (
+            {isNeedOption('trashcan', props.activeObj) && (
                 <div className='trashCan activeButton'>
                     <icons.TrashCan onClick={delHandler} />
                 </div>
             )}
-            {props.activeObj.specialType !== 'background' && props.activeObj.type && (
+            {isNeedOption('layer', props.activeObj) && (
                 <div className='layer activeButton'>
                     <icons.Layer onClick={toggleLayerSelection} className='insideButton' />
                     {isLayerChoosing && (
                         <div className='layerChoosingBox'>
-                            <icons.ToBottom className='activeButton insideButton' onClick={toBottomHandler} />
-                            <icons.ToTop className='activeButton insideButton' onClick={toTopHandler} />
-                            <icons.Upper className='activeButton insideButton' onClick={upperHandler} />
-                            <icons.Downer className='activeButton insideButton' onClick={downerHandler} />
+                            <icons.ToBottom
+                                className='activeButton insideButton'
+                                onClick={toBottomHandler}
+                            />
+                            <icons.ToTop
+                                className='activeButton insideButton'
+                                onClick={toTopHandler}
+                            />
+                            <icons.Upper
+                                className='activeButton insideButton'
+                                onClick={upperHandler}
+                            />
+                            <icons.Downer
+                                className='activeButton insideButton'
+                                onClick={downerHandler}
+                            />
                         </div>
                     )}
                 </div>
             )}
-            {props.activeObj.specialType !== 'background' && props.activeObj.type && (
+            {isNeedOption('align', props.activeObj) && (
                 <div className='align activeButton'>
                     <icons.Align onClick={toggleAlignSelection} className='insideButton' />
                     {isAlignChoosing && (
@@ -357,12 +410,12 @@ const NavRight = (props) => {
                     )}
                 </div>
             )}
-            {props.activeObj.specialType !== 'background' && props.activeObj.type && (
+            {isNeedOption('copy', props.activeObj) && (
                 <div className='copy activeButton'>
                     <icons.Copy onClick={copyHandler} />
                 </div>
             )}
-            {props.activeObj.specialType !== 'background' && props.activeObj.type && (
+            {isNeedOption('cut', props.activeObj) && (
                 <div className='cut activeButton'>
                     <icons.Cut onClick={cutHandler} />
                 </div>
@@ -372,7 +425,7 @@ const NavRight = (props) => {
                     <icons.Paste onClick={pasteHandler} />
                 </div>
             )}
-            {props.canvas.historyUndo && props.canvas.historyUndo.length !== 0 && (
+            {isNeedOption('undo', props.activeObj, props.canvas) && (
                 <div className='undo activeButton'>
                     <icons.Undo
                         onClick={() => {
@@ -382,7 +435,7 @@ const NavRight = (props) => {
                     />
                 </div>
             )}
-            {props.canvas.historyRedo && props.canvas.historyRedo.length !== 0 && (
+            {isNeedOption('redo', props.activeObj, props.canvas) && (
                 <div className='redo activeButton'>
                     <icons.Redo
                         onClick={() => {
@@ -392,21 +445,16 @@ const NavRight = (props) => {
                     />
                 </div>
             )}
-            {props.activeObj.specialType !== 'background' &&
-                props.canvasData.objects &&
-                props.canvasData.objects.length !== 0 && (
-                    <div className='selectAll activeButton'>
-                        <icons.SelectAll onClick={selectAllHandler} />
-                    </div>
-                )}
-            {props.activeObj.specialType !== 'background' &&
-                props.canvasData.objects &&
-                props.canvasData.objects.length !== 0 &&
-                Object.keys(props.activeObj).length !== 0 && (
-                    <div className='selectAll activeButton'>
-                        <icons.Discard onClick={discardHandler} />
-                    </div>
-                )}
+            {isNeedOption('selectAll', props.activeObj, props.canvas, props.canvasData) && (
+                <div className='selectAll activeButton'>
+                    <icons.SelectAll onClick={selectAllHandler} />
+                </div>
+            )}
+            {isNeedOption('discard', props.activeObj, props.canvas, props.canvasData) && (
+                <div className='selectAll activeButton'>
+                    <icons.Discard onClick={discardHandler} />
+                </div>
+            )}
         </div>
     );
 };

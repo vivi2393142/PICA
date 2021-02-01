@@ -48,9 +48,9 @@ const UserPage = (props) => {
         // get user data
         firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
             if (dataFromFirebase) {
-                setUserDataFromFirebase(dataFromFirebase);
                 setUserPhoto(dataFromFirebase.photo);
                 setIsLoaded(false);
+                setUserDataFromFirebase(dataFromFirebase);
             }
         });
         // get like list

@@ -33,19 +33,11 @@ const NavLeftText = (props) => {
     const [textFont, setTextFont] = useState('Sans-serif');
     const handleTextFont = (e) => {
         setTextFont(e.target.value);
-        if (e.target.value === 'Sans-serif') {
-            props.activeObj.set({
-                fontFamily: e.target.value,
-            });
-            props.canvas.fire('object:modified');
-            props.canvas.requestRenderAll();
-        } else {
-            props.activeObj.set({
-                fontFamily: e.target.value,
-            });
-            props.canvas.fire('object:modified');
-            props.canvas.requestRenderAll();
-        }
+        props.activeObj.set({
+            fontFamily: e.target.value,
+        });
+        props.canvas.fire('object:modified');
+        props.canvas.requestRenderAll();
     };
     const [textSize, setTextSize] = useState(12);
     const handleTextSize = (e) => {
@@ -155,11 +147,15 @@ const NavLeftText = (props) => {
                 )}
             </div>
             <icons.TextBold
-                className={`specificButton textIcon ${textWeight === 'bold' ? 'textButtonActive' : ''}`}
+                className={`specificButton textIcon ${
+                    textWeight === 'bold' ? 'textButtonActive' : ''
+                }`}
                 onClick={handleTextWeight}
             />
             <icons.TextItalic
-                className={`specificButton textIcon ${textStyle === 'italic' ? 'textButtonActive' : ''}`}
+                className={`specificButton textIcon ${
+                    textStyle === 'italic' ? 'textButtonActive' : ''
+                }`}
                 onClick={handleTextStyle}
             />
             <icons.TextUnderline
@@ -167,15 +163,21 @@ const NavLeftText = (props) => {
                 onClick={handleTextUnderline}
             />
             <icons.TextAlignLeft
-                className={`specificButton textIcon ${textAlign === 'left' ? 'textButtonActive' : ''}`}
+                className={`specificButton textIcon ${
+                    textAlign === 'left' ? 'textButtonActive' : ''
+                }`}
                 onClick={() => handleTextAlgin('left')}
             />
             <icons.TextAlignCenter
-                className={`specificButton textIcon ${textAlign === 'center' ? 'textButtonActive' : ''}`}
+                className={`specificButton textIcon ${
+                    textAlign === 'center' ? 'textButtonActive' : ''
+                }`}
                 onClick={() => handleTextAlgin('center')}
             />
             <icons.TextAlignRight
-                className={`specificButton textIcon ${textAlign === 'right' ? 'textButtonActive' : ''}`}
+                className={`specificButton textIcon ${
+                    textAlign === 'right' ? 'textButtonActive' : ''
+                }`}
                 onClick={() => handleTextAlgin('right')}
             />
             <div className='spaceBoxOuter'>

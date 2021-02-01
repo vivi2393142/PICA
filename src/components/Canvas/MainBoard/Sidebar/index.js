@@ -17,7 +17,9 @@ const Sidebar = (props) => {
 
     useEffect(() => {
         const setSizeState = () => {
-            config.mediaQuerySize.big >= window.innerWidth ? setIsAtMobile(true) : setIsAtMobile(false);
+            config.mediaQuerySize.big >= window.innerWidth
+                ? setIsAtMobile(true)
+                : setIsAtMobile(false);
         };
         setSizeState();
         window.addEventListener('resize', setSizeState);
@@ -55,7 +57,9 @@ const Sidebar = (props) => {
             }}
         >
             {props.currentSidebar === item.EN ? item.icon : item.iconB}
-            <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : ''}`}>{item.CH}</div>
+            <div className={`iconText ${props.currentSidebar === item.EN ? 'iconTextB' : ''}`}>
+                {item.CH}
+            </div>
         </div>
     ));
     const sidebarFoldJsx = (
@@ -82,13 +86,12 @@ const Sidebar = (props) => {
 
     return (
         <div
-            className={`sidebar ${props.isShowMobileSidebar ? 'mobileSidebarShow' : 'mobileSidebarHide'} ${
-                props.currentSidebar !== '' ? 'showMobileUnfoldSidebar' : ''
-            }`}
+            className={`sidebar ${
+                props.isShowMobileSidebar ? 'mobileSidebarShow' : 'mobileSidebarHide'
+            } ${props.currentSidebar !== '' ? 'showMobileUnfoldSidebar' : ''}`}
         >
             <div className='mobileToggle' onClick={() => setIsShowMobileSidebar(false)}></div>
             {sidebarFoldJsx}
-            {/* {props.currentSidebar !== '' && ( */}
             <div
                 className={`sidebarUnfold sidebarUnfoldUpload ${
                     props.currentSidebar === 'text' ? 'firstUnfold' : ''
