@@ -13,7 +13,6 @@ const Export = (props) => {
     };
 
     // set export function
-    const exportCanvas = document.getElementById('fabric-canvas');
     const handleExport = (way) => {
         let dataURL = '';
         const fileName = props.canvasSetting.title ? props.canvasSetting.title : '未命名畫布';
@@ -22,7 +21,7 @@ const Export = (props) => {
         const zoomRatio = width / height;
         switch (way) {
             case 'pdf':
-                exportUtils.downloadPdf(width, height, exportCanvas, fileName);
+                exportUtils.downloadPdf(width, height, props.canvas, zoomRatio, fileName);
                 setIsChoosingExport(false);
                 return;
             case 'jpg':
