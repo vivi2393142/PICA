@@ -43,12 +43,16 @@ const ExploreItem = (props) => {
     return (
         <div
             className={`${
-                props.parentNodeForClass === 'explore' ? styles.exploreFileWrapper : styles.userFileWrapper
+                props.parentNodeForClass === 'explore'
+                    ? styles.exploreFileWrapper
+                    : styles.userFileWrapper
             }`}
             onClick={() => history.push(`/main/shots/${props.item.fileId}`)}
             style={{
                 animationDelay:
-                    !props.isLikeLoader && props.parentNodeForClass !== 'explore' && `${props.index * 0.05}s`,
+                    !props.isLikeLoader &&
+                    props.parentNodeForClass !== 'explore' &&
+                    `${props.index * 0.05}s`,
             }}
         >
             {showAlert && (
@@ -63,7 +67,7 @@ const ExploreItem = (props) => {
                 />
             )}
             <div className={styles.cover}>
-                <img className={styles.innerImg} src={props.item.snapshot}></img>
+                <img className={styles.innerImg} src={props.item.snapshot} loading='lazy'></img>
                 {props.item.isSample && <div className={styles.isSample}>範本</div>}
                 {props.isNotSameAsCurrentUser ? null : (
                     <div className={styles.buttons}>
@@ -109,7 +113,9 @@ const ExploreItem = (props) => {
             <div className={styles.info}>
                 <img className={styles.userPhoto} src={props.item.userPhoto}></img>
                 <div className={styles.author}>{props.item.userName}</div>
-                <mainIcons.Like className={`${styles.infoIcon} ${props.item.isLike ? styles.isLike : ''}`} />
+                <mainIcons.Like
+                    className={`${styles.infoIcon} ${props.item.isLike ? styles.isLike : ''}`}
+                />
                 <div className={styles.like}>{props.item.like}</div>
                 <mainIcons.Comment className={styles.infoIcon} />
                 <div className={styles.messages}>{props.item.comment}</div>

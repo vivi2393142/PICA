@@ -9,7 +9,12 @@ const Image = (props) => {
             <div className='unfoldItemGalleryWrapper' key={imageSrc}>
                 <img
                     onClick={(e) => {
-                        utils.addImage(e.target, props.nextAddPosition, props.canvas, props.canvasSetting);
+                        utils.addImage(
+                            e.target,
+                            props.nextAddPosition,
+                            props.canvas,
+                            props.canvasSetting
+                        );
                         props.adjSetNextPosition();
                     }}
                     className='unfoldItem unfoldItemGallery'
@@ -35,7 +40,9 @@ const Image = (props) => {
                     {category.title}
                     <div
                         onClick={(e) => {
-                            e.target.parentNode.parentNode.classList.toggle('unfoldImgWrapperToggle');
+                            e.target.parentNode.parentNode.classList.toggle(
+                                'unfoldImgWrapperToggle'
+                            );
                             e.target.textContent === '+'
                                 ? (e.target.textContent = '-')
                                 : (e.target.textContent = '+');
@@ -49,7 +56,9 @@ const Image = (props) => {
             </div>
         );
     };
-    const allCategoryJsx = config.imageArray.map((category, index) => singleCategory(category, index));
+    const allCategoryJsx = config.imageArray.map((category, index) =>
+        singleCategory(category, index)
+    );
 
     return (
         <div

@@ -81,7 +81,12 @@ $like-red: rgb(243, 71, 71);
         justify-content: flex-end;
         opacity: 0;
         width: 100%;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.1) 70%, transparent 100%);
+        background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.6) 0%,
+            rgba(0, 0, 0, 0.1) 70%,
+            transparent 100%
+        );
         width: 100%;
         .edit,
         .like {
@@ -143,6 +148,8 @@ $like-red: rgb(243, 71, 71);
     .info {
         padding-bottom: 0.3rem;
     }
+    animation: fadeIn 0.3s ease-in-out;
+    animation-fill-mode: both;
 }
 
 // for waterfall layout
@@ -167,8 +174,6 @@ $like-red: rgb(243, 71, 71);
         padding: 0;
         height: 1.6rem;
         padding-bottom: 0.7rem;
-        // padding-left: 1rem;
-        // padding-right: 1rem;
     }
 }
 @keyframes fadeIn {

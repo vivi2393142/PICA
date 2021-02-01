@@ -42,6 +42,7 @@ const getArrowShowingState = (hasArrow, dataObject, filter, currentWidth) => {
 const Explore = (props) => {
     const scrollRef = useRef([]);
     const [isLoaded, setIsLoaded] = useState(true);
+    const [isSmallLoaded, setIsSmallLoaded] = useState(true);
     const [dataObject, setDataObject] = useState({});
     const [filter, setFilter] = useState('all');
     const [currentWidth, setCurrentWidth] = useState(4);
@@ -57,10 +58,11 @@ const Explore = (props) => {
     const [arrowState, setArrowState] = useState(arrowStateInit);
 
     useEffect(() => {
+        setIsLoaded(false);
         props.setCurrentPage('explore');
         firebase.getAllFiles(props.currentUser.email, (dataObject) => {
+            setIsSmallLoaded(false);
             setDataObject(dataObject);
-            setIsLoaded(false);
         });
         // reset scroll button while resize
         const setRowItemsWidth = () => {
@@ -198,6 +200,14 @@ const Explore = (props) => {
             <div className={styles.filtersWrapper}>
                 <div className={styles.filters}>{filtersJsx}</div>
             </div>
+            {isSmallLoaded && (
+                <div className={`${styles.smallLoaderLike} ${styles.mainPageSmallLoader}`}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            )}
             <div className={styles.main}>{allRowsJsx}</div>
         </div>
     );
