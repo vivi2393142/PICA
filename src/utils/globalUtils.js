@@ -1,4 +1,11 @@
 import * as config from './globalConfig';
+export const isEmptyObj = (obj) => {
+    if (Object.keys(obj).length === 0) {
+        return true;
+    } else {
+        return false;
+    }
+};
 // for all pages
 export const trackOutSideClick = (trackTargetNode, callback) => {
     const clickedOrNot = (e) => {

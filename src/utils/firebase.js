@@ -11,6 +11,126 @@ const db = firebase.firestore();
 const userDb = db.collection('userData');
 const filesDb = db.collection('canvasFiles');
 
+// refactor: change explore page data to redux
+export const getUsers = (callback) => {
+    const users = [];
+    userDb
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                users.push(doc.data());
+            });
+        })
+        .then(() => {
+            callback(users);
+        });
+};
+export const getFiles = (callback) => {
+    const files = [];
+    filesDb
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                files.push(doc.data());
+            });
+        })
+        .then(() => {
+            callback(files);
+        });
+};
+
+export const mapDataForExplore = (currentUserId, files, allUsers) => {
+    // const allUsers = [];
+    const instagram = [];
+    const poster = [];
+    const postCard = [];
+    const web = [];
+    const a4 = [];
+    const nameCard = [];
+    const custom = [];
+    files.forEach((file) => {
+        const userId = file.basicSetting.userEmail;
+        const userData = allUsers.find((x) => x.email === userId);
+        const fileData = {
+            userId: userId,
+            userName: userData ? userData.name : '',
+            userPhoto: userData ? userData.photo : '',
+            like: file.like.length,
+            comment: file.comments.length,
+            fileId: file.basicSetting.id,
+            snapshot: file.snapshot,
+            isSample: file.isSample,
+            isLike: file.like.includes(currentUserId),
+        };
+        file.basicSetting.type === 'instagram'
+            ? instagram.push(fileData)
+            : file.basicSetting.type === 'poster'
+            ? poster.push(fileData)
+            : file.basicSetting.type === 'postCard'
+            ? postCard.push(fileData)
+            : file.basicSetting.type === 'web'
+            ? web.push(fileData)
+            : file.basicSetting.type === 'a4'
+            ? a4.push(fileData)
+            : file.basicSetting.type === 'nameCard'
+            ? nameCard.push(fileData)
+            : custom.push(fileData);
+    });
+    const dataObject = {
+        Instagram: instagram,
+        Poster: poster,
+        PostCard: postCard,
+        Web: web,
+        A4: a4,
+        NameCard: nameCard,
+        Custom: custom,
+    };
+    return dataObject;
+};
+export const mapCurrentUser = (users, userId) => {
+    const currentUser = users.find((user) => user.email === userId);
+    return currentUser;
+};
+export const mapLikeList = (allUsers, files, userId) => {
+    const result = [];
+    const currentUser = allUsers.find((user) => user.email === userId);
+    const currentUserLike = currentUser.like;
+    files.forEach((file) => {
+        if (currentUserLike.includes(file.basicSetting.id)) {
+            const userData = allUsers.find((x) => x.email === file.basicSetting.userEmail);
+            const fileData = {
+                userId: userData.email,
+                userName: userData.name,
+                userPhoto: userData.photo,
+                like: file.like.length,
+                comment: file.comments.length,
+                fileId: file.basicSetting.id,
+                snapshot: file.snapshot,
+                isSample: file.isSample,
+                isLike: file.like.includes(userId),
+            };
+            result.push(fileData);
+        }
+    });
+    return result;
+};
+export const mapOwnFilesData = (allUsers, files, userId) => {
+    const currentUser = allUsers.find((user) => user.email === userId);
+    if (currentUser.canvas[0] !== '') {
+        const userFiles = currentUser.canvas.map((item) => {
+            const fileData = files.find((file) => file.basicSetting.id === item);
+            return {
+                comments: fileData.comments,
+                like: fileData.like,
+                fileId: item,
+                snapshot: fileData.snapshot,
+                title:
+                    fileData.basicSetting.title === '' ? '未命名畫布' : fileData.basicSetting.title,
+            };
+        });
+        return userFiles;
+    }
+};
 // canvas
 // -- listen canvas update
 let initState = true;

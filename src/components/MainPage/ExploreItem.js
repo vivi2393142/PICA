@@ -67,7 +67,7 @@ const ExploreItem = (props) => {
                 />
             )}
             <div className={styles.cover}>
-                <img className={styles.innerImg} src={props.item.snapshot} loading='lazy'></img>
+                <img className={styles.innerImg} src={props.item.snapshot}></img>
                 {props.item.isSample && <div className={styles.isSample}>範本</div>}
                 {props.isNotSameAsCurrentUser ? null : (
                     <div className={styles.buttons}>

@@ -5,6 +5,12 @@ import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-d
 import Canvas from './components/Canvas/index';
 import LandingPage from './components/LandingPage/index';
 import MainPage from './components/MainPage/index';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { Provider } from 'react-redux';
+import { storeData } from './redux/reducer';
+
+const store = createStore(storeData, applyMiddleware(thunkMiddleware));
 
 export default function App() {
     const [currentUser, setCurrentUser] = useState({ email: null });
@@ -20,9 +26,11 @@ export default function App() {
         <Router>
             <div className='App'>
                 <Switch>
-                    <Route path='/main'>
-                        <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-                    </Route>
+                    <Provider store={store}>
+                        <Route path='/main'>
+                            <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
+                        </Route>
+                    </Provider>
                     <Route
                         path='/file/:id'
                         render={(props) => <Canvas currentUser={currentUser} {...props} />}

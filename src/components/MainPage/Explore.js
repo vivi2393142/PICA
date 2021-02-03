@@ -7,6 +7,9 @@ import ExploreItem from './ExploreItem';
 import * as mainIcons from '../../img/mainPage';
 import * as bannerIcons from '../../img/banner';
 import { mediaQuerySize } from '../../utils/globalConfig.js';
+import { isEmptyObj } from '../../utils/globalUtils.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUsers, updateFiles } from '../../redux/action';
 
 const allType = ['Instagram', 'Poster', 'PostCard', 'Web', 'A4', 'NameCard', 'Custom'];
 const filters = [
@@ -56,15 +59,31 @@ const Explore = (props) => {
         Custom: false,
     });
     const [arrowState, setArrowState] = useState(arrowStateInit);
+    const dispatch = useDispatch();
+    const storeData = useSelector((state) => state);
 
     useEffect(() => {
         setIsLoaded(false);
         props.setCurrentPage('explore');
-        firebase.getAllFiles(props.currentUser.email, (dataObject) => {
+    }, []);
+
+    useEffect(() => {
+        if (isEmptyObj(storeData.users)) {
+            dispatch(updateUsers());
+        } else if (isEmptyObj(storeData.files)) {
+            dispatch(updateFiles());
+        } else if (props.currentUser) {
+            const exploreData = firebase.mapDataForExplore(
+                props.currentUser.email,
+                storeData.files,
+                storeData.users
+            );
+            setDataObject(exploreData);
             setIsSmallLoaded(false);
-            setDataObject(dataObject);
-        });
-        // reset scroll button while resize
+        }
+    }, [storeData, props.currentUser]);
+
+    useEffect(() => {
         const setRowItemsWidth = () => {
             window.innerWidth > mediaQuerySize.big
                 ? setCurrentWidth(4)
@@ -75,8 +94,9 @@ const Explore = (props) => {
         setRowItemsWidth();
         window.addEventListener('resize', setRowItemsWidth);
     }, [props.currentUser]);
+
     useEffect(() => {
-        if (Object.keys(dataObject).length > 0) {
+        if (!isEmptyObj(dataObject)) {
             const newArrowState = getArrowShowingState(hasArrow, dataObject, filter, currentWidth);
             setHasArrow(newArrowState);
         }

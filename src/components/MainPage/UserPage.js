@@ -8,11 +8,15 @@ import TitleInput from './TitleInput';
 import * as mainIcons from '../../img/mainPage';
 import { useHistory } from 'react-router-dom';
 import { Alert, defaultAlertSetting } from '../Alert';
+import { isEmptyObj } from '../../utils/globalUtils.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUsers, updateFiles } from '../../redux/action';
 
 const UserPage = (props) => {
     const history = useHistory();
     const [isLoaded, setIsLoaded] = useState(true);
-    const [isSmallLoaded, setIsSmallLoaded] = useState(false);
+    const [isUploadLoaded, setIsUploadLoaded] = useState(false);
+    const [isSmallLoaded, setIsSmallLoaded] = useState(true);
     const [isAtMyCanvas, setIsAtMyCanvas] = useState(true);
     const [isLikeLoader, setIsLikeLoader] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
@@ -23,6 +27,8 @@ const UserPage = (props) => {
     const [alertSetting, setAlertSetting] = useState({
         ...defaultAlertSetting,
     });
+    const dispatch = useDispatch();
+    const storeData = useSelector((state) => state);
 
     useEffect(() => {
         // not login alert
@@ -45,31 +51,37 @@ const UserPage = (props) => {
         props.currentUser.email === props.match.params.userId
             ? props.setCurrentPage('user')
             : props.setCurrentPage('explore');
-        // get user data
-        firebase.loadUserData(props.match.params.userId, (dataFromFirebase) => {
-            if (dataFromFirebase) {
-                setUserPhoto(dataFromFirebase.photo);
-                setIsLoaded(false);
-                setUserDataFromFirebase(dataFromFirebase);
-            }
-        });
-        // get like list
-        if (props.currentUser) {
-            firebase.getLikeList(props.match.params.userId, (result) => {
-                setLikeList(result);
-                setIsLikeLoader(false);
-            });
-        }
     }, [props.currentUser]);
 
     useEffect(() => {
-        firebase.getOwnFilesData(userDataFromFirebase, (canvasDataWithImg) => {
-            setCanvasDataWithDataURL(canvasDataWithImg);
-        });
-    }, [userDataFromFirebase.canvas]);
+        if (isEmptyObj(storeData.users)) {
+            dispatch(updateUsers());
+        } else if (isEmptyObj(storeData.files)) {
+            dispatch(updateFiles());
+        } else if (props.currentUser) {
+            const currentUser = firebase.mapCurrentUser(storeData.users, props.match.params.userId);
+            setUserPhoto(currentUser.photo);
+            setIsLoaded(false);
+            setUserDataFromFirebase(currentUser);
+            const userFiles = firebase.mapOwnFilesData(
+                storeData.users,
+                storeData.files,
+                props.match.params.userId
+            );
+            setCanvasDataWithDataURL(userFiles);
+            setIsSmallLoaded(false);
+            const likeList = firebase.mapLikeList(
+                storeData.users,
+                storeData.files,
+                props.match.params.userId
+            );
+            setLikeList(likeList);
+            setIsLikeLoader(false);
+        }
+    }, [storeData, props.currentUser]);
 
     const handleUploadImage = (e) => {
-        setIsSmallLoaded(true);
+        setIsUploadLoaded(true);
         const fileSizeLimit = 2097152;
         if (e.target.files[0].size > fileSizeLimit) {
             setAlertSetting({
@@ -83,12 +95,12 @@ const UserPage = (props) => {
                 title: '上傳錯誤',
                 content: '請勿上傳超過2mb之圖片',
             });
-            setIsSmallLoaded(false);
+            setIsUploadLoaded(false);
             setShowAlert(true);
         } else {
             firebase.uploadUserPhoto(e, props.match.params.userId, (url) => {
                 setUserPhoto(url);
-                setIsSmallLoaded(false);
+                setIsUploadLoaded(false);
             });
         }
     };
@@ -214,7 +226,7 @@ const UserPage = (props) => {
                     <div className={styles.main}>
                         <div className={styles.memberDetails}>
                             <div className={styles.memberPhotoWrapper}>
-                                {isSmallLoaded && (
+                                {isUploadLoaded && (
                                     <div className={styles.loaderWrapper}>
                                         <div className={styles.smallLoader}>
                                             <div></div>
@@ -281,7 +293,16 @@ const UserPage = (props) => {
                                 <div></div>
                             </div>
                         )}
-
+                        {isSmallLoaded && (
+                            <div
+                                className={`${styles.smallLoaderLike} ${styles.userPageSmallLoader}`}
+                            >
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        )}
                         {isAtMyCanvas ? (
                             <div className={styles.canvasFiles}>
                                 {canvasFilesJsx ? canvasFilesJsx : null}
