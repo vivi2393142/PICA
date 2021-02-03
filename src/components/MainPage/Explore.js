@@ -41,14 +41,29 @@ const getArrowShowingState = (hasArrow, dataObject, filter, currentWidth) => {
     });
     return oldState;
 };
+const useCurrentWidth = () => {
+    const [currentWidth, setCurrentWidth] = useState(4);
+    useEffect(() => {
+        const setRowItemsWidth = () => {
+            window.innerWidth > mediaQuerySize.big
+                ? setCurrentWidth(4)
+                : window.innerWidth > mediaQuerySize.medium
+                ? setCurrentWidth(3)
+                : setCurrentWidth(2);
+        };
+        setRowItemsWidth();
+        window.addEventListener('resize', setRowItemsWidth);
+    }, []);
 
+    return currentWidth;
+};
 const Explore = (props) => {
     const scrollRef = useRef([]);
     const [isLoaded, setIsLoaded] = useState(true);
     const [isSmallLoaded, setIsSmallLoaded] = useState(true);
     const [dataObject, setDataObject] = useState({});
     const [filter, setFilter] = useState('all');
-    const [currentWidth, setCurrentWidth] = useState(4);
+    const currentWidth = useCurrentWidth();
     const [hasArrow, setHasArrow] = useState({
         Instagram: false,
         Poster: false,
@@ -84,18 +99,6 @@ const Explore = (props) => {
     }, [storeData, props.currentUser]);
 
     useEffect(() => {
-        const setRowItemsWidth = () => {
-            window.innerWidth > mediaQuerySize.big
-                ? setCurrentWidth(4)
-                : window.innerWidth > mediaQuerySize.medium
-                ? setCurrentWidth(3)
-                : setCurrentWidth(2);
-        };
-        setRowItemsWidth();
-        window.addEventListener('resize', setRowItemsWidth);
-    }, [props.currentUser]);
-
-    useEffect(() => {
         if (!isEmptyObj(dataObject)) {
             const newArrowState = getArrowShowingState(hasArrow, dataObject, filter, currentWidth);
             setHasArrow(newArrowState);
@@ -120,6 +123,11 @@ const Explore = (props) => {
             : null;
         setArrowState(oldState);
     };
+    const scrollButtonHandler = (filterName) => {
+        setFilter(filterName);
+        setArrowState({ ...arrowStateInit });
+        scrollRef.current.forEach((ref) => (ref.scrollLeft = 0));
+    };
     const likeHandler = (e, item, type) => {
         firebase.postLike(props.currentUser.email, item.fileId, item.isLike);
         const oldData = { ...dataObject };
@@ -127,11 +135,6 @@ const Explore = (props) => {
         item.isLike ? (oldData[type][index].like -= 1) : (oldData[type][index].like += 1);
         oldData[type][index].isLike = !item.isLike;
         setDataObject(oldData);
-    };
-    const scrollButtonHandler = (filterName) => {
-        setFilter(filterName);
-        setArrowState({ ...arrowStateInit });
-        scrollRef.current.forEach((ref) => (ref.scrollLeft = 0));
     };
 
     const allRowsJsx =

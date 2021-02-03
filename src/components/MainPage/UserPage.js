@@ -17,8 +17,8 @@ const UserPage = (props) => {
     const [isLoaded, setIsLoaded] = useState(true);
     const [isUploadLoaded, setIsUploadLoaded] = useState(false);
     const [isSmallLoaded, setIsSmallLoaded] = useState(true);
-    const [isAtMyCanvas, setIsAtMyCanvas] = useState(true);
     const [isLikeLoader, setIsLikeLoader] = useState(true);
+    const [isAtMyCanvas, setIsAtMyCanvas] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
     const [likeList, setLikeList] = useState([]);
     const [userDataFromFirebase, setUserDataFromFirebase] = useState({ canvas: [] });
