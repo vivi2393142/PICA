@@ -26,11 +26,11 @@ export default function App() {
         <Router>
             <div className='App'>
                 <Switch>
-                    <Provider store={store}>
-                        <Route path='/main'>
+                    <Route path='/main'>
+                        <Provider store={store}>
                             <MainPage currentUser={currentUser} setCurrentUser={setCurrentUser} />
-                        </Route>
-                    </Provider>
+                        </Provider>
+                    </Route>
                     <Route
                         path='/file/:id'
                         render={(props) => <Canvas currentUser={currentUser} {...props} />}
