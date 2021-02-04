@@ -31,6 +31,13 @@
     -   Authentication
 -   Library
     -   Fabric.js
+    -   Redux.js + Thunk
+
+## Recently Updates
+
+-   Adopt Redux on Explore, Self & Design Details Page to reduce loading time.
+-   Rewrite or divide part of functions to enhance code-readability.
+-   Bug fixes.
 
 ## Structure
 
@@ -121,6 +128,7 @@
 
 ## Future Features
 
+-   Adopt Next.js to have better reduce loading time and get better SEO
 -   Add frame elements to Design Editing Page
 -   Connect with Google Photos/Facebook photos as image elements on Design Editing Page
 -   Share users own file to others as template
